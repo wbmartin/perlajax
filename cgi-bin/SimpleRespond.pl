@@ -16,10 +16,22 @@ my $params;
 $rowRef = $sth->fetchrow_hashref();
 print "session: $rowRef->{session_id} \n";
   #$params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}};
-  #$sth = &UTL::buildSTH($dbh,"ledger_account","select", $params );
- 
-  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}};
+  #sth = &UTL::buildSTH($dbh,"ledger_account","select", $params );
+#Select 
+  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}, where_clause=>"code_type='A'"};
    $sth = &UTL::buildSTH($dbh,"sys_code","select", $params );
+#insert
+  #$params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id},code_type=>'A', key=>'B', value=>'C', notes=>'blah' };
+  #  $sth = &UTL::buildSTH($dbh,"sys_code","insert", $params );
+#update
+  $sth->execute();
+  my $rowRef2 = $sth->fetchrow_hashref();
+  $rowRef2->{notes}='got it';
+  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}, %$rowRef2};
+  $sth = &UTL::buildSTH($dbh,"sys_code","update", $params );
+
+
+
    if(ref($sth))  {
      $sth->execute();
 	# iterate through resultset
@@ -106,7 +118,8 @@ $rad->{SECURITY_USER}={
 	proc=>"initsession"
   }
 };
-
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#---------------------------------------------
 my @ledgerAccountAllFields =('client_id', 'ledger_account_id', 'last_update', 'name', 'account_type', 'ledger_commodity_id', 'parent_account_id', 'code', 'description') ;
 $rad->{LEDGER_ACCOUNT} ={
   SELECT =>{
@@ -115,25 +128,22 @@ $rad->{LEDGER_ACCOUNT} ={
 	proc=>"ledger_account_sq"
   }
 };
-
-my @sysCodeAllFields = ('sys_code_id', 'code_type', 'key', 'value', 'last_update', 'notes');
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#---------------------------------------------
+my @sysCodeAllFields = ('client_id','sys_code_id', 'code_type', 'key', 'value', 'last_update', 'notes');
+my @sysCodeInsertParamFields = @sysCodeAllFields;
+splice @sysCodeInsertParamFields,5,1; #remove last_update
+splice @sysCodeInsertParamFields,0,2; #remove client_id, prkey
+my @sysCodeUpdateParamFields =  @sysCodeAllFields;
+splice @sysCodeUpdateParamFields,0,1; #remove client_id, prkey 
 $rad->{SYS_CODE} ={
-  SELECT =>{
-	rf=>\@sysCodeAllFields ,
-	pf=>\@stdSelectParamFields,
-	proc=>"sys_code_sq"
-  },
-  INSERT =>{
-	rf=>\@sysCodeAllFields,
-	pf=>['where_clause','orderby_clause', 'rowlimit','startrow'],
-	proc=>"sys_code_sq"
-  }
+  SELECT =>{ rf=>\@sysCodeAllFields, pf=>\@stdSelectParamFields, proc=>"sys_code_sq"},
+  INSERT =>{ rf=>\@sysCodeAllFields, pf=>\@sysCodeInsertParamFields, proc=>"sys_code_iq" },
+  UPDATE =>{ rf=>\@sysCodeAllFields, pf=>\@sysCodeUpdateParamFields, proc=>"sys_code_uq" }
+
 };
-
-
-
-
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#---------------------------------------------
 
 return $rad
 }# end resourceActionDef
-
