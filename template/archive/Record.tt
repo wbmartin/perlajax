@@ -1,0 +1,74 @@
+[% FOREACH tablename IN tbl.keys %]
+[%-SET ClassName = ucfirst(toCC(tablename)) -%]
+[%- FILTER redirect("gwt/${ClassName}Record.java") -%]  
+
+package [%-props.packageRoot-%].client.model.bean;
+import com.smartgwt.client.data.Record;
+
+
+
+/**
+ * [%- ClassName-%]Record serves as the [%- tablename -%] bean and carries all associated data
+ * @author bmartin
+ *
+ */
+public class [%- ClassName-%]Record extends Record{
+  
+[%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
+	private [%-tbl.$tablename.columns.$column.java_type+%] [%+tbl.$tablename.columns.$column.java_name-%];
+[%+END #FOREACH column IN tbl.$tablename.col_ord_pos-%]
+
+
+
+/**
+ * Primary constructor, 
+[%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
+ * @param [%+tbl.$tablename.columns.$column.java_name-%]_;
+[%+END #FOREACH column IN tbl.$tablename.col_ord_pos-%]
+
+ */
+  public  [%- ClassName-%]Record(
+[%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
+[%-"," IF loop.count() >1-%] 
+[%- " "; tbl.$tablename.columns.$column.boxed_type+%] [%+tbl.$tablename.columns.$column.java_name-%]_
+[%-END #FOREACH column IN tbl.$tablename.col_ord_pos-%]
+){
+[%- FOREACH column IN tbl.$tablename.col_ord_pos +%]
+	 set[%-ucfirst(tbl.$tablename.columns.$column.java_name)+%]( [%+tbl.$tablename.columns.$column.java_name+%]_);
+[%-END #FOREACH column IN tbl.$tablename.col_ord_pos+%]
+  }
+
+  public  [%- ClassName-%]Bean(){
+[%- FOREACH column IN tbl.$tablename.col_ord_pos +%]
+	 set[%-ucfirst(tbl.$tablename.columns.$column.java_name)+%]( null);
+[%-END #FOREACH column IN tbl.$tablename.col_ord_pos+%]
+  }
+
+
+[%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
+    /** 
+     * Set the [%+tbl.$tablename.columns.$column.java_name-%]. 
+     * 
+     * @param [%+tbl.$tablename.columns.$column.java_name-%] the [%+tbl.$tablename.columns.$column.java_name-%] 
+     */  
+    public void set[%+ucfirst(tbl.$tablename.columns.$column.java_name)-%]([%- tbl.$tablename.columns.$column.boxed_type+%] [%+tbl.$tablename.columns.$column.java_name-%]_) {  
+        setAttribute("[%+tbl.$tablename.columns.$column.java_name-%]", [%+tbl.$tablename.columns.$column.java_name-%]_);  
+    }  
+  
+    /** 
+     * Return the [%+tbl.$tablename.columns.$column.java_name-%]. 
+     * 
+     * @return the [%+tbl.$tablename.columns.$column.java_name-%] 
+     */  
+    public [%- tbl.$tablename.columns.$column.boxed_type+%] get[%+ucfirst(tbl.$tablename.columns.$column.java_name)-%]() {  
+        return getAttributeAs[%- ucfirst(tbl.$tablename.columns.$column.java_type) |replace("Java.util.","")+%]("[%+tbl.$tablename.columns.$column.java_name-%]");  
+    }  
+
+
+[%-END #FOREACH column IN tbl.$tablename.col_ord_pos-%]
+
+
+}
+[%-END# FILTER redirect("...") -%]   
+[%-END# FOREACH tablename IN tbl.keys %]
+
