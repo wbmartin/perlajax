@@ -5,46 +5,45 @@ use JSON;
 use DBI;
 use strict;
 Main:{
-  my ($DBInfo,$dbh, $json, $json_text,$ndx );
+  my ($DBInfo,$dbh, $json, $json_text,$ndx, $sth,$rowRef );
   print header('application/json');
   $DBInfo ={dbname=>"simpledemo", user=>"simpledemo", password=>"simpledemo"};
   &UTL::dbConnect(\$dbh, $DBInfo);
-my $params = {user_id =>'simpledemo', password =>'simpledemo'};
-
-  
-if(1==1){
-  #my $sql =&UTL::buildSQL("security_user","authenticate");
- 
-  #my $sth = $dbh->prepare($sql);
-  my $sth = &UTL::buildSTH($dbh,"security_user","authenticate", $params );
-
+my $params;
+  $params = {user_id =>'simpledemo', password =>'simpledemo'};
+  $sth = &UTL::buildSTH($dbh,"security_user","authenticate", $params );
   $sth->execute();
+$rowRef = $sth->fetchrow_hashref();
+print "session: $rowRef->{session_id} \n";
+  #$params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}};
+  #$sth = &UTL::buildSTH($dbh,"ledger_account","select", $params );
+ 
+  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}};
+   $sth = &UTL::buildSTH($dbh,"sys_code","select", $params );
+   if(ref($sth))  {
+     $sth->execute();
+	# iterate through resultset
+  	my @rows;
+  	while(my $ref = $sth->fetchrow_hashref()) {
+	  push(@rows, $ref);
+  	}
+	#package it up in and print it
+  	$json->{"rows"} =\@rows;
+    }else{
+	$json->{"errorMsg"} =$sth;
 
-# iterate through resultset
-# print values
-  my @rows;
-  while(my $ref = $sth->fetchrow_hashref()) {
-	push(@rows, $ref);
-  }
+    }  
+  	$json_text = to_json($json);
+  	print $json_text;
 
-#######################
-
-
-
-####################
-
-  $json->{"rows"} =\@rows;
-
-  $json_text = to_json($json);
-  print $json_text;
-}
+$dbh->disconnect()
 }#End Main
 ################################################################
 package UTL;
 sub dbConnect{
   my $dbh = shift;
   my $DBInfo = shift;
-  ${$dbh} = DBI->connect(	"DBI:Pg:dbname=$DBInfo->{dbname};host=localhost",
+  ${$dbh} = DBI->connect("DBI:Pg:dbname=$DBInfo->{dbname};host=localhost",
 			$DBInfo->{user}, 
 			$DBInfo->{password}, 
 			{'RaiseError' => 1});
@@ -82,29 +81,59 @@ sub buildSTH{
   # Load the Resource/Action Hashref and standard field names
   my $resourceActionDef =&buildResourceActionDef();
   # assign the specific resource action
-  $raDef=$resourceActionDef->{uc($resource."_".$action)}; #resource action definition
-  @spFields = (@stdFieldNames,@{$raDef->{tf}});
-  $sql = "SELECT " . &buildSQLColsList($raDef->{rf})  ." from $raDef->{func}(" . ("?," x $#spFields) . "?);"  ;
-  $sth = $dbh->prepare($sql);
+  $raDef=$resourceActionDef->{uc($resource)}->{uc($action)}; #resource action definition
+  #if(! exists $resourceActionDef->{uc($resource)}->{uc($action)} ){ return "ResourceAction Not Defined";}
+  if(!$raDef){ return "ResourceAction Not Defined";}
 
-  $ndx=1;
-  foreach(@spFields){
-	$sth->bind_param($ndx++,$params->{$_}); 
-  }
+    @spFields = (@stdFieldNames,@{$raDef->{pf}});
+    $sql = "SELECT " . &buildSQLColsList($raDef->{rf})  ." from $raDef->{proc}('CHECK_AUTH'," . ("?," x $#spFields) . "?);"  ;
+    $sth = $dbh->prepare($sql);
+    $ndx=1;
+    foreach(@spFields){
+	print "$ndx $_ $params->{$_}\n ";
+	$sth->bind_param($ndx++,$params->{$_});
+    }
   return $sth;
-
-
 
 }
 sub buildResourceActionDef{
-return 
-{SECURITY_USER_AUTHENTICATE=>
-	{  rf=>['client_id', 'user_id', 'session_id'],
-	   tf=>['password'],
-	   func=>"initsession"
+my $rad;
+my @stdSelectParamFields = ('where_clause','orderby_clause', 'rowlimit','startrow');
+$rad->{SECURITY_USER}={
+  AUTHENTICATE=>{  
+	rf=>['client_id', 'user_id', 'session_id'],
+	pf=>['password'],
+	proc=>"initsession"
+  }
+};
 
-	}
+my @ledgerAccountAllFields =('client_id', 'ledger_account_id', 'last_update', 'name', 'account_type', 'ledger_commodity_id', 'parent_account_id', 'code', 'description') ;
+$rad->{LEDGER_ACCOUNT} ={
+  SELECT =>{
+	rf=>\@ledgerAccountAllFields,
+	pf=>\@stdSelectParamFields,
+	proc=>"ledger_account_sq"
+  }
+};
 
-};# end resourceActionDef
+my @sysCodeAllFields = ('sys_code_id', 'code_type', 'key', 'value', 'last_update', 'notes');
+$rad->{SYS_CODE} ={
+  SELECT =>{
+	rf=>\@sysCodeAllFields ,
+	pf=>\@stdSelectParamFields,
+	proc=>"sys_code_sq"
+  },
+  INSERT =>{
+	rf=>\@sysCodeAllFields,
+	pf=>['where_clause','orderby_clause', 'rowlimit','startrow'],
+	proc=>"sys_code_sq"
+  }
+};
 
-}
+
+
+
+
+return $rad
+}# end resourceActionDef
+
