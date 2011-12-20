@@ -9,12 +9,13 @@ Main:{
   print header('application/json');
   $DBInfo ={dbname=>"simpledemo", user=>"simpledemo", password=>"simpledemo"};
   &UTL::dbConnect(\$dbh, $DBInfo);
+#++++++++++++++++++++++++++++++++++Begin TESTING+++++++++++++++++++++++++
 my $params;
   $params = {user_id =>'simpledemo', password =>'simpledemo'};
   $sth = &UTL::buildSTH($dbh,"security_user","authenticate", $params );
   $sth->execute();
 $rowRef = $sth->fetchrow_hashref();
-print "session: $rowRef->{session_id} \n";
+#print "session: $rowRef->{session_id} \n";
   #$params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}};
   #sth = &UTL::buildSTH($dbh,"ledger_account","select", $params );
 #Select 
@@ -30,7 +31,7 @@ print "session: $rowRef->{session_id} \n";
   $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}, %$rowRef2};
   $sth = &UTL::buildSTH($dbh,"sys_code","update", $params );
 
-
+#++++++++++++++++++++++++++++++++++END TESTING+++++++++++++++++++++++++
 
    if(ref($sth))  {
      $sth->execute();
@@ -53,8 +54,7 @@ $dbh->disconnect()
 ################################################################
 package UTL;
 sub dbConnect{
-  my $dbh = shift;
-  my $DBInfo = shift;
+  my ($dbh ,$DBInfo) = @_;
   ${$dbh} = DBI->connect("DBI:Pg:dbname=$DBInfo->{dbname};host=localhost",
 			$DBInfo->{user}, 
 			$DBInfo->{password}, 
@@ -72,21 +72,17 @@ sub toCC{
 }
 
 sub buildSQLColsList{
-  my($SQLColsList);
   my $colArrayRef = shift;
+  my($SQLColsList);
   foreach(@$colArrayRef){
 	$SQLColsList .= " $_,";
   }
-  $SQLColsList =~ s/,$//;
-  $SQLColsList .= " ";
-  return $SQLColsList;('password');
+  $SQLColsList =~ s/,$/ /;
+  return $SQLColsList;
 }
 
 sub buildSTH{
-  my $dbh = shift;
-  my $resource = shift;
-  my $action = shift;
-  my $params = shift;
+  my ($dbh ,$resource,$action, $params) = @_;
   my ($sql,@spFields,$raDef, @stdFieldNames, $sth, $ndx);
   @stdFieldNames = ('client_id', 'user_id', 'session_id');
   # Load the Resource/Action Hashref and standard field names
