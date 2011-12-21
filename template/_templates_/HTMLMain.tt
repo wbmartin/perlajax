@@ -1,0 +1,27 @@
+[%- FILTER redirect("/index.html") -%]
+[%INSERT _top.html%]
+<script type="text/javascript"> 
+//<![CDATA[
+[%INSERT _header1.js%]
+//]]
+</script>
+<style type="text/css">
+[%INSERT _main.css%]
+</style>
+</head>
+<body >
+[%INSERT _header.html%]
+<div id="container">
+	<div id="content"> 
+[% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
+<div id='leftnav' style='background-color:black;'> blah</div>
+
+
+
+[% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
+	</div>[% # End content%]
+</div> [% # End container%]
+[%INSERT _footer.html %]
+</body>
+</html>
+[%- END #filter -%]

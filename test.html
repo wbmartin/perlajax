@@ -3,10 +3,9 @@
 <head>
 <title> Simple2 Demo</title>
 <script type="text/javascript" src="./jquery-1.7.1.js"></script>
-
 <script type="text/javascript"> 
 //<![CDATA[
-var urlTarget = "/cgi-bin3/SimpleRespond.pl"
+var urlTarget = "cgi-bin/SimpleRespond.pl"
 //"http://localhost/cgi-bin2/SimpleRespond.pl";
 
 //alert ("2");
@@ -14,16 +13,19 @@ var params= new Array();;
 params['spwfresource'] = "security_user";
 params['spwfaction'] = "authenticate";
 var startTime=new Date();
-//$(document).load(urlTarget, params, function(responseText){ 
-//		var stopTime=new Date(); 
-//            alert("Response:\n" + responseText + "Delivered in "+(stopTime.getTime()-startTime.getTime())/1000);  
-//        });     
+$(document).load(urlTarget, params, function(responseText){ 
+		var stopTime=new Date(); 
+            alert("Response:\n" + responseText + "Delivered in "+(stopTime.getTime()-startTime.getTime())/1000);  
+        });     
 //alert ("ok");
-
-
 //]]
 </script>
 <style type="text/css">
+/*
+Fixed Header/Footer: http://www.noobcube.com/tutorials/html-css/fixed-header-footer-layout-a-beginners-guide-/
+JSON EXAMPLE: http://stackoverflow.com/questions/435442/how-can-i-send-a-json-response-from-a-perl-cgi-program
+
+*/
 body {
 	font: 62.5% Arial, Helvetica, sans-serif;
 	color: #597347;
@@ -58,8 +60,7 @@ blockquote {
 }
 
 #header-container {
-	height: 15px;
-
+	height: 90px;
 /*	background: url(../images/header-bg.png) repeat-x left bottom;
 */
 }
@@ -68,8 +69,6 @@ blockquote {
 	width: 940px;
 	margin: 0 auto;
 	position: relative;
-
-
 }
 
 #header h1 {
@@ -115,23 +114,22 @@ blockquote {
 }
 
 #container {
-	/*width: 940px;*/
+	width: 940px;
 	margin: 0 auto;
 	font-size: 1.4em;
 	overflow: auto;
-	padding: 20px 0 15px;
+	padding: 90px 0 40px;
 }
 
 #content {
 	float: left;
-	/*width: 625px;*/
+	width: 625px;
 }
 
 #sidebar {
 	float: right;
 	width: 275px;
 	margin-top: 10px;
-
 }
 
 #footer-wrap {
@@ -142,36 +140,29 @@ blockquote {
 }
 
 #footer-container {
-	height: 15px;
-background-color:red;
+	height: 40px;
 /*	background: url(../images/footer-bg.png) repeat-x left bottom;
 */
 }
 
 #footer {
-	/*width: 940px; was centering footer*/
+	width: 940px;
 	margin: 0 auto;
 	position: relative;
 }
 
-
 </style>
 </head>
 <body >
+<h1>test</h1>
 <div id="header-wrap">
 	<div id="header-container"> header
 	</div>
 </div>
-
-
 <div id="container">
-	<div id="content"> 
-<div id='leftnav' style='background-color:black;'> blah</div>
-
-
-
+	<div id="content"> <p> test </p>
 	</div>
-</div> 
+</div>
 <div id="footer-wrap">
 	<div id="footer-container">
 		<div id="footer">

@@ -25,9 +25,10 @@ Main:{
 	print "$key "
   }
   foreach(@templates){
+    next if /swp/;
      $templateName = $_;
 	print "\nBegin template: $templateName ";
-	$tt = Template->new(RELATIVE=>1, OUTPUT_PATH=>$outputPath);
+	$tt = Template->new(RELATIVE=>1, OUTPUT_PATH=>$outputPath, INCLUDE_PATH=>'./_templates_/');
 	$tt->process(($path . $_),$var ) || die $tt->error(); 
 	print "End template $templateName";
      

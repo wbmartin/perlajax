@@ -5,34 +5,37 @@ use JSON;
 use DBI;
 use strict;
 Main:{
-  my ($DBInfo,$dbh, $json, $json_text,$ndx, $sth,$rowRef ,$params);
+  my ($DBInfo,$dbh, $json, $json_text,$ndx, $sth,$rowRef ,$params, $cgi);
+  $cgi = CGI->new;
   print header('application/json');
+  $params = $cgi->param;
   $DBInfo ={dbname=>"simpledemo", user=>"simpledemo", password=>"simpledemo"};
   &UTL::dbConnect(\$dbh, $DBInfo);
 #++++++++++++++++++++++++++++++++++Begin TESTING+++++++++++++++++++++++++
-  $params = {user_id =>'simpledemo', password =>'simpledemo', resource=>"security_user", action=>"authenticate"};
-  $sth = &UTL::buildSTH($dbh,$params );
-  $sth->execute();
-$rowRef = $sth->fetchrow_hashref();
+  $params = {user_id =>'simpledemo', password =>'simpledemo', spwfResource=>"security_user", spwfAction=>"authenticate"};
+#  $sth = &UTL::buildSTH($dbh,$params );
+#  $sth->execute();
+#$rowRef = $sth->fetchrow_hashref();
 #print "session: $rowRef->{session_id} \n";
   #$params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}};
   #sth = &UTL::buildSTH($dbh,"ledger_account","select", $params );
 #Select 
-  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}, where_clause=>"code_type='A'",
-		 resource=>"sys_code", action=>"select"};
-  $sth = &UTL::buildSTH($dbh, $params );
+#  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}, where_clause=>"code_type='A'",
+#		 spwfResource=>"sys_code", spwfAction=>"select"};
+#  $sth = &UTL::buildSTH($dbh, $params );
 #insert
-  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id},code_type=>'A', key=>'B', 
-		value=>'C', notes=>'blah',resource=>"sys_code", action=>"insert" };
-  $sth = &UTL::buildSTH($dbh, $params );
+#  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id},code_type=>'A', key=>'B', 
+#		value=>'C', notes=>'blah',spwfResource=>"sys_code", spwfAction=>"insert" };
+#  $sth = &UTL::buildSTH($dbh, $params );
 #update
-  $sth->execute();
-  my $rowRef2 = $sth->fetchrow_hashref();
-  $rowRef2->{notes}='got it';
-  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}, %$rowRef2,resource=>"sys_code", action=>"update" };
-  $sth = &UTL::buildSTH($dbh, $params );
+#  $sth->execute();
+ # my $rowRef2 = $sth->fetchrow_hashref();
+#  $rowRef2->{notes}='got it';
+#  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}, %$rowRef2, spwfResource=>"sys_code", spwfAction=>"update" };
+#  $sth = &UTL::buildSTH($dbh, $params );
 
 #++++++++++++++++++++++++++++++++++END TESTING+++++++++++++++++++++++++
+  $sth = &UTL::buildSTH($dbh, $params );
 
    if(ref($sth))  {
      $sth->execute();
@@ -54,6 +57,7 @@ $dbh->disconnect()
 }#End Main
 ################################################################
 package UTL;
+my $debug=0;
 sub dbConnect{
   my ($dbh ,$DBInfo) = @_;
   ${$dbh} = DBI->connect("DBI:Pg:dbname=$DBInfo->{dbname};host=localhost",
@@ -85,18 +89,16 @@ sub buildSQLColsList{
 sub buildSTH{
   my ($dbh , $params) = @_;
   my ($sql,@spFields,$raDef, @stdFieldNames, $sth, $ndx);
-  $resource =$params->{resource};
-  $action=$params->{action};
   @stdFieldNames = ('client_id', 'user_id', 'session_id');
   # Load the Resource/Action Hashref and standard field names
-  $raDef=&buildResourceActionDef($params->{resource}, $params->{action});
+  $raDef=&buildResourceActionDef($params->{spwfResource}, $params->{spwfAction});
   if(!$raDef){ return "ResourceAction Not Defined";}
   @spFields = (@stdFieldNames,@{$raDef->{pf}});
   $sql = "SELECT " . &buildSQLColsList($raDef->{rf})  ." from $raDef->{proc}('CHECK_AUTH'," . ("?," x $#spFields) . "?);"  ;
   $sth = $dbh->prepare($sql);
   $ndx=1;
   foreach(@spFields){
-	print "$ndx $_ $params->{$_}\n ";
+	print "$ndx $_ $params->{$_}\n " if $debug;
 	$sth->bind_param($ndx++,$params->{$_});
   }
   return $sth;
