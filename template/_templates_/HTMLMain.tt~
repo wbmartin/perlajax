@@ -14,13 +14,13 @@
 <div id="container">
 	<div id="content"> 
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
-<div id='leftnav' style='background-color:black;'> blah</div>
+<div id='leftnav' style='background-color:black;width=100px;'> blah</div>
 
 
 
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
-	</div>
-</div>
+	</div>[% # End content%]
+</div> [% # End container%]
 [%INSERT _footer.html %]
 </body>
 </html>
