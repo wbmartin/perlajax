@@ -1,0 +1,33 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" style="margin:0; padding:0;"> 
+<head> 
+<title> Simple2 Demo</title> 
+<script type="text/javascript">
+function bodyOnLoad(){
+ 
+}
+function bodyOnResize(){
+  sizeLeftNav();
+}
+function sizeLeftNav(){
+  document.getElementById('leftnav').style.height= (window.innerHeight-100) +"px";
+  document.getElementById('mainContent').style.top="25px";
+  document.getElementById('mainContent').style.left="205px";
+  document.getElementById('mainContent').style.height=(window.innerHeight-100) +"px";
+}
+
+
+</script>
+</head> 
+<body style="background-color:blue; margin:0;padding: 0 ;" onload='bodyOnResize();' onresize="bodyOnResize();"> 
+
+<div id="header" style="position:fixed; top: 0; left:0; width:100%;  background-color:white; min-height:25px; height:auto!important;height:25px;">Header</div>
+<div id="footer" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:white;">FooterFooter Footer FooterFooter Footer Footer Footer Footer </div>
+
+<div id='leftnav' style='position:fixed; top:25px; left:0; width:200px; margin:0px; padding: 5px;background-color:green;overflow:auto'> left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br></div>
+
+<div id="mainContent" style="position:fixed;overflow:auto;padding: 5px 5px 5px 25px; margin:0px;">1234
+aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa </div> 
+</body> 
+</html>

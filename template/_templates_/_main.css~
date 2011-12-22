@@ -3,6 +3,7 @@ body {
 	color: #597347;
 	margin: 0;
 	padding: 0;
+height:100%;
 }
 
 h1, h2 {
@@ -89,15 +90,21 @@ blockquote {
 }
 
 #container {
-	width: 940px;
+	/*width: 940px;*/
 	margin: 0 auto;
 	font-size: 1.4em;
 	overflow: auto;
 	padding: 20px 0 15px;
+	width:100%;
+	float:left;
 }
 
 #content {
-	float: left;
+	float: right;
+	overflow: auto;
+	display:inline;
+	width:300;
+	height:100%;
 	/*width: 625px;*/
 }
 
