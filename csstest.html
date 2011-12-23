@@ -2,10 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" style="margin:0; padding:0;"> 
 <head> 
 <title> Simple2 Demo</title> 
+<script type="text/javascript" src="./jquery-1.7.1.js"></script>
 <script type="text/javascript">
+"use strict";
+//Layout Functions
 var currentContentPane=""
 function bodyOnLoad(){
-//displayMainLayout(true);
   sizeLeftNav();
 }
 function bodyOnResize(){
@@ -36,6 +38,49 @@ function setMainContentPane(divId){
   currentContentPane = divId;
 
 }
+
+
+//Login Functions
+
+function validateLoginForm(){ "use strict";
+        $('.error').hide(); 
+        $('.error').html(""); 
+	if( validateAndNotifyFail(!isFieldIdEmpty("user_id"),"user_id","*Required")
+	  & validateAndNotifyFail(!isFieldIdEmpty("password"),"password","*Required")
+	){
+	  alert("ok");
+	  return true;
+	}else{
+	  alert ("failed");
+	  return false;
+        }
+}//end validateLoginForm();
+
+//validation functions
+function isFieldIdEmpty(fieldId_){
+  if (document.getElementById(fieldId_) ==undefined) return true;
+  if (document.getElementById(fieldId_).value ==undefined) return true;
+  if (document.getElementById(fieldId_).value ==null) return true;
+  if (document.getElementById(fieldId_).value =="") return true;
+  return false;
+}
+
+function validateAndNotifyFail(test_, fieldId_, msg_){
+  if (!test_){
+	$("label#" +fieldID_ +"_error").show();  
+	$("label#" +fieldID_ +"_error").html($("label#" +fieldID_ +"_error").html() + " " + msg_  )  ;  
+      	$("input#" +fieldID_).focus();  
+  }
+  return test_;
+}
+
+
+$(document).ready(function(){
+	$('.error').hide();  
+	$("#login_submit").click(validateLoginForm ); 
+});
+ 
+
 </script>
 <style type="text/css">
 .MainContentPaneStyle{
@@ -49,6 +94,51 @@ function setMainContentPane(divId){
 .MainLayout{
 display:none;/*Initially Hidden*/
 }
+
+
+li .fieldbox {
+/*    background:transparent url(images/subfield.jpg) no-repeat top left;
+*/    float:left;
+    height:27px;
+    padding-left:5px;
+}
+ 
+li .fieldbox input {
+/*    background:transparent url(images/subfield.jpg) no-repeat top right;
+*/    height:27px;
+    padding-top:5px;
+    width:400px;
+}
+//Textarea style
+#contactform li .msgbox {
+/*    background:transparent url(images/msgfield.jpg) no-repeat top left;
+*/    float:left;
+    height:110px;
+    padding-left:5px;
+}
+ 
+#contactform li .msgbox textarea {
+/*    background:transparent url(images/msgfield.jpg)  no-repeat top right ;
+*/    height:110px;
+    padding-top:5px;
+    width:500px;
+}
+//Button Style
+#login_button {
+    background:#acb4cb; color:#fff;
+    cursor:pointer;
+    padding:5px 10px;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px
+}
+
+
+
+
+
+
+
+
 </style>
 </head> 
 <body style="background-color:gray; " onload='bodyOnLoad();' onresize="bodyOnResize();"> 
@@ -62,16 +152,34 @@ display:none;/*Initially Hidden*/
 
 <div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto'> left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br>left nav<br></div>
 
-<div id="mainContent" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px">
+<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px">
 
 <div id="sample" class="MainLayout" class="MainContentPaneStyle" >blah blah blah <input type=text> blah blah blah
 blah blah blah
 blah blah blah
-blah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blah</div>
+ blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blah</div>
 <div id="sample2" class="MainContentPaneStyle">blah1 blah1 blah1</div>
 </div> <!--End Main Content-->
 
 <div id="LoginPortal" style="position:fixed; height:100%; width:100%">
+<div id="Login_Form">  
+<form name="loginForm" action="">  
+  <fieldset>  
+    <label for="user_id" id="user_id_label">User ID:</label>  
+    <input type="text" name="user_id" id="user_id" size="30" value="" class="text-input" />  
+    <label class="error" for="user_id" id="user_id_error">This field is required.</label>  
+  
+    <label for="password" id="password_label">Password</label>  
+    <input type="password" name="password" id="password" size="30" value="" class="text-input" />  
+    <label class="error" for="password" id="password_error">This field is required.</label>  
+  
+ 
+  
+    <br />  
+    <input type="submit" name="submit"  id="login_button" value="Send" />  
+  </fieldset>  
+</form>  
+</div>  
 <a href="javascript:void(0)" onclick="displayMainLayout(true)"> Login</a>
 </div>
 
