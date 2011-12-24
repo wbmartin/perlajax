@@ -1,18 +1,30 @@
 #! /usr/bin/perl
 package ResourceAction;
 use CGI qw(:standard);
+use CGI qw(:cgi-lib);
 use JSON;
 use DBI;
 use strict;
 Main:{
-  my ($DBInfo,$dbh, $json, $json_text,$ndx, $sth,$rowRef ,$params, $cgi);
+  my ($DBInfo,$dbh, $json, $json_text,$ndx, $sth,$rowRef ,$params, $cgi, $debug, $qaMode, $prodServerPassword,@rows, $rowCount);
+  $debug =1;#1 for debug mode, 0 for normal
+  $qaMode=1;#1 for qa mode 0 for production
+  $prodServerPassword="";#Changed on Server after publish
   $cgi = CGI->new;
   print header('application/json');
-  $params = $cgi->param;
-  $DBInfo ={dbname=>"simpledemo", user=>"simpledemo", password=>"simpledemo"};
+  $params = Vars;
+#  $params = {user_id =>'simpledemo', password =>'simpledemo', spwfResource=>"security_user", spwfAction=>"authenticate"};
+   if($debug){     
+	print STDERR "Script running\n";
+  	while ( my ($key, $value) = each(%{$params}) ) {
+          print STDERR "$key => $value\n";
+    	}
+   }
+  if(!$qaMode){	$DBInfo ={dbname=>"concordc_firstapp", user=>"concordc_fistapp", password=>$prodServerPassword};
+  }else{ 	$DBInfo ={dbname=>"simpledemo", user=>"simpledemo", password=>"simpledemo"}; }
   &UTL::dbConnect(\$dbh, $DBInfo);
 #++++++++++++++++++++++++++++++++++Begin TESTING+++++++++++++++++++++++++
-  $params = {user_id =>'simpledemo', password =>'simpledemo', spwfResource=>"security_user", spwfAction=>"authenticate"};
+#  $params = {user_id =>'simpledemo', password =>'simpledemo', spwfResource=>"security_user", spwfAction=>"authenticate"};
 #  $sth = &UTL::buildSTH($dbh,$params );
 #  $sth->execute();
 #$rowRef = $sth->fetchrow_hashref();
@@ -38,20 +50,32 @@ Main:{
   $sth = &UTL::buildSTH($dbh, $params );
 
    if(ref($sth))  {
+	print STDERR "Connection Successful\n" if($debug);
      $sth->execute();
-	# iterate through resultset
-  	my @rows;
-  	while(my $ref = $sth->fetchrow_hashref()) {
-	  push(@rows, $ref);
-  	}
-	#package it up in and print it
-  	$json->{"rows"} =\@rows;
+	if(!$sth->err){
+	  # iterate through resultset
+	  $rowCount=0;
+  	  while(my $ref = $sth->fetchrow_hashref()) {
+	    push(@rows, $ref);
+	    $rowCount++;
+  	  }
+	  #package it up in and print it
+  	  $json->{"rows"} =\@rows;
+	  $json->{"rowCount"}=$rowCount;
+	}else{
+	   $json->{"rowCount"}=0;
+	   $json->{"errorMsg"} =$DBI::errstr;
+ 
+
+	}
+	print STDERR "Package Successful\n" if($debug);
     }else{
 	$json->{"errorMsg"} =$sth;
 
     }  
   	$json_text = to_json($json);
   	print $json_text;
+	print STDERR "JSON Txt: $json_text\n"  if($debug);
 
 $dbh->disconnect()
 }#End Main
@@ -63,7 +87,7 @@ sub dbConnect{
   ${$dbh} = DBI->connect("DBI:Pg:dbname=$DBInfo->{dbname};host=localhost",
 			$DBInfo->{user}, 
 			$DBInfo->{password}, 
-			{'RaiseError' => 1});
+			{RaiseError => 0});
 return;
 }
 sub toCC{
@@ -92,7 +116,7 @@ sub buildSTH{
   @stdFieldNames = ('client_id', 'user_id', 'session_id');
   # Load the Resource/Action Hashref and standard field names
   $raDef=&buildResourceActionDef($params->{spwfResource}, $params->{spwfAction});
-  if(!$raDef){ return "ResourceAction Not Defined";}
+  if(!$raDef){ return "ResourceAction Not Defined:" .$params->{spwfResource} . "-". $params->{spwfAction} ;}
   @spFields = (@stdFieldNames,@{$raDef->{pf}});
   $sql = "SELECT " . &buildSQLColsList($raDef->{rf})  ." from $raDef->{proc}('CHECK_AUTH'," . ("?," x $#spFields) . "?);"  ;
   $sth = $dbh->prepare($sql);
