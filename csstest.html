@@ -155,56 +155,54 @@ $("logOutLink").click(logOutUser);
   padding: 5px 5px 5px 5px ;
 }
 .MainLayout{
-display:none;/*Initially Hidden*/
-}
-
-
-.error{
-color: red;
+  display:none;/*Initially Hidden*/
 }
 
 body{
-font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
-font-size:12px;
+  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+  font-size:12px;
 }
- .small{
-color:#666666;
-display:block;
-font-size:11px;
-font-weight:normal;
-text-align:left;
+.small{
+  color:#666666;
+  display:block;
+  font-size:11px;
+  font-weight:normal;
+  text-align:left;
 }
 /*-------Form Layout------------------------------------*/
- input{
-float:left;
-font-size:12px;
-padding:4px 2px;
-border:solid 1px ;
-width:200px;
-margin:2px 0 20px 10px;
+.error{
+  color: red;
+}
+
+input{
+  float:left;
+  font-size:12px;
+  padding:4px 2px;
+  border:solid 1px ;
+  width:200px;
+  margin:2px 0 20px 10px;
 }
 
 .formLayout .labelColumn{
-text-align:right;
-font-weight:bold;
-padding:7px 25px 20px 50px;
+  text-align:right;
+  font-weight:bold;
+  padding:7px 25px 20px 50px;
 }
 table.formLayout{
-border-width: 2px;
-border-style: solid;
-border-color:green;
+  border-width: 2px;
+  border-style: solid;
+  border-color:green;
 }
 .formLayout button{
-clear:both;
-background-color:#666666;
-width:125px;
-height:31px;
-text-align:center;
-line-height:31px;
-color:#FFFFFF;
-font-size:11px;
-font-weight:bold;
-
+  clear:both;
+  background-color:#666666;
+  width:125px;
+  height:31px;
+  text-align:center;
+  line-height:31px;
+  color:#FFFFFF;
+  font-size:11px;
+  font-weight:bold;
 }
 .formLayout .formHeader{
   font-weight: bold;
@@ -212,23 +210,37 @@ font-weight:bold;
 }
 
 .formLayout .errorColumn{
- width:50px;
+  width:50px;
 }
 .formHeaderTD{
-padding:15px;
+  padding:15px;
 }
-.vcenter {position:absolute; top:0; bottom:0; left:0; right:0;
-			margin:auto; height:240px; width:70%;}
+.vcenter {
+  position:absolute; 
+  top:0; bottom:0; left:0; right:0;
+  margin:auto; 
+  height:240px; width:70%;
+}
+#statusMsg{
+  display:block;
+  position: relative;
+  top: 5px;
+  left: 5px;
+  border-width: 1px;
+  border-style: outset;
+  width: 500px;
+  padding:1px;
+}
 
 </style>
 </head> 
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();"> 
 
 <div id="header" class="MainLayout" style="position:fixed; top: 0; left:0; width:100%;  background-color:white; min-height:25px; height:auto!important;height:25px;">Header 
-| <a href="" id="logOutLink"> Log Out</a>
->
+ <a href="" id="logOutLink"> Log Out</a>
+
 </div>
-<div id="footer" class="MainLayout" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:white;"><span id="statusMsg"></span></div>
+<div id="footer" class="MainLayout" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:#DCDCDC;"><span id="statusMsg" ></span></div>
 
 <div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto'> l
 left nav stuff
@@ -268,7 +280,5 @@ blah blah blah
 </form>  
 </div>
 </div> <!--loginportal--> 
-
-
 </body> 
 </html>
