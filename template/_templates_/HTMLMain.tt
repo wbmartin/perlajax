@@ -9,21 +9,21 @@
 [%INSERT _main.css%]
 </style>
 </head>
-<body >
-[%INSERT _header.html%]
-<div id="container">
-	<div id='leftnav' style='position:absolute;clear:left;display:inline;float:left;width=500px;height=100%;background-color:black;'> blah</div>
-	<div id="content"> 
+<body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();"> 
+[%INSERT _LayoutComponents.html%]
+<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px">
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 
 
-<p>aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa aaa a  a aaaaa aaa </p>
+[%INSERT _Sample.html%]
+[%INSERT _Sample2.html%]
 
 
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
-	</dif>[% # End content%]
-</div> [% # End container%]
-[%INSERT _footer.html %]
+</div><!--End Main Content-->
+
+[%INSERT _LoginPortal.html%]
+
 </body>
 </html>
 [%- END #filter -%]
