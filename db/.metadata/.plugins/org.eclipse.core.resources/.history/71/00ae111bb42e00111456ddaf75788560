@@ -1,9 +1,9 @@
 \o ./log/InitSession.log
--- Function: initsession( text, text, text, text)
+-- Function: initsession( text, text)
 
--- DROP FUNCTION initsession(  text, text, text, text);
+-- DROP FUNCTION initsession( text, text);
 
-CREATE OR REPLACE FUNCTION initsession( checkAuthDummyPlaceHolder text, userid_ text, sessionDummyPlaceHolder text,password_ text)
+CREATE OR REPLACE FUNCTION initsession( userid_ text, password_ text)
   RETURNS security_user AS
 $BODY$
  Declare
@@ -28,6 +28,6 @@ $BODY$
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100;
-ALTER FUNCTION initsession( text, text, text, text) OWNER TO postgres;
+ALTER FUNCTION initsession( text, text) OWNER TO postgres;
 
 

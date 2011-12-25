@@ -21,7 +21,7 @@ Main:{
     	}
    }
   if(!$qaMode){	$DBInfo ={dbname=>"concordc_firstapp", user=>"concordc_fistapp", password=>$prodServerPassword};
-  }else{ 	$DBInfo ={dbname=>"simpledemo", user=>"simpledemo", password=>"simpledemo"}; }
+  }else{ 	$DBInfo ={dbname=>"golfscore", user=>"golfscore", password=>"golfscore"}; }
   &UTL::dbConnect(\$dbh, $DBInfo);
 #++++++++++++++++++++++++++++++++++Begin TESTING+++++++++++++++++++++++++
 #  $params = {user_id =>'simpledemo', password =>'simpledemo', spwfResource=>"security_user", spwfAction=>"authenticate"};
@@ -113,7 +113,7 @@ sub buildSQLColsList{
 sub buildSTH{
   my ($dbh , $params) = @_;
   my ($sql,@spFields,$raDef, @stdFieldNames, $sth, $ndx);
-  @stdFieldNames = ('client_id', 'user_id', 'session_id');
+  @stdFieldNames = ( 'user_id', 'session_id');
   # Load the Resource/Action Hashref and standard field names
   $raDef=&buildResourceActionDef($params->{spwfResource}, $params->{spwfAction});
   if(!$raDef){ return "ResourceAction Not Defined:" .$params->{spwfResource} . "-". $params->{spwfAction} ;}
@@ -135,18 +135,18 @@ sub buildResourceActionDef{
   @stdSelectParamFields= ('where_clause','orderby_clause', 'rowlimit','startrow');
   if ($resource eq "SECURITY_USER" ){
 	if($action eq "AUTHENTICATE") {
-		$rad ={  rf=>['client_id', 'user_id', 'session_id'], pf=>['password'], proc=>"initsession" };
+		$rad ={  rf=>[ 'user_id', 'session_id'], pf=>['password'], proc=>"initsession" };
 	}
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   } elsif($resource eq "LEDGER_ACCOUNT" ){
-	@paramFields = @allFields =('client_id', 'ledger_account_id', 'last_update', 'name', 'account_type', 
+	@paramFields = @allFields =( 'ledger_account_id', 'last_update', 'name', 'account_type', 
 					'ledger_commodity_id', 'parent_account_id', 'code', 'description') ;
 	if($action eq "SELECT"){
 		$rad= { rf=>\@allFields, pf=>\@stdSelectParamFields, proc=>"ledger_account_sq" };
 	}
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   } elsif($resource eq "SYS_CODE" ){
-	@paramFields = @allFields = ('client_id','sys_code_id', 'code_type', 'key', 'value', 'last_update', 'notes');
+	@paramFields = @allFields = ('sys_code_id', 'code_type', 'key', 'value', 'last_update', 'notes');
 	if($action eq "SELECT"){
 		  $rad = { rf=>\@allFields, pf=>\@stdSelectParamFields, proc=>"sys_code_sq"};
 	}elsif($action eq "INSERT"){
