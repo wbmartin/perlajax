@@ -4,15 +4,15 @@
 /*
 -- Security Grants
 GRANT ALL ON TABLE [%+tablename+%] TO GROUP [%+ props.dbgroup -%];
-INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'SELECT_[%+tablename | upper+%]', now(), 'Allows users to select [%+tablename+%]'); 
-INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'INSERT_[%+tablename | upper+%]', now(), 'Allows users to add records to [%+tablename+%]');
-INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'UPDATE_[%+tablename | upper+%]', now(), 'Allows users to update records in [%+tablename+%]');
-INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'DELETE_[%+tablename | upper+%]', now(), 'Allows users to delete records from [%+tablename+%]');
+INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ( 'SELECT_[%+tablename | upper+%]', now(), 'Allows users to select [%+tablename+%]'); 
+INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ('INSERT_[%+tablename | upper+%]', now(), 'Allows users to add records to [%+tablename+%]');
+INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ('UPDATE_[%+tablename | upper+%]', now(), 'Allows users to update records in [%+tablename+%]');
+INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ( 'DELETE_[%+tablename | upper+%]', now(), 'Allows users to delete records from [%+tablename+%]');
 select * from security_privilege where priv_name in ('SELECT_[%+tablename | upper+%]','INSERT_[%+tablename | upper+%]','UPDATE_[%+tablename | upper+%]','DELETE_[%+tablename | upper+%]');
-INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, ?);
-INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, ?);
-INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, ?);
-INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, ?);
+INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
+INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
+INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
+INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
 */
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
@@ -21,25 +21,25 @@ INSERT INTO security_profile_grant(client_id, security_profile_id, security_priv
 [% ", "  IF loop.count()>1; column %]
 [%-END+%]
 [%END #BLOCK %]
--- Function: [%+tablename+%]_sq(text, integer, text, text, text, text, integer, integer)
+-- Function: [%+tablename+%]_sq(text, text, text, text, text, integer, integer)
 
--- DROP FUNCTION [%+tablename+%]_sq(text, integer, text, text, text, text, integer, integer);
+-- DROP FUNCTION [%+tablename+%]_sq(text, text, text, text, text, integer, integer);
 
-CREATE OR REPLACE FUNCTION [%+tablename+%]_sq(alreadyAuth_ text, clientid_ integer, securityuserid_ text, sessionid_ text, whereClause_ text, orderByClause_ text, rowLimit_ integer, rowOffset_ integer)
+CREATE OR REPLACE FUNCTION [%+tablename+%]_sq(alreadyAuth_ text, securityuserid_ text, sessionid_ text, whereClause_ text, orderByClause_ text, rowLimit_ integer, rowOffset_ integer)
   RETURNS SETOF [%+tablename+%] AS
 $BODY$
   Declare
-    additionalWhereClause text;
+    whereClause text;
     orderByClause text;
     offsetStatement text;
     limitStatement text;
   Begin
     if alreadyAuth_ <>'ALREADY_AUTH' then
-    	perform isSessionValid(clientid_, securityuserId_,sessionId_) ;
-    	perform isUserAuthorized(clientid_, securityuserId_, 'SELECT_[%+tablename | upper+%]' );
+    	perform isSessionValid( securityuserId_,sessionId_) ;
+    	perform isUserAuthorized( securityuserId_, 'SELECT_[%+tablename | upper+%]' );
     end if;
 --[%- INCLUDE COMMA_COLUMNS+%]
-    additionalWhereClause ='';
+    whereClause ='';
     orderByClause='';
     offsetStatement ='';
     limitStatement ='';
@@ -50,28 +50,26 @@ $BODY$
 	limitStatement =' limit '||rowLimit_;
     end if;
     if whereClause_ <>'' then
-	additionalWhereClause = trim(leading whereClause_);
-	additionalWhereClause = regexp_replace(additionalWhereClause, '^(where|WHERE)','');
-	additionalWhereClause = trim(leading additionalWhereClause);
-	additionalWhereClause = regexp_replace(additionalWhereClause, '^(and|AND)','');
-	additionalWhereClause = ' and( ' || additionalWhereClause || ')';
+	whereClause = trim(leading whereClause_);
+	whereClause = regexp_replace(whereClause, '^(where|WHERE)','');
+        whereClause = ' where ' || whereClause;
     end if;
     if orderByClause_ <> '' then
 	orderByClause = orderByClause_;
     end if;
 
-    return query execute 'select * from [%+tablename+%] where client_id =' || clientid_ || ' ' 
-	|| additionalWhereClause || orderByclause || offsetStatement || limitStatement;
+    return query execute 'select * from [%+tablename+%] '
+	|| whereClause || orderByclause || offsetStatement || limitStatement;
 
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION [%+tablename+%]_sq(text, integer, text, text, text, text, integer, integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION [%+tablename+%]_sq(text, integer, text, text, text, text, integer, integer) TO GROUP [%+ props.dbgroup -%];
+ALTER FUNCTION [%+tablename+%]_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION [%+tablename+%]_sq(text, text, text, text, text, integer, integer) TO GROUP [%+ props.dbgroup -%];
 
---select * from [%+tablename+%]_sq('ALREADY_AUTH', 1, 'test', 'test', '','',-1,-1);
+--select * from [%+tablename+%]_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -93,11 +91,11 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_sq(text, integer, text, text, text, te
 [%-END #foreach-%]
 [%-END #BLOCK -%]
 
--- Function: [%+tablename+%]_bypk(text, integer, text, text [%INCLUDE BYPK_OMIT_NAMES%])
+-- Function: [%+tablename+%]_bypk(text,  text, text [%INCLUDE BYPK_OMIT_NAMES%])
 
--- DROP FUNCTION [%+tablename+%]_pybk(text, integer, text, text[%INCLUDE BYPK_OMIT_NAMES%]);
+-- DROP FUNCTION [%+tablename+%]_pybk(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%]);
 
-CREATE OR REPLACE FUNCTION [%+tablename+%]_bypk(alreadyAuth_ text, clientid_ integer, securityuserid_ text, sessionid_ text 
+CREATE OR REPLACE FUNCTION [%+tablename+%]_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
 [%- INCLUDE BYPK_SHOW_NAMES -%])
   RETURNS [%+tablename+%] AS
 $BODY$
@@ -105,8 +103,8 @@ $BODY$
     result [%+tablename+%];
   Begin
     if alreadyAuth_ <>'ALREADY_AUTH' then
-    	perform isSessionValid(clientid_, securityuserId_,sessionId_) ;
-    	perform isUserAuthorized(clientid_, securityuserId_, 'SELECT_[%+tablename | upper+%]' );
+    	perform isSessionValid( securityuserId_,sessionId_) ;
+    	perform isUserAuthorized( securityuserId_, 'SELECT_[%+tablename | upper+%]' );
     end if;
 --[%-INCLUDE COMMA_COLUMNS-%] 
    
@@ -118,8 +116,8 @@ $BODY$
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100;
-ALTER FUNCTION [%+tablename+%]_bypk(text, integer, text, text[%INCLUDE BYPK_OMIT_NAMES%]) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION [%+tablename+%]_bypk(text, integer, text, text[%INCLUDE BYPK_OMIT_NAMES%]) TO GROUP [%+ props.dbgroup -%];
+ALTER FUNCTION [%+tablename+%]_bypk(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%]) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION [%+tablename+%]_bypk(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%]) TO GROUP [%+ props.dbgroup -%];
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -138,31 +136,35 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_bypk(text, integer, text, text[%INCLUD
 
 
 
--- Function:  [%+tablename+%]_iq(text, integer, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%])
+-- Function:  [%+tablename+%]_iq(text,  text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%])
 
--- DROP FUNCTION [%+tablename+%]_iq( text, integer, text[%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]);
+-- DROP FUNCTION [%+tablename+%]_iq( text,  text[%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]);
 
-create or replace function [%+tablename+%]_iq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text[%-INCLUDE IQ_FUNC_SHOW_COLUMN_NAMES-%])
+create or replace function [%+tablename+%]_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text[%-INCLUDE IQ_FUNC_SHOW_COLUMN_NAMES-%])
   returns [%+tablename+%] as
 $body$
   declare
     newrow [%+tablename+%];
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
-    	perform issessionvalid(clientid_, securityuserid_,sessionid_) ;
-    	perform isuserauthorized(clientid_, securityuserid_,'INSERT_[%+tablename | upper+%]' );
+    	perform issessionvalid( securityuserid_,sessionid_) ;
+    	perform isuserauthorized( securityuserid_,'INSERT_[%+tablename | upper+%]' );
     end if;
 
 
-    insert into [%+tablename+%](client_id 
+    insert into [%+tablename+%]( 
+[%- matchCount =0 -%]
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
-[%   IF tbl.$tablename.columns.$column.auto_inc != "Y" && column != "client_id" ; ",";column; END -%]
+[%   IF tbl.$tablename.columns.$column.auto_inc != "Y"  && matchCount>0; ","; END -%]
+[%   IF tbl.$tablename.columns.$column.auto_inc != "Y"  ;matchCount = matchCount+1; column; END -%]
 [%-END #FOREACH-%]
 ) 
-	values (clientid_ 
+[%- matchCount =0 -%]
+	values ( 
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
-[%   IF tbl.$tablename.columns.$column.auto_inc == "Y" || column == "client_id" ; -%] 
-[%ELSIF column == "last_update";", now()";ELSE; ",";tbl.$tablename.columns.$column.java_name;"_"; -%]
+[%   IF tbl.$tablename.columns.$column.auto_inc != "Y"  && matchCount>0; ","; END -%]
+[%   IF tbl.$tablename.columns.$column.auto_inc == "Y"  ; -%] 
+[%ELSIF column == "last_update";" now()";matchCount = matchCount+1;ELSE; matchCount = matchCount+1 ;tbl.$tablename.columns.$column.java_name;"_"; -%]
 [%- END #IF-%]
 [%-END #FOREACH - %]) 
 	returning * into newrow;
@@ -171,8 +173,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function [%+tablename+%]_iq(text, integer, text, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]) owner to postgres;
-GRANT EXECUTE ON FUNCTION [%+tablename+%]_iq(text, integer, text, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]) TO GROUP [%+ props.dbgroup -%];
+alter function [%+tablename+%]_iq(text,  text, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]) owner to postgres;
+GRANT EXECUTE ON FUNCTION [%+tablename+%]_iq(text,  text, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]) TO GROUP [%+ props.dbgroup -%];
 
 [%-BLOCK IQ_DUMMY_DATA-%]
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
@@ -188,7 +190,7 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_iq(text, integer, text, text [%-INCLUD
 
 
 
---select * from [%+tablename+%]_iq('ALREADY_AUTH', 1, 'test', 'test' [%INCLUDE IQ_DUMMY_DATA%] );
+--select * from [%+tablename+%]_iq('ALREADY_AUTH', 'test', 'test' [%INCLUDE IQ_DUMMY_DATA%] );
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -208,20 +210,20 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_iq(text, integer, text, text [%-INCLUD
 [%-END #BLOCK -%]
 
 
--- Function:  [%+tablename+%]_uq(text, integer, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%])
+-- Function:  [%+tablename+%]_uq(text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%])
 
--- DROP FUNCTION [%+tablename+%]_uq( text, integer, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]);
+-- DROP FUNCTION [%+tablename+%]_uq( text,  text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]);
 
 
-create or replace function [%+tablename+%]_uq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text [%-INCLUDE UQ_FUNC_SHOW_COLUMN_NAMES-%])
+create or replace function [%+tablename+%]_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text [%-INCLUDE UQ_FUNC_SHOW_COLUMN_NAMES-%])
   returns [%+tablename+%] as
 $body$
   declare
     updatedrow [%+tablename+%];
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
-    	perform issessionvalid(clientid_, securityuserid_,sessionid_) ;
-    	perform isuserauthorized(clientid_, securityuserid_, 'UPDATE_[%+tablename | upper+%]' );
+    	perform issessionvalid( securityuserid_,sessionid_) ;
+    	perform isuserauthorized( securityuserid_, 'UPDATE_[%+tablename | upper+%]' );
     end if;
 	update [%+tablename+%] set
 [%- colCount=0 -%]
@@ -244,8 +246,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function [%+tablename+%]_uq(text, integer, text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]) owner to postgres;
-GRANT EXECUTE ON FUNCTION [%+tablename+%]_uq(text, integer, text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]) TO GROUP [%+ props.dbgroup -%];
+alter function [%+tablename+%]_uq(text,  text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]) owner to postgres;
+GRANT EXECUTE ON FUNCTION [%+tablename+%]_uq(text, text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]) TO GROUP [%+ props.dbgroup -%];
 
 
 [%-BLOCK UQ_DUMMY_DATA-%]
@@ -261,24 +263,24 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_uq(text, integer, text, text [%-INCLUD
 [%- END #IF-%]
 [%-END #FOREACH-%]
 [%-END #DUMMYDATA-%]
---select * from [%+tablename +%]_uq('ALREADY_AUTH', 1, 'test', 'test'[%- INCLUDE UQ_DUMMY_DATA +%]);
+--select * from [%+tablename +%]_uq('ALREADY_AUTH', 'test', 'test'[%- INCLUDE UQ_DUMMY_DATA +%]);
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function:  [%+tablename+%]_dq(text, integer, text [%INCLUDE BYPK_OMIT_NAMES%], timestamp)
+-- Function:  [%+tablename+%]_dq(text, text [%INCLUDE BYPK_OMIT_NAMES%], timestamp)
 
--- DROP FUNCTION [%+tablename+%]_dq( text, integer, text [%INCLUDE BYPK_OMIT_NAMES%], timestamp);
+-- DROP FUNCTION [%+tablename+%]_dq( text,  text [%INCLUDE BYPK_OMIT_NAMES%], timestamp);
 
 
-create or replace function [%+tablename+%]_dq(alreadyauth_ text, clientid_ integer, userid_ text, sessionid_ text [%INCLUDE BYPK_SHOW_NAMES%], lastUpdate_ timestamp  )
+create or replace function [%+tablename+%]_dq(alreadyauth_ text,  userid_ text, sessionid_ text [%INCLUDE BYPK_SHOW_NAMES%], lastUpdate_ timestamp  )
   returns boolean as
 $body$
   declare
     
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
-    	perform issessionvalid(clientid_, userid_,sessionid_) ;
-    	perform isuserauthorized(clientid_,userid_,'DELETE_[%+tablename | upper+%]' );
+    	perform issessionvalid( userid_,sessionid_) ;
+    	perform isuserauthorized(userid_,'DELETE_[%+tablename | upper+%]' );
     end if;
 	delete from [%+tablename+%] where [%-INCLUDE PRKEY_WHERE_CLAUSE-%]  and last_update = lastUpdate_;
 
@@ -292,8 +294,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function [%+tablename+%]_dq(text, integer, text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) owner to postgres;
-GRANT EXECUTE ON FUNCTION [%+tablename+%]_dq(text, integer, text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) TO GROUP [%+ props.dbgroup -%];
+alter function [%+tablename+%]_dq(text, text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) owner to postgres;
+GRANT EXECUTE ON FUNCTION [%+tablename+%]_dq(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) TO GROUP [%+ props.dbgroup -%];
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 

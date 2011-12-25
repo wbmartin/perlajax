@@ -15,7 +15,7 @@ Main:{
   &DBGenUTIL::getProps(\%props, ($path."include.properties"));
   $outputPath = $props{outputPath};
 `rm -rf $outputPath`;
-  &DBGenUTIL::getConnection(\$dbh,'simpledemo','simpledemo');
+  &DBGenUTIL::getConnection(\$dbh,'golfscore','golfscore');
   &DBGenUTIL::getTables($dbh,\%tables);
   $var = {tbl=>\%tables,props=>\%props, toCC=>\&DBGenUTIL::toCC, ucfirst =>\&DBGenUTIL::ucf, lcfirst =>\&DBGenUTIL::lcf };
   &DBGenUTIL::grabTemplates($path, \@templates);

@@ -3,7 +3,7 @@ package DBGenUTIL;
 use strict;
 sub getConnection{
 my($dbh_, $username_, $password_) = @_; 
-  ${$dbh_} = DBI->connect('DBI:Pg:dbname=simpledemo;host=127.0.0.1',$username_, $password_);
+  ${$dbh_} = DBI->connect('DBI:Pg:dbname=golfscore;host=127.0.0.1',$username_, $password_);
   if (${$dbh_}) {
    print "DB Connected Successfully\n";
 
@@ -165,8 +165,12 @@ sub getJavaType($){
     	"text"=>"String",
 	"integer" =>"int",
 	"timestamp without time zone" =>"Date",
+	"timestamp with time zone" =>"Date",
 	"character"=>"String",
-	"character varying"=>"String"
+	"character varying"=>"String",
+	"date"=>"java.util.Date"
+	,"double precision"=>"Double"
+	,"real"=>"Double"
 
   };
 $out =  $JavaType->{$in};
@@ -182,8 +186,12 @@ sub getJavaSQLType($){
     	"text"=>"String",
 	"integer" =>"Int",
 	"timestamp without time zone" =>"Timestamp",
+	"timestamp with time zone" =>"Timestamp",
 	"character"=>"String",
-	"character varying"=>"String"
+	"character varying"=>"String",
+	"date"=>"date"
+	,"double precision"=>"Double"
+	,"real"=>"Double"
 
   };
 $out =  $JavaType->{$in};
@@ -200,8 +208,13 @@ sub getBoxedType($){
     	"text"=>"String",
 	"integer" =>"Integer",
 	"timestamp without time zone" =>"Date",
+	"timestamp with time zone" =>"Date",
 	"character"=>"String",
-	"character varying"=>"String"
+	"character varying"=>"String",
+	"date"=>"java.util.Date"
+	,"double precision"=>"Double"
+	,"real"=>"Double"
+
 
   };
 $out =  $BoxedType->{$in};
@@ -216,8 +229,12 @@ sub getSmartFieldType($){
     	"text"=>"Text",
 	"integer" =>"Integer",
 	"timestamp without time zone" =>"Date",
+	"timestamp with time zone" =>"Date",
 	"character"=>"Text",
-	"character varying"=>"Text"
+	"character varying"=>"Text",
+	"date"=>"Date"
+	,"double precision"=>"Double"
+	,"real"=>"Double"
 
   };
 $out =  $SmartType->{$in};

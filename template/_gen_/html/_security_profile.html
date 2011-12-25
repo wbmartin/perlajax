@@ -1,7 +1,7 @@
 \o ./log/CRUD_security_profile.log
 /*
 -- Security Grants
-GRANT ALL ON TABLE security_profile TO GROUP simpledemo;
+GRANT ALL ON TABLE security_profile TO GROUP golfscore;
 INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'SELECT_SECURITY_PROFILE', now(), 'Allows users to select security_profile'); 
 INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'INSERT_SECURITY_PROFILE', now(), 'Allows users to add records to security_profile');
 INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'UPDATE_SECURITY_PROFILE', now(), 'Allows users to update records in security_profile');
@@ -32,7 +32,7 @@ $BODY$
     	perform isSessionValid(clientid_, securityuserId_,sessionId_) ;
     	perform isUserAuthorized(clientid_, securityuserId_, 'SELECT_SECURITY_PROFILE' );
     end if;
---client_id, security_profile_id, profile_name, last_update
+--security_profile_id, profile_name, last_update
 
     additionalWhereClause ='';
     orderByClause='';
@@ -64,7 +64,7 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION security_profile_sq(text, integer, text, text, text, text, integer, integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION security_profile_sq(text, integer, text, text, text, text, integer, integer) TO GROUP simpledemo;
+GRANT EXECUTE ON FUNCTION security_profile_sq(text, integer, text, text, text, text, integer, integer) TO GROUP golfscore;
 
 --select * from security_profile_sq('ALREADY_AUTH', 1, 'test', 'test', '','',-1,-1);
 
@@ -86,18 +86,18 @@ $BODY$
     	perform isSessionValid(clientid_, securityuserId_,sessionId_) ;
     	perform isUserAuthorized(clientid_, securityuserId_, 'SELECT_SECURITY_PROFILE' );
     end if;
---client_id, security_profile_id, profile_name, last_update
+--security_profile_id, profile_name, last_update
    
 
 
-     select * into result from security_profile where client_id=clientId_ and security_profile_id=securityProfileId_;
+     select * into result from security_profile where security_profile_id=securityProfileId_;
      return result;
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100;
 ALTER FUNCTION security_profile_bypk(text, integer, text, text,integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION security_profile_bypk(text, integer, text, text,integer) TO GROUP simpledemo;
+GRANT EXECUTE ON FUNCTION security_profile_bypk(text, integer, text, text,integer) TO GROUP golfscore;
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -129,7 +129,7 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 alter function security_profile_iq(text, integer, text, text ,text) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_profile_iq(text, integer, text, text ,text) TO GROUP simpledemo;
+GRANT EXECUTE ON FUNCTION security_profile_iq(text, integer, text, text ,text) TO GROUP golfscore;
 
 
 
@@ -154,7 +154,7 @@ $body$
     	perform issessionvalid(clientid_, securityuserid_,sessionid_) ;
     	perform isuserauthorized(clientid_, securityuserid_, 'UPDATE_SECURITY_PROFILE' );
     end if;
-	update security_profile set profile_name= profileName_ ,  last_update = now() 	where client_id=clientId_ and security_profile_id=securityProfileId_   and   last_update = lastUpdate_
+	update security_profile set profile_name= profileName_ ,  last_update = now() 	where security_profile_id=securityProfileId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then
@@ -168,7 +168,7 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 alter function security_profile_uq(text, integer, text, text ,integer,text,timestamp) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_profile_uq(text, integer, text, text ,integer,text,timestamp) TO GROUP simpledemo;
+GRANT EXECUTE ON FUNCTION security_profile_uq(text, integer, text, text ,integer,text,timestamp) TO GROUP golfscore;
 
 --select * from security_profile_uq('ALREADY_AUTH', 1, 'test', 'test' <security_profile_id> <last_update>, 'text');
 
@@ -189,7 +189,7 @@ $body$
     	perform issessionvalid(clientid_, userid_,sessionid_) ;
     	perform isuserauthorized(clientid_,userid_,'DELETE_SECURITY_PROFILE' );
     end if;
-	delete from security_profile where client_id=clientId_ and security_profile_id=securityProfileId_  and last_update = lastUpdate_;
+	delete from security_profile where security_profile_id=securityProfileId_  and last_update = lastUpdate_;
 
 	if found then
 	  return true;
@@ -202,6 +202,6 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 alter function security_profile_dq(text, integer, text, text,integer, timestamp) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_profile_dq(text, integer, text, text,integer, timestamp) TO GROUP simpledemo;
+GRANT EXECUTE ON FUNCTION security_profile_dq(text, integer, text, text,integer, timestamp) TO GROUP golfscore;
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

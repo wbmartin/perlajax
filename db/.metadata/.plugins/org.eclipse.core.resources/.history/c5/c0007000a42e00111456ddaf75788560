@@ -1,0 +1,10 @@
+Create or replace View vw_profile_grant as
+SELECT  sp.client_id, sp.security_profile_id, sp.profile_name, spriv.security_privilege_id, spriv.priv_name, spg.last_update
+   FROM  security_profile sp 
+   LEFT JOIN security_profile_grant spg ON sp.client_id = spg.client_id AND sp.security_profile_id = spg.security_profile_id
+   LEFT JOIN security_privilege spriv ON spg.client_id = spriv.client_id AND spg.security_privilege_id = spriv.security_privilege_id;
+
+ALTER TABLE vw_profile_grant OWNER TO postgres;
+GRANT ALL ON TABLE vw_profile_grant TO postgres;
+GRANT ALL ON TABLE vw_profile_grant TO simpledemo;
+GRANT ALL ON TABLE vw_profile_grant TO simpledemo_grp;

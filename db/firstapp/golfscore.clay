@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<clay-model clay-version="2.0.1">
+<database-model author="" begin-script="" end-script="" id="1acc1c2:13472d2640c:-7fff" name="firstapp" sql-dialect-id="jp.azzurri.clay.dialect.Postgre_7_3_Dialect" version="1.0">
+<schema-list>
+<schema id="1acc1c2:13472d2640c:-7ffc" name="public">
+<table-list>
+<table id="1acc1c2:13472d2640c:-7ffe" name="golfer">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1acc1c2:13472d2640c:-7ff7" mandatory="true" name="golfer_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="1acc1c2:13472d2640c:-7ff6" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="1acc1c2:13472d2640c:-7ff5" mandatory="false" name="name">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="1acc1c2:13472d2640c:-7ffd" name="PK_GOLFER">
+<primary-key-column name="golfer_id"/>
+</primary-key>
+</table>
+<table id="1acc1c2:13472d2640c:-7ff3" name="golf_score">
+<column-list>
+<column auto-increment="false" column-size="10" decimal-digits="0" default-value="" id="1acc1c2:13472d2640c:-7fe7" mandatory="true" name="golf_score_id">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="1acc1c2:13472d2640c:-7fe8" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1acc1c2:13472d2640c:-7fe9" mandatory="false" name="golf_score">
+<data-type name="INT4" selected-variant-pattern="INT4"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1acc1c2:13472d2640c:-7fe6" mandatory="false" name="golfer_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+</column-list>
+<primary-key id="1acc1c2:13472d2640c:-7ff2" name="PK_GOLF_SCORE">
+<primary-key-column name="golf_score_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="1acc1c2:13472d2640c:-7f66" name="FK_golf_score_1" on-delete="RESTRICT" on-update="RESTRICT" referenced-key="PK_GOLFER" referenced-table="golfer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="golfer_id" referenced-key-column-name="golfer_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+</table-list>
+</schema>
+</schema-list>
+</database-model>
+<diagram>
+<table-figure height="130" refid="1acc1c2:13472d2640c:-7ffe" width="255" x="86" y="106"/>
+<table-figure height="131" refid="1acc1c2:13472d2640c:-7ff3" width="213" x="564" y="97"/>
+</diagram>
+</clay-model>

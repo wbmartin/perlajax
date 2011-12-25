@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;firstapp/security/vw_profile_grant&apos; to &apos;vw_profile_grant.sql&apos;" description="Rename resource &apos;vw_profile_grant&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="security/vw_profile_grant" name="vw_profile_grant.sql" stamp="1324781780055" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;firstapp/firstapp.clay&apos; to &apos;golfscore.clay&apos;" description="Rename resource &apos;firstapp.clay&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="firstapp.clay" name="golfscore.clay" stamp="1324782085063" updateReferences="true"/>
+</session>

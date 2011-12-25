@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<clay-model clay-version="2.0.1">
+<database-model author="" begin-script="" end-script="" id="1426fec:124e0dd7196:-8000" name="security" sql-dialect-id="jp.azzurri.clay.dialect.Postgre_7_3_Dialect" version="1.0">
+<schema-list>
+<schema id="1426fec:124e0dd7196:-7ffd" name="public">
+<table-list>
+<table alias="client" id="1426fec:124e0dd7196:-7fff" name="client">
+<column-list>
+<column alias="Client Identifier" auto-increment="true" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7ffa" mandatory="true" name="client_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column alias="Client Name" auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7ff7" mandatory="false" name="client_name">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+</column-list>
+<primary-key id="1426fec:124e0dd7196:-7ffe" name="PK_CLIENT">
+<primary-key-column name="client_id"/>
+</primary-key>
+</table>
+<table id="1426fec:124e0dd7196:-7ff6" name="security_privilege">
+<column-list>
+<column alias="Client Identifier" auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7ff2" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7ff1" mandatory="true" name="security_privilege_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7ff0" mandatory="false" name="priv_name">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7fef" mandatory="false" name="description">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7fee" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p)"/>
+</column>
+</column-list>
+<primary-key id="1426fec:124e0dd7196:-7ff5" name="PK_SECURITY_PRIVILEGE">
+<primary-key-column name="client_id"/>
+<primary-key-column name="security_privilege_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="1426fec:124e0dd7196:-7f67" name="fk_securityprivilege_client" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CLIENT" referenced-table="client" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="1426fec:124e0dd7196:-7f41" name="security_profile">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7f3d" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7f3c" mandatory="true" name="security_profile_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7f3b" mandatory="false" name="profile_name">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7f38" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p)"/>
+</column>
+</column-list>
+<primary-key id="1426fec:124e0dd7196:-7f40" name="PK_SECURITY_PROFILE">
+<primary-key-column name="client_id"/>
+<primary-key-column name="security_profile_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="1426fec:124e0dd7196:-7f26" name="fk_secuirtyprofile_client" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CLIENT" referenced-table="client" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="1426fec:124e0dd7196:-7ee7" name="security_profile_grant">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7ee3" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7edd" mandatory="true" name="security_privilege_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7e00" mandatory="true" name="security_profile_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="12a3cfa:1309f980bc4:-7fe4" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITH TIME ZONE"/>
+</column>
+</column-list>
+<primary-key id="1426fec:124e0dd7196:-7ee6" name="PK_SECURITY_PROFILE_GRANT">
+<primary-key-column name="client_id"/>
+<primary-key-column name="security_privilege_id"/>
+<primary-key-column name="security_profile_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="1426fec:124e0dd7196:-7e03" name="FK_security_profile_grant_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_SECURITY_PROFILE" referenced-table="security_profile" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="security_profile_id" referenced-key-column-name="security_profile_id"/>
+</foreign-key>
+<foreign-key id="1426fec:124e0dd7196:-7ea3" name="fk_securityprofilegrant_securityprivilege" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_SECURITY_PRIVILEGE" referenced-table="security_privilege" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="security_privilege_id" referenced-key-column-name="security_privilege_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="1426fec:124e0dd7196:-7dbf" name="security_user">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7dbb" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7dba" mandatory="true" name="user_id">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7db1" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7db9" mandatory="false" name="password_enc">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1cc1ef4:129e0187362:-7f8f" mandatory="true" name="security_profile_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7db8" mandatory="false" name="session_id">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7db3" mandatory="false" name="session_expire_dt">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="1426fec:124e0dd7196:-7db2" mandatory="false" name="active_yn">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="1426fec:124e0dd7196:-7dbe" name="PK_SECURITY_USER">
+<primary-key-column name="client_id"/>
+<primary-key-column name="user_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="1426fec:124e0dd7196:-7d99" name="fk_securityuser_client" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CLIENT" referenced-table="client" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+<foreign-key id="1cc1ef4:129e0187362:-7f36" name="FK_security_user_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_SECURITY_PROFILE" referenced-table="security_profile" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="security_profile_id" referenced-key-column-name="security_profile_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="6b2b55:13189ec16cb:-7fb7" name="user_confidential">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7fb5" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7fb4" mandatory="true" name="user_id">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7fae" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7faa" mandatory="false" name="home_address1">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7fa9" mandatory="false" name="home_address2">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7fa8" mandatory="false" name="home_city">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="2" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7fa7" mandatory="false" name="home_state">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="10" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7fa6" mandatory="false" name="home_zip">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="14" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f81" mandatory="false" name="home_phone">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="14" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f9b" mandatory="false" name="personal_cell">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f9a" mandatory="false" name="emergency_contact_name1">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="14" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f99" mandatory="false" name="emergency_contact_phone1">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f98" mandatory="false" name="emergency_contact_name2">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="14" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f97" mandatory="false" name="emergency_contact_phone2">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f96" mandatory="false" name="start_date">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f95" mandatory="false" name="termination_date">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f89" mandatory="false" name="exempt_yn">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f86" mandatory="false" name="annual_salary">
+<data-type name="FLOAT4" selected-variant-pattern="FLOAT4"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f85" mandatory="false" name="hourly_bill_rate">
+<data-type name="FLOAT4" selected-variant-pattern="FLOAT4"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f84" mandatory="false" name="hourly_pay_rate">
+<data-type name="FLOAT4" selected-variant-pattern="FLOAT4"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6b2b55:13189ec16cb:-7f8c" mandatory="false" name="comment">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fe2" mandatory="false" name="ssn_enc">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fdf" mandatory="false" name="birth_date">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+</column-list>
+<primary-key id="6b2b55:13189ec16cb:-7f94" name="PK_USER_CONFIDENTIAL">
+<primary-key-column name="client_id"/>
+<primary-key-column name="user_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="6b2b55:13189ec16cb:-7e9b" name="FK_user_confidential_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_SECURITY_USER" referenced-table="security_user" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="user_id" referenced-key-column-name="user_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="c9e715:1319e99dd2a:-7fc6" name="user_public">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fc4" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fc3" mandatory="true" name="user_id">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fc2" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fbc" mandatory="false" name="last_name">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fbb" mandatory="false" name="first_name">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fba" mandatory="false" name="middle_name">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fb9" mandatory="false" name="office_address1">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fb8" mandatory="false" name="office_address2">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fb7" mandatory="false" name="office_city">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="2" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fb6" mandatory="false" name="office_state">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="10" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fb5" mandatory="false" name="office_zip">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fb4" mandatory="false" name="title">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fb3" mandatory="false" name="suffix">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="14" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fb2" mandatory="false" name="office_phone">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="14" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fb1" mandatory="false" name="fax">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="14" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7fb0" mandatory="false" name="office_cell">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="c9e715:1319e99dd2a:-7faf" mandatory="false" name="comment">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+</column-list>
+<primary-key id="c9e715:1319e99dd2a:-7fae" name="PK_USER_PUBLIC">
+<primary-key-column name="client_id"/>
+<primary-key-column name="user_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="c9e715:1319e99dd2a:-7f8b" name="FK_user_public_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_SECURITY_USER" referenced-table="security_user" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="user_id" referenced-key-column-name="user_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+</table-list>
+</schema>
+</schema-list>
+</database-model>
+<diagram>
+<table-figure refid="1426fec:124e0dd7196:-7fff" x="6" y="8"/>
+<table-figure refid="1426fec:124e0dd7196:-7ff6" x="326" y="16"/>
+<table-figure refid="1426fec:124e0dd7196:-7f41" x="219" y="143"/>
+<table-figure refid="1426fec:124e0dd7196:-7ee7" x="647" y="234"/>
+<table-figure refid="1426fec:124e0dd7196:-7dbf" x="26" y="338"/>
+<table-figure refid="6b2b55:13189ec16cb:-7fb7" x="470" y="335"/>
+<table-figure refid="c9e715:1319e99dd2a:-7fc6" x="99" y="578"/>
+</diagram>
+</clay-model>
