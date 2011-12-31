@@ -5,6 +5,7 @@ $(document).ready( function(){
 	$("#aboutGolfScore").click(function(){setMainContentPane(showAboutPane);});
 	$("a#SummaryPage").click(function(){setMainContentPane(showGolfScoreSummary);});
 	$("a#golfScoreEntry").click(function(){setMainContentPane(showGolfScoreCreate);});
+	$("a#logViewer").click(function(){setMainContentPane(showClientLogViewer);});
 });
 
 //Layout Functions
@@ -53,6 +54,7 @@ function setMainContentPane(showFunction){
 			<li><a id="">Golfers</a></li>
 			<li><a id="golfScoreEntry">Scores</a></li>
 			<li><a id="aboutGolfScore">About</a></li>
+			<li><a id="logViewer">Log</a></li>
 			<li id="logout"><a >Logout</a></li>			
 		</ul>	</div>[%#End Top Menu Bar%]
 	</div [%# end header%]></div [%# end header-content%]>

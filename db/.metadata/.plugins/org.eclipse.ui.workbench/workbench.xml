@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbench progressCount="15" version="2.0">
+<workbenchAdvisor/>
+<window height="768" maximized="true" width="1024" x="0" y="24">
+<fastViewData fastViewLocation="1024"/>
+<perspectiveBar>
+<itemSize x="160"/>
+</perspectiveBar>
+<coolbarLayout>
+<coolItem id="group.file" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="132" y="30"/>
+<coolItem id="com.google.gdt.eclipse.suite.GDTPulldownToolbar" itemType="typeToolBarContribution" x="48" y="30"/>
+<coolItem id="additions" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="48" y="30"/>
+<coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="48" y="30"/>
+<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="68" y="30"/>
+<coolItem id="org.eclipse.wst.xml.ui.perspective.NewFileToolBar" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="org.eclipse.wst.xml.ui.design.DesignToolBar" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="group.nav" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="184" y="30"/>
+<coolItem id="group.editor" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typePlaceholder" x="-1" y="-1"/>
+<coolItem id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="jp.azzurri.clay.ui.edit.DatabaseModelEditor" itemType="typeToolBarContribution" x="651" y="30"/>
+<coolItem id="group.help" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
+</coolbarLayout>
+<page aggregateWorkingSetId="Aggregate for window 1324776046238" focus="true" label="Workspace - Resource">
+<editors>
+<editorArea activeWorkbook="DefaultEditorWorkbook">
+<info part="DefaultEditorWorkbook">
+<folder appearance="1" expanded="2">
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+<part id="1"/>
+<part id="2"/>
+<part id="3"/>
+<part id="4"/>
+<part id="5"/>
+<part id="6"/>
+<part id="7"/>
+<part id="8"/>
+</presentation>
+</folder>
+</info>
+</editorArea>
+<editor id="jp.azzurri.clay.ui.edit.DatabaseModelEditor" name="security.clay" partName="security.clay" path="/home/wbmartin/www/firstapp/db/firstapp/security/security.clay" title="security.clay" tooltip="firstapp/security/security.clay" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/security/security.clay"/>
+</editor>
+<editor id="jp.azzurri.clay.ui.edit.DatabaseModelEditor" name="golfscore.clay" partName="golfscore.clay" path="/home/wbmartin/www/firstapp/db/firstapp/golfscore.clay" title="golfscore.clay" tooltip="firstapp/golfscore.clay" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/golfscore.clay"/>
+</editor>
+<editor activePart="true" focus="true" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="CRUD_golf_score.sql" partName="CRUD_golf_score.sql" path="/home/wbmartin/www/firstapp/db/firstapp/CRUD_golf_score.sql" title="CRUD_golf_score.sql" tooltip="firstapp/CRUD_golf_score.sql" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/CRUD_golf_score.sql"/>
+</editor>
+<editor id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="firstapp.sql" partName="firstapp.sql" path="/home/wbmartin/www/firstapp/db/firstapp/security/firstapp.sql" title="firstapp.sql" tooltip="firstapp/security/firstapp.sql" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/security/firstapp.sql"/>
+</editor>
+<editor id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="CRUD_golfer.sql" partName="CRUD_golfer.sql" path="/home/wbmartin/www/firstapp/db/firstapp/CRUD_golfer.sql" title="CRUD_golfer.sql" tooltip="firstapp/CRUD_golfer.sql" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/CRUD_golfer.sql"/>
+</editor>
+<editor id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="BusinessLogic.sql" partName="BusinessLogic.sql" path="/home/wbmartin/www/firstapp/db/firstapp/BusinessLogic.sql" title="BusinessLogic.sql" tooltip="firstapp/BusinessLogic.sql" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/BusinessLogic.sql"/>
+</editor>
+<editor id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="create.sql" partName="create.sql" path="/home/wbmartin/www/firstapp/db/firstapp/create.sql" title="create.sql" tooltip="firstapp/create.sql" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/create.sql"/>
+</editor>
+<editor id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="initialSetup.sql" partName="initialSetup.sql" path="/home/wbmartin/www/firstapp/db/firstapp/initialSetup.sql" title="initialSetup.sql" tooltip="firstapp/initialSetup.sql" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/initialSetup.sql"/>
+</editor>
+</editors>
+<views>
+<view id="org.eclipse.ui.navigator.ProjectExplorer" partName="Project Explorer">
+<viewState CommonNavigator.LINKING_ENABLED="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0"/>
+</view>
+<view id="net.sourceforge.sqlexplorer.connections.ConnectionsView" partName="Connections">
+<viewState/>
+</view>
+<view id="org.eclipse.ui.views.ProblemView" partName="Problems">
+<viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
+<expanded>
+<category IMemento.internal.id="Warnings (1 item)"/>
+<category IMemento.internal.id="Warnings"/>
+</expanded>
+<columnWidths org.eclipse.ui.ide.locationField="105" org.eclipse.ui.ide.markerType="259" org.eclipse.ui.ide.pathField="140" org.eclipse.ui.ide.resourceField="105" org.eclipse.ui.ide.severityAndDescriptionField="350"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.pathField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.locationField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.markerType"/>
+</viewState>
+</view>
+<view id="org.eclipse.ui.views.TaskList" partName="Tasks">
+<viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.completionField" categoryGroup="none" markerContentGenerator="org.eclipse.ui.ide.tasksGenerator" partName="Tasks">
+<columnWidths org.eclipse.ui.ide.completionField="40" org.eclipse.ui.ide.descriptionField="350" org.eclipse.ui.ide.locationField="105" org.eclipse.ui.ide.markerType="184" org.eclipse.ui.ide.pathField="140" org.eclipse.ui.ide.priorityField="35" org.eclipse.ui.ide.resourceField="105"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.completionField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.priorityField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.descriptionField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.pathField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.locationField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.markerType"/>
+</viewState>
+</view>
+<view id="org.eclipse.ui.views.ContentOutline" partName="Outline">
+<viewState/>
+</view>
+<view id="net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView" partName="Database Structure">
+<viewState/>
+</view>
+</views>
+<perspectives activePart="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" activePerspective="org.eclipse.ui.resourcePerspective">
+<perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
+<descriptor class="org.eclipse.ui.internal.ide.application.ResourcePerspective" id="org.eclipse.ui.resourcePerspective" label="Resource"/>
+<alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.annotationNavigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"/>
+<alwaysOnActionSet id="org.eclipse.ui.externaltools.ExternalToolsSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.openFiles"/>
+<alwaysOnActionSet id="net.sourceforge.sqlexplorer.about"/>
+<alwaysOnActionSet id="com.google.gdt.eclipse.core.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.NavigateActionSet"/>
+<show_view_action id="org.eclipse.ui.navigator.ProjectExplorer"/>
+<show_view_action id="org.eclipse.ui.views.BookmarkView"/>
+<show_view_action id="org.eclipse.ui.views.ContentOutline"/>
+<show_view_action id="org.eclipse.ui.views.PropertySheet"/>
+<show_view_action id="org.eclipse.ui.views.ProblemView"/>
+<show_view_action id="org.eclipse.ui.views.ProgressView"/>
+<show_view_action id="org.eclipse.ui.views.TaskList"/>
+<show_view_action id="org.eclipse.ant.ui.views.AntView"/>
+<show_view_action id="org.eclipse.pde.runtime.LogView"/>
+<new_wizard_action id="org.eclipse.ui.wizards.new.folder"/>
+<new_wizard_action id="org.eclipse.ui.wizards.new.file"/>
+<new_wizard_action id="org.eclipse.ui.editors.wizards.UntitledTextFileWizard"/>
+<perspective_action id="org.eclipse.jdt.ui.JavaPerspective"/>
+<perspective_action id="org.eclipse.jdt.ui.JavaBrowsingPerspective"/>
+<perspective_action id="org.eclipse.team.cvs.ui.cvsPerspective"/>
+<perspective_action id="org.eclipse.team.ui.TeamSynchronizingPerspective"/>
+<perspective_action id="org.eclipse.wst.jsdt.ui.JavaPerspective"/>
+<perspective_action id="org.eclipse.wst.xml.ui.perspective"/>
+<perspective_action id="org.tigris.subversion.subclipse.ui.svnPerspective"/>
+<hide_toolbar_item_id id="org.eclipse.jdt.ui.actions.OpenProjectWizard"/>
+<hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
+<view id="org.eclipse.ui.navigator.ProjectExplorer"/>
+<view id="org.eclipse.ui.views.ContentOutline"/>
+<view id="org.eclipse.ui.views.TaskList"/>
+<view id="org.eclipse.ui.views.ProblemView"/>
+<view id="net.sourceforge.sqlexplorer.connections.ConnectionsView"/>
+<view id="net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView"/>
+<fastViewBars/>
+<layout>
+<mainWindow>
+<info folder="true" part="topLeft">
+<folder activePageID="org.eclipse.ui.navigator.ProjectExplorer" appearance="2" expanded="2">
+<page content="org.eclipse.ui.navigator.ProjectExplorer" label="Project Explorer"/>
+<page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
+<page content="org.eclipse.team.ccvs.ui.RepositoriesView" label="LabelNotFound"/>
+<page content="org.tigris.subversion.subclipse.ui.repository.RepositoriesView" label="LabelNotFound"/>
+<page content="org.tigris.subversion.subclipse.ui.annotations.AnnotateView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@93886b" ratio="0.7495049" ratioLeft="757" ratioRight="253" relationship="2" relative="topLeft">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
+<page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+<info part="org.eclipse.gef.ui.palette_view" ratio="0.23955871" ratioLeft="304" ratioRight="965" relationship="2" relative="topLeft"/>
+<info folder="true" part="bottomRight" ratio="0.7670623" ratioLeft="517" ratioRight="157" relationship="4" relative="org.eclipse.gef.ui.palette_view">
+<folder activePageID="org.eclipse.ui.views.ProblemView" appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
+<page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
+<page content="net.sourceforge.sqlexplorer.connections.ConnectionsView" label="Connections"/>
+<page content="net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView" label="Database Structure"/>
+<page content="org.eclipse.team.ui.GenericHistoryView" label="LabelNotFound"/>
+<page content="org.tigris.subversion.subclipse.ui.history.HistoryView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+<part id="1"/>
+<part id="2"/>
+<part id="3"/>
+</presentation>
+</folder>
+</info>
+<info part="org.eclipse.ui.editorss" ratio="0.1590909" ratioLeft="119" ratioRight="629" relationship="2" relative="org.eclipse.gef.ui.palette_view"/>
+<info folder="true" part="bottomLeft" ratio="0.49921995" ratioLeft="320" ratioRight="321" relationship="4" relative="topLeft">
+<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
+<page content="org.eclipse.ant.ui.views.AntView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+</mainWindow>
+</layout>
+</perspective>
+</perspectives>
+<workingSets/>
+<navigationHistory>
+<editors>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="jp.azzurri.clay.ui.edit.DatabaseModelEditor" path="/firstapp/security/security.clay"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/security/InitSession.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="jp.azzurri.clay.ui.edit.DatabaseModelEditor" path="/firstapp/golfscore.clay"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/security/firstapp.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/security/security.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/CRUD_golfer.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/initialSetup.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/CRUD_golf_score.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/security/create.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/create.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/BusinessLogic.sql"/>
+</editors>
+<item historyLabel="firstapp.sql" index="3"/>
+<item historyLabel="security.clay" index="0"/>
+<item historyLabel="golfscore.clay" index="2"/>
+<item historyLabel="firstapp.sql" index="3">
+<position/>
+</item>
+<item historyLabel="firstapp.sql" index="3"/>
+<item historyLabel="golfscore.clay" index="2"/>
+<item historyLabel="security.clay" index="0"/>
+<item historyLabel="security.sql" index="4"/>
+<item historyLabel="CRUD_golfer.sql" index="5"/>
+<item historyLabel="initialSetup.sql" index="6"/>
+<item historyLabel="CRUD_golfer.sql" index="5"/>
+<item historyLabel="initialSetup.sql" index="6"/>
+<item historyLabel="InitSession.sql" index="1"/>
+<item historyLabel="initialSetup.sql" index="6"/>
+<item historyLabel="InitSession.sql" index="1"/>
+<item historyLabel="initialSetup.sql" index="6"/>
+<item historyLabel="CRUD_golfer.sql" index="5"/>
+<item historyLabel="security.sql" index="4"/>
+<item historyLabel="security.clay" index="0"/>
+<item historyLabel="CRUD_golf_score.sql" index="7"/>
+<item historyLabel="golfscore.clay" index="2"/>
+<item historyLabel="firstapp.sql" index="3"/>
+<item historyLabel="CRUD_golf_score.sql" index="7"/>
+<item historyLabel="CRUD_golfer.sql" index="5"/>
+<item historyLabel="firstapp.sql" index="3"/>
+<item historyLabel="CRUD_golf_score.sql" index="7"/>
+<item historyLabel="create.sql" index="8"/>
+<item historyLabel="create.sql" index="9">
+<position info="not_deleted" x="296" y="0"/>
+</item>
+<item historyLabel="BusinessLogic.sql" index="10"/>
+<item historyLabel="CRUD_golfer.sql" index="5"/>
+<item historyLabel="BusinessLogic.sql" index="10"/>
+<item historyLabel="CRUD_golfer.sql" index="5"/>
+<item historyLabel="BusinessLogic.sql" index="10"/>
+<item historyLabel="CRUD_golfer.sql" index="5"/>
+<item historyLabel="BusinessLogic.sql" index="10"/>
+<item historyLabel="create.sql" index="8"/>
+<item historyLabel="CRUD_golf_score.sql" index="7"/>
+<item historyLabel="BusinessLogic.sql" index="10"/>
+<item historyLabel="create.sql" index="9"/>
+<item historyLabel="BusinessLogic.sql" index="10"/>
+<item historyLabel="create.sql" index="9"/>
+<item historyLabel="initialSetup.sql" index="6"/>
+<item historyLabel="create.sql" index="9"/>
+<item historyLabel="BusinessLogic.sql" index="10"/>
+<item historyLabel="create.sql" index="8"/>
+<item historyLabel="initialSetup.sql" index="6"/>
+<item historyLabel="create.sql" index="9"/>
+<item historyLabel="BusinessLogic.sql" index="10"/>
+<item historyLabel="create.sql" index="8"/>
+<item active="true" historyLabel="CRUD_golf_score.sql" index="7"/>
+</navigationHistory>
+<input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
+</page>
+<workbenchWindowAdvisor/>
+<actionBarAdvisor/>
+<trimLayout>
+<trimArea IMemento.internal.id="16384">
+<trimItem IMemento.internal.id="topLeft"/>
+<trimItem IMemento.internal.id="bottomLeft"/>
+</trimArea>
+<trimArea IMemento.internal.id="128">
+<trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar"/>
+</trimArea>
+<trimArea IMemento.internal.id="1024">
+<trimItem IMemento.internal.id="com.google.gdt.eclipse.login.status.trim"/>
+<trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar"/>
+<trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
+<trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
+<trimItem IMemento.internal.id="org.eclipse.ui.internal.intro.impl.presentations.IntroLaunchBar"/>
+<trimItem IMemento.internal.id="bottomRight"/>
+</trimArea>
+</trimLayout>
+</window>
+<mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="initialSetup.sql" tooltip="firstapp/initialSetup.sql">
+<persistable path="/firstapp/initialSetup.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="create.sql" tooltip="firstapp/create.sql">
+<persistable path="/firstapp/create.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="BusinessLogic.sql" tooltip="firstapp/BusinessLogic.sql">
+<persistable path="/firstapp/BusinessLogic.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="create.sql" tooltip="firstapp/security/create.sql">
+<persistable path="/firstapp/security/create.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="CRUD_golfer.sql" tooltip="firstapp/CRUD_golfer.sql">
+<persistable path="/firstapp/CRUD_golfer.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="firstapp.sql" tooltip="firstapp/security/firstapp.sql">
+<persistable path="/firstapp/security/firstapp.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="CRUD_golf_score.sql" tooltip="firstapp/CRUD_golf_score.sql">
+<persistable path="/firstapp/CRUD_golf_score.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="InitSession.sql" tooltip="firstapp/security/InitSession.sql">
+<persistable path="/firstapp/security/InitSession.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="security.sql" tooltip="firstapp/security/security.sql">
+<persistable path="/firstapp/security/security.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="jp.azzurri.clay.ui.edit.DatabaseModelEditor" name="golfscore.clay" tooltip="firstapp/golfscore.clay">
+<persistable path="/firstapp/golfscore.clay"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="vw_profile_grant.sql" tooltip="firstapp/security/vw_profile_grant.sql">
+<persistable path="/firstapp/security/vw_profile_grant.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name="vw_profile_grant" tooltip="firstapp/security/vw_profile_grant">
+<persistable path="/firstapp/security/vw_profile_grant"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="payment_log.sql" tooltip="firstapp/security/payment_log.sql">
+<persistable path="/firstapp/security/payment_log.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="IsUserAuthorized.sql" tooltip="firstapp/security/IsUserAuthorized.sql">
+<persistable path="/firstapp/security/IsUserAuthorized.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="IsSessionValid.sql" tooltip="firstapp/security/IsSessionValid.sql">
+<persistable path="/firstapp/security/IsSessionValid.sql"/>
+</file>
+</mruList>
+</workbench>

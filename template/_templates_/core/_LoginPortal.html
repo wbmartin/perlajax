@@ -22,7 +22,7 @@ function authenticateUser(){
  		var r = responseJSON.rows[0];
 		usrSessionId = r.session_id;
 		usrLoginId = r.user_id;
-		$("#statusMsg").html("Successfully Authenticated User in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+		statusMsg("Successfully Authenticated User in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
 		onSuccessfulLogin();
 		
 
@@ -45,7 +45,7 @@ function timeoutIfNoAction(){ "use strict";
 	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
 	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
 		usrLogoutScheduled = true;
-		$("#statusMsg").html("Logging Out User in 1 minute");
+		statusMsg("Logging Out User in 1 minute");
 		window.setTimeOut(function(){if (usrLogoutScheduled){logOutUser();}},60000);
 	}else{
 	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );

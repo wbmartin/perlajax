@@ -1,0 +1,19 @@
+[%divId="clientLogViewer"%]
+<div id="[%divId%]" class="MainLayout MainContentPaneStyle">
+<ul id ="clientLogView">
+</ul>[%# end clientLogView%]
+</div> [%# end golfScoreSummary%]
+<script type="text/javascript">
+
+function show[%ucfirst(divId)%](){
+  $("#[%divId%]").fadeIn();
+  $("ul#clientLogView").find("li").remove();[%#remove all list items.%]
+	$("ul#clientLogView").html("<li>Log viewed|"+ new Date()+"</li>");
+  for(var ndx=0;ndx<clientLog.length;ndx++){
+	$("ul#clientLogView li:last").after("<li>" + clientLog[ndx] + "</li>");
+  }
+  return "[%divId%]";
+}
+
+
+</script>

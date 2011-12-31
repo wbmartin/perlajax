@@ -43,7 +43,7 @@ newHTML="";
 		  newRow = newRow + '</tr>'
 		  $("#golfScoreSummaryTable tr:last").after(newRow);
 		}
-		$("#statusMsg").html("Sucessfully Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+		statusMsg("Sucessfully Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
 
         });  
 }

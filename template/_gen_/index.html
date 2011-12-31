@@ -95,15 +95,14 @@ function retrieveCache(){
 		}
 		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
 		  
-alert(rJSON.rows[rowNdx].tp + " " + rJSON.rows[rowNdx].lbl + " "+ rJSON.rows[rowNdx].val);
 		if (!(rJSON.rows[rowNdx].lbl in typeLabelValueCache )){
-			typeLabelValueCache[rJSON.rows[rowNdx].tp]={};
+			typeLabelValueCache[rJSON.rows[rowNdx].tp]={}; 
 		}
 		typeLabelValueCache[rJSON.rows[rowNdx].tp][rJSON.rows[rowNdx].lbl] = rJSON.rows[rowNdx].val;
 		}
 
 		
-$("#statusMsg").html("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+statusMsg("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
 
         });  
 }
@@ -258,6 +257,7 @@ p, h1, h2, h3 {
 	margin: 10px 15px;
 }
 ul, ol {
+	text-align: left;
 	margin: 10px 30px;
 	padding: 0 15px;		
 }
@@ -657,6 +657,7 @@ $(document).ready( function(){
 	$("#aboutGolfScore").click(function(){setMainContentPane(showAboutPane);});
 	$("a#SummaryPage").click(function(){setMainContentPane(showGolfScoreSummary);});
 	$("a#golfScoreEntry").click(function(){setMainContentPane(showGolfScoreCreate);});
+	$("a#logViewer").click(function(){setMainContentPane(showClientLogViewer);});
 });
 
 //Layout Functions
@@ -705,6 +706,7 @@ function setMainContentPane(showFunction){
 			<li><a id="">Golfers</a></li>
 			<li><a id="golfScoreEntry">Scores</a></li>
 			<li><a id="aboutGolfScore">About</a></li>
+			<li><a id="logViewer">Log</a></li>
 			<li id="logout"><a >Logout</a></li>			
 		</ul>	</div>
 	</div ></div >
@@ -728,7 +730,7 @@ blah blah blah
 
 
 
-<div id="golfScoreSummary">
+<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle">
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable'>
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
 </table>
@@ -822,7 +824,7 @@ newHTML="";
 		  newRow = newRow + '</tr>'
 		  $("#golfScoreSummaryTable tr:last").after(newRow);
 		}
-		$("#statusMsg").html("Sucessfully Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+		statusMsg("Sucessfully Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
 
         });  
 }
@@ -860,6 +862,26 @@ alert("");
 
 
 
+<div id="clientLogViewer" class="MainLayout MainContentPaneStyle">
+<ul id ="clientLogView">
+</ul>
+</div> 
+<script type="text/javascript">
+
+function showClientLogViewer(){
+  $("#clientLogViewer").fadeIn();
+  $("ul#clientLogView").find("li").remove();
+	$("ul#clientLogView").html("<li>Log viewed: "+ new Date()+"</li>");
+  for(var ndx=0;ndx<clientLog.length;ndx++){
+	$("ul#clientLogView li:last").after("<li>" + clientLog[ndx] + "</li>");
+  }
+  return "clientLogViewer";
+}
+
+
+</script>
+
+
 
 </div><!--End Main Content-->
 
@@ -887,7 +909,7 @@ function authenticateUser(){
  		var r = responseJSON.rows[0];
 		usrSessionId = r.session_id;
 		usrLoginId = r.user_id;
-		$("#statusMsg").html("Successfully Authenticated User in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+		statusMsg("Successfully Authenticated User in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
 		onSuccessfulLogin();
 		
 
@@ -910,7 +932,7 @@ function timeoutIfNoAction(){ "use strict";
 	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
 	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
 		usrLogoutScheduled = true;
-		$("#statusMsg").html("Logging Out User in 1 minute");
+		statusMsg("Logging Out User in 1 minute");
 		window.setTimeOut(function(){if (usrLogoutScheduled){logOutUser();}},60000);
 	}else{
 	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );

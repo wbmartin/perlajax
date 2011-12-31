@@ -19,7 +19,6 @@ function retrieveCache(){
 		}
 		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
 		  [%#strip out other messages update/add to clientCache%]
-alert(rJSON.rows[rowNdx].tp + " " + rJSON.rows[rowNdx].lbl + " "+ rJSON.rows[rowNdx].val);
 		if (!(rJSON.rows[rowNdx].lbl in typeLabelValueCache )){
 			typeLabelValueCache[rJSON.rows[rowNdx].tp]={}; [%# conditionally initialize the row%]
 		}
@@ -27,7 +26,7 @@ alert(rJSON.rows[rowNdx].tp + " " + rJSON.rows[rowNdx].lbl + " "+ rJSON.rows[row
 		}
 
 		
-$("#statusMsg").html("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+statusMsg("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
 
         });  
 }

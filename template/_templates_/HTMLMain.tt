@@ -24,6 +24,7 @@
 [%INCLUDE _golfScoreSummary.html%]
 [%INCLUDE _golfScoreCreate.html%]
 [%INCLUDE core/_about.html%]
+[%INCLUDE core/_clientLog.html%]
 
 
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
