@@ -1,17 +1,19 @@
 [%- FILTER redirect("/index.html") -%]
-[%INCLUDE _top.html%]
+[%serverErrorMsg_Communication ="Sorry, there was a problem communicating with the server."%]
+[%INCLUDE core/_top.html%]
 <script type="text/javascript"> 
 //<![CDATA[
-[%INCLUDE _header1.js%]
+[%INCLUDE core/_header1.js%]
+[%INCLUDE core/_cache.js%]
 //]]
 </script>
 <style type="text/css">
-[%INCLUDE _main.css%]
-[%INCLUDE _PixelGreen.css%]
+[%INCLUDE style/_main.css%]
+[%INCLUDE style/_PixelGreen.css%]
 </style>
 </head>
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();"> 
-[%INCLUDE _LayoutComponents.html%]
+[%INCLUDE core/_LayoutComponents.html%]
 
 <div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;">
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
@@ -20,14 +22,15 @@
 [%INCLUDE _Sample.html%]
 [%INCLUDE _Sample2.html%]
 [%INCLUDE _golfScoreSummary.html%]
-[%INCLUDE _about.html%]
+[%INCLUDE _golfScoreCreate.html%]
+[%INCLUDE core/_about.html%]
 
 
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 </div><!--End Main Content-->
 
-[%INCLUDE _LoginPortal.html%]
-[%INCLUDE _msgBox.html%]
+[%INCLUDE core/_LoginPortal.html%]
+[%INCLUDE core/_msgBox.html%]
 
 </body>
 </html>

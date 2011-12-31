@@ -4,6 +4,7 @@ $(document).ready( function(){
 	$("#logout").click(logOutUser);
 	$("#aboutGolfScore").click(function(){setMainContentPane(showAboutPane);});
 	$("a#SummaryPage").click(function(){setMainContentPane(showGolfScoreSummary);});
+	$("a#golfScoreEntry").click(function(){setMainContentPane(showGolfScoreCreate);});
 });
 
 //Layout Functions
@@ -38,13 +39,8 @@ function setMainContentPane(showFunction){
   if(document.getElementById(currentContentPane)!= undefined){
 	document.getElementById(currentContentPane).style.display="none";
   }
-  //document.getElementById(divId).style.display="block";
   currentContentPane = showFunction();
-
 }
-
-
-
 
 </script>
 <div id="header"><div id="header-content">	
@@ -55,7 +51,7 @@ function setMainContentPane(showFunction){
 		<ul>
 			<li><a id="SummaryPage">Home</a></li>
 			<li><a id="">Golfers</a></li>
-			<li><a href="index.html">Scores</a></li>
+			<li><a id="golfScoreEntry">Scores</a></li>
 			<li><a id="aboutGolfScore">About</a></li>
 			<li id="logout"><a >Logout</a></li>			
 		</ul>	</div>[%#End Top Menu Bar%]

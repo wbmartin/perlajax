@@ -36,7 +36,8 @@ function onSuccessfulLogin(){
 	registerAction();
 	timeoutIfNoAction();
 	setMainContentPane(showGolfScoreSummary);
-	retrieveGolfScoreSummary()
+	retrieveGolfScoreSummary();
+	retrieveCache();
 
 }
 // timeout function

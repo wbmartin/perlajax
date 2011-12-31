@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 <head> 
@@ -15,6 +16,7 @@ var usrLoginId="";
 var usrLastAction= new Date();
 var usrLogoutScheduled=false;
 var usrTimeOutDuration = 20*60*1000;
+var clientLog=new Array();
 
 
 //validation functions
@@ -37,14 +39,23 @@ function isValidOrNotifyFail(test_, fieldId_, msg_){
 
 function validateServerResponse(responseTxt){
 	if(responseTxt == undefined ||responseTxt==null ){
-	  //alert("Server Called Failed undefined response"); 
+	  logMsg("validateServerResponse - undefined response");
 	  return false;
 	}
 	if(responseTxt.errorMsg != undefined){
-	   //alert ("Server Error Msg: " + responseTxt.errorMsg);
+	   logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
 	   return false;
 	}
   return true;
+}
+
+function logMsg(msg){
+  clientLog.push( String(msg) + "|"+ new Date());
+
+}
+function statusMsg(msg){
+  $("#statusMsg").html(msg);
+  logMsg("Console Msg:" +msg);
 }
 function extractDateFromPg(pgDate){
  return pgDate.substring(0,10);
@@ -63,6 +74,41 @@ $(document).ready(function(){
 $("logOutLink").click(logOutUser);
 });
 
+var typeLabelValueCache = {};
+function retrieveCache(){ 
+"use strict";
+  var startTime, stopTime;
+  var rowCount, rowNdx,r, newHTML, newRow;
+  var params = {};
+  params['spwfResource'] = "cross_table_cache";
+  params['spwfAction'] = "select";
+  params['user_id'] = usrLoginId;
+  params['password'] = usrSessionId;
+  registerAction();
+
+  startTime= new Date();
+    $.post(urlTarget,params, function(rJSON){ 
+		stopTime=new Date();
+		if(!validateServerResponse(rJSON)){
+			alert("Sorry, there was a problem communicating with the server.");
+			return false;
+		}
+		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
+		  
+alert(rJSON.rows[rowNdx].tp + " " + rJSON.rows[rowNdx].lbl + " "+ rJSON.rows[rowNdx].val);
+		if (!(rJSON.rows[rowNdx].lbl in typeLabelValueCache )){
+			typeLabelValueCache[rJSON.rows[rowNdx].tp]={};
+		}
+		typeLabelValueCache[rJSON.rows[rowNdx].tp][rJSON.rows[rowNdx].lbl] = rJSON.rows[rowNdx].val;
+		}
+
+		
+$("#statusMsg").html("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+
+        });  
+}
+
+
 //]]
 </script>
 <style type="text/css">
@@ -71,7 +117,7 @@ $("logOutLink").click(logOutUser);
   height:100%;
   display:none;
   overflow:auto;
-  background-color:green;
+  /*background-color:green;*/
   padding: 5px 5px 5px 5px ;
 }
 .MainLayout{
@@ -101,6 +147,9 @@ input{
   border:solid 1px ;
   width:200px;
   margin:2px 0 20px 10px;
+}
+select{
+width:200px;
 }
 
 .formLayout .labelColumn{
@@ -158,6 +207,13 @@ table.formLayout{
 }
 .dataTable th{
 font-weight:bold;
+}
+
+.formTable{
+border-style:none;
+}
+.formTable td{
+border-style:none;
 }
 
 
@@ -600,6 +656,7 @@ $(document).ready( function(){
 	$("#logout").click(logOutUser);
 	$("#aboutGolfScore").click(function(){setMainContentPane(showAboutPane);});
 	$("a#SummaryPage").click(function(){setMainContentPane(showGolfScoreSummary);});
+	$("a#golfScoreEntry").click(function(){setMainContentPane(showGolfScoreCreate);});
 });
 
 //Layout Functions
@@ -634,13 +691,8 @@ function setMainContentPane(showFunction){
   if(document.getElementById(currentContentPane)!= undefined){
 	document.getElementById(currentContentPane).style.display="none";
   }
-  //document.getElementById(divId).style.display="block";
   currentContentPane = showFunction();
-
 }
-
-
-
 
 </script>
 <div id="header"><div id="header-content">	
@@ -651,7 +703,7 @@ function setMainContentPane(showFunction){
 		<ul>
 			<li><a id="SummaryPage">Home</a></li>
 			<li><a id="">Golfers</a></li>
-			<li><a href="index.html">Scores</a></li>
+			<li><a id="golfScoreEntry">Scores</a></li>
 			<li><a id="aboutGolfScore">About</a></li>
 			<li id="logout"><a >Logout</a></li>			
 		</ul>	</div>
@@ -681,14 +733,64 @@ blah blah blah
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
 </table>
 
-</div>
+</div> 
 <script type="text/javascript">
 
 function showGolfScoreSummary(){
-  var divId="golfScoreSummary";
-  $("#"+divId).fadeIn();
-  return divId;
+  $("#golfScoreSummary").fadeIn();
+  return "golfScoreSummary";
+}
 
+function retrieveGolfScoreSummary(){ 
+"use strict";
+  var startTime, stopTime;
+  var rowCount, rowNdx,r, newHTML, newRow;
+  var params = {};
+  params['spwfResource'] = "golf_score_summary";
+  params['spwfAction'] = "select";
+  params['user_id'] = usrLoginId;
+  params['password'] = usrSessionId;
+  registerAction();
+
+$("#golfScoreSummaryTable").find("tr:gt(0)").remove();
+  startTime= new Date();
+    $.post(urlTarget,params, function(rJSON){ 
+		stopTime=new Date();
+		if(!validateServerResponse(rJSON)){
+			alert("Sorry, there was a problem communicating with the server.");
+			return false;
+		}
+newHTML="";
+		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
+		   (rowNdx%2==0)?'a':'b'
+		  newRow = '<tr id="golferRow' + rJSON.rows[rowNdx].golfer_id +'" class="row-' +( (rowNdx%2==0)?'a':'b') +'">';
+		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golfer_name + '</td>';
+		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golf_score  +'</td>';
+		  newRow = newRow + '<td>' +extractDateFromPg(rJSON.rows[rowNdx].first_date) + ' to '+ extractDateFromPg(rJSON.rows[rowNdx].last_date)  +'</td>';
+		  newRow = newRow + '</tr>'
+		  $("#golfScoreSummaryTable tr:last").after(newRow);
+		}
+		$("#statusMsg").html("Sucessfully Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+
+        });  
+}
+
+</script>
+
+
+<div id="golfScoreCreate" class="MainLayout MainContentPaneStyle">
+<table id="golfScoreFormTable" style="" class='formTable'>
+<tr><td> Golfer </td><td><select id="golfScoreForm.golfer_id"></select></td></tr>
+<tr><td> Score </td><td><input type="text" id="golfScoreForm.score"/></td></tr>
+<tr><td colspan="2"><button id="golfScoreForm.Save" value="Save" >Save</button></td></tr>
+</table>
+
+</div> 
+<script type="text/javascript">
+
+function showGolfScoreCreate(){
+  $("#golfScoreCreate").fadeIn();
+  return "golfScoreCreate";
 }
 
 function retrieveGolfScoreSummary(){ 
@@ -732,7 +834,7 @@ newHTML="";
 <div id ="aboutPaneCenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; background-color:white; max-width:300; ">
 <h1 style="width:40em;margin-left: auto; margin-right: auto;text-align:center;">About golfscore</h1>
 
-<p style="width:40em;margin-left: auto; margin-right: auto;">golfscore is an open source application developed by Martinanalytics.  Part of our open source model leverages software developed by other open source contributors that we recognize here:</p>
+<p style="width:40em;margin-left: auto; margin-right: auto; ">golfscore is an open source application developed by Martinanalytics.  Part of our open source model leverages software developed by other open source contributors that we recognize here:
 <ul style="width:40em;margin-left: auto; margin-right: auto;padding: 10px 0px 10px 100px;">
 <li><a href="">jQuery</a> provides our AJAX and Javascript handlers</li>
 <li>Site styling provided by <a href="http://www.styleshout.com/">StyleShout's</a> PixelGreen web template</li>
@@ -742,14 +844,16 @@ newHTML="";
 <li>Developed on the <a href="http://www.ubuntu.org/">Ubuntu</a> Platform </li>
 
 </ul>
+</p>
+
 </div>
 </div>
 <script type="text/javascript">
 
 function showAboutPane(){
-  var divId="aboutPane";
-  $("#"+divId).fadeIn();
-  return divId;
+alert("");
+  $("#aboutPane").fadeIn();
+  return "aboutPane";
 }
 
 </script>
@@ -797,7 +901,8 @@ function onSuccessfulLogin(){
 	registerAction();
 	timeoutIfNoAction();
 	setMainContentPane(showGolfScoreSummary);
-	retrieveGolfScoreSummary()
+	retrieveGolfScoreSummary();
+	retrieveCache();
 
 }
 // timeout function

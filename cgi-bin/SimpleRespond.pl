@@ -1,7 +1,6 @@
 #! /usr/bin/perl
 package ResourceAction;
-use CGI qw(:standard);
-use CGI qw(:cgi-lib);
+use CGI qw/:standard :cgi-lib/;
 use JSON;
 use DBI;
 use strict;
@@ -175,6 +174,12 @@ sub buildResourceActionDef{
   	#}elsif($action eq "DELETE"){
 	#	$rad =   { rf=>[], pf=>['sys_code_id','last_update'], proc=>"sys_code_dq" };
 	#}
+} elsif($resource eq "CROSS_TABLE_CACHE" ){
+	 @allFields = ('tp', 'lbl', 'val' );
+	@paramFields =();
+	if($action eq "SELECT"){
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"cross_table_cache_sq"};
+	}
 
 
 

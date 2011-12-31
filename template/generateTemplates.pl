@@ -12,7 +12,7 @@ Main:{
   
   
   
-  &DBGenUTIL::getProps(\%props, ($path."include.properties"));
+  &DBGenUTIL::getProps(\%props, ("include.properties"));
   $outputPath = $props{outputPath};
 `rm -rf $outputPath`;
   &DBGenUTIL::getConnection(\$dbh,'golfscore','golfscore');

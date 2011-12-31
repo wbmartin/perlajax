@@ -115,8 +115,10 @@
   <driver id="-7">
     <name>PostgreSQL</name>
     <driver-class>org.postgresql.Driver</driver-class>
-    <url>jdbc:postgresql:[&lt;//host&gt;[:&lt;5432&gt;/]]&lt;database&gt;</url>
-    <jars/>
+    <url>jdbc:postgresql:localhost:5432/simpledemo</url>
+    <jars>
+      <jar>/home/wbmartin/dev/javaclass/postgresql-9.0-801.jdbc4.jar</jar>
+    </jars>
   </driver>
   <driver id="-9">
     <name>Sybase Adaptive Server Enterprise</name>

@@ -6,6 +6,7 @@ var usrLoginId="";
 var usrLastAction= new Date();
 var usrLogoutScheduled=false;
 var usrTimeOutDuration = 20*60*1000;
+var clientLog=new Array();
 
 
 //validation functions
@@ -28,14 +29,23 @@ function isValidOrNotifyFail(test_, fieldId_, msg_){
 
 function validateServerResponse(responseTxt){
 	if(responseTxt == undefined ||responseTxt==null ){
-	  //alert("Server Called Failed undefined response"); 
+	  logMsg("validateServerResponse - undefined response");
 	  return false;
 	}
 	if(responseTxt.errorMsg != undefined){
-	   //alert ("Server Error Msg: " + responseTxt.errorMsg);
+	   logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
 	   return false;
 	}
   return true;
+}
+
+function logMsg(msg){
+  clientLog.push( String(msg) + "|"+ new Date());
+
+}
+function statusMsg(msg){
+  $("#statusMsg").html(msg);
+  logMsg("Console Msg:" +msg);
 }
 function extractDateFromPg(pgDate){
  return pgDate.substring(0,10);
