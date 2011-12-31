@@ -1,5 +1,5 @@
-DROP TABLE public.golf_score;
-DROP TABLE public.golfer;
+DROP TABLE public.golf_score cascade;
+DROP TABLE public.golfer cascade;
 
 CREATE TABLE public.golfer (
        golfer_id SERIAL NOT NULL
@@ -9,7 +9,7 @@ CREATE TABLE public.golfer (
 );
 
 CREATE TABLE public.golf_score (
-       golf_score_id CHAR(10) NOT NULL
+       golf_score_id SERIAL NOT NULL
      , last_update TIMESTAMP(3) WITHOUT TIME ZONE
      , golf_score INT4
      , golfer_id INTEGER

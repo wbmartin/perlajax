@@ -22,18 +22,44 @@ function authenticateUser(){
  		var r = responseJSON.rows[0];
 		usrSessionId = r.session_id;
 		usrLoginId = r.user_id;
-		$("#password").val("");
-		displayMainLayout(true);
 		$("#statusMsg").html("Successfully Authenticated User in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+		onSuccessfulLogin();
+		
 
-            //alert("Response:\n" + r.session_id +"Delivered in "+(stopTime.getTime()-startTime.getTime())/1000);  
         });  
 }
 
+function onSuccessfulLogin(){
+	$("#password").val("");
+	displayMainLayout(true);
+	$("#topMenuBar").show();
+	registerAction();
+	timeoutIfNoAction();
+	setMainContentPane(showGolfScoreSummary);
+	retrieveGolfScoreSummary()
+
+}
+// timeout function
+function timeoutIfNoAction(){ "use strict";
+	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
+	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
+		usrLogoutScheduled = true;
+		$("#statusMsg").html("Logging Out User in 1 minute");
+		window.setTimeOut(function(){if (usrLogoutScheduled){logOutUser();}},60000);
+	}else{
+	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
+	}
+
+}
+function registerAction(){
+usrLastAction= new Date();
+usrLogoutScheduled = false;
+
+
+}
+
+
 function logOutUser(){
-  usrSessionId ="";
-  usrLoginId="";
-  displayMainLayout(false);
   location.reload(true);
 return;
 }
@@ -55,6 +81,7 @@ function validateLoginForm(){ "use strict";
 </script>
 
 <div id="LoginPortal" style="position:fixed; height:100%; width:100%">
+<img align="center" height="150" width ="470" src="./img/headerphoto.jpg">
 <div  class="vcenter">
 <form name="loginForm" action="">  
   <fieldset style="border:0">  

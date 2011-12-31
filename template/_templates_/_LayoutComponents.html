@@ -1,10 +1,67 @@
-<div id="header" class="MainLayout" style="position:fixed; top: 0; left:0; width:100%;  background-color:white; min-height:25px; height:auto!important;height:25px;">Header 
- <a href="" id="logOutLink"> Log Out</a>
+<script type="text/javascript">
+$(document).ready( function(){
 
-</div>
+	$("#logout").click(logOutUser);
+	$("#aboutGolfScore").click(function(){setMainContentPane(showAboutPane);});
+	$("a#SummaryPage").click(function(){setMainContentPane(showGolfScoreSummary);});
+});
+
+//Layout Functions
+var currentContentPane="";
+function bodyOnLoad(){
+  sizeLeftNav();
+}
+function bodyOnResize(){
+  sizeLeftNav();
+}
+
+function sizeLeftNav(){
+[%headerHeight = 100%]
+[%leftNavWidth = 0%]
+  document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
+  document.getElementById('mainContent').style.top="[%headerHeight%]px";
+  document.getElementById('mainContent').style.left="0px";
+  document.getElementById('mainContent').style.height=(window.innerHeight - [%headerHeight + 35%] ) +"px";
+  document.getElementById('mainContent').style.width=(window.innerWidth- [%leftNavWidth +20%] ) +"px";
+}
+function displayMainLayout(showHide){
+  var display = (showHide)?"block":"none";
+  //document.getElementById('leftnav').style.display=display;
+  document.getElementById('header').style.display=display;
+  document.getElementById('footer').style.display=display;
+  document.getElementById('mainContent').style.display=display;
+  display = (showHide)?"none":"block";
+  document.getElementById('LoginPortal').style.display=display;
+
+}
+function setMainContentPane(showFunction){
+  if(document.getElementById(currentContentPane)!= undefined){
+	document.getElementById(currentContentPane).style.display="none";
+  }
+  //document.getElementById(divId).style.display="block";
+  currentContentPane = showFunction();
+
+}
+
+
+
+
+</script>
+<div id="header"><div id="header-content">	
+	<h1 id="logo"><a href="index.html" title="">golf<span class="gray">score</span></a></h1>	
+		<h2 id="slogan">keepin' it honest...</h2>
+
+		<div id = "topMenuBar" style="display:none;"> [%#initially hidden%]
+		<ul>
+			<li><a id="SummaryPage">Home</a></li>
+			<li><a id="">Golfers</a></li>
+			<li><a href="index.html">Scores</a></li>
+			<li><a id="aboutGolfScore">About</a></li>
+			<li id="logout"><a >Logout</a></li>			
+		</ul>	</div>[%#End Top Menu Bar%]
+	</div [%# end header%]></div [%# end header-content%]>
+
 <div id="footer" class="MainLayout" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:#DCDCDC;"><span id="statusMsg" ></span></div>
 
-<div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto'> l
-left nav stuff
+<div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto;'> 
 </div>
-

@@ -3,42 +3,10 @@
 var urlTarget = "/cgi-bin2/SimpleRespond.pl";
 var usrSessionId="";
 var usrLoginId="";
+var usrLastAction= new Date();
+var usrLogoutScheduled=false;
+var usrTimeOutDuration = 20*60*1000;
 
-//Layout Functions
-var currentContentPane="";
-function bodyOnLoad(){
-  sizeLeftNav();
-}
-function bodyOnResize(){
-  sizeLeftNav();
-}
-[%+ test= "test"+%]
-
-function sizeLeftNav(){[%test%]
-  document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
-  document.getElementById('mainContent').style.top="25px";
-  document.getElementById('mainContent').style.left="205px";
-  document.getElementById('mainContent').style.height=(window.innerHeight-65) +"px";
- document.getElementById('mainContent').style.width=(window.innerWidth-230) +"px";
-}
-function displayMainLayout(showHide){
-  var display = (showHide)?"block":"none";
-  document.getElementById('leftnav').style.display=display;
-  document.getElementById('header').style.display=display;
-  document.getElementById('footer').style.display=display;
-  document.getElementById('mainContent').style.display=display;
-  display = (showHide)?"none":"block";
-  document.getElementById('LoginPortal').style.display=display;
-
-}
-function setMainContentPane(divId){
-  if(document.getElementById(currentContentPane)!= undefined){
-	document.getElementById(currentContentPane).style.display="none";
-  }
-  document.getElementById(divId).style.display="block";
-  currentContentPane = divId;
-
-}
 
 //validation functions
 function isFieldIdEmpty(fieldId_){
@@ -68,6 +36,9 @@ function validateServerResponse(responseTxt){
 	   return false;
 	}
   return true;
+}
+function extractDateFromPg(pgDate){
+ return pgDate.substring(0,10);
 }
 
 $(document).ready(function(){

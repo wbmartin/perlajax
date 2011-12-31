@@ -160,6 +160,24 @@ sub buildResourceActionDef{
 		$rad =   { rf=>[], pf=>['sys_code_id','last_update'], proc=>"sys_code_dq" };
 	}
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+} elsif($resource eq "GOLF_SCORE_SUMMARY" ){
+	 @allFields = ('golfer_id', 'golfer_name', 'golf_score', 'last_date', 'first_date' );
+	@paramFields =();
+	if($action eq "SELECT"){
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_handicap_sq"};
+	}#elsif($action eq "INSERT"){
+	#	splice @paramFields,5,1; #remove last_update
+	#	splice @paramFields,0,2; #remove client_id, prkey
+	#  	$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"sys_code_iq" };
+	#}elsif($action eq "UPDATE"){
+	#	splice @paramFields,0,1; #remove client_id, prkey 
+	#	$rad= { rf=>\@allFields, pf=>\@paramFields, proc=>"sys_code_uq" };
+  	#}elsif($action eq "DELETE"){
+	#	$rad =   { rf=>[], pf=>['sys_code_id','last_update'], proc=>"sys_code_dq" };
+	#}
+
+
+
   } else {return;}
   return $rad;
 }

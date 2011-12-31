@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 <head> 
 <title> Simple2 Demo</title> 
@@ -12,42 +12,10 @@
 var urlTarget = "/cgi-bin2/SimpleRespond.pl";
 var usrSessionId="";
 var usrLoginId="";
+var usrLastAction= new Date();
+var usrLogoutScheduled=false;
+var usrTimeOutDuration = 20*60*1000;
 
-//Layout Functions
-var currentContentPane="";
-function bodyOnLoad(){
-  sizeLeftNav();
-}
-function bodyOnResize(){
-  sizeLeftNav();
-}
-[%+ test= "test"+%]
-
-function sizeLeftNav(){[%test%]
-  document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
-  document.getElementById('mainContent').style.top="25px";
-  document.getElementById('mainContent').style.left="205px";
-  document.getElementById('mainContent').style.height=(window.innerHeight-65) +"px";
- document.getElementById('mainContent').style.width=(window.innerWidth-230) +"px";
-}
-function displayMainLayout(showHide){
-  var display = (showHide)?"block":"none";
-  document.getElementById('leftnav').style.display=display;
-  document.getElementById('header').style.display=display;
-  document.getElementById('footer').style.display=display;
-  document.getElementById('mainContent').style.display=display;
-  display = (showHide)?"none":"block";
-  document.getElementById('LoginPortal').style.display=display;
-
-}
-function setMainContentPane(divId){
-  if(document.getElementById(currentContentPane)!= undefined){
-	document.getElementById(currentContentPane).style.display="none";
-  }
-  document.getElementById(divId).style.display="block";
-  currentContentPane = divId;
-
-}
 
 //validation functions
 function isFieldIdEmpty(fieldId_){
@@ -77,6 +45,9 @@ function validateServerResponse(responseTxt){
 	   return false;
 	}
   return true;
+}
+function extractDateFromPg(pgDate){
+ return pgDate.substring(0,10);
 }
 
 $(document).ready(function(){
@@ -118,7 +89,7 @@ body{
   font-weight:normal;
   text-align:left;
 }
-/*-------Form Layout------------------------------------*/
+
 .error{
   color: red;
 }
@@ -141,6 +112,7 @@ table.formLayout{
   border-width: 2px;
   border-style: solid;
   border-color:green;
+  background-color:white;
 }
 .formLayout button{
   clear:both;
@@ -181,23 +153,517 @@ table.formLayout{
   padding:1px;
 }
 
+.dataTable{
+
+}
+.dataTable th{
+font-weight:bold;
+}
+
+
+
+/* ----------------------------------------------------
+
+   AUTHOR           :  	Erwin Aligam
+   WEBSITE          :   http://www.styleshout.com/
+   TEMPLATE NAME    : 	PixelGreen
+   TEMPLATE CODE    : 	S-0010
+   VERSION          :   1.3
+   LAST MODIFIED    :   January 19, 2010
+
+------------------------------------------------------- */
+ 
+/* ----------------------------------------------------
+   HTML ELEMENTS
+------------------------------------------------------- */
+
+/* top elements */
+* { padding: 0; margin: 0; outline: 0; }
+
+body {
+	margin: 0; 	padding: 0;
+	font: normal 73%/1.6em 'Trebuchet MS', Tahoma, sans-serif;
+	color: #555;
+	background: #FFF url(./img/bg.jpg) repeat-x;
+	text-align: center;		
+}
+
+/* links */
+a:link, a:visited { background: inherit; color: #72A545; text-decoration: none; }
+a:hover { background: inherit; color: #006699; text-decoration: underline; }
+
+/* headers */
+h1, h2, h3 { font: bold 1em 'Trebuchet MS', Tahoma, Sans-serif; }
+h1 { font-size: 1.4em; color: #65944A; }
+h2 { font-size: 1.2em; text-transform: uppercase; }
+h3 { font-size: 1.2em; }
+
+p, h1, h2, h3 {
+	margin: 10px 15px;
+}
+ul, ol {
+	margin: 10px 30px;
+	padding: 0 15px;		
+}
+
+/* images */
+img {
+	border: 1px solid #DADADA;
+	padding: 8px;
+	background: #FAFAFA;
+}
+img.float-right {
+  margin: 5px 0px 5px 15px;  
+}
+img.float-left {
+  margin: 5px 15px 5px 0px;
+}
+
+code {
+  margin: 5px 0;
+  padding: 10px;
+  text-align: left;
+  display: block;
+  overflow: auto;  
+  font: 500 1em/1.5em 'Lucida Console', 'courier new', monospace;
+  /* white-space: pre; */
+  background: #FAFAFA;
+  border: 1px solid #f2f2f2;  
+  border-left: 3px solid #72A545;
+}
+acronym {
+  cursor: help;
+  border-bottom: 1px solid #777;
+}
+blockquote {
+	margin: 15px; 	padding: 0 0 0 20px;  	
+  	background-color: #FAFAFA; 
+	background-position: 8px 10px;
+	border: 1px solid #f2f2f2; 
+	border-left: 3px solid #72A545;  
+	font: bold 1.2em/1.5em "Trebuchet MS", Tahoma, sans-serif; 
+	color: #666666;	
+}
+
+/* start - table */
+table {
+	border-collapse: collapse;
+	margin: 10px 15px;	
+}
+th strong {
+	color: #fff;
+}
+th {
+	background: #74A846;
+	height: 29px;
+	padding-left: 11px;
+	padding-right: 11px;
+	color: #fff;
+	text-align: left;
+	border-left: 1px solid #B6D59A;
+	border-bottom: solid 2px #FFF;
+}
+tr {
+	height: 30px;
+}
+td {
+	padding-left: 11px;
+	padding-right: 11px;
+	/* border-left: 1px solid #FFE1C3; */
+	border-left: 1px solid #FFF;
+	border-bottom: solid 1px #ffffff;
+}
+td.first,th.first {
+	border-left: 0px;
+}
+tr.row-a {
+	background: #F8F8F8;
+}
+tr.row-b {
+	background: #EFEFEF;
+}
+/* end - table */
+
+/* form elements 
+form {
+	margin:10px 15px; padding: 0;
+	border: 1px solid #f2f2f2; 
+	background-color: #FAFAFA; 
+}
+label {
+	display:block;
+	font-weight:bold;
+	margin:5px 0;
+}
+input {
+	padding: 2px;
+	border:1px solid #eee;
+	font: normal 1em "Trebuchet MS", Tahoma, sans-serif;
+	color:#777;
+}
+textarea {
+	width:400px;
+	padding:2px;
+	font: normal 1em "Trebuchet MS", Tahoma, sans-serif;
+	border:1px solid #eee;
+	height:100px;
+	display:block;
+	color:#777;
+}
+input.button { 
+	margin: 0; 
+	font: bold 1em Arial, Sans-serif; 
+	background: #FFF url(./img/gradientbg.jpg) repeat-x; 
+	padding: 2px 3px; 
+	color: #333;	
+	border: 1px solid #DADADA;	
+}
+*/
+/* search form */
+.searchform {
+	background-color: transparent;
+	border: none;	margin: 0; padding: 0;	
+}
+.searchform p { margin: 10px; padding: 0; }
+.searchform input.textbox { 
+	width: 130px;
+	color: #333; 
+	height: 20px;
+	padding: 2px;	
+	vertical-align: top;
+}
+.searchform input.button { 
+	font: bold 12px Arial, Sans-serif; 
+	color: #333;	
+	width: 60px;
+	height: 26px;
+	border: 1px solid #DADADA;
+	padding: 3px 5px;	
+	vertical-align: top;
+}
+
+/* ----------------------------
+	  LAYOUT
+------------------------------- */
+
+#header-content, #content, #footer-content {
+	width: 760px;
+}
+
+/* header */
+#header {
+	height: 100px;
+	text-align: left;	
+}
+#header-content {	
+	margin: 0 auto; padding: 0;
+	position: relative;
+}
+#header-content h1#logo {
+	position: absolute;	
+	font: bold 45px 'Trebuchet MS', Sans-serif;
+	letter-spacing: -2px; 
+	color: #FFF;
+	margin: 0; padding: 0;		
+	
+	/* change the values of left and top to adjust the position of the logo */
+	top: 0; left: 0px;
+}
+#header-content h1#logo a {
+	text-decoration: none;
+	color: #FFF;
+}
+#header-content #slogan {
+	position: absolute;	
+	font: bold 12px 'Trebuchet Ms', Sans-serif;
+	text-transform: none;
+	color: #FFF;	
+	margin: 0; padding: 0;
+	
+	/* change the values of left and top to adjust the position of the slogan */
+	top: 55px; left: 40px;
+}
+
+/* header menu */
+#header-content ul {
+	position: absolute;
+	right: -5px; top: 15px;
+	font: bolder 1.3em 'Trebuchet MS', sans-serif;
+	color: #FFF;
+	list-style: none;
+	margin: 0; padding: 0;		
+}
+#header-content li {
+	display: inline;
+}
+#header-content li a {
+	float: left;
+	display: block;
+	padding: 3px 12px;	
+	color: #FFF;
+	background-color: #333;
+	text-decoration: none;
+	border-right: 1px solid #272727;
+}
+#header-content li a:hover {
+	background: #65944A;
+	color: #FFF;
+}
+#header-content li a#current  {
+	background: #65944A;
+	color: #FFF;
+}
+
+/* header photo */
+.headerphoto {
+	margin: 0 auto;
+	width: 770px;
+	height: 200px;
+	padding: 15px 10px 10px 10px; 
+	/*background: #FFF url(headerphoto.jpg) no-repeat center;	*/
+}
+
+/* content */
+#content-wrap {
+	clear: both;
+	float: left;
+	width: 100%;
+}
+#content {
+	text-align: left;	
+	padding: 0;
+	margin: 0 auto;	
+}
+
+/* sidebar */
+#sidebar {
+	float: right;
+	width: 30%;
+	margin: 0 0 10px 0; padding: 0;	
+}	
+#sidebar h1 {
+	padding: 10px 0px 5px 10px;
+	margin: 0;	
+	font: bold 1.3em 'Trebuchet MS', Tahoma, Sans-serif;
+}
+.sidebox {
+	background: #F5F5F5;
+	border: 1px solid #EFEDED;
+	margin-bottom: 10px;
+}
+
+/* sidebar menu */
+#sidebar ul.sidemenu {
+	list-style:none;
+	margin: 10px 0 15px 0;
+	padding: 0;
+	background: #F2F2F2;			
+}
+#sidebar ul.sidemenu li {
+	padding: 0px 10px;
+}
+#sidebar ul.sidemenu a {
+	display:block;
+	font-weight:normal;
+	color: #333;
+	height: 1.5em;	
+	padding:.3em 0 .3em 15px;
+	line-height: 1.5em;
+	border-bottom: 1px dashed #D4D4D4;
+	text-decoration:none;
+}
+#sidebar ul.sidemenu a.top{	
+	border-top: 1px dashed #D4D4D4;
+}
+#sidebar ul.sidemenu a:hover {
+	padding: .3em 0 .3em 10px;
+	border-left: 5px solid  #65944A;
+	color: #65944A;		
+}
+
+/* main */
+#main {
+	float: left;
+	width: 68%;	
+	margin: 0 0 10px 0; padding: 0;	
+}
+#main h1 {
+	padding: 10px 0px 0px 5px;
+	margin: 0 0 0 10px;
+	border-bottom: 1px solid #f2f2f2; 	
+	font: normal 1.8em 'Trebuchet MS', Tahoma, Sans-serif;
+}
+#main ul li {
+	list-style-image: url(bullet.gif);
+}
+
+.post {
+	margin: 0; padding: 0;
+	background: #FFF url(./img/gradientbg.jpg) repeat-x;
+	border: 1px solid #EFEDED;
+}
+.post .post-footer {
+	background-color: #FAFAFA;
+	border: 1px solid #f2f2f2;
+	padding: 5px; margin-top: 20px;
+	font-size: 95%;
+}
+.post .post-footer .date {
+	background: url('clock.gif') no-repeat 0 center;
+	padding-left: 20px; margin: 0 10px 0 5px;
+}
+.post .post-footer .comments {
+	background: url('comment.gif') no-repeat 0 center;
+	padding-left: 20px; margin: 0 10px 0 5px;
+}
+.post .post-footer .readmore {
+	background: url('page.gif') no-repeat 0 center;
+	padding-left: 20px; margin: 0 10px 0 5px;
+}
+
+/* footer */
+#footer {
+	clear: both;
+	margin: 0; padding: 0;
+	font: normal .95em/1.6em 'Trebuchet MS', Tahoma, Arial, sans-serif;
+	text-align: left;	
+}
+
+#footer h1, #footer p {	margin-left: 0; }
+
+#footer-content {	
+	border-top: 1px solid #EAEAEA;
+	margin: 0 auto;
+	padding-left: 15px;
+}
+#footer-content a {
+	text-decoration: none;
+}
+#footer-content a:hover {
+	color: #333;
+}
+
+/* footer list */
+#footer-content ul.flist {
+	list-style: none;
+	margin: 0; padding: 0;
+    border-top: 1px solid #f2f2f2;
+}
+#footer-content ul.flist li {
+    border-bottom: 1px solid #f2f2f2;
+}
+#footer-content ul.flist li a:link,
+#footer-content ul.flist li a:visited {
+    color: #555;
+    display: block;
+	font-weight: normal;
+	padding: 5px 0 ;
+	width: 98%;
+}
+#footer-content ul.flist li a:hover {
+  text-decoration: none;
+  color: #222;
+}
+
+
+#footer-content .col {
+	width: 240px;
+	padding: 0 5px 30px 0;	
+}
+#footer-content .col2 {
+	width: 230px;
+	padding: 0 0 30px 0;	
+}
+#footer-content .space-sep {
+	margin-right: 20px;
+}
+
+/* alignment classes */
+.float-left  { float: left; }
+.float-right { float: right; }
+.align-left  { text-align: left; }
+.align-right {	text-align: right; }
+
+/* additional classes */
+.clear { clear: both; }
+.gray  { color: #BFBFBF; }
+
+
 
 
 </style>
 </head>
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();"> 
-<div id="header" class="MainLayout" style="position:fixed; top: 0; left:0; width:100%;  background-color:white; min-height:25px; height:auto!important;height:25px;">Header 
- <a href="" id="logOutLink"> Log Out</a>
+<script type="text/javascript">
+$(document).ready( function(){
 
-</div>
+	$("#logout").click(logOutUser);
+	$("#aboutGolfScore").click(function(){setMainContentPane(showAboutPane);});
+	$("a#SummaryPage").click(function(){setMainContentPane(showGolfScoreSummary);});
+});
+
+//Layout Functions
+var currentContentPane="";
+function bodyOnLoad(){
+  sizeLeftNav();
+}
+function bodyOnResize(){
+  sizeLeftNav();
+}
+
+function sizeLeftNav(){
+
+
+  document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
+  document.getElementById('mainContent').style.top="100px";
+  document.getElementById('mainContent').style.left="0px";
+  document.getElementById('mainContent').style.height=(window.innerHeight - 135 ) +"px";
+  document.getElementById('mainContent').style.width=(window.innerWidth- 20 ) +"px";
+}
+function displayMainLayout(showHide){
+  var display = (showHide)?"block":"none";
+  //document.getElementById('leftnav').style.display=display;
+  document.getElementById('header').style.display=display;
+  document.getElementById('footer').style.display=display;
+  document.getElementById('mainContent').style.display=display;
+  display = (showHide)?"none":"block";
+  document.getElementById('LoginPortal').style.display=display;
+
+}
+function setMainContentPane(showFunction){
+  if(document.getElementById(currentContentPane)!= undefined){
+	document.getElementById(currentContentPane).style.display="none";
+  }
+  //document.getElementById(divId).style.display="block";
+  currentContentPane = showFunction();
+
+}
+
+
+
+
+</script>
+<div id="header"><div id="header-content">	
+	<h1 id="logo"><a href="index.html" title="">golf<span class="gray">score</span></a></h1>	
+		<h2 id="slogan">keepin' it honest...</h2>
+
+		<div id = "topMenuBar" style="display:none;"> 
+		<ul>
+			<li><a id="SummaryPage">Home</a></li>
+			<li><a id="">Golfers</a></li>
+			<li><a href="index.html">Scores</a></li>
+			<li><a id="aboutGolfScore">About</a></li>
+			<li id="logout"><a >Logout</a></li>			
+		</ul>	</div>
+	</div ></div >
+
 <div id="footer" class="MainLayout" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:#DCDCDC;"><span id="statusMsg" ></span></div>
 
-<div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto'> l
-left nav stuff
+<div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto;'> 
 </div>
 
 
-<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px">
+<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;">
 
 
 <div id="sample" class="MainLayout MainContentPaneStyle" >blah blah blah <input type="text"/> blah blah blah
@@ -207,6 +673,86 @@ blah blah blah
 
 
 <div id="sample2" class="MainContentPaneStyle">blah1 blah1 blah1</div>
+
+
+
+<div id="golfScoreSummary">
+<table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable'>
+<tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
+</table>
+
+</div>
+<script type="text/javascript">
+
+function showGolfScoreSummary(){
+  var divId="golfScoreSummary";
+  $("#"+divId).fadeIn();
+  return divId;
+
+}
+
+function retrieveGolfScoreSummary(){ 
+"use strict";
+  var startTime, stopTime;
+  var rowCount, rowNdx,r, newHTML, newRow;
+  var params = {};
+  params['spwfResource'] = "golf_score_summary";
+  params['spwfAction'] = "select";
+  params['user_id'] = usrLoginId;
+  params['password'] = usrSessionId;
+  registerAction();
+
+$("#golfScoreSummaryTable").find("tr:gt(0)").remove();
+  startTime= new Date();
+    $.post(urlTarget,params, function(rJSON){ 
+		stopTime=new Date();
+		if(!validateServerResponse(rJSON)){
+			alert("Sorry, there was a problem communicating with the server.");
+			return false;
+		}
+newHTML="";
+		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
+		   (rowNdx%2==0)?'a':'b'
+		  newRow = '<tr id="golferRow' + rJSON.rows[rowNdx].golfer_id +'" class="row-' +( (rowNdx%2==0)?'a':'b') +'">';
+		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golfer_name + '</td>';
+		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golf_score  +'</td>';
+		  newRow = newRow + '<td>' +extractDateFromPg(rJSON.rows[rowNdx].first_date) + ' to '+ extractDateFromPg(rJSON.rows[rowNdx].last_date)  +'</td>';
+		  newRow = newRow + '</tr>'
+		  $("#golfScoreSummaryTable tr:last").after(newRow);
+		}
+		$("#statusMsg").html("Sucessfully Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+
+        });  
+}
+
+</script>
+
+
+<div id="aboutPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
+<div id ="aboutPaneCenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; background-color:white; max-width:300; ">
+<h1 style="width:40em;margin-left: auto; margin-right: auto;text-align:center;">About golfscore</h1>
+
+<p style="width:40em;margin-left: auto; margin-right: auto;">golfscore is an open source application developed by Martinanalytics.  Part of our open source model leverages software developed by other open source contributors that we recognize here:</p>
+<ul style="width:40em;margin-left: auto; margin-right: auto;padding: 10px 0px 10px 100px;">
+<li><a href="">jQuery</a> provides our AJAX and Javascript handlers</li>
+<li>Site styling provided by <a href="http://www.styleshout.com/">StyleShout's</a> PixelGreen web template</li>
+<li><a href="http://www.apache.org/">Apache Web Server</a> </li>
+<li>Proudly developed in <a href="http://www.perl.org/">Perl</a> </li>
+<li>Database backended by <a href="http://www.postgresql.org/">PostgreSQL</a> </li>
+<li>Developed on the <a href="http://www.ubuntu.org/">Ubuntu</a> Platform </li>
+
+</ul>
+</div>
+</div>
+<script type="text/javascript">
+
+function showAboutPane(){
+  var divId="aboutPane";
+  $("#"+divId).fadeIn();
+  return divId;
+}
+
+</script>
 
 
 
@@ -237,18 +783,44 @@ function authenticateUser(){
  		var r = responseJSON.rows[0];
 		usrSessionId = r.session_id;
 		usrLoginId = r.user_id;
-		$("#password").val("");
-		displayMainLayout(true);
 		$("#statusMsg").html("Successfully Authenticated User in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+		onSuccessfulLogin();
+		
 
-            //alert("Response:\n" + r.session_id +"Delivered in "+(stopTime.getTime()-startTime.getTime())/1000);  
         });  
 }
 
+function onSuccessfulLogin(){
+	$("#password").val("");
+	displayMainLayout(true);
+	$("#topMenuBar").show();
+	registerAction();
+	timeoutIfNoAction();
+	setMainContentPane(showGolfScoreSummary);
+	retrieveGolfScoreSummary()
+
+}
+// timeout function
+function timeoutIfNoAction(){ "use strict";
+	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
+	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
+		usrLogoutScheduled = true;
+		$("#statusMsg").html("Logging Out User in 1 minute");
+		window.setTimeOut(function(){if (usrLogoutScheduled){logOutUser();}},60000);
+	}else{
+	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
+	}
+
+}
+function registerAction(){
+usrLastAction= new Date();
+usrLogoutScheduled = false;
+
+
+}
+
+
 function logOutUser(){
-  usrSessionId ="";
-  usrLoginId="";
-  displayMainLayout(false);
   location.reload(true);
 return;
 }
@@ -270,6 +842,7 @@ function validateLoginForm(){ "use strict";
 </script>
 
 <div id="LoginPortal" style="position:fixed; height:100%; width:100%">
+<img align="center" height="150" width ="470" src="./img/headerphoto.jpg">
 <div  class="vcenter">
 <form name="loginForm" action="">  
   <fieldset style="border:0">  
@@ -295,6 +868,16 @@ function validateLoginForm(){ "use strict";
 </div>
 </div> <!--loginportal--> 
 <!--End LoginPortal-->
+
+<div id="customMsgBox" style="position: absolute;height:100%;width:100%; top:0; left:0;background-color:gray;opacity:0.5;z-index:1000;display:none;">
+<!--
+<table style="height:100%; width:100%">
+	<tr><td colspan="3">&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>msg</td><td>&nbsp;</td></tr>
+-->
+<div style="margin-left: auto; margin-right:auto;min-height: 10em; display: table-cell; vertical-align: middle; border-style=onset;border-width:1px; width:300px; height:300px; background-color:red">msg</div>
+
+</div>
 
 
 </body>
