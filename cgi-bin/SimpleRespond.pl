@@ -14,9 +14,9 @@ Main:{
   $params = Vars;
 #  $params = {user_id =>'simpledemo', password =>'simpledemo', spwfResource=>"security_user", spwfAction=>"authenticate"};
    if($debug){     
-	print STDERR "Script running\n";
+	print STDERR "Script running - Parameters received:\n";
   	while ( my ($key, $value) = each(%{$params}) ) {
-          print STDERR "$key => $value\n";
+          print STDERR "\t$key => $value\n";
     	}
    }
   if(!$qaMode){	$DBInfo ={dbname=>"concordc_firstapp", user=>"concordc_fistapp", password=>$prodServerPassword};
@@ -99,6 +99,20 @@ sub toCC{
   return $out;
 }
 
+sub removeArrayElement(){
+  my $arrayRef = shift;
+  my $elementToRemove = shift;
+  my $ndx=0;
+  for( $ndx =0; $ndx <@$arrayRef; $ndx++){
+   if (${$arrayRef}[$ndx] eq $elementToRemove){
+    splice(@{$arrayRef}, $ndx, 1);
+     last;
+   }
+  }
+   return;
+
+}
+
 sub buildSQLColsList{
   my $colArrayRef = shift;
   my($SQLColsList);
@@ -118,10 +132,11 @@ sub buildSTH{
   if(!$raDef){ return "ResourceAction Not Defined:" .$params->{spwfResource} . "-". $params->{spwfAction} ;}
   @spFields = (@stdFieldNames,@{$raDef->{pf}});
   $sql = "SELECT " . &buildSQLColsList($raDef->{rf})  ." from $raDef->{proc}('CHECK_AUTH'," . ("?," x $#spFields) . "?);"  ;
+  print STDERR "SQL: $sql\n" if($debug);
   $sth = $dbh->prepare($sql);
   $ndx=1;
   foreach(@spFields){
-	print "$ndx $_ $params->{$_}\n " if $debug;
+	print STDERR "\tBinding Params $ndx $_ $params->{$_}\n " if ($debug);
 	$sth->bind_param($ndx++,$params->{$_});
   }
   return $sth;
@@ -149,11 +164,10 @@ sub buildResourceActionDef{
 	if($action eq "SELECT"){
 		  $rad = { rf=>\@allFields, pf=>\@stdSelectParamFields, proc=>"sys_code_sq"};
 	}elsif($action eq "INSERT"){
-		splice @paramFields,5,1; #remove last_update
-		splice @paramFields,0,2; #remove client_id, prkey
+		&removeArrayElement(\@paramFields, 'last_update');
+		&removeArrayElement(\@paramFields, 'sys_code_id');
 	  	$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"sys_code_iq" };
 	}elsif($action eq "UPDATE"){
-		splice @paramFields,0,1; #remove client_id, prkey 
 		$rad= { rf=>\@allFields, pf=>\@paramFields, proc=>"sys_code_uq" };
   	}elsif($action eq "DELETE"){
 		$rad =   { rf=>[], pf=>['sys_code_id','last_update'], proc=>"sys_code_dq" };
@@ -180,10 +194,18 @@ sub buildResourceActionDef{
 	if($action eq "SELECT"){
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"cross_table_cache_sq"};
 	}
-
+} elsif($resource eq "GOLF_SCORE" ){
+	 @allFields = ('golf_score_id', 'last_update', 'golf_score', 'golfer_id' );
+	if($action eq "INSERT"){
+		@paramFields =@allFields;
+		&removeArrayElement(\@paramFields, 'golf_score_id');
+		&removeArrayElement(\@paramFields, 'last_update');
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_iq"};
+	}
 
 
   } else {return;}
   return $rad;
 }
+
 

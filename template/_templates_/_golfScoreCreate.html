@@ -1,10 +1,12 @@
 [%divId="golfScoreCreate"%]
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle">
+<form id="golfScore" action="">
 <table id="golfScoreFormTable" style="" class='formTable'>
-<tr><td> Golfer </td><td><select id="golfScoreForm.golfer_id"></select></td></tr>
-<tr><td> Score </td><td><input type="text" id="golfScoreForm.score"/></td></tr>
-<tr><td colspan="2"><button id="golfScoreForm.Save" value="Save" >Save</button></td></tr>
+<tr><td> Golfer </td><td><select id="golfer_idselect"><option>loading</option></select></td></tr>
+<tr><td> Score </td><td><input type="text" id="golfScoreFormscore"/></td></tr>
+<tr><td colspan="2"><button id="golfScoreFormSave" value="Save" >Save</button><input type="hidden" id="last_update"></td></tr>
 </table>
+</form>
 
 </div> [%# end golfScoreSummary%]
 <script type="text/javascript">
@@ -14,18 +16,32 @@ function show[%ucfirst(divId)%](){
   return "[%divId%]";
 }
 
-function retrieveGolfScoreSummary(){ 
+$(document).ready(function(){
+$("#golfScoreFormSave").click(saveGolfScore);
+});
+
+function saveGolfScore(){ 
 "use strict";
   var startTime, stopTime;
   var rowCount, rowNdx,r, newHTML, newRow;
   var params = {};
-  params['spwfResource'] = "golf_score_summary";
-  params['spwfAction'] = "select";
+  params['spwfResource'] = "golf_score";
   params['user_id'] = usrLoginId;
   params['password'] = usrSessionId;
   registerAction();
 
-$("#golfScoreSummaryTable").find("tr:gt(0)").remove();[%#remove all rows greater than 1.%]
+
+params['golfer_id'] = $("#golfer_idselect").val();
+params['last_update'] = $("#last_update").val();
+params['golf_score'] = $("#golfScoreFormscore").val();
+
+  if(params['last_update']!= ""){
+    params['spwfAction'] = "update";
+  }else{
+    params['spwfAction'] = "insert";
+  }
+
+//$("#golfScoreSummaryTable").find("tr:gt(0)").remove();[%#remove all rows greater than 1.%]
   startTime= new Date();
     $.post(urlTarget,params, function(rJSON){ 
 		stopTime=new Date();
@@ -34,18 +50,19 @@ $("#golfScoreSummaryTable").find("tr:gt(0)").remove();[%#remove all rows greater
 			return false;
 		}
 newHTML="";
-		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
-		   (rowNdx%2==0)?'a':'b'
-		  newRow = '<tr id="golferRow' + rJSON.rows[rowNdx].golfer_id +'" class="row-' +( (rowNdx%2==0)?'a':'b') +'">';
-		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golfer_name + '</td>';
-		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golf_score  +'</td>';
-		  newRow = newRow + '<td>' +extractDateFromPg(rJSON.rows[rowNdx].first_date) + ' to '+ extractDateFromPg(rJSON.rows[rowNdx].last_date)  +'</td>';
-		  newRow = newRow + '</tr>'
-		  $("#golfScoreSummaryTable tr:last").after(newRow);
-		}
-		statusMsg("Sucessfully Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+//		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
+//		   (rowNdx%2==0)?'a':'b'
+//		  newRow = '<tr id="golferRow' + rJSON.rows[rowNdx].golfer_id +'" class="row-' +( (rowNdx%2==0)?'a':'b') +'">';
+//		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golfer_name + '</td>';
+//		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golf_score  +'</td>';
+//		  newRow = newRow + '<td>' +extractDateFromPg(rJSON.rows[rowNdx].first_date) + ' to '+ extractDateFromPg(rJSON.rows[rowNdx].last_date)  +'</td>';
+//		  newRow = newRow + '</tr>'
+//		  $("#golfScoreSummaryTable tr:last").after(newRow);
+//		}
+		logMsg("Sucessfully Saved Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
 
         });  
+ return false; [%#Dont actually submit%]
 }
 
 </script>

@@ -1,10 +1,14 @@
 
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
+<head>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 <head> 
 <title> Simple2 Demo</title> 
 <script type="text/javascript" src="./jquery-1.7.1.js"></script>
-
+<script type="text/javascript" src="./angular-0.9.19.min.js"></script>
 
 <script type="text/javascript"> 
 //<![CDATA[
@@ -61,6 +65,21 @@ function extractDateFromPg(pgDate){
  return pgDate.substring(0,10);
 }
 
+
+// populates select list from array of items given as objects: { lbl: 'text', val: 'value' }
+function populateSelect(el, items) {
+  var optionString="<option value='0'>Please Select...</option>";
+    $.each(items, function () {
+    	optionString = optionString + "<option value='" + this.val +"'>" + this.lbl +"</option>";
+	});
+el.html(optionString);
+}
+
+window.onbeforeunload = function () {
+   return "Are you sure you want to leave my glorious Flex app?"
+}
+
+
 $(document).ready(function(){
 	$('.error').hide();  
 	$("#login_button").click(function(){
@@ -80,6 +99,7 @@ function retrieveCache(){
   var startTime, stopTime;
   var rowCount, rowNdx,r, newHTML, newRow;
   var params = {};
+  var typeNdx;
   params['spwfResource'] = "cross_table_cache";
   params['spwfAction'] = "select";
   params['user_id'] = usrLoginId;
@@ -88,25 +108,30 @@ function retrieveCache(){
 
   startTime= new Date();
     $.post(urlTarget,params, function(rJSON){ 
-		stopTime=new Date();
-		if(!validateServerResponse(rJSON)){
-			alert("Sorry, there was a problem communicating with the server.");
-			return false;
-		}
-		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
-		  
-		if (!(rJSON.rows[rowNdx].lbl in typeLabelValueCache )){
-			typeLabelValueCache[rJSON.rows[rowNdx].tp]={}; 
-		}
-		typeLabelValueCache[rJSON.rows[rowNdx].tp][rJSON.rows[rowNdx].lbl] = rJSON.rows[rowNdx].val;
-		}
-
-		
-statusMsg("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-
+	stopTime=new Date();
+	if(!validateServerResponse(rJSON)){
+		alert("Sorry, there was a problem communicating with the server.");
+		return false;
+	}
+	for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
+	  
+	  if (!(rJSON.rows[rowNdx].tp in typeLabelValueCache )){
+		//typeLabelValueCache[rJSON.rows[rowNdx].tp]={}; 
+		typeLabelValueCache[rJSON.rows[rowNdx].tp]=new Array();
+		typeNdx=0;
+	  }
+	  //typeLabelValueCache[rJSON.rows[rowNdx].tp][typeNdx++] = {lbl: rJSON.rows[rowNdx].lbl , val:rJSON.rows[rowNdx].val};
+	  typeLabelValueCache[rJSON.rows[rowNdx].tp].push( {lbl: rJSON.rows[rowNdx].lbl , val:rJSON.rows[rowNdx].val});
+	}
+        onRefreshCache();
+	statusMsg("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
         });  
 }
 
+function onRefreshCache(){
+
+  populateSelect($('#golfer_idselect'), typeLabelValueCache["golfer"]);
+}
 
 //]]
 </script>
@@ -649,6 +674,9 @@ input.button {
 
 </style>
 </head>
+
+
+</head>
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();"> 
 <script type="text/javascript">
 $(document).ready( function(){
@@ -781,11 +809,13 @@ newHTML="";
 
 
 <div id="golfScoreCreate" class="MainLayout MainContentPaneStyle">
+<form id="golfScore" action="">
 <table id="golfScoreFormTable" style="" class='formTable'>
-<tr><td> Golfer </td><td><select id="golfScoreForm.golfer_id"></select></td></tr>
-<tr><td> Score </td><td><input type="text" id="golfScoreForm.score"/></td></tr>
-<tr><td colspan="2"><button id="golfScoreForm.Save" value="Save" >Save</button></td></tr>
+<tr><td> Golfer </td><td><select id="golfer_idselect"><option>loading</option></select></td></tr>
+<tr><td> Score </td><td><input type="text" id="golfScoreFormscore"/></td></tr>
+<tr><td colspan="2"><button id="golfScoreFormSave" value="Save" >Save</button><input type="hidden" id="last_update"></td></tr>
 </table>
+</form>
 
 </div> 
 <script type="text/javascript">
@@ -795,18 +825,32 @@ function showGolfScoreCreate(){
   return "golfScoreCreate";
 }
 
-function retrieveGolfScoreSummary(){ 
+$(document).ready(function(){
+$("#golfScoreFormSave").click(saveGolfScore);
+});
+
+function saveGolfScore(){ 
 "use strict";
   var startTime, stopTime;
   var rowCount, rowNdx,r, newHTML, newRow;
   var params = {};
-  params['spwfResource'] = "golf_score_summary";
-  params['spwfAction'] = "select";
+  params['spwfResource'] = "golf_score";
   params['user_id'] = usrLoginId;
   params['password'] = usrSessionId;
   registerAction();
 
-$("#golfScoreSummaryTable").find("tr:gt(0)").remove();
+
+params['golfer_id'] = $("#golfer_idselect").val();
+params['last_update'] = $("#last_update").val();
+params['golf_score'] = $("#golfScoreFormscore").val();
+
+  if(params['last_update']!= ""){
+    params['spwfAction'] = "update";
+  }else{
+    params['spwfAction'] = "insert";
+  }
+
+//$("#golfScoreSummaryTable").find("tr:gt(0)").remove();
   startTime= new Date();
     $.post(urlTarget,params, function(rJSON){ 
 		stopTime=new Date();
@@ -815,18 +859,19 @@ $("#golfScoreSummaryTable").find("tr:gt(0)").remove();
 			return false;
 		}
 newHTML="";
-		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
-		   (rowNdx%2==0)?'a':'b'
-		  newRow = '<tr id="golferRow' + rJSON.rows[rowNdx].golfer_id +'" class="row-' +( (rowNdx%2==0)?'a':'b') +'">';
-		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golfer_name + '</td>';
-		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golf_score  +'</td>';
-		  newRow = newRow + '<td>' +extractDateFromPg(rJSON.rows[rowNdx].first_date) + ' to '+ extractDateFromPg(rJSON.rows[rowNdx].last_date)  +'</td>';
-		  newRow = newRow + '</tr>'
-		  $("#golfScoreSummaryTable tr:last").after(newRow);
-		}
-		statusMsg("Sucessfully Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+//		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
+//		   (rowNdx%2==0)?'a':'b'
+//		  newRow = '<tr id="golferRow' + rJSON.rows[rowNdx].golfer_id +'" class="row-' +( (rowNdx%2==0)?'a':'b') +'">';
+//		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golfer_name + '</td>';
+//		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golf_score  +'</td>';
+//		  newRow = newRow + '<td>' +extractDateFromPg(rJSON.rows[rowNdx].first_date) + ' to '+ extractDateFromPg(rJSON.rows[rowNdx].last_date)  +'</td>';
+//		  newRow = newRow + '</tr>'
+//		  $("#golfScoreSummaryTable tr:last").after(newRow);
+//		}
+		logMsg("Sucessfully Saved Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
 
         });  
+ return false; 
 }
 
 </script>
@@ -871,7 +916,7 @@ alert("");
 function showClientLogViewer(){
   $("#clientLogViewer").fadeIn();
   $("ul#clientLogView").find("li").remove();
-	$("ul#clientLogView").html("<li>Log viewed: "+ new Date()+"</li>");
+	$("ul#clientLogView").html("<li>Log viewed|"+ new Date()+"</li>");
   for(var ndx=0;ndx<clientLog.length;ndx++){
 	$("ul#clientLogView li:last").after("<li>" + clientLog[ndx] + "</li>");
   }

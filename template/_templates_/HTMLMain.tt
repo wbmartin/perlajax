@@ -1,16 +1,10 @@
 [%- FILTER redirect("/index.html") -%]
 [%serverErrorMsg_Communication ="Sorry, there was a problem communicating with the server."%]
-[%INCLUDE core/_top.html%]
-<script type="text/javascript"> 
-//<![CDATA[
-[%INCLUDE core/_header1.js%]
-[%INCLUDE core/_cache.js%]
-//]]
-</script>
-<style type="text/css">
-[%INCLUDE style/_main.css%]
-[%INCLUDE style/_PixelGreen.css%]
-</style>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
+<head>
+[%INCLUDE core/_header.html%]
 </head>
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();"> 
 [%INCLUDE core/_LayoutComponents.html%]

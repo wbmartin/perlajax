@@ -51,6 +51,21 @@ function extractDateFromPg(pgDate){
  return pgDate.substring(0,10);
 }
 
+
+// populates select list from array of items given as objects: { lbl: 'text', val: 'value' }
+function populateSelect(el, items) {
+  var optionString="<option value='0'>Please Select...</option>";
+    $.each(items, function () {
+    	optionString = optionString + "<option value='" + this.val +"'>" + this.lbl +"</option>";
+	});
+el.html(optionString);
+}
+[%#http://stackoverflow.com/questions/5263583/implement-a-back-button-warning-in-javascript-for-use-in-flex%]
+window.onbeforeunload = function () {
+   return "Are you sure you want to leave my glorious Flex app?"
+}
+
+
 $(document).ready(function(){
 	$('.error').hide();  
 	$("#login_button").click(function(){
