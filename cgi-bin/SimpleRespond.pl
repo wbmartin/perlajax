@@ -6,12 +6,19 @@ use DBI;
 use strict;
 Main:{
   my ($DBInfo,$dbh, $json, $json_text,$ndx, $sth,$rowRef ,$params, $cgi, $debug, $qaMode, $prodServerPassword,@rows, $rowCount);
+  my($keywords);
   $debug =1;#1 for debug mode, 0 for normal
   $qaMode=1;#1 for qa mode 0 for production
   $prodServerPassword="";#Changed on Server after publish
   $cgi = CGI->new;
   print header('application/json');
   $params = Vars;
+
+if (exists $params->{"keywords"}){
+  $keywords = from_json($params->{"keywords"});
+  %{$params} = (%{$params}, %{$keywords});
+  delete $params->{"keywords"};
+}
 #  $params = {user_id =>'simpledemo', password =>'simpledemo', spwfResource=>"security_user", spwfAction=>"authenticate"};
    if($debug){     
 	print STDERR "Script running - Parameters received:\n";

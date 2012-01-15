@@ -8,7 +8,7 @@
 <head> 
 <title> Simple2 Demo</title> 
 <script type="text/javascript" src="./jquery-1.7.1.js"></script>
-<script type="text/javascript" src="./angular-0.9.19.min.js"></script>
+<script type="text/javascript" src="./angular-0.9.19.min.js" ng:autobind ></script>
 
 <script type="text/javascript"> 
 //<![CDATA[
@@ -758,21 +758,13 @@ blah blah blah
 
 
 
-<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle">
-<table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable'>
-<tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
-</table>
-
-</div> 
 <script type="text/javascript">
+function GolfScoreSummaryCtl($xhr){
+var self = this;
+this.golferSummaries;//= [{"golfer_id" :1, "golfer_name": "c", "golf_score": "15", "first_date":"01/01/2011", "last_date":"12/31/2011"},
+		//{"golfer_id":2 , "golfer_name": "d", "golf_score": "30", "first_date":"01/01/2011", "last_date":"12/31/2011"}];
 
-function showGolfScoreSummary(){
-  $("#golfScoreSummary").fadeIn();
-  return "golfScoreSummary";
-}
-
-function retrieveGolfScoreSummary(){ 
-"use strict";
+this.retrieveGolfScoreSummary = function(){ 
   var startTime, stopTime;
   var rowCount, rowNdx,r, newHTML, newRow;
   var params = {};
@@ -782,30 +774,54 @@ function retrieveGolfScoreSummary(){
   params['password'] = usrSessionId;
   registerAction();
 
-$("#golfScoreSummaryTable").find("tr:gt(0)").remove();
   startTime= new Date();
-    $.post(urlTarget,params, function(rJSON){ 
-		stopTime=new Date();
-		if(!validateServerResponse(rJSON)){
-			alert("Sorry, there was a problem communicating with the server.");
-			return false;
-		}
-newHTML="";
-		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
-		   (rowNdx%2==0)?'a':'b'
-		  newRow = '<tr id="golferRow' + rJSON.rows[rowNdx].golfer_id +'" class="row-' +( (rowNdx%2==0)?'a':'b') +'">';
-		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golfer_name + '</td>';
-		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golf_score  +'</td>';
-		  newRow = newRow + '<td>' +extractDateFromPg(rJSON.rows[rowNdx].first_date) + ' to '+ extractDateFromPg(rJSON.rows[rowNdx].last_date)  +'</td>';
-		  newRow = newRow + '</tr>'
-		  $("#golfScoreSummaryTable tr:last").after(newRow);
-		}
-		$("#statusMsg").html("Sucessfully Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+ //$xhr('GET', '/cgi-bin2/SimpleRespond.pl?user_id=golfscore&spwfResource=golf_score_summary&spwfAction=select&session_id='+usrSessionId, function(code, response) {
+ $xhr('POST', '/cgi-bin2/SimpleRespond.pl',params, function(code, response) {
+    self.golferSummaries = response.rows;
+  });
+  //  $.post(urlTarget,params, function(rJSON){ 
+//		stopTime=new Date();
+//		if(!validateServerResponse(rJSON)){
+//			alert("Sorry, there was a problem communicating with the server.");
+//			return false;
+//		}
+//		golfScope.golferSummaries = rJSON.rows;
+//		$("#statusMsg").html("Sucessfully Retrieved Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+//
+  //      });  
 
-        });  
+}//endretrieveGolferSummaries
+
+}//end class
+
+GolfScoreSummaryCtl.prototype.test = function(){
+this.golferSummaries= [{"golfer_id" :1, "golfer_name": "A", "golf_score": "15", "first_date":"01/01/2011", "last_date":"12/31/2011"},
+		{"golfer_id":2 , "golfer_name": "B", "golf_score": "30", "first_date":"01/01/2011", "last_date":"12/31/2011"}];
+
+
+}
+function showGolfScoreSummary(){
+  $("#golfScoreSummary").fadeIn();
+  return "golfScoreSummary";
 }
 
+
+
+
 </script>
+
+<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl">
+<table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
+<tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
+  <tr ng:repeat="summary in golferSummaries">
+  	<td>{{summary.golfer_id}} {{summary.golfer_name}}</td><td>{{summary.golf_score}}</td><td>{{summary.first_date}} - {{summary.last_date}}</td>
+ </tr>
+</table>
+<button ng:click="retrieveGolfScoreSummary()">Tst</button>
+<button ng:click="test()">Tst2</button>
+
+</div> 
+
 
 
 <div id="golfScoreCreate" class="MainLayout MainContentPaneStyle">
@@ -968,7 +984,8 @@ function onSuccessfulLogin(){
 	registerAction();
 	timeoutIfNoAction();
 	setMainContentPane(showGolfScoreSummary);
-	retrieveGolfScoreSummary();
+//var temp =  GolfScoreSummaryCtl();
+//	temp.retrieveGolfScoreSummary();
 	retrieveCache();
 
 }
