@@ -13,7 +13,7 @@ Begin
   update security_user 
   set session_expire_dt = now() + '20 min'
   where user_id = userID_ 
-    and session_id = sessionId_;
+    and session_id = sessionId_ and session_id is not null and session_id !='';
   if found then
     return 'Valid Session' ;
   else 

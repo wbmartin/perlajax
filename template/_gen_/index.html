@@ -82,12 +82,12 @@ window.onbeforeunload = function () {
 
 $(document).ready(function(){
 	$('.error').hide();  
-	$("#login_button").click(function(){
-	  if(validateLoginForm()) {
-		authenticateUser();
-          }
-	  return false;// don't actually submit	
-}); 
+//	$("#login_button").click(function(){
+//	  if(validateLoginForm()) {
+//		authenticateUser();
+//          }
+//	  return false;// don't actually submit	
+//}); 
 	$("#user_id").val("golfscore");
 	$("#password").val("golfscore");
 $("logOutLink").click(logOutUser);
@@ -758,48 +758,46 @@ blah blah blah
 
 
 
+<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl">
 <script type="text/javascript">
+var spwfService = new function(){
+  this.ServiceHandles = new Array();
+  this.register = function(name, ref){
+	this.ServiceHandles[name]=ref;
+  };
+  this.exec = function(name, params){
+	if(params == null){ params = {}; }
+  	if(params['user_id'] == null)  params['user_id'] = usrLoginId;
+	if(params['password'] == null) params['password'] = usrSessionId;
+  	registerAction();
+	this.ServiceHandles[name](params);
+  }
+};
 function GolfScoreSummaryCtl($xhr){
-var self = this;
-this.golferSummaries;//= [{"golfer_id" :1, "golfer_name": "c", "golf_score": "15", "first_date":"01/01/2011", "last_date":"12/31/2011"},
-		//{"golfer_id":2 , "golfer_name": "d", "golf_score": "30", "first_date":"01/01/2011", "last_date":"12/31/2011"}];
-
-this.retrieveGolfScoreSummary = function(){ 
+  var self = this;
+  this.golferSummaries;
+  this.retrieveGolfScoreSummary = function(params){ 
   var startTime, stopTime;
-  var rowCount, rowNdx,r, newHTML, newRow;
-  var params = {};
+  if(params == null){ params = {}; }
   params['spwfResource'] = "golf_score_summary";
   params['spwfAction'] = "select";
-  params['user_id'] = usrLoginId;
-  params['password'] = usrSessionId;
-  registerAction();
 
   startTime= new Date();
- //$xhr('GET', '/cgi-bin2/SimpleRespond.pl?user_id=golfscore&spwfResource=golf_score_summary&spwfAction=select&session_id='+usrSessionId, function(code, response) {
- $xhr('POST', '/cgi-bin2/SimpleRespond.pl',params, function(code, response) {
-    self.golferSummaries = response.rows;
+  $xhr('POST', urlTarget,params, function(code, response) {
+	stopTime=new Date();
+	if(!validateServerResponse(response)){
+		alert("Sorry, there was a problem communicating with the server.");
+		return false;
+	}
+	statusMsg("Sucessfully Retrieved Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+        self.golferSummaries = response.rows;
   });
-  //  $.post(urlTarget,params, function(rJSON){ 
-//		stopTime=new Date();
-//		if(!validateServerResponse(rJSON)){
-//			alert("Sorry, there was a problem communicating with the server.");
-//			return false;
-//		}
-//		golfScope.golferSummaries = rJSON.rows;
-//		$("#statusMsg").html("Sucessfully Retrieved Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-//
-  //      });  
 
 }//endretrieveGolferSummaries
+spwfService.register('golferSummaryRetrieve',this.retrieveGolfScoreSummary);
 
 }//end class
 
-GolfScoreSummaryCtl.prototype.test = function(){
-this.golferSummaries= [{"golfer_id" :1, "golfer_name": "A", "golf_score": "15", "first_date":"01/01/2011", "last_date":"12/31/2011"},
-		{"golfer_id":2 , "golfer_name": "B", "golf_score": "30", "first_date":"01/01/2011", "last_date":"12/31/2011"}];
-
-
-}
 function showGolfScoreSummary(){
   $("#golfScoreSummary").fadeIn();
   return "golfScoreSummary";
@@ -810,7 +808,6 @@ function showGolfScoreSummary(){
 
 </script>
 
-<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl">
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
   <tr ng:repeat="summary in golferSummaries">
@@ -818,7 +815,6 @@ function showGolfScoreSummary(){
  </tr>
 </table>
 <button ng:click="retrieveGolfScoreSummary()">Tst</button>
-<button ng:click="test()">Tst2</button>
 
 </div> 
 
@@ -949,33 +945,49 @@ function showClientLogViewer(){
 <!--Begin LoginPortal-->
 
 <script type="text/javascript">
-
-function authenticateUser(){
-"use strict";
+function digest(er, ee) {
+    if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
+    for (var attr in ee) {
+        er[attr] = ee[attr];
+    }
+    return er;
+}
+function LoginPageCtl($xhr,$invalidWidgets){
+var self = this;
+this.$invalidWidgets = $invalidWidgets;
+this.result="";
+this.authenticateUser = function(params){ "use strict";
   var startTime, stopTime;
-  var params = {};
   params['spwfResource'] = "security_user";
   params['spwfAction'] = "authenticate";
-  params['user_id'] = $("#user_id").val();
-  params['password'] = $("#password").val();
 
   startTime= new Date();
-    $.post(urlTarget,params, function(responseJSON){ 
-		stopTime=new Date();
-		if(!validateServerResponse(responseJSON)){
-			alert("Sorry, I Couldn't validate those Credentials");
-			 $("#password").val("");
-			return false;
-		}		
- 		var r = responseJSON.rows[0];
+ 
+ $xhr('POST', urlTarget,params, function(code, response) {
+	stopTime=new Date();
+	if(!validateServerResponse(response) || response.rows[0].session_id ==""){
+		alert("Sorry, I Couldn't validate those Credentials");
+		self.loginForm.password="";
+		return false;
+	}else{
+		statusMsg("Successfully Authenticated User in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+		var r = response.rows[0];
 		usrSessionId = r.session_id;
 		usrLoginId = r.user_id;
-		statusMsg("Successfully Authenticated User in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
 		onSuccessfulLogin();
-		
 
-        });  
+	}
+//self.result = response;
+
+  });
 }
+
+
+}//end LoginPageCtl
+
+
+
+
 
 function onSuccessfulLogin(){
 	$("#password").val("");
@@ -984,8 +996,8 @@ function onSuccessfulLogin(){
 	registerAction();
 	timeoutIfNoAction();
 	setMainContentPane(showGolfScoreSummary);
-//var temp =  GolfScoreSummaryCtl();
-//	temp.retrieveGolfScoreSummary();
+	//funcref.retrieveGolfScoreSummary();
+	spwfService.exec('golferSummaryRetrieve');
 	retrieveCache();
 
 }
@@ -1013,47 +1025,33 @@ function logOutUser(){
   location.reload(true);
 return;
 }
-function validateLoginForm(){ "use strict";
-        $('.error').hide(); 
-        $('.error').html(""); 
-	if( isValidOrNotifyFail(!isFieldIdEmpty("user_id"),"user_id","*Required")
-	  & isValidOrNotifyFail(!isFieldIdEmpty("password"),"password","*Required")
-	){
-	  //alert("ok");
-	  //displayMainLayout(true);
-	  return true;
-	}else{
-	  //alert ("failed");
-	  return false;
-        }
-}//end validateLoginForm();
 
 </script>
 
-<div id="LoginPortal" style="position:fixed; height:100%; width:100%">
+<div id="LoginPortal" style="position:fixed; height:100%; width:100%" ng:controller="LoginPageCtl">
 <img align="center" height="150" width ="470" src="./img/headerphoto.jpg">
 <div  class="vcenter">
-<form name="loginForm" action="">  
+<form name="loginForm" >  
   <fieldset style="border:0">  
-<!-- -->
     <table class="formLayout" style="margin: auto;" vertical-align="middle">
-    <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
+    <tr><td colspan="2" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
 	<span class="small" >Please enter your login credentials</span><hr/></td></tr>
     <tr>
     <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
-    <td><input type="text" name="user_id" id="user_id" size="30" value="" class="fieldbox" /> </td> 
-    <td class="errorColumn">   <label class="error" for="user_id" id="user_id_error"></label> </td> 
+    <td><input type="text" name="loginForm.user_id" id="user_id" size="30" value="" class="fieldbox" ng:required /> </td> 
      </tr><tr>
     <td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
-    <td><input type="password" name="password" id="password" size="30" value="" class="fieldbox" />  </td> 
-    <td class="errorColumn">   <label class="error" for="password" id="password_error"></label>  </td>
+    <td><input type="password" name="loginForm.password" id="password" size="30" value="" class="fieldbox" ng:required />  </td> 
      </tr><tr>
-    <td colspan="3" align="center" style="padding: 15px"><button type="submit" name="submit"  id="login_button" class="custombutton" value="Send" > Login </button>  </td>
+    <td colspan="2" align="center" style="padding: 15px">
+	<button type="button"  id="login_button" class="custombutton"  ng:click="authenticateUser(this.loginForm)"> Login </button>  
+<pre>ok {{this.result}}</pre>
+    </td>
 </tr></table>
-
-
   </fieldset>  
 </form>  
+
+
 </div>
 </div> <!--loginportal--> 
 <!--End LoginPortal-->

@@ -68,12 +68,12 @@ window.onbeforeunload = function () {
 
 $(document).ready(function(){
 	$('.error').hide();  
-	$("#login_button").click(function(){
-	  if(validateLoginForm()) {
-		authenticateUser();
-          }
-	  return false;// don't actually submit	
-}); 
+//	$("#login_button").click(function(){
+//	  if(validateLoginForm()) {
+//		authenticateUser();
+//          }
+//	  return false;// don't actually submit	
+//}); 
 	$("#user_id").val("golfscore");
 	$("#password").val("golfscore");
 $("logOutLink").click(logOutUser);
