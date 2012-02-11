@@ -67,14 +67,23 @@ window.onbeforeunload = function () {
 
 
 $(document).ready(function(){
-	$('.error').hide();  
-//	$("#login_button").click(function(){
-//	  if(validateLoginForm()) {
-//		authenticateUser();
-//          }
-//	  return false;// don't actually submit	
-//}); 
-	$("#user_id").val("golfscore");
-	$("#password").val("golfscore");
-$("logOutLink").click(logOutUser);
+//	$("#user_id").val("golfscore");
+//		$("input#password").val("golfscore");
+alert("ok");
 });
+
+var spwfService = new function(){
+  this.ServiceHandles = new Array();
+  this.register = function(name, ref){
+	this.ServiceHandles[name]=ref;
+  };
+  this.exec = function(name, params){
+//alert ("exec called");
+	if(params == null){ params = {}; }
+  	if(params['user_id'] == null)  params['user_id'] = usrLoginId;
+	if(params['password'] == null) params['password'] = usrSessionId;
+  	registerAction();
+	this.ServiceHandles[name](params);
+  }
+};
+

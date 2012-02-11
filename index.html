@@ -1,14 +1,11 @@
 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
-<head>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng:app> 
 <head> 
 <title> Simple2 Demo</title> 
 <script type="text/javascript" src="./jquery-1.7.1.js"></script>
-<script type="text/javascript" src="./angular-0.9.19.min.js" ng:autobind ></script>
+<script type="text/javascript" src="./angular-0.10.6.min.js" ng:autobind ></script>
 
 <script type="text/javascript"> 
 //<![CDATA[
@@ -81,56 +78,87 @@ window.onbeforeunload = function () {
 
 
 $(document).ready(function(){
-	$('.error').hide();  
-//	$("#login_button").click(function(){
-//	  if(validateLoginForm()) {
-//		authenticateUser();
-//          }
-//	  return false;// don't actually submit	
-//}); 
-	$("#user_id").val("golfscore");
-	$("#password").val("golfscore");
-$("logOutLink").click(logOutUser);
+//	$("#user_id").val("golfscore");
+//		$("input#password").val("golfscore");
+alert("ok");
 });
 
-var typeLabelValueCache = {};
-function retrieveCache(){ 
-"use strict";
+var spwfService = new function(){
+  this.ServiceHandles = new Array();
+  this.register = function(name, ref){
+	this.ServiceHandles[name]=ref;
+  };
+  this.exec = function(name, params){
+//alert ("exec called");
+	if(params == null){ params = {}; }
+  	if(params['user_id'] == null)  params['user_id'] = usrLoginId;
+	if(params['password'] == null) params['password'] = usrSessionId;
+  	registerAction();
+	this.ServiceHandles[name](params);
+  }
+};
+
+
+var cacheCtl;
+
+function CacheCtl($http){
+  cacheCtl = this;
+
+  var self = this;
+  this.typeLabelValueCache = new Array();
+  this.retrieveCache = function(){ 
   var startTime, stopTime;
   var rowCount, rowNdx,r, newHTML, newRow;
   var params = {};
   var typeNdx;
   params['spwfResource'] = "cross_table_cache";
   params['spwfAction'] = "select";
-  params['user_id'] = usrLoginId;
-  params['password'] = usrSessionId;
-  registerAction();
 
   startTime= new Date();
-    $.post(urlTarget,params, function(rJSON){ 
+
+ $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	stopTime=new Date();
-	if(!validateServerResponse(rJSON)){
+	if(!validateServerResponse(data)){
 		alert("Sorry, there was a problem communicating with the server.");
 		return false;
 	}
-	for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
-	  
-	  if (!(rJSON.rows[rowNdx].tp in typeLabelValueCache )){
-		//typeLabelValueCache[rJSON.rows[rowNdx].tp]={}; 
-		typeLabelValueCache[rJSON.rows[rowNdx].tp]=new Array();
-		typeNdx=0;
-	  }
-	  //typeLabelValueCache[rJSON.rows[rowNdx].tp][typeNdx++] = {lbl: rJSON.rows[rowNdx].lbl , val:rJSON.rows[rowNdx].val};
-	  typeLabelValueCache[rJSON.rows[rowNdx].tp].push( {lbl: rJSON.rows[rowNdx].lbl , val:rJSON.rows[rowNdx].val});
-	}
-        onRefreshCache();
 	statusMsg("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-        });  
-}
+        cacheCtl.typeLabelValueCache = response.rows;
+        onRefreshCache();
+
+  });
+
+
+
+
+
+
+
+//    $.post(urlTarget,params, function(rJSON){ 
+//	stopTime=new Date();
+//	if(!validateServerResponse(rJSON)){
+//		alert("Sorry, there was a problem communicating with the server.");
+//		return false;
+//	}
+//	for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
+//	  
+//	  if (!(rJSON.rows[rowNdx].tp in typeLabelValueCache )){
+//		//typeLabelValueCache[rJSON.rows[rowNdx].tp]={}; 
+//		typeLabelValueCache[rJSON.rows[rowNdx].tp]=new Array();
+//		typeNdx=0;
+//	  }
+//	  //typeLabelValueCache[rJSON.rows[rowNdx].tp][typeNdx++] = {lbl: rJSON.rows[rowNdx].lbl , val:rJSON.rows[rowNdx].val};
+//	  typeLabelValueCache[rJSON.rows[rowNdx].tp].push( {lbl: rJSON.rows[rowNdx].lbl , val:rJSON.rows[rowNdx].val});
+//	}
+//        });  
+}//end retrieveCache
+spwfService.register('cacheRetrieve',this.retrieveCache);
+
+}//end CacheCTL
 
 function onRefreshCache(){
-
-  populateSelect($('#golfer_idselect'), typeLabelValueCache["golfer"]);
+golfScoreCtl.golfers = cacheCtl.typeLabelValueCache;
+ // populateSelect($('#golfer_idselect'), typeLabelValueCache["golfer"]);
 }
 
 //]]
@@ -676,12 +704,11 @@ input.button {
 </head>
 
 
-</head>
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();"> 
 <script type="text/javascript">
 $(document).ready( function(){
-
-	$("#logout").click(logOutUser);
+//	$("logOutLink").click(logOutUser);
+//	$("#logout").click(logOutUser);
 	$("#aboutGolfScore").click(function(){setMainContentPane(showAboutPane);});
 	$("a#SummaryPage").click(function(){setMainContentPane(showGolfScoreSummary);});
 	$("a#golfScoreEntry").click(function(){setMainContentPane(showGolfScoreCreate);});
@@ -745,7 +772,9 @@ function setMainContentPane(showFunction){
 </div>
 
 
-<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;">
+
+
+<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" ng:controller="CacheCtl">
 
 
 <div id="sample" class="MainLayout MainContentPaneStyle" >blah blah blah <input type="text"/> blah blah blah
@@ -758,22 +787,8 @@ blah blah blah
 
 
 
-<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl">
 <script type="text/javascript">
-var spwfService = new function(){
-  this.ServiceHandles = new Array();
-  this.register = function(name, ref){
-	this.ServiceHandles[name]=ref;
-  };
-  this.exec = function(name, params){
-	if(params == null){ params = {}; }
-  	if(params['user_id'] == null)  params['user_id'] = usrLoginId;
-	if(params['password'] == null) params['password'] = usrSessionId;
-  	registerAction();
-	this.ServiceHandles[name](params);
-  }
-};
-function GolfScoreSummaryCtl($xhr){
+function GolfScoreSummaryCtl($http){
   var self = this;
   this.golferSummaries;
   this.retrieveGolfScoreSummary = function(params){ 
@@ -783,14 +798,14 @@ function GolfScoreSummaryCtl($xhr){
   params['spwfAction'] = "select";
 
   startTime= new Date();
-  $xhr('POST', urlTarget,params, function(code, response) {
+  $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	stopTime=new Date();
-	if(!validateServerResponse(response)){
+	if(!validateServerResponse(data)){
 		alert("Sorry, there was a problem communicating with the server.");
 		return false;
 	}
 	statusMsg("Sucessfully Retrieved Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-        self.golferSummaries = response.rows;
+        self.golferSummaries = data.rows;
   });
 
 }//endretrieveGolferSummaries
@@ -802,11 +817,8 @@ function showGolfScoreSummary(){
   $("#golfScoreSummary").fadeIn();
   return "golfScoreSummary";
 }
-
-
-
-
 </script>
+<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl">
 
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
@@ -816,21 +828,89 @@ function showGolfScoreSummary(){
 </table>
 <button ng:click="retrieveGolfScoreSummary()">Tst</button>
 
+
+
+
+
+
+
+
+
+
 </div> 
 
 
 
-<div id="golfScoreCreate" class="MainLayout MainContentPaneStyle">
+
+
+<div id="golfScoreCreate" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreCtl">
 <form id="golfScore" action="">
 <table id="golfScoreFormTable" style="" class='formTable'>
-<tr><td> Golfer </td><td><select id="golfer_idselect"><option>loading</option></select></td></tr>
-<tr><td> Score </td><td><input type="text" id="golfScoreFormscore"/></td></tr>
-<tr><td colspan="2"><button id="golfScoreFormSave" value="Save" >Save</button><input type="hidden" id="last_update"></td></tr>
+<tr><td> Golfer </td><td><select name="golfScore.golferSelect" ng:options="golferiterator.lbl for golferiterator in golfers" ></select></td></tr>
+<!--
+<tr><td> Score </td><td><input type="text" name="golfScore.score"/></td></tr>
+-->
+<tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" ng:click="addScore(this.golfScore)" >Save</button><input type="hidden" id="last_update"></td></tr>
 </table>
 </form>
+{{golfers}}<br>
+x {{ {selected_golfScore.golferSelect:golfer}  }}
+
+
 
 </div> 
+
+
+
+
 <script type="text/javascript">
+
+
+  function MyCntrl(){
+    this.colors = [
+      {name:'black', shade:'dark'},
+      {name:'white', shade:'light'},
+      {name:'red', shade:'dark'},
+      {name:'blue', shade:'dark'},
+      {name:'yellow', shade:'light'}
+    ];
+    this.color = this.colors[2]; // red
+  }
+
+
+
+var golfScoreCtl;
+function GolfScoreCtl($http){
+  golfScoreCtl = this;
+  this.golfers;
+  this.addScore = function(params){
+  	if (params == null) var params = {};
+	alert("Golf Score" + params['score']);
+  }
+  this.saveGolfScore = function (params){ 
+	"use strict";
+    var startTime, stopTime;
+    var rowCount, rowNdx,r, newHTML, newRow;
+    if (params == null) var params = {};
+    params['spwfResource'] = "golf_score";
+    if(params['last_update']!= ""){
+      params['spwfAction'] = "update";
+    }else{
+      params['spwfAction'] = "insert";
+    }
+
+$http.post(urlTarget,params).success(function(data, status, headers, config) {
+	stopTime=new Date();
+	if(!validateServerResponse(data)){
+		alert("Sorry, there was a problem communicating with the server.");
+		return false
+	}
+	statusMsg("Saved Golf Score in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+    });
+
+
+  }// end savegolfscore
+}//end GolfScoreCTL
 
 function showGolfScoreCreate(){
   $("#golfScoreCreate").fadeIn();
@@ -952,9 +1032,12 @@ function digest(er, ee) {
     }
     return er;
 }
-function LoginPageCtl($xhr,$invalidWidgets){
+var loginPageCtl;
+function LoginPageCtl($http){
 var self = this;
-this.$invalidWidgets = $invalidWidgets;
+loginPageCtl = this;
+
+//this.$invalidWidgets = $invalidWidgets;
 this.result="";
 this.authenticateUser = function(params){ "use strict";
   var startTime, stopTime;
@@ -962,27 +1045,27 @@ this.authenticateUser = function(params){ "use strict";
   params['spwfAction'] = "authenticate";
 
   startTime= new Date();
- 
- $xhr('POST', urlTarget,params, function(code, response) {
+  $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	stopTime=new Date();
-	if(!validateServerResponse(response) || response.rows[0].session_id ==""){
+	if(!validateServerResponse(data) || data.rows[0].session_id ==""){
 		alert("Sorry, I Couldn't validate those Credentials");
 		self.loginForm.password="";
 		return false;
 	}else{
 		statusMsg("Successfully Authenticated User in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-		var r = response.rows[0];
+		var r = data.rows[0];
 		usrSessionId = r.session_id;
 		usrLoginId = r.user_id;
 		onSuccessfulLogin();
 
 	}
-//self.result = response;
-
   });
 }
 
+spwfService.register('authenticateUser',this.authenticateUser );
 
+//alert($("#user_id").val());
+this.loginForm= {user_id:"golfscore", password:"golfscore"};
 }//end LoginPageCtl
 
 
@@ -996,9 +1079,9 @@ function onSuccessfulLogin(){
 	registerAction();
 	timeoutIfNoAction();
 	setMainContentPane(showGolfScoreSummary);
-	//funcref.retrieveGolfScoreSummary();
 	spwfService.exec('golferSummaryRetrieve');
-	retrieveCache();
+spwfService.exec('cacheRetrieve');
+	//	retrieveCache();
 
 }
 // timeout function
@@ -1025,27 +1108,29 @@ function logOutUser(){
   location.reload(true);
 return;
 }
-
+alert("end of scripts");
 </script>
 
 <div id="LoginPortal" style="position:fixed; height:100%; width:100%" ng:controller="LoginPageCtl">
 <img align="center" height="150" width ="470" src="./img/headerphoto.jpg">
 <div  class="vcenter">
-<form name="loginForm" >  
+<form  >  
   <fieldset style="border:0">  
     <table class="formLayout" style="margin: auto;" vertical-align="middle">
     <tr><td colspan="2" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
 	<span class="small" >Please enter your login credentials</span><hr/></td></tr>
     <tr>
     <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
-    <td><input type="text" name="loginForm.user_id" id="user_id" size="30" value="" class="fieldbox" ng:required /> </td> 
+    <td><input type="text" ng:model="loginForm.user_id" id="user_id" size="30" value="" class="fieldbox" ng:required /> </td> 
      </tr><tr>
     <td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
-    <td><input type="password" name="loginForm.password" id="password" size="30" value="" class="fieldbox" ng:required />  </td> 
+    <td><input type="password" ng:model="loginForm.password" id="password" size="30" value="" class="fieldbox" ng:required />  </td> 
      </tr><tr>
     <td colspan="2" align="center" style="padding: 15px">
 	<button type="button"  id="login_button" class="custombutton"  ng:click="authenticateUser(this.loginForm)"> Login </button>  
+	<!--<button type="button"  id="login_button" class="custombutton"  onclick="spwfService.exec('authenticateUser',this.loginForm)"> Login </button>  
 <pre>ok {{this.result}}</pre>
+-->
     </td>
 </tr></table>
   </fieldset>  

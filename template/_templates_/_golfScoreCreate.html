@@ -1,15 +1,72 @@
 [%divId="golfScoreCreate"%]
-<div id="[%divId%]" class="MainLayout MainContentPaneStyle">
+<div id="[%divId%]" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreCtl">
 <form id="golfScore" action="">
 <table id="golfScoreFormTable" style="" class='formTable'>
-<tr><td> Golfer </td><td><select id="golfer_idselect"><option>loading</option></select></td></tr>
-<tr><td> Score </td><td><input type="text" id="golfScoreFormscore"/></td></tr>
-<tr><td colspan="2"><button id="golfScoreFormSave" value="Save" >Save</button><input type="hidden" id="last_update"></td></tr>
+<tr><td> Golfer </td><td><select name="golfScore.golferSelect" ng:options="golferiterator.lbl for golferiterator in golfers" ></select></td></tr>
+<!--
+<tr><td> Score </td><td><input type="text" name="golfScore.score"/></td></tr>
+-->
+<tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" ng:click="addScore(this.golfScore)" >Save</button><input type="hidden" id="last_update"></td></tr>
 </table>
 </form>
+{{golfers}}<br>
+x {{ {selected_golfScore.golferSelect:golfer}  }}
+
+
 
 </div> [%# end golfScoreSummary%]
+
+
+
+
 <script type="text/javascript">
+
+
+  function MyCntrl(){
+    this.colors = [
+      {name:'black', shade:'dark'},
+      {name:'white', shade:'light'},
+      {name:'red', shade:'dark'},
+      {name:'blue', shade:'dark'},
+      {name:'yellow', shade:'light'}
+    ];
+    this.color = this.colors[2]; // red
+  }
+
+
+
+var golfScoreCtl;
+function GolfScoreCtl($http){
+  golfScoreCtl = this;
+  this.golfers;
+  this.addScore = function(params){
+  	if (params == null) var params = {};
+	alert("Golf Score" + params['score']);
+  }
+  this.saveGolfScore = function (params){ 
+	"use strict";
+    var startTime, stopTime;
+    var rowCount, rowNdx,r, newHTML, newRow;
+    if (params == null) var params = {};
+    params['spwfResource'] = "golf_score";
+    if(params['last_update']!= ""){
+      params['spwfAction'] = "update";
+    }else{
+      params['spwfAction'] = "insert";
+    }
+
+$http.post(urlTarget,params).success(function(data, status, headers, config) {
+	stopTime=new Date();
+	if(!validateServerResponse(data)){
+		alert("[%serverErrorMsg_Communication%]");
+		return false
+	}
+	statusMsg("Saved Golf Score in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+    });
+
+
+  }// end savegolfscore
+}//end GolfScoreCTL
 
 function show[%ucfirst(divId)%](){
   $("#[%divId%]").fadeIn();

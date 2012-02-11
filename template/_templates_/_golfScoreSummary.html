@@ -1,20 +1,6 @@
 [%divId="golfScoreSummary"%]
-<div id="[%divId%]" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl">
 <script type="text/javascript">
-var spwfService = new function(){
-  this.ServiceHandles = new Array();
-  this.register = function(name, ref){
-	this.ServiceHandles[name]=ref;
-  };
-  this.exec = function(name, params){
-	if(params == null){ params = {}; }
-  	if(params['user_id'] == null)  params['user_id'] = usrLoginId;
-	if(params['password'] == null) params['password'] = usrSessionId;
-  	registerAction();
-	this.ServiceHandles[name](params);
-  }
-};
-function GolfScoreSummaryCtl($xhr){
+function GolfScoreSummaryCtl($http){
   var self = this;
   this.golferSummaries;
   this.retrieveGolfScoreSummary = function(params){ 
@@ -24,14 +10,14 @@ function GolfScoreSummaryCtl($xhr){
   params['spwfAction'] = "select";
 
   startTime= new Date();
-  $xhr('POST', urlTarget,params, function(code, response) {
+  $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	stopTime=new Date();
-	if(!validateServerResponse(response)){
+	if(!validateServerResponse(data)){
 		alert("Sorry, there was a problem communicating with the server.");
 		return false;
 	}
 	statusMsg("Sucessfully Retrieved Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-        self.golferSummaries = response.rows;
+        self.golferSummaries = data.rows;
   });
 
 }//endretrieveGolferSummaries
@@ -43,11 +29,8 @@ function show[%ucfirst(divId)%](){
   $("#[%divId%]").fadeIn();
   return "[%divId%]";
 }
-
-
-
-
 </script>
+<div id="[%divId%]" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl">
 
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
@@ -57,5 +40,16 @@ function show[%ucfirst(divId)%](){
 </table>
 <button ng:click="retrieveGolfScoreSummary()">Tst</button>
 
+
+
+
+
+
+
+
+
+
 </div> [%# end golfScoreSummary%]
+
+
 
