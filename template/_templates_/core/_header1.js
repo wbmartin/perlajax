@@ -69,7 +69,6 @@ window.onbeforeunload = function () {
 $(document).ready(function(){
 //	$("#user_id").val("golfscore");
 //		$("input#password").val("golfscore");
-alert("ok");
 });
 
 var spwfService = new function(){

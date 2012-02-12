@@ -80,7 +80,6 @@ window.onbeforeunload = function () {
 $(document).ready(function(){
 //	$("#user_id").val("golfscore");
 //		$("input#password").val("golfscore");
-alert("ok");
 });
 
 var spwfService = new function(){
@@ -123,7 +122,7 @@ function CacheCtl($http){
 		return false;
 	}
 	statusMsg("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-        cacheCtl.typeLabelValueCache = response.rows;
+        cacheCtl.typeLabelValueCache = data.rows;
         onRefreshCache();
 
   });
@@ -846,15 +845,15 @@ function showGolfScoreSummary(){
 <div id="golfScoreCreate" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreCtl">
 <form id="golfScore" action="">
 <table id="golfScoreFormTable" style="" class='formTable'>
-<tr><td> Golfer </td><td><select name="golfScore.golferSelect" ng:options="golferiterator.lbl for golferiterator in golfers" ></select></td></tr>
-<!--
-<tr><td> Score </td><td><input type="text" name="golfScore.score"/></td></tr>
--->
-<tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" ng:click="addScore(this.golfScore)" >Save</button><input type="hidden" id="last_update"></td></tr>
+<tr><td> Golfer </td><td><select ng:model="golfScoreForm.golferSelect" ng:options="golferiterator.lbl for golferiterator in golfers" ></select></td></tr>
+<tr><td> Score </td><td><input ng:model="golfScoreForm.golf_score" type="text"/></td></tr>
+<tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" ng:click="saveGolfScore(this.golfScoreForm)" >Save</button><input type="hidden" id="last_update"></td></tr>
 </table>
 </form>
 {{golfers}}<br>
-x {{ {selected_golfScore.golferSelect:golfer}  }}
+<pre>
+{{golfScoreForm}}
+</pre>
 
 
 
@@ -864,41 +863,31 @@ x {{ {selected_golfScore.golferSelect:golfer}  }}
 
 
 <script type="text/javascript">
-
-
-  function MyCntrl(){
-    this.colors = [
-      {name:'black', shade:'dark'},
-      {name:'white', shade:'light'},
-      {name:'red', shade:'dark'},
-      {name:'blue', shade:'dark'},
-      {name:'yellow', shade:'light'}
-    ];
-    this.color = this.colors[2]; // red
-  }
-
-
-
 var golfScoreCtl;
 function GolfScoreCtl($http){
   golfScoreCtl = this;
   this.golfers;
-  this.addScore = function(params){
-  	if (params == null) var params = {};
-	alert("Golf Score" + params['score']);
-  }
-  this.saveGolfScore = function (params){ 
+  //this.addScore = function(params){
+ // 	if (params == null) var params = {};
+//	alert("Golf Score" + params['score']);
+ // }
+  this.saveGolfScore = function (args){ 
 	"use strict";
     var startTime, stopTime;
     var rowCount, rowNdx,r, newHTML, newRow;
-    if (params == null) var params = {};
+var params = {};
+
+    if (args != null)digest(params, args);  
     params['spwfResource'] = "golf_score";
-    if(params['last_update']!= ""){
+    if(params['last_update']!= null && params['last_update']!= ""){
       params['spwfAction'] = "update";
     }else{
       params['spwfAction'] = "insert";
     }
-
+    params['golfer_id'] = params.golferSelect.val;
+    params['golferSelect']=null;//don't forward to server
+startTime=new Date();
+registerAction();
 $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	stopTime=new Date();
 	if(!validateServerResponse(data)){
@@ -915,55 +904,6 @@ $http.post(urlTarget,params).success(function(data, status, headers, config) {
 function showGolfScoreCreate(){
   $("#golfScoreCreate").fadeIn();
   return "golfScoreCreate";
-}
-
-$(document).ready(function(){
-$("#golfScoreFormSave").click(saveGolfScore);
-});
-
-function saveGolfScore(){ 
-"use strict";
-  var startTime, stopTime;
-  var rowCount, rowNdx,r, newHTML, newRow;
-  var params = {};
-  params['spwfResource'] = "golf_score";
-  params['user_id'] = usrLoginId;
-  params['password'] = usrSessionId;
-  registerAction();
-
-
-params['golfer_id'] = $("#golfer_idselect").val();
-params['last_update'] = $("#last_update").val();
-params['golf_score'] = $("#golfScoreFormscore").val();
-
-  if(params['last_update']!= ""){
-    params['spwfAction'] = "update";
-  }else{
-    params['spwfAction'] = "insert";
-  }
-
-//$("#golfScoreSummaryTable").find("tr:gt(0)").remove();
-  startTime= new Date();
-    $.post(urlTarget,params, function(rJSON){ 
-		stopTime=new Date();
-		if(!validateServerResponse(rJSON)){
-			alert("Sorry, there was a problem communicating with the server.");
-			return false;
-		}
-newHTML="";
-//		for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
-//		   (rowNdx%2==0)?'a':'b'
-//		  newRow = '<tr id="golferRow' + rJSON.rows[rowNdx].golfer_id +'" class="row-' +( (rowNdx%2==0)?'a':'b') +'">';
-//		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golfer_name + '</td>';
-//		  newRow = newRow + '<td>' +rJSON.rows[rowNdx].golf_score  +'</td>';
-//		  newRow = newRow + '<td>' +extractDateFromPg(rJSON.rows[rowNdx].first_date) + ' to '+ extractDateFromPg(rJSON.rows[rowNdx].last_date)  +'</td>';
-//		  newRow = newRow + '</tr>'
-//		  $("#golfScoreSummaryTable tr:last").after(newRow);
-//		}
-		logMsg("Sucessfully Saved Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-
-        });  
- return false; 
 }
 
 </script>
@@ -1108,7 +1048,6 @@ function logOutUser(){
   location.reload(true);
 return;
 }
-alert("end of scripts");
 </script>
 
 <div id="LoginPortal" style="position:fixed; height:100%; width:100%" ng:controller="LoginPageCtl">

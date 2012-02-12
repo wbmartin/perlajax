@@ -22,7 +22,7 @@ function CacheCtl($http){
 		return false;
 	}
 	statusMsg("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-        cacheCtl.typeLabelValueCache = response.rows;
+        cacheCtl.typeLabelValueCache = data.rows;
         onRefreshCache();
 
   });
