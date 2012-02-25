@@ -29,34 +29,10 @@ if (exists $params->{"POSTDATA"}){
   if(!$qaMode){	$DBInfo ={dbname=>"concordc_firstapp", user=>"concordc_fistapp", password=>$prodServerPassword};
   }else{ 	$DBInfo ={dbname=>"golfscore", user=>"golfscore", password=>"golfscore"}; }
   &UTL::dbConnect(\$dbh, $DBInfo);
-#++++++++++++++++++++++++++++++++++Begin TESTING+++++++++++++++++++++++++
-#  $params = {user_id =>'simpledemo', password =>'simpledemo', spwfResource=>"security_user", spwfAction=>"authenticate"};
-#  $sth = &UTL::buildSTH($dbh,$params );
-#  $sth->execute();
-#$rowRef = $sth->fetchrow_hashref();
-#print "session: $rowRef->{session_id} \n";
-  #$params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}};
-  #sth = &UTL::buildSTH($dbh,"ledger_account","select", $params );
-#Select 
-#  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}, where_clause=>"code_type='A'",
-#		 spwfResource=>"sys_code", spwfAction=>"select"};
-#  $sth = &UTL::buildSTH($dbh, $params );
-#insert
-#  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id},code_type=>'A', key=>'B', 
-#		value=>'C', notes=>'blah',spwfResource=>"sys_code", spwfAction=>"insert" };
-#  $sth = &UTL::buildSTH($dbh, $params );
-#update
-#  $sth->execute();
- # my $rowRef2 = $sth->fetchrow_hashref();
-#  $rowRef2->{notes}='got it';
-#  $params = {client_id=>1,user_id =>'simpledemo', session_id =>$rowRef->{session_id}, %$rowRef2, spwfResource=>"sys_code", spwfAction=>"update" };
-#  $sth = &UTL::buildSTH($dbh, $params );
-
-#++++++++++++++++++++++++++++++++++END TESTING+++++++++++++++++++++++++
   $sth = &UTL::buildSTH($dbh, $params );
 
    if(ref($sth))  {
-	print STDERR "Connection Successful\n" if($debug);
+	print STDERR "Connection Successful2\n" if($debug);
      $sth->execute();
 	if(!$sth->err){
 	  # iterate through resultset
@@ -87,7 +63,8 @@ $dbh->disconnect()
 }#End Main
 ################################################################
 package UTL;
-my $debug=0;
+use strict;
+my $debug=1;
 sub dbConnect{
   my ($dbh ,$DBInfo) = @_;
   ${$dbh} = DBI->connect("DBI:Pg:dbname=$DBInfo->{dbname};host=localhost",
@@ -134,6 +111,7 @@ sub buildSTH{
   my ($dbh , $params) = @_;
   my ($sql,@spFields,$raDef, @stdFieldNames, $sth, $ndx);
   @stdFieldNames = ( 'user_id', 'session_id');
+$debug=1;
   # Load the Resource/Action Hashref and standard field names
   $raDef=&buildResourceActionDef($params->{spwfResource}, $params->{spwfAction});
   if(!$raDef){ return "ResourceAction Not Defined:" .$params->{spwfResource} . "-". $params->{spwfAction} ;}

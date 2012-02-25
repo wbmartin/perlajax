@@ -1,7 +1,5 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng:app> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng:app="AppModule"> 
 <head> 
 <title> Simple2 Demo</title> 
 <script type="text/javascript" src="./jquery-1.7.1.js"></script>
@@ -29,24 +27,22 @@ function isFieldIdEmpty(fieldId_){
   return false;
 }
 
-function isValidOrNotifyFail(test_, fieldId_, msg_){
-  if (!test_){ 
-	$("label#" +fieldId_ +"_error").show();  
-	$("label#" +fieldId_ +"_error").html($("label#" +fieldId_ +"_error").html() + " " + msg_  )  ;  
-      	$("input#" +fieldId_).focus();  
-  }
-  return test_;
-}
 
 function validateServerResponse(responseTxt){
 	if(responseTxt == undefined ||responseTxt==null ){
 	  logMsg("validateServerResponse - undefined response");
+	  alert("Sorry, there was an unexpected error communicating with the server.");
 	  return false;
-	}
-	if(responseTxt.errorMsg != undefined){
+	}else if(responseTxt.errorMsg != undefined){
+		if(responseTxt.errorMsg.indexOf('Session Invalid')>-1 ){
+	  		alert("Sorry, the session has expired and you will be logged out");
+			usrSessionId="";
+	  		//window.location.reload();
+		}
 	   logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
 	   return false;
 	}
+  registerAction();
   return true;
 }
 
@@ -58,44 +54,60 @@ function statusMsg(msg){
   $("#statusMsg").html(msg);
   logMsg("Console Msg:" +msg);
 }
-function extractDateFromPg(pgDate){
- return pgDate.substring(0,10);
-}
 
 
-// populates select list from array of items given as objects: { lbl: 'text', val: 'value' }
-function populateSelect(el, items) {
-  var optionString="<option value='0'>Please Select...</option>";
-    $.each(items, function () {
-    	optionString = optionString + "<option value='" + this.val +"'>" + this.lbl +"</option>";
-	});
-el.html(optionString);
-}
 
 window.onbeforeunload = function () {
-   return "Are you sure you want to leave my glorious Flex app?"
+  if(usrSessionId !=""){
+   return "If you click OK and continue to refresh this page, you will lose any data that has not been saved"
+  }
 }
 
 
-$(document).ready(function(){
-//	$("#user_id").val("golfscore");
-//		$("input#password").val("golfscore");
-});
-
-var spwfService = new function(){
-  this.ServiceHandles = new Array();
-  this.register = function(name, ref){
-	this.ServiceHandles[name]=ref;
-  };
-  this.exec = function(name, params){
-//alert ("exec called");
+function prepParams(params){
 	if(params == null){ params = {}; }
-  	if(params['user_id'] == null)  params['user_id'] = usrLoginId;
-	if(params['password'] == null) params['password'] = usrSessionId;
-  	registerAction();
-	this.ServiceHandles[name](params);
-  }
-};
+  	params['user_id'] = usrLoginId;
+	params['session_id'] = usrSessionId;
+}
+// timeout function
+function timeoutIfNoAction(){ "use strict";
+	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
+	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
+		usrLogoutScheduled = true;
+		statusMsg("Logging Out User in 1 minute");
+		window.setTimeout(function(){if (usrLogoutScheduled){logOutUser();}},60000);
+	}else{
+	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
+	}
+
+}
+function registerAction(){
+  usrLastAction= new Date();
+  usrLogoutScheduled = false;
+}
+
+
+function logOutUser(){
+  location.reload(true);
+  return;
+}
+
+function digest(er, ee) {
+    if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
+    for (var attr in ee) {
+        er[attr] = ee[attr];
+    }
+    return er;
+}
+
+
+
+var appModule = angular.module('AppModule', []);
+appModule.filter('pgDate', function(){
+   return function(pgDate){
+      return pgDate.substring(0,10);
+   }
+});
 
 
 var cacheCtl;
@@ -112,15 +124,13 @@ function CacheCtl($http){
   var typeNdx;
   params['spwfResource'] = "cross_table_cache";
   params['spwfAction'] = "select";
+  prepParams(params);
 
   startTime= new Date();
 
  $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	stopTime=new Date();
-	if(!validateServerResponse(data)){
-		alert("Sorry, there was a problem communicating with the server.");
-		return false;
-	}
+	if(!validateServerResponse(data)) return false;
 	statusMsg("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
         cacheCtl.typeLabelValueCache = data.rows;
         onRefreshCache();
@@ -128,30 +138,8 @@ function CacheCtl($http){
   });
 
 
-
-
-
-
-
-//    $.post(urlTarget,params, function(rJSON){ 
-//	stopTime=new Date();
-//	if(!validateServerResponse(rJSON)){
-//		alert("Sorry, there was a problem communicating with the server.");
-//		return false;
-//	}
-//	for (rowNdx=0;rowNdx <rJSON.rowCount; rowNdx++){
-//	  
-//	  if (!(rJSON.rows[rowNdx].tp in typeLabelValueCache )){
-//		//typeLabelValueCache[rJSON.rows[rowNdx].tp]={}; 
-//		typeLabelValueCache[rJSON.rows[rowNdx].tp]=new Array();
-//		typeNdx=0;
-//	  }
-//	  //typeLabelValueCache[rJSON.rows[rowNdx].tp][typeNdx++] = {lbl: rJSON.rows[rowNdx].lbl , val:rJSON.rows[rowNdx].val};
-//	  typeLabelValueCache[rJSON.rows[rowNdx].tp].push( {lbl: rJSON.rows[rowNdx].lbl , val:rJSON.rows[rowNdx].val});
-//	}
-//        });  
 }//end retrieveCache
-spwfService.register('cacheRetrieve',this.retrieveCache);
+
 
 }//end CacheCTL
 
@@ -699,11 +687,15 @@ input.button {
 
 
 
+    input.ng-invalid { border: solid 1px red; }
+    .ng-form {display: block;}
+    .FieldError{
+	color:red;
+    }
 </style>
 </head>
 
-
-<body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();"> 
+<body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();" > 
 <script type="text/javascript">
 $(document).ready( function(){
 //	$("logOutLink").click(logOutUser);
@@ -771,30 +763,20 @@ function setMainContentPane(showFunction){
 </div>
 
 
-
-
 <div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" ng:controller="CacheCtl">
 
-
-<div id="sample" class="MainLayout MainContentPaneStyle" >blah blah blah <input type="text"/> blah blah blah
-blah blah blah
-blah blah blah
- blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blahblah blah blah</div>
-
-
-<div id="sample2" class="MainContentPaneStyle">blah1 blah1 blah1</div>
-
-
-
 <script type="text/javascript">
+var golfScoreSummaryCtl;
 function GolfScoreSummaryCtl($http){
   var self = this;
+golfScoreSummaryCtl = this;
   this.golferSummaries;
   this.retrieveGolfScoreSummary = function(params){ 
   var startTime, stopTime;
   if(params == null){ params = {}; }
   params['spwfResource'] = "golf_score_summary";
   params['spwfAction'] = "select";
+  prepParams(params);
 
   startTime= new Date();
   $http.post(urlTarget,params).success(function(data, status, headers, config) {
@@ -808,38 +790,28 @@ function GolfScoreSummaryCtl($http){
   });
 
 }//endretrieveGolferSummaries
-spwfService.register('golferSummaryRetrieve',this.retrieveGolfScoreSummary);
-
 }//end class
 
+
+
+
+
+
 function showGolfScoreSummary(){
+golfScoreSummaryCtl.retrieveGolfScoreSummary(); 
   $("#golfScoreSummary").fadeIn();
   return "golfScoreSummary";
 }
 </script>
-<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl">
+<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl" >
 
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
   <tr ng:repeat="summary in golferSummaries">
-  	<td>{{summary.golfer_id}} {{summary.golfer_name}}</td><td>{{summary.golf_score}}</td><td>{{summary.first_date}} - {{summary.last_date}}</td>
+  	<td>{{summary.golfer_id}} {{summary.golfer_name}}</td><td>{{summary.golf_score}}</td><td>{{summary.first_date}} - {{summary.last_date |pgDate }}</td>
  </tr>
 </table>
-<button ng:click="retrieveGolfScoreSummary()">Tst</button>
-
-
-
-
-
-
-
-
-
-
 </div> 
-
-
-
 
 
 <div id="golfScoreCreate" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreCtl">
@@ -850,28 +822,17 @@ function showGolfScoreSummary(){
 <tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" ng:click="saveGolfScore(this.golfScoreForm)" >Save</button><input type="hidden" id="last_update"></td></tr>
 </table>
 </form>
-{{golfers}}<br>
-<pre>
-{{golfScoreForm}}
-</pre>
 
 
 
 </div> 
-
-
-
 
 <script type="text/javascript">
 var golfScoreCtl;
 function GolfScoreCtl($http){
   golfScoreCtl = this;
   this.golfers;
-  //this.addScore = function(params){
- // 	if (params == null) var params = {};
-//	alert("Golf Score" + params['score']);
- // }
-  this.saveGolfScore = function (args){ 
+   this.saveGolfScore = function (args){ 
 	"use strict";
     var startTime, stopTime;
     var rowCount, rowNdx,r, newHTML, newRow;
@@ -886,8 +847,8 @@ var params = {};
     }
     params['golfer_id'] = params.golferSelect.val;
     params['golferSelect']=null;//don't forward to server
+prepParams(params);
 startTime=new Date();
-registerAction();
 $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	stopTime=new Date();
 	if(!validateServerResponse(data)){
@@ -958,26 +919,16 @@ function showClientLogViewer(){
 
 </script>
 
-
-
 </div><!--End Main Content-->
-
 <!--Begin LoginPortal-->
 
 <script type="text/javascript">
-function digest(er, ee) {
-    if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
-    for (var attr in ee) {
-        er[attr] = ee[attr];
-    }
-    return er;
-}
 var loginPageCtl;
 function LoginPageCtl($http){
 var self = this;
 loginPageCtl = this;
+this.loginForm={};
 
-//this.$invalidWidgets = $invalidWidgets;
 this.result="";
 this.authenticateUser = function(params){ "use strict";
   var startTime, stopTime;
@@ -1002,14 +953,9 @@ this.authenticateUser = function(params){ "use strict";
   });
 }
 
-spwfService.register('authenticateUser',this.authenticateUser );
-
-//alert($("#user_id").val());
-this.loginForm= {user_id:"golfscore", password:"golfscore"};
+this.loginForm.user_id="golfscore";
+this.loginForm.password="golfscore";
 }//end LoginPageCtl
-
-
-
 
 
 function onSuccessfulLogin(){
@@ -1019,62 +965,32 @@ function onSuccessfulLogin(){
 	registerAction();
 	timeoutIfNoAction();
 	setMainContentPane(showGolfScoreSummary);
-	spwfService.exec('golferSummaryRetrieve');
-spwfService.exec('cacheRetrieve');
-	//	retrieveCache();
-
-}
-// timeout function
-function timeoutIfNoAction(){ "use strict";
-	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
-	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
-		usrLogoutScheduled = true;
-		statusMsg("Logging Out User in 1 minute");
-		window.setTimeout(function(){if (usrLogoutScheduled){logOutUser();}},60000);
-	}else{
-	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
-	}
-
-}
-function registerAction(){
-usrLastAction= new Date();
-usrLogoutScheduled = false;
-
-
-}
-
-
-function logOutUser(){
-  location.reload(true);
-return;
+	cacheCtl.retrieveCache();
 }
 </script>
 
 <div id="LoginPortal" style="position:fixed; height:100%; width:100%" ng:controller="LoginPageCtl">
 <img align="center" height="150" width ="470" src="./img/headerphoto.jpg">
 <div  class="vcenter">
-<form  >  
+<form name="loginHolder">  
   <fieldset style="border:0">  
     <table class="formLayout" style="margin: auto;" vertical-align="middle">
-    <tr><td colspan="2" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
+    <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
 	<span class="small" >Please enter your login credentials</span><hr/></td></tr>
     <tr>
     <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
-    <td><input type="text" ng:model="loginForm.user_id" id="user_id" size="30" value="" class="fieldbox" ng:required /> </td> 
+    <td><input type="text" name="user_id" ng:model="loginForm.user_id" id="user_id" size="30" value="" class="fieldbox" required /> </td> <td><span class="FieldError" ng:show="loginHolder.user_id.$error.REQUIRED">* Required</span></td>
      </tr><tr>
     <td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
-    <td><input type="password" ng:model="loginForm.password" id="password" size="30" value="" class="fieldbox" ng:required />  </td> 
+    <td><input type="password" ng:model="loginForm.password" id="password" size="30" value="" class="fieldbox" required />  </td>  <td><span class="FieldError" ng:show="loginHolder.password.$error.REQUIRED">* Required</span></td>
+
      </tr><tr>
-    <td colspan="2" align="center" style="padding: 15px">
-	<button type="button"  id="login_button" class="custombutton"  ng:click="authenticateUser(this.loginForm)"> Login </button>  
-	<!--<button type="button"  id="login_button" class="custombutton"  onclick="spwfService.exec('authenticateUser',this.loginForm)"> Login </button>  
-<pre>ok {{this.result}}</pre>
--->
+    <td colspan="3" align="center" style="padding: 15px">
+	<button type="button"  id="login_button" class="custombutton"  ng:click="authenticateUser(this.loginForm)" ng:disabled="{{this.loginHolder.$invalid}}"> Login </button>  
     </td>
 </tr></table>
   </fieldset>  
 </form>  
-
 
 </div>
 </div> <!--loginportal--> 
@@ -1089,7 +1005,6 @@ return;
 <div style="margin-left: auto; margin-right:auto;min-height: 10em; display: table-cell; vertical-align: middle; border-style=onset;border-width:1px; width:300px; height:300px; background-color:red">msg</div>
 
 </div>
-
 
 </body>
 </html>

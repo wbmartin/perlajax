@@ -1,13 +1,16 @@
 [%divId="golfScoreSummary"%]
 <script type="text/javascript">
+var golfScoreSummaryCtl;
 function GolfScoreSummaryCtl($http){
   var self = this;
+golfScoreSummaryCtl = this;
   this.golferSummaries;
   this.retrieveGolfScoreSummary = function(params){ 
   var startTime, stopTime;
   if(params == null){ params = {}; }
   params['spwfResource'] = "golf_score_summary";
   params['spwfAction'] = "select";
+  prepParams(params);
 
   startTime= new Date();
   $http.post(urlTarget,params).success(function(data, status, headers, config) {
@@ -21,35 +24,25 @@ function GolfScoreSummaryCtl($http){
   });
 
 }//endretrieveGolferSummaries
-spwfService.register('golferSummaryRetrieve',this.retrieveGolfScoreSummary);
-
 }//end class
 
+
+
+
+
+
 function show[%ucfirst(divId)%](){
+golfScoreSummaryCtl.retrieveGolfScoreSummary(); 
   $("#[%divId%]").fadeIn();
   return "[%divId%]";
 }
 </script>
-<div id="[%divId%]" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl">
+<div id="[%divId%]" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl" >
 
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
   <tr ng:repeat="summary in golferSummaries">
-  	<td>{{summary.golfer_id}} {{summary.golfer_name}}</td><td>{{summary.golf_score}}</td><td>{{summary.first_date}} - {{summary.last_date}}</td>
+  	<td>{{summary.golfer_id}} {{summary.golfer_name}}</td><td>{{summary.golf_score}}</td><td>{{summary.first_date}} - {{summary.last_date |pgDate }}</td>
  </tr>
 </table>
-<button ng:click="retrieveGolfScoreSummary()">Tst</button>
-
-
-
-
-
-
-
-
-
-
 </div> [%# end golfScoreSummary%]
-
-
-

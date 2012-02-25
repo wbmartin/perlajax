@@ -133,3 +133,15 @@ Command-line arguments:  -os linux -ws gtk -arch x86
 
 !ENTRY com.google.gdt.eclipse.managedapis 1 0 2012-02-04 14:19:16.281
 !MESSAGE Failed to load icon cache
+!SESSION 2012-02-18 07:56:13.491 -----------------------------------------------
+eclipse.buildId=I20110613-1736
+java.version=1.6.0_23
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY org.eclipse.core.resources 2 10035 2012-02-18 07:56:23.065
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY com.google.gdt.eclipse.managedapis 1 0 2012-02-24 22:23:51.477
+!MESSAGE Failed to load icon cache

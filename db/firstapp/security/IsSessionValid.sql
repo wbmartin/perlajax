@@ -17,7 +17,8 @@ Begin
   if found then
     return 'Valid Session' ;
   else 
-    return 'Session Invalid -- Access Denied';
+    raise exception 'Session Invalid -- Access Denied';
+    --return 'Session Invalid -- Access Denied';
   end if;
 
 End;

@@ -1,32 +1,21 @@
 [%- FILTER redirect("/index.html") -%]
-[%serverErrorMsg_Communication ="Sorry, there was a problem communicating with the server."%]
-
+[%- serverErrorMsg_Communication ="Sorry, there was a problem communicating with the server." -%]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng:app> 
-[%INCLUDE core/_header.html%]
-<body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();"> 
-[%INCLUDE core/_LayoutComponents.html%]
-
-
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng:app="AppModule"> 
+[%INCLUDE _header.html%]
+<body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();" > 
+[%INCLUDE _LayoutComponents.html%]
 
 <div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" ng:controller="CacheCtl">
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
-
-
-[%INCLUDE _Sample.html%]
-[%INCLUDE _Sample2.html%]
 [%INCLUDE _golfScoreSummary.html%]
 [%INCLUDE _golfScoreCreate.html%]
-[%INCLUDE core/_about.html%]
+[%INCLUDE _about.html%]
 [%INCLUDE core/_clientLog.html%]
-
-
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 </div><!--End Main Content-->
-
-[%INCLUDE core/_LoginPortal.html%]
+[%INCLUDE _LoginPortal.html%]
 [%INCLUDE core/_msgBox.html%]
-
 </body>
 </html>
 [%- END #filter -%]
