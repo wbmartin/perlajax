@@ -16,32 +16,19 @@
 var golfScoreCtl;
 function GolfScoreCtl($http){
   golfScoreCtl = this;
-  this.golfers;
-   this.saveGolfScore = function (args){ 
+  //this.golfers;
+   this.saveGolfScore = function (params){ 
 	"use strict";
-    var startTime, stopTime;
-    var rowCount, rowNdx,r, newHTML, newRow;
-var params = {};
-
-    if (args != null)digest(params, args);  
-    params['spwfResource'] = "golf_score";
-    if(params['last_update']!= null && params['last_update']!= ""){
-      params['spwfAction'] = "update";
-    }else{
-      params['spwfAction'] = "insert";
-    }
+    var startTime;
+    params = prepParams(params,"golf_score",insertUpdateChoose);
     params['golfer_id'] = params.golferSelect.val;
     params['golferSelect']=null;//don't forward to server
-prepParams(params);
-startTime=new Date();
-$http.post(urlTarget,params).success(function(data, status, headers, config) {
-	stopTime=new Date();
-	if(!validateServerResponse(data)){
-		alert("[%serverErrorMsg_Communication%]");
-		return false
-	}
-	statusMsg("Saved Golf Score in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-    });
+    startTime=new Date();
+    $http.post(urlTarget,params).success(
+	function(data, status, headers, config) {
+ 		handleServerResponse("Saved Golf Score ",startTime, data);
+        }
+    );
 
 
   }// end savegolfscore

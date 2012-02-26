@@ -2,25 +2,16 @@
 <script type="text/javascript">
 var golfScoreSummaryCtl;
 function GolfScoreSummaryCtl($http){
-  var self = this;
 golfScoreSummaryCtl = this;
   this.golferSummaries;
   this.retrieveGolfScoreSummary = function(params){ 
   var startTime, stopTime;
-  if(params == null){ params = {}; }
-  params['spwfResource'] = "golf_score_summary";
-  params['spwfAction'] = "select";
-  prepParams(params);
-
+  params=  prepParams(params,"golf_score_summary" ,"select" );
   startTime= new Date();
   $http.post(urlTarget,params).success(function(data, status, headers, config) {
-	stopTime=new Date();
-	if(!validateServerResponse(data)){
-		alert("Sorry, there was a problem communicating with the server.");
-		return false;
+	if(handleServerResponse("Sucessfully Retrieved Golfer Handicaps",startTime, data)){
+	        golfScoreSummaryCtl.golferSummaries = data.rows;
 	}
-	statusMsg("Sucessfully Retrieved Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-        self.golferSummaries = data.rows;
   });
 
 }//endretrieveGolferSummaries

@@ -63,12 +63,23 @@ window.onbeforeunload = function () {
   }
 }
 
-
-function prepParams(params){
-	if(params == null){ params = {}; }
-  	params['user_id'] = usrLoginId;
+function prepParams(params, resource, action){
+ 	if(params == null){ params = {}; }
+  	params['spwfResource'] = resource;
+	params['user_id'] = usrLoginId;
 	params['session_id'] = usrSessionId;
+  	if (action =="INSERTUPDATE"){
+ 	  if(params['last_update']!= null && params['last_update']!= ""){
+      		action = "update";
+    	  }else{
+      		action= "insert";
+    	  }
+        }
+  	params['spwfAction'] = action;
+	return params;
 }
+
+
 // timeout function
 function timeoutIfNoAction(){ "use strict";
 	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
@@ -110,32 +121,44 @@ appModule.filter('pgDate', function(){
 });
 
 
+function handleServerResponse(msg, startTime, data){
+	if(!validateServerResponse(data)){
+		alert("Sorry, there was a problem communicating with the server.");
+		return false
+	}
+	statusMsg( msg +" in " + (new Date().getTime()-startTime.getTime())/1000 + "s" );
+	return true;
+}
+
+
+function onSuccessfulLogin(){
+	$("#password").val("");
+	displayMainLayout(true);
+	$("#topMenuBar").show();
+	registerAction();
+	timeoutIfNoAction();
+	setMainContentPane(showGolfScoreSummary);
+	cacheCtl.retrieveCache();
+}
+
+
 var cacheCtl;
 
 function CacheCtl($http){
   cacheCtl = this;
-
-  var self = this;
-  this.typeLabelValueCache = new Array();
-  this.retrieveCache = function(){ 
-  var startTime, stopTime;
-  var rowCount, rowNdx,r, newHTML, newRow;
-  var params = {};
-  var typeNdx;
-  params['spwfResource'] = "cross_table_cache";
-  params['spwfAction'] = "select";
-  prepParams(params);
-
+  cacheCtl.typeLabelValueCache = new Array();
+  cacheCtl.retrieveCache = function(){ 
+  var startTime,typeNdx, params;
+  params = prepParams(params,"cross_table_cache","select");
   startTime= new Date();
-
- $http.post(urlTarget,params).success(function(data, status, headers, config) {
-	stopTime=new Date();
-	if(!validateServerResponse(data)) return false;
-	statusMsg("Sucessfully Retrieved Cache Values in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-        cacheCtl.typeLabelValueCache = data.rows;
-        onRefreshCache();
-
-  });
+  $http.post(urlTarget,params).success(
+    function(data, status, headers, config) {
+	if(handleServerResponse("Sucessfully Retrieved Cache ",startTime, data)){
+          cacheCtl.typeLabelValueCache = data.rows;
+          onRefreshCache();
+	}
+    }
+  );
 
 
 }//end retrieveCache
@@ -144,8 +167,7 @@ function CacheCtl($http){
 }//end CacheCTL
 
 function onRefreshCache(){
-golfScoreCtl.golfers = cacheCtl.typeLabelValueCache;
- // populateSelect($('#golfer_idselect'), typeLabelValueCache["golfer"]);
+  golfScoreCtl.golfers = cacheCtl.typeLabelValueCache;
 }
 
 //]]
@@ -768,25 +790,16 @@ function setMainContentPane(showFunction){
 <script type="text/javascript">
 var golfScoreSummaryCtl;
 function GolfScoreSummaryCtl($http){
-  var self = this;
 golfScoreSummaryCtl = this;
   this.golferSummaries;
   this.retrieveGolfScoreSummary = function(params){ 
   var startTime, stopTime;
-  if(params == null){ params = {}; }
-  params['spwfResource'] = "golf_score_summary";
-  params['spwfAction'] = "select";
-  prepParams(params);
-
+  params=  prepParams(params,"golf_score_summary" ,"select" );
   startTime= new Date();
   $http.post(urlTarget,params).success(function(data, status, headers, config) {
-	stopTime=new Date();
-	if(!validateServerResponse(data)){
-		alert("Sorry, there was a problem communicating with the server.");
-		return false;
+	if(handleServerResponse("Sucessfully Retrieved Golfer Handicaps",startTime, data)){
+	        golfScoreSummaryCtl.golferSummaries = data.rows;
 	}
-	statusMsg("Sucessfully Retrieved Golfer Handicaps in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-        self.golferSummaries = data.rows;
   });
 
 }//endretrieveGolferSummaries
@@ -832,31 +845,19 @@ var golfScoreCtl;
 function GolfScoreCtl($http){
   golfScoreCtl = this;
   this.golfers;
-   this.saveGolfScore = function (args){ 
+   this.saveGolfScore = function (params){ 
 	"use strict";
     var startTime, stopTime;
-    var rowCount, rowNdx,r, newHTML, newRow;
-var params = {};
-
-    if (args != null)digest(params, args);  
-    params['spwfResource'] = "golf_score";
-    if(params['last_update']!= null && params['last_update']!= ""){
-      params['spwfAction'] = "update";
-    }else{
-      params['spwfAction'] = "insert";
-    }
+    var action;
+    params = prepParams(params,"golf_score","INSERTUPDATE");
     params['golfer_id'] = params.golferSelect.val;
     params['golferSelect']=null;//don't forward to server
-prepParams(params);
-startTime=new Date();
-$http.post(urlTarget,params).success(function(data, status, headers, config) {
-	stopTime=new Date();
-	if(!validateServerResponse(data)){
-		alert("Sorry, there was a problem communicating with the server.");
-		return false
-	}
-	statusMsg("Saved Golf Score in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
-    });
+    startTime=new Date();
+    $http.post(urlTarget,params).success(
+	function(data, status, headers, config) {
+ 		handleServerResponse("Saved Golf Score ",startTime, data);
+        }
+    );
 
 
   }// end savegolfscore
@@ -937,19 +938,18 @@ this.authenticateUser = function(params){ "use strict";
 
   startTime= new Date();
   $http.post(urlTarget,params).success(function(data, status, headers, config) {
-	stopTime=new Date();
-	if(!validateServerResponse(data) || data.rows[0].session_id ==""){
+	if(handleServerResponse("Authentication Attempt Answered",startTime, data)){
+	   if(data.rows[0].session_id ==""){
 		alert("Sorry, I Couldn't validate those Credentials");
 		self.loginForm.password="";
-		return false;
-	}else{
-		statusMsg("Successfully Authenticated User in " + (stopTime.getTime()-startTime.getTime())/1000 + "s" );
+	   }else{
 		var r = data.rows[0];
+		statusMsg("Successfully Authenticated User: " + r.user_id );
 		usrSessionId = r.session_id;
 		usrLoginId = r.user_id;
 		onSuccessfulLogin();
-
-	}
+	   }
+      }
   });
 }
 
@@ -958,15 +958,6 @@ this.loginForm.password="golfscore";
 }//end LoginPageCtl
 
 
-function onSuccessfulLogin(){
-	$("#password").val("");
-	displayMainLayout(true);
-	$("#topMenuBar").show();
-	registerAction();
-	timeoutIfNoAction();
-	setMainContentPane(showGolfScoreSummary);
-	cacheCtl.retrieveCache();
-}
 </script>
 
 <div id="LoginPortal" style="position:fixed; height:100%; width:100%" ng:controller="LoginPageCtl">

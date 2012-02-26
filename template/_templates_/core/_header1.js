@@ -7,6 +7,7 @@ var usrLastAction= new Date();
 var usrLogoutScheduled=false;
 var usrTimeOutDuration = 20*60*1000;
 var clientLog=new Array();
+var insertUpdateChoose = "INSERTUPDATE";
 
 
 //validation functions
@@ -54,12 +55,23 @@ window.onbeforeunload = function () {
   }
 }
 
-
-function prepParams(params){
-	if(params == null){ params = {}; }
-  	params['user_id'] = usrLoginId;
+function prepParams(params, resource, action){
+ 	if(params == null){ params = {}; }
+  	params['spwfResource'] = resource;
+	params['user_id'] = usrLoginId;
 	params['session_id'] = usrSessionId;
+  	if (action ==insertUpdateChoose){
+ 	  if(params['last_update']!= null && params['last_update']!= ""){
+      		action = "update";
+    	  }else{
+      		action= "insert";
+    	  }
+        }
+  	params['spwfAction'] = action;
+	return params;
 }
+
+
 // timeout function
 function timeoutIfNoAction(){ "use strict";
 	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
@@ -99,4 +111,25 @@ appModule.filter('pgDate', function(){
       return pgDate.substring(0,10);
    }
 });
+
+
+function handleServerResponse(msg, startTime, data){
+	if(!validateServerResponse(data)){
+		alert("[%serverErrorMsg_Communication%]");
+		return false
+	}
+	statusMsg( msg +" in " + (new Date().getTime()-startTime.getTime())/1000 + "s" );
+	return true;
+}
+
+
+function onSuccessfulLogin(){
+	$("#password").val("");
+	displayMainLayout(true);
+	$("#topMenuBar").show();
+	registerAction();
+	timeoutIfNoAction();
+	setMainContentPane(showGolfScoreSummary);
+	cacheCtl.retrieveCache();
+}
 
