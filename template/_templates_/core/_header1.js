@@ -112,6 +112,12 @@ appModule.filter('pgDate', function(){
    }
 });
 
+appModule.filter('FormatNumber',function(){
+	return function(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
+		return FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas);
+	}
+});
+
 
 function handleServerResponse(msg, startTime, data){
 	if(!validateServerResponse(data)){
@@ -133,3 +139,44 @@ function onSuccessfulLogin(){
 	cacheCtl.retrieveCache();
 }
 
+
+function FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
+        if (isNaN(parseInt(num))) return "NaN";
+	var tmpNum = num;
+	var iSign = num < 0 ? -1 : 1;		// Get sign of number
+	tmpNum *= Math.pow(10,decimalNum);
+	tmpNum = Math.round(Math.abs(tmpNum))
+	tmpNum /= Math.pow(10,decimalNum);
+	tmpNum *= iSign;						
+	var tmpNumStr = new String(tmpNum);
+
+	// See if we need to strip out the leading zero or not.
+	if (!bolLeadingZero && num < 1 && num > -1 && num != 0)
+		if (num > 0)tmpNumStr = tmpNumStr.substring(1,tmpNumStr.length);
+		else tmpNumStr = "-" + tmpNumStr.substring(2,tmpNumStr.length);
+		
+	// See if we need to put in the commas
+	if (bolCommas && (num >= 1000 || num <= -1000)) {
+		var iStart = tmpNumStr.indexOf(".");
+		if (iStart < 0)	iStart = tmpNumStr.length;
+
+		iStart -= 3;
+		while (iStart >= 1) {
+			tmpNumStr = tmpNumStr.substring(0,iStart) + "," + tmpNumStr.substring(iStart,tmpNumStr.length)
+			iStart -= 3;
+		}		
+	}
+
+	// See if we need to use parenthesis
+	if (bolParens && num < 0) tmpNumStr = "(" + tmpNumStr.substring(1,tmpNumStr.length) + ")";
+
+	if(tmpNumStr.indexOf(".")<0 && decimalNum >0){
+	  tmpNumStr += ".";
+	}
+	while((tmpNumStr.length -tmpNumStr.indexOf(".")) <= decimalNum){
+	  tmpNumStr += "0";
+
+	}
+
+	return tmpNumStr.toString();		// Return our formatted string!
+}

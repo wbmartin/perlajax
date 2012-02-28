@@ -16,6 +16,7 @@ var usrLastAction= new Date();
 var usrLogoutScheduled=false;
 var usrTimeOutDuration = 20*60*1000;
 var clientLog=new Array();
+var insertUpdateChoose = "INSERTUPDATE";
 
 
 //validation functions
@@ -68,7 +69,7 @@ function prepParams(params, resource, action){
   	params['spwfResource'] = resource;
 	params['user_id'] = usrLoginId;
 	params['session_id'] = usrSessionId;
-  	if (action =="INSERTUPDATE"){
+  	if (action ==insertUpdateChoose){
  	  if(params['last_update']!= null && params['last_update']!= ""){
       		action = "update";
     	  }else{
@@ -120,6 +121,12 @@ appModule.filter('pgDate', function(){
    }
 });
 
+appModule.filter('FormatNumber',function(){
+	return function(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
+		return FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas);
+	}
+});
+
 
 function handleServerResponse(msg, startTime, data){
 	if(!validateServerResponse(data)){
@@ -142,26 +149,64 @@ function onSuccessfulLogin(){
 }
 
 
-var cacheCtl;
+function FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
+        if (isNaN(parseInt(num))) return "NaN";
+	var tmpNum = num;
+	var iSign = num < 0 ? -1 : 1;		// Get sign of number
+	tmpNum *= Math.pow(10,decimalNum);
+	tmpNum = Math.round(Math.abs(tmpNum))
+	tmpNum /= Math.pow(10,decimalNum);
+	tmpNum *= iSign;						
+	var tmpNumStr = new String(tmpNum);
 
+	// See if we need to strip out the leading zero or not.
+	if (!bolLeadingZero && num < 1 && num > -1 && num != 0)
+		if (num > 0)tmpNumStr = tmpNumStr.substring(1,tmpNumStr.length);
+		else tmpNumStr = "-" + tmpNumStr.substring(2,tmpNumStr.length);
+		
+	// See if we need to put in the commas
+	if (bolCommas && (num >= 1000 || num <= -1000)) {
+		var iStart = tmpNumStr.indexOf(".");
+		if (iStart < 0)	iStart = tmpNumStr.length;
+
+		iStart -= 3;
+		while (iStart >= 1) {
+			tmpNumStr = tmpNumStr.substring(0,iStart) + "," + tmpNumStr.substring(iStart,tmpNumStr.length)
+			iStart -= 3;
+		}		
+	}
+
+	// See if we need to use parenthesis
+	if (bolParens && num < 0) tmpNumStr = "(" + tmpNumStr.substring(1,tmpNumStr.length) + ")";
+
+	if(tmpNumStr.indexOf(".")<0 && decimalNum >0){
+	  tmpNumStr += ".";
+	}
+	while((tmpNumStr.length -tmpNumStr.indexOf(".")) <= decimalNum){
+	  tmpNumStr += "0";
+
+	}
+
+	return tmpNumStr.toString();		// Return our formatted string!
+}
+
+var cacheCtl;
 function CacheCtl($http){
   cacheCtl = this;
   cacheCtl.typeLabelValueCache = new Array();
   cacheCtl.retrieveCache = function(){ 
-  var startTime,typeNdx, params;
-  params = prepParams(params,"cross_table_cache","select");
-  startTime= new Date();
-  $http.post(urlTarget,params).success(
-    function(data, status, headers, config) {
+    var startTime,typeNdx, params;
+    params = prepParams(params,"cross_table_cache","select");
+    startTime= new Date();
+    $http.post(urlTarget,params).success(
+      function(data, status, headers, config) {
 	if(handleServerResponse("Sucessfully Retrieved Cache ",startTime, data)){
           cacheCtl.typeLabelValueCache = data.rows;
           onRefreshCache();
 	}
-    }
-  );
-
-
-}//end retrieveCache
+      }
+    );
+  }//end retrieveCache
 
 
 }//end CacheCTL
@@ -821,7 +866,7 @@ golfScoreSummaryCtl.retrieveGolfScoreSummary();
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
   <tr ng:repeat="summary in golferSummaries">
-  	<td>{{summary.golfer_id}} {{summary.golfer_name}}</td><td>{{summary.golf_score}}</td><td>{{summary.first_date}} - {{summary.last_date |pgDate }}</td>
+  	<td>{{summary.golfer_id}} {{summary.golfer_name}}</td><td> {{summary.golf_score}} - {{summary.golf_score |FormatNumber:2:true:false:true}}</td><td>{{summary.first_date}} - {{summary.last_date |pgDate }}</td>
  </tr>
 </table>
 </div> 
@@ -844,12 +889,11 @@ golfScoreSummaryCtl.retrieveGolfScoreSummary();
 var golfScoreCtl;
 function GolfScoreCtl($http){
   golfScoreCtl = this;
-  this.golfers;
+  //this.golfers;
    this.saveGolfScore = function (params){ 
 	"use strict";
-    var startTime, stopTime;
-    var action;
-    params = prepParams(params,"golf_score","INSERTUPDATE");
+    var startTime;
+    params = prepParams(params,"golf_score",insertUpdateChoose);
     params['golfer_id'] = params.golferSelect.val;
     params['golferSelect']=null;//don't forward to server
     startTime=new Date();
