@@ -1,3 +1,3 @@
 ./generateTemplates.pl 
-cp _gen_/index.html ..
+cp ./_gen_/index.html ..
 

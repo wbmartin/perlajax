@@ -116,7 +116,7 @@ $debug=1;
   $raDef=&buildResourceActionDef($params->{spwfResource}, $params->{spwfAction});
   if(!$raDef){ return "ResourceAction Not Defined:" .$params->{spwfResource} . "-". $params->{spwfAction} ;}
   @spFields = (@stdFieldNames,@{$raDef->{pf}});
-  $sql = "SELECT " . &buildSQLColsList($raDef->{rf})  ." from $raDef->{proc}('CHECK_AUTH'," . ("?," x $#spFields) . "?);"  ;
+  $sql = "SELECT " . &buildSQLColsList($raDef->{rf})  ." from $raDef->{proc}('CHECK_AUTH'," . ("?," x $#spFields) . "?) ;" ;
   print STDERR "SQL: $sql\n" if($debug);
   $sth = $dbh->prepare($sql);
   $ndx=1;
@@ -186,10 +186,14 @@ sub buildResourceActionDef{
 		&removeArrayElement(\@paramFields, 'golf_score_id');
 		&removeArrayElement(\@paramFields, 'last_update');
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_iq"};
+	} elsif($action eq "SELECT"){
+		@paramFields=@stdSelectParamFields;
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_sq"};
+
+	
 	}
 
-
-  } else {return;}
+} else {return;}
   return $rad;
 }
 

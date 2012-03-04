@@ -19,6 +19,7 @@ var clientLog=new Array();
 var insertUpdateChoose = "INSERTUPDATE";
 
 
+
 //validation functions
 function isFieldIdEmpty(fieldId_){
   if (document.getElementById(fieldId_) == undefined) return true;
@@ -100,7 +101,14 @@ function registerAction(){
 
 
 function logOutUser(){
-  location.reload(true);
+  usrSessionId="";
+  usrLoginId="";
+  loginPageCtl.loginForm.user_id="";
+  loginPageCtl.loginForm.password="";
+	displayMainLayout(false);
+	$("#topMenuBar").hide();
+	hideMainContent();
+
   return;
 }
 
@@ -127,6 +135,28 @@ appModule.filter('FormatNumber',function(){
 	}
 });
 
+appModule.filter('lbl4Val',function(){
+	return function(val,type){
+	   return getLbl4Val(val,type);
+	}
+});
+
+appModule.filter('golferNameFromId',function(){
+	return function(id){
+        if(typeof golfScoreCtl.golfers === 'undefined'){return "--";} 
+	  for(var i=0;i<golfScoreCtl.golfers.length;i++){
+		if(golfScoreCtl.golfers[i].val == id){
+			return golfScoreCtl.golfers[i].lbl;
+
+		}
+	  }
+	  return "**";
+	}
+});
+
+
+
+
 
 function handleServerResponse(msg, startTime, data){
 	if(!validateServerResponse(data)){
@@ -144,8 +174,12 @@ function onSuccessfulLogin(){
 	$("#topMenuBar").show();
 	registerAction();
 	timeoutIfNoAction();
-	setMainContentPane(showGolfScoreSummary);
+	showGolfScoreSummary();
 	cacheCtl.retrieveCache();
+}
+
+function hideMainContent(){
+ return "";
 }
 
 
@@ -190,6 +224,7 @@ function FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 	return tmpNumStr.toString();		// Return our formatted string!
 }
 
+
 var cacheCtl;
 function CacheCtl($http){
   cacheCtl = this;
@@ -201,8 +236,7 @@ function CacheCtl($http){
     $http.post(urlTarget,params).success(
       function(data, status, headers, config) {
 	if(handleServerResponse("Sucessfully Retrieved Cache ",startTime, data)){
-          cacheCtl.typeLabelValueCache = data.rows;
-          onRefreshCache();
+          onRefreshCache(data.rows);
 	}
       }
     );
@@ -211,8 +245,38 @@ function CacheCtl($http){
 
 }//end CacheCTL
 
-function onRefreshCache(){
-  golfScoreCtl.golfers = cacheCtl.typeLabelValueCache;
+function onRefreshCache(data){
+	cacheCtl.typeLabelValueCache =new Array();
+	golfScoreCtl.golfers = new Array();	
+	for(var i=0;i< data.length; i++){
+	   cacheCtl.typeLabelValueCache.push(data[i]);
+	   if(data[i].tp === "golfer"){
+		golfScoreCtl.golfers.push({lbl:data[i].lbl, val:data[i].val}); 
+	  }
+	}
+}
+
+
+function getLbl4Val(val, type){
+  var cacheToSearch;
+	if (type ==="golfer"){ cacheToSearch = deepCopy(golfScoreCtl.golfers);
+	}else if( type==""){
+	}else{
+		return "INVALID CACHE REQUESTED";
+	}
+//alert(cacheToSearch.length);
+	alert (val + " " + cacheToSearch.length);
+	for (var i=0; i < cacheToSearch.length;i++){
+		if(cacheToSearch.val === val){
+			return cacheToSearch.lbl;
+		}
+	}
+	return "--";
+
+}
+
+function deepCopy(obj){
+return $.extend(true, [], obj);
 }
 
 //]]
@@ -765,12 +829,10 @@ input.button {
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();" > 
 <script type="text/javascript">
 $(document).ready( function(){
-//	$("logOutLink").click(logOutUser);
-//	$("#logout").click(logOutUser);
-	$("#aboutGolfScore").click(function(){setMainContentPane(showAboutPane);});
-	$("a#SummaryPage").click(function(){setMainContentPane(showGolfScoreSummary);});
-	$("a#golfScoreEntry").click(function(){setMainContentPane(showGolfScoreCreate);});
-	$("a#logViewer").click(function(){setMainContentPane(showClientLogViewer);});
+	$("#aboutGolfScore").click(function(){showAboutPane();});
+	$("a#SummaryPage").click(function(){showGolfScoreSummary();});
+	$("a#golfScoreEntry").click(function(){showGolfScoreCreate();});
+	$("a#logViewer").click(function(){showClientLogViewer();});
 });
 
 //Layout Functions
@@ -801,11 +863,11 @@ function displayMainLayout(showHide){
   document.getElementById('LoginPortal').style.display=display;
 
 }
-function setMainContentPane(showFunction){
+function hideCurrentContentPane(){
   if(document.getElementById(currentContentPane)!= undefined){
 	document.getElementById(currentContentPane).style.display="none";
   }
-  currentContentPane = showFunction();
+
 }
 
 </script>
@@ -843,7 +905,7 @@ golfScoreSummaryCtl = this;
   startTime= new Date();
   $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	if(handleServerResponse("Sucessfully Retrieved Golfer Handicaps",startTime, data)){
-	        golfScoreSummaryCtl.golferSummaries = data.rows;
+	        golfScoreSummaryCtl.golferSummaries = deepCopy(data.rows);
 	}
   });
 
@@ -851,14 +913,11 @@ golfScoreSummaryCtl = this;
 }//end class
 
 
-
-
-
-
 function showGolfScoreSummary(){
-golfScoreSummaryCtl.retrieveGolfScoreSummary(); 
-  $("#golfScoreSummary").fadeIn();
-  return "golfScoreSummary";
+	golfScoreSummaryCtl.retrieveGolfScoreSummary();
+	hideCurrentContentPane();
+  	$("#golfScoreSummary").fadeIn();
+  	currentContentPane= "golfScoreSummary";
 }
 </script>
 <div id="golfScoreSummary" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl" >
@@ -866,7 +925,7 @@ golfScoreSummaryCtl.retrieveGolfScoreSummary();
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
   <tr ng:repeat="summary in golferSummaries">
-  	<td>{{summary.golfer_id}} {{summary.golfer_name}}</td><td> {{summary.golf_score}} - {{summary.golf_score |FormatNumber:2:true:false:true}}</td><td>{{summary.first_date}} - {{summary.last_date |pgDate }}</td>
+  	<td> <a onclick="showGolferHistory(1)">x</a> <a ng:click="showGolferHistory(summary.golfer_id)"> {{summary.golfer_name}}</a> </td><td>{{summary.golf_score |FormatNumber:2:true:false:true}}</td><td>{{summary.first_date |pgDate}} - {{summary.last_date |pgDate }}</td>
  </tr>
 </table>
 </div> 
@@ -908,11 +967,53 @@ function GolfScoreCtl($http){
 }//end GolfScoreCTL
 
 function showGolfScoreCreate(){
+  hideCurrentContentPane();
   $("#golfScoreCreate").fadeIn();
-  return "golfScoreCreate";
+  currentContentPane = "golfScoreCreate";
 }
 
 </script>
+
+
+<script type="text/javascript">
+var golferHistoryCtl;
+function GolferHistoryCtl($http){
+golferHistoryCtl = this;
+var golferId;
+this.golferId=0;
+  this.retrieveGolferHistory = function(golferId_){ 
+  var startTime, stopTime;
+  var params={};
+ golferHistoryCtl.golferId = golferId_;
+  params=  prepParams(params,"golf_score" ,"select" );
+  params['whereClause'] = "golfer_id =" + golferId_;
+  startTime= new Date();
+  $http.post(urlTarget,params).success(function(data, status, headers, config) {
+	if(handleServerResponse("Sucessfully Retrieved Golfer History",startTime, data)){
+	        golferHistoryCtl.golferHistory = data.rows;
+	}
+  });
+
+}//endretrieveGolferHistory
+}//end class
+
+
+function showGolferHistory(golferId_){
+golferHistoryCtl.retrieveGolferHistory(golferId_); 
+hideCurrentContentPane();
+  $("#golferHistory").fadeIn();
+  currentContentPane="golferHistory";
+}
+</script>
+<div id="golferHistory" class="MainLayout MainContentPaneStyle" ng:controller="GolferHistoryCtl" >
+{{this.golferId | golferNameFromId}}
+<table id="golferHistoryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
+<tr> <th>Score</th><th>Date</th> </tr>
+  <tr ng:repeat="history in golferHistory">
+  	<td>{{history.golf_score |FormatNumber:0:true:false:true}}</td><td>{{history.last_update |pgDate}} </td>
+ </tr>
+</table>
+</div> <!--end:GolferHistory-->
 
 
 <div id="aboutPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
@@ -970,7 +1071,6 @@ function showClientLogViewer(){
 <script type="text/javascript">
 var loginPageCtl;
 function LoginPageCtl($http){
-var self = this;
 loginPageCtl = this;
 this.loginForm={};
 
@@ -985,7 +1085,7 @@ this.authenticateUser = function(params){ "use strict";
 	if(handleServerResponse("Authentication Attempt Answered",startTime, data)){
 	   if(data.rows[0].session_id ==""){
 		alert("Sorry, I Couldn't validate those Credentials");
-		self.loginForm.password="";
+		loginPageCtl.loginForm.password="";
 	   }else{
 		var r = data.rows[0];
 		statusMsg("Successfully Authenticated User: " + r.user_id );
@@ -997,10 +1097,11 @@ this.authenticateUser = function(params){ "use strict";
   });
 }
 
-this.loginForm.user_id="golfscore";
-this.loginForm.password="golfscore";
+loginPageCtl.loginForm.user_id="golfscore";
+loginPageCtl.loginForm.password="golfscore";
 }//end LoginPageCtl
-
+$(document).ready(function(){
+});
 
 </script>
 
@@ -1021,12 +1122,11 @@ this.loginForm.password="golfscore";
 
      </tr><tr>
     <td colspan="3" align="center" style="padding: 15px">
-	<button type="button"  id="login_button" class="custombutton"  ng:click="authenticateUser(this.loginForm)" ng:disabled="{{this.loginHolder.$invalid}}"> Login </button>  
+	<button type="button"  id="cmdlogin" class="custombutton"  ng:click="authenticateUser(this.loginForm)" ng:disabled="{{this.loginHolder.$invalid}}"> Login </button>  
     </td>
 </tr></table>
   </fieldset>  
 </form>  
-
 </div>
 </div> <!--loginportal--> 
 <!--End LoginPortal-->

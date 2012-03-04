@@ -10,7 +10,7 @@ golfScoreSummaryCtl = this;
   startTime= new Date();
   $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	if(handleServerResponse("Sucessfully Retrieved Golfer Handicaps",startTime, data)){
-	        golfScoreSummaryCtl.golferSummaries = data.rows;
+	        golfScoreSummaryCtl.golferSummaries = deepCopy(data.rows);
 	}
   });
 
@@ -18,14 +18,11 @@ golfScoreSummaryCtl = this;
 }//end class
 
 
-
-
-
-
 function show[%ucfirst(divId)%](){
-golfScoreSummaryCtl.retrieveGolfScoreSummary(); 
-  $("#[%divId%]").fadeIn();
-  return "[%divId%]";
+	golfScoreSummaryCtl.retrieveGolfScoreSummary();
+	hideCurrentContentPane();
+  	$("#[%divId%]").fadeIn();
+  	currentContentPane= "[%divId%]";
 }
 </script>
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl" >
@@ -33,7 +30,7 @@ golfScoreSummaryCtl.retrieveGolfScoreSummary();
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
   <tr ng:repeat="summary in golferSummaries">
-  	<td>{{summary.golfer_id}} {{summary.golfer_name}}</td><td> {{summary.golf_score}} - {{summary.golf_score |FormatNumber:2:true:false:true}}</td><td>{{summary.first_date}} - {{summary.last_date |pgDate }}</td>
+  	<td> <a onclick="showGolferHistory(1)">x</a> <a ng:click="showGolferHistory(summary.golfer_id)"> {{summary.golfer_name}}</a> </td><td>{{summary.golf_score |FormatNumber:2:true:false:true}}</td><td>{{summary.first_date |pgDate}} - {{summary.last_date |pgDate }}</td>
  </tr>
 </table>
 </div> [%# end golfScoreSummary%]

@@ -10,6 +10,7 @@ var clientLog=new Array();
 var insertUpdateChoose = "INSERTUPDATE";
 
 
+
 //validation functions
 function isFieldIdEmpty(fieldId_){
   if (document.getElementById(fieldId_) == undefined) return true;
@@ -91,7 +92,14 @@ function registerAction(){
 
 
 function logOutUser(){
-  location.reload(true);
+  usrSessionId="";
+  usrLoginId="";
+  loginPageCtl.loginForm.user_id="";
+  loginPageCtl.loginForm.password="";
+	displayMainLayout(false);
+	$("#topMenuBar").hide();
+	hideMainContent();
+
   return;
 }
 
@@ -118,6 +126,28 @@ appModule.filter('FormatNumber',function(){
 	}
 });
 
+appModule.filter('lbl4Val',function(){
+	return function(val,type){
+	   return getLbl4Val(val,type);
+	}
+});
+
+appModule.filter('golferNameFromId',function(){
+	return function(id){
+        if(typeof golfScoreCtl.golfers === 'undefined'){return "--";} 
+	  for(var i=0;i<golfScoreCtl.golfers.length;i++){
+		if(golfScoreCtl.golfers[i].val == id){
+			return golfScoreCtl.golfers[i].lbl;
+
+		}
+	  }
+	  return "**";
+	}
+});
+
+
+
+
 
 function handleServerResponse(msg, startTime, data){
 	if(!validateServerResponse(data)){
@@ -135,8 +165,12 @@ function onSuccessfulLogin(){
 	$("#topMenuBar").show();
 	registerAction();
 	timeoutIfNoAction();
-	setMainContentPane(showGolfScoreSummary);
+	showGolfScoreSummary();
 	cacheCtl.retrieveCache();
+}
+
+function hideMainContent(){
+ return "";
 }
 
 
@@ -180,3 +214,4 @@ function FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 
 	return tmpNumStr.toString();		// Return our formatted string!
 }
+

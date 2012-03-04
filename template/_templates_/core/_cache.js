@@ -9,8 +9,7 @@ function CacheCtl($http){
     $http.post(urlTarget,params).success(
       function(data, status, headers, config) {
 	if(handleServerResponse("Sucessfully Retrieved Cache ",startTime, data)){
-          cacheCtl.typeLabelValueCache = data.rows;
-          onRefreshCache();
+          onRefreshCache(data.rows);
 	}
       }
     );
@@ -19,6 +18,36 @@ function CacheCtl($http){
 
 }//end CacheCTL
 
-function onRefreshCache(){
-  golfScoreCtl.golfers = cacheCtl.typeLabelValueCache;
+function onRefreshCache(data){
+	cacheCtl.typeLabelValueCache =new Array();
+	golfScoreCtl.golfers = new Array();	
+	for(var i=0;i< data.length; i++){
+	   cacheCtl.typeLabelValueCache.push(data[i]);
+	   if(data[i].tp === "golfer"){
+		golfScoreCtl.golfers.push({lbl:data[i].lbl, val:data[i].val}); 
+	  }
+	}
+}
+
+
+function getLbl4Val(val, type){
+  var cacheToSearch;
+	if (type ==="golfer"){ cacheToSearch = deepCopy(golfScoreCtl.golfers);
+	}else if( type==""){
+	}else{
+		return "INVALID CACHE REQUESTED";
+	}
+//alert(cacheToSearch.length);
+	alert (val + " " + cacheToSearch.length);
+	for (var i=0; i < cacheToSearch.length;i++){
+		if(cacheToSearch.val === val){
+			return cacheToSearch.lbl;
+		}
+	}
+	return "--";
+
+}
+
+function deepCopy(obj){
+return $.extend(true, [], obj);
 }

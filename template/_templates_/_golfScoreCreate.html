@@ -35,8 +35,9 @@ function GolfScoreCtl($http){
 }//end GolfScoreCTL
 
 function show[%ucfirst(divId)%](){
+  hideCurrentContentPane();
   $("#[%divId%]").fadeIn();
-  return "[%divId%]";
+  currentContentPane = "[%divId%]";
 }
 
 </script>
