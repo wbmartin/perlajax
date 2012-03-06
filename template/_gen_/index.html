@@ -925,7 +925,7 @@ function showGolfScoreSummary(){
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
   <tr ng:repeat="summary in golferSummaries">
-  	<td> <a onclick="showGolferHistory(1)">x</a> <a ng:click="showGolferHistory(summary.golfer_id)"> {{summary.golfer_name}}</a> </td><td>{{summary.golf_score |FormatNumber:2:true:false:true}}</td><td>{{summary.first_date |pgDate}} - {{summary.last_date |pgDate }}</td>
+  	<td> <a onclick="showGolferHistory({{summary.golfer_id}})"> {{summary.golfer_name}}</a> </td><td>{{summary.golf_score |FormatNumber:2:true:false:true}}</td><td>{{summary.first_date |pgDate}} - {{summary.last_date |pgDate }}</td>
  </tr>
 </table>
 </div> 
@@ -986,7 +986,7 @@ this.golferId=0;
   var params={};
  golferHistoryCtl.golferId = golferId_;
   params=  prepParams(params,"golf_score" ,"select" );
-  params['whereClause'] = "golfer_id =" + golferId_;
+  params['where_clause'] = "golfer_id =" + golferId_;
   startTime= new Date();
   $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	if(handleServerResponse("Sucessfully Retrieved Golfer History",startTime, data)){
