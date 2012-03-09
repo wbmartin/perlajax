@@ -931,70 +931,91 @@ function showGolfScoreSummary(){
 </div> 
 
 
-<div id="golfScoreCreate" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreCtl">
-<form id="golfScore" action="">
-<table id="golfScoreFormTable" style="" class='formTable'>
-<tr><td> Golfer </td><td><select ng:model="golfScoreForm.golferSelect" ng:options="golferiterator.lbl for golferiterator in golfers" ></select></td></tr>
-<tr><td> Score </td><td><input ng:model="golfScoreForm.golf_score" type="text"/></td></tr>
-<tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" ng:click="saveGolfScore(this.golfScoreForm)" >Save</button><input type="hidden" id="last_update"></td></tr>
-</table>
-</form>
-
-
-
-</div> 
-
 <script type="text/javascript">
 var golfScoreCtl;
 function GolfScoreCtl($http){
-  golfScoreCtl = this;
-  //this.golfers;
-   this.saveGolfScore = function (params){ 
-	"use strict";
-    var startTime;
-    params = prepParams(params,"golf_score",insertUpdateChoose);
-    params['golfer_id'] = params.golferSelect.val;
-    params['golferSelect']=null;//don't forward to server
-    startTime=new Date();
-    $http.post(urlTarget,params).success(
+   golfScoreCtl = this;
+   golfScoreCtl.saveGolfScore = function (params){ "use strict";
+      var startTime;
+      params = prepParams(params,"golf_score",insertUpdateChoose);
+      params['golfer_id'] = params.golferSelect.val;
+      params['golferSelect']=null;//don't forward to server
+      startTime=new Date();
+      $http.post(urlTarget,params).success(
 	function(data, status, headers, config) {
  		handleServerResponse("Saved Golf Score ",startTime, data);
         }
-    );
+      );
+    }// end save
+
+    golfScoreCtl.retrieveGolfScore = function(params){"use strict";
+	var startTime = new Date();
+	params = prepParams(params,"golf_score","SELECT");
+ 	$http.post(urlTarget,params).success(
+		function(data, status, headers, config) {
+ 			handleServerResponse("Retrieved Golf Score ",startTime, data);
+		golfScoreCtl.bindToForm(data);
+        	}
+    	);
+    }// end retrieve
+
+    golfScoreCtl.bindToForm =function (data){
+	//golfScoreCtl.golfScoreForm ={};
+    	//golfScoreCtl.golfScoreForm.golf_score = data.rows[0].golf_score_id;
+    	golfScoreCtl.golfScoreForm = data.rows[0];
+    }
 
 
-  }// end savegolfscore
+
+
 }//end GolfScoreCTL
 
-function showGolfScoreCreate(){
+
+
+function showGolfScore(scoreId_){
   hideCurrentContentPane();
-  $("#golfScoreCreate").fadeIn();
-  currentContentPane = "golfScoreCreate";
+  $("#golfScore").fadeIn();
+  currentContentPane = "golfScore";
+  if(scoreId_){
+	var params ={"where_clause":"golf_score_id=" +scoreId_};
+	golfScoreCtl.retrieveGolfScore(params);
+  }
 }
 
 </script>
+
+<div id="golfScore" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreCtl">
+<form id="golfScoreForm" action="">
+<table id="golfScoreFormTable" style="" class='formTable'>
+<tr><td> Golfer </td><td><select ng:model="golfScoreForm.golferSelect" ng:options="golferiterator.lbl for golferiterator in golfers" ></select></td></tr>
+<tr><td> Score </td><td><input ng:model="golfScoreForm.golf_score" type="text"/></td></tr>
+<tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" ng:click="saveGolfScore(this.golfScoreForm)" >Save</button></td></tr>
+</table>
+<input type="hidden" ng:model="golfScoreForm.last_update">
+<input type="hidden" ng:model="golfScoreForm.golfer_id">
+</form>
+</div> 
 
 
 <script type="text/javascript">
 var golferHistoryCtl;
 function GolferHistoryCtl($http){
-golferHistoryCtl = this;
-var golferId;
-this.golferId=0;
+  golferHistoryCtl = this;
+  var golferId;
+  this.golferId=0;
   this.retrieveGolferHistory = function(golferId_){ 
-  var startTime, stopTime;
-  var params={};
- golferHistoryCtl.golferId = golferId_;
-  params=  prepParams(params,"golf_score" ,"select" );
-  params['where_clause'] = "golfer_id =" + golferId_;
-  startTime= new Date();
-  $http.post(urlTarget,params).success(function(data, status, headers, config) {
-	if(handleServerResponse("Sucessfully Retrieved Golfer History",startTime, data)){
-	        golferHistoryCtl.golferHistory = data.rows;
-	}
-  });
-
-}//endretrieveGolferHistory
+    	var startTime;
+  	var params={};
+ 	golferHistoryCtl.golferId = golferId_;
+  	params=  prepParams(params,"golf_score" ,"select" );
+  	params['where_clause'] = "golfer_id =" + golferId_;
+  	startTime= new Date();
+  	$http.post(urlTarget,params).success(function(data, status, headers, config) {
+	  if(handleServerResponse("Sucessfully Retrieved Golfer History",startTime, data)){
+	         golferHistoryCtl.golferHistory = data.rows;
+	  }
+  	});
+  }//endretrieveGolferHistory
 }//end class
 
 
@@ -1010,7 +1031,7 @@ hideCurrentContentPane();
 <table id="golferHistoryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Score</th><th>Date</th> </tr>
   <tr ng:repeat="history in golferHistory">
-  	<td>{{history.golf_score |FormatNumber:0:true:false:true}}</td><td>{{history.last_update |pgDate}} </td>
+  	<td><a onclick="showGolfScore({{history.golf_score_id}})">{{history.golf_score |FormatNumber:0:true:false:true}}</a></td><td>{{history.last_update |pgDate}} </td>
  </tr>
 </table>
 </div> <!--end:GolferHistory-->
