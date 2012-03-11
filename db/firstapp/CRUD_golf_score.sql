@@ -66,15 +66,15 @@ GRANT EXECUTE ON FUNCTION golf_score_sq(text, text, text, text, text, integer, i
 
 --select * from golf_score_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 
- 
+
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function: golf_score_bypk(text,  text, text ,character)
+-- Function: golf_score_bypk(text,  text, text ,integer)
 
--- DROP FUNCTION golf_score_pybk(text,  text, text,character);
+-- DROP FUNCTION golf_score_pybk(text,  text, text,integer);
 
-CREATE OR REPLACE FUNCTION golf_score_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text ,golfScoreId_ character)
+CREATE OR REPLACE FUNCTION golf_score_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text ,golfScoreId_ integer)
   RETURNS golf_score AS
 $BODY$
   Declare
@@ -94,19 +94,19 @@ $BODY$
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100;
-ALTER FUNCTION golf_score_bypk(text,  text, text,character) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION golf_score_bypk(text,  text, text,character) TO GROUP golfscore;
+ALTER FUNCTION golf_score_bypk(text,  text, text,integer) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION golf_score_bypk(text,  text, text,integer) TO GROUP golfscore;
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
 
--- Function:  golf_score_iq(text,  text ,character,integer,integer)
+-- Function:  golf_score_iq(text, text, text ,integer,integer)
 
--- DROP FUNCTION golf_score_iq( text,  text,character,integer,integer);
+-- DROP FUNCTION golf_score_iq( text, text, text,integer,integer);
 
-create or replace function golf_score_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,golfScoreId_ character,golfScore_ integer,golferId_ integer)
+create or replace function golf_score_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,golfScore_ integer,golferId_ integer)
   returns golf_score as
 $body$
   declare
@@ -118,30 +118,30 @@ $body$
     end if;
 
 
-    insert into golf_score( golf_score_id,last_update,golf_score,golfer_id) 	values ( golfScoreId_, now(),golfScore_,golferId_) 
+    insert into golf_score( last_update,golf_score,golfer_id) 	values (  now(),golfScore_,golferId_) 
 	returning * into newrow;
       return newrow;
   end;
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function golf_score_iq(text,  text, text ,character,integer,integer) owner to postgres;
-GRANT EXECUTE ON FUNCTION golf_score_iq(text,  text, text ,character,integer,integer) TO GROUP golfscore;
+alter function golf_score_iq(text,  text, text ,integer,integer) owner to postgres;
+GRANT EXECUTE ON FUNCTION golf_score_iq(text,  text, text ,integer,integer) TO GROUP golfscore;
 
 
 
---select * from golf_score_iq('ALREADY_AUTH', 'test', 'test' , 'text' ,1 ,1 );
+--select * from golf_score_iq('ALREADY_AUTH', 'test', 'test'  ,1 ,1 );
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function:  golf_score_uq(text, text ,character,timestamp,integer,integer)
+-- Function:  golf_score_uq(text, text ,integer,timestamp,integer,integer)
 
--- DROP FUNCTION golf_score_uq( text,  text ,character,timestamp,integer,integer);
+-- DROP FUNCTION golf_score_uq( text,  text ,integer,timestamp,integer,integer);
 
 
-create or replace function golf_score_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , golfScoreId_ character, lastUpdate_ timestamp, golfScore_ integer, golferId_ integer)
+create or replace function golf_score_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , golfScoreId_ integer, lastUpdate_ timestamp, golfScore_ integer, golferId_ integer)
   returns golf_score as
 $body$
   declare
@@ -164,19 +164,19 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function golf_score_uq(text,  text, text ,character,timestamp,integer,integer) owner to postgres;
-GRANT EXECUTE ON FUNCTION golf_score_uq(text, text, text ,character,timestamp,integer,integer) TO GROUP golfscore;
+alter function golf_score_uq(text,  text, text ,integer,timestamp,integer,integer) owner to postgres;
+GRANT EXECUTE ON FUNCTION golf_score_uq(text, text, text ,integer,timestamp,integer,integer) TO GROUP golfscore;
 
---select * from golf_score_uq('ALREADY_AUTH', 'test', 'test', 'text' <last_update> ,1 ,1);
+--select * from golf_score_uq('ALREADY_AUTH', 'test', 'test' <golf_score_id> <last_update> ,1 ,1);
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function:  golf_score_dq(text, text ,character, timestamp)
+-- Function:  golf_score_dq(text, text ,integer, timestamp)
 
--- DROP FUNCTION golf_score_dq( text,  text ,character, timestamp);
+-- DROP FUNCTION golf_score_dq( text,  text ,integer, timestamp);
 
 
-create or replace function golf_score_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,golfScoreId_ character, lastUpdate_ timestamp  )
+create or replace function golf_score_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,golfScoreId_ integer, lastUpdate_ timestamp  )
   returns boolean as
 $body$
   declare
@@ -198,7 +198,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function golf_score_dq(text, text, text,character, timestamp) owner to postgres;
-GRANT EXECUTE ON FUNCTION golf_score_dq(text,  text, text,character, timestamp) TO GROUP golfscore;
+alter function golf_score_dq(text, text, text,integer, timestamp) owner to postgres;
+GRANT EXECUTE ON FUNCTION golf_score_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

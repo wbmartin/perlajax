@@ -102,9 +102,9 @@ GRANT EXECUTE ON FUNCTION vw_profile_grant_bypk(text,  text, text) TO GROUP golf
 
 
 
--- Function:  vw_profile_grant_iq(text,  text ,integer,text,integer,text)
+-- Function:  vw_profile_grant_iq(text, text, text ,integer,text,integer,text)
 
--- DROP FUNCTION vw_profile_grant_iq( text,  text,integer,text,integer,text);
+-- DROP FUNCTION vw_profile_grant_iq( text, text, text,integer,text,integer,text);
 
 create or replace function vw_profile_grant_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,securityProfileId_ integer,profileName_ text,securityPrivilegeId_ integer,privName_ text)
   returns vw_profile_grant as

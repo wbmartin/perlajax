@@ -151,3 +151,6 @@ Command-line arguments:  -os linux -ws gtk -arch x86
 
 !ENTRY com.google.gdt.eclipse.managedapis 1 0 2012-02-28 20:18:54.047
 !MESSAGE Failed to load icon cache
+
+!ENTRY com.google.gdt.eclipse.managedapis 1 0 2012-03-10 21:45:50.410
+!MESSAGE Failed to load icon cache

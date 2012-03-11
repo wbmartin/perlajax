@@ -22,20 +22,21 @@ function [%ucfirst(divId)%]Ctl($http){
  	$http.post(urlTarget,params).success(
 		function(data, status, headers, config) {
  			handleServerResponse("Retrieved Golf Score ",startTime, data);
-		[%divId%]Ctl.bindToForm(data);
+		[%divId%]Ctl.bindToForm(data.rows[0]);
         	}
     	);
     }// end retrieve
 
     [%divId%]Ctl.bindToForm =function (data){
-    	[%divId%]Ctl.[%divId%]Form = data.rows[0];
-	[%divId%]Form.golferSelect
+    	[%divId%]Ctl.[%divId%]Form = data;
+	[%divId%]Ctl.[%divId%]Form.golferSelect=filterCacheArrayByVal(golfScoreCtl.golfers, data.golfer_id );
     }
 
 
 
 
 }//end GolfScoreCTL
+
 
 
 

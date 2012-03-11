@@ -102,9 +102,9 @@ GRANT EXECUTE ON FUNCTION security_user_bypk(text,  text, text,text) TO GROUP go
 
 
 
--- Function:  security_user_iq(text,  text ,text,text,integer,text,timestamp,character)
+-- Function:  security_user_iq(text, text, text ,text,text,integer,text,timestamp,character)
 
--- DROP FUNCTION security_user_iq( text,  text,text,text,integer,text,timestamp,character);
+-- DROP FUNCTION security_user_iq( text, text, text,text,text,integer,text,timestamp,character);
 
 create or replace function security_user_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,userId_ text,passwordEnc_ text,securityProfileId_ integer,sessionId_ text,sessionExpireDt_ timestamp,activeYn_ character)
   returns security_user as

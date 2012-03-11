@@ -102,9 +102,9 @@ GRANT EXECUTE ON FUNCTION golfer_bypk(text,  text, text,integer) TO GROUP golfsc
 
 
 
--- Function:  golfer_iq(text,  text ,character varying)
+-- Function:  golfer_iq(text, text, text ,character varying)
 
--- DROP FUNCTION golfer_iq( text,  text,character varying);
+-- DROP FUNCTION golfer_iq( text, text, text,character varying);
 
 create or replace function golfer_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,name_ character varying)
   returns golfer as

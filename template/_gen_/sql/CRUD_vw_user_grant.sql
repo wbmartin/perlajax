@@ -102,9 +102,9 @@ GRANT EXECUTE ON FUNCTION vw_user_grant_bypk(text,  text, text) TO GROUP golfsco
 
 
 
--- Function:  vw_user_grant_iq(text,  text ,text,text,text)
+-- Function:  vw_user_grant_iq(text, text, text ,text,text,text)
 
--- DROP FUNCTION vw_user_grant_iq( text,  text,text,text,text);
+-- DROP FUNCTION vw_user_grant_iq( text, text, text,text,text,text);
 
 create or replace function vw_user_grant_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,userId_ text,profileName_ text,privName_ text)
   returns vw_user_grant as

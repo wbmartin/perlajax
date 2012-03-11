@@ -136,9 +136,9 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_bypk(text,  text, text[%INCLUDE BYPK_O
 
 
 
--- Function:  [%+tablename+%]_iq(text,  text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%])
+-- Function:  [%+tablename+%]_iq(text, text, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%])
 
--- DROP FUNCTION [%+tablename+%]_iq( text,  text[%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]);
+-- DROP FUNCTION [%+tablename+%]_iq( text, text, text[%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]);
 
 create or replace function [%+tablename+%]_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text[%-INCLUDE IQ_FUNC_SHOW_COLUMN_NAMES-%])
   returns [%+tablename+%] as
@@ -210,9 +210,9 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_iq(text,  text, text [%-INCLUDE IQ_FUN
 [%-END #BLOCK -%]
 
 
--- Function:  [%+tablename+%]_uq(text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%])
+-- Function:  [%+tablename+%]_uq(text, text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%])
 
--- DROP FUNCTION [%+tablename+%]_uq( text,  text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]);
+-- DROP FUNCTION [%+tablename+%]_uq(text, text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]);
 
 
 create or replace function [%+tablename+%]_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text [%-INCLUDE UQ_FUNC_SHOW_COLUMN_NAMES-%])

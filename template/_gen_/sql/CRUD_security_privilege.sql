@@ -102,9 +102,9 @@ GRANT EXECUTE ON FUNCTION security_privilege_bypk(text,  text, text,integer) TO 
 
 
 
--- Function:  security_privilege_iq(text,  text ,text,text)
+-- Function:  security_privilege_iq(text, text, text ,text,text)
 
--- DROP FUNCTION security_privilege_iq( text,  text,text,text);
+-- DROP FUNCTION security_privilege_iq( text, text, text,text,text);
 
 create or replace function security_privilege_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,privName_ text,description_ text)
   returns security_privilege as

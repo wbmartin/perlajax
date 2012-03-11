@@ -215,3 +215,10 @@ function FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 	return tmpNumStr.toString();		// Return our formatted string!
 }
 
+function filterCacheArrayByVal ( cacheArray, idToSet){
+	for(var i=0;i<cacheArray.length;i++){
+		if(cacheArray[i].val == idToSet)return cacheArray[i];
+	}
+	return {};
+}
+

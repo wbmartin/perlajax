@@ -102,9 +102,9 @@ GRANT EXECUTE ON FUNCTION security_profile_bypk(text,  text, text,integer) TO GR
 
 
 
--- Function:  security_profile_iq(text,  text ,text)
+-- Function:  security_profile_iq(text, text, text ,text)
 
--- DROP FUNCTION security_profile_iq( text,  text,text);
+-- DROP FUNCTION security_profile_iq( text, text, text,text);
 
 create or replace function security_profile_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,profileName_ text)
   returns security_profile as

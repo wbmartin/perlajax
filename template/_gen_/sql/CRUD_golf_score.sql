@@ -102,9 +102,9 @@ GRANT EXECUTE ON FUNCTION golf_score_bypk(text,  text, text,integer) TO GROUP go
 
 
 
--- Function:  golf_score_iq(text,  text ,integer,integer)
+-- Function:  golf_score_iq(text, text, text ,integer,integer)
 
--- DROP FUNCTION golf_score_iq( text,  text,integer,integer);
+-- DROP FUNCTION golf_score_iq( text, text, text,integer,integer);
 
 create or replace function golf_score_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,golfScore_ integer,golferId_ integer)
   returns golf_score as

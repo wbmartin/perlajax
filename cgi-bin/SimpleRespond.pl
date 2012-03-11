@@ -189,9 +189,12 @@ sub buildResourceActionDef{
 	} elsif($action eq "SELECT"){
 		@paramFields=@stdSelectParamFields;
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_sq"};
-
-	
+	}elsif($action eq "UPDATE"){
+		@paramFields=@allFields;
+		#splice @paramFields,0,1; #remove client_id, prkey
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_uq"};
 	}
+
 
 } else {return;}
   return $rad;

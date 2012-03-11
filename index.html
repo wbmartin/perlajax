@@ -224,6 +224,13 @@ function FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 	return tmpNumStr.toString();		// Return our formatted string!
 }
 
+function filterCacheArrayByVal ( cacheArray, idToSet){
+	for(var i=0;i<cacheArray.length;i++){
+		if(cacheArray[i].val == idToSet)return cacheArray[i];
+	}
+	return {};
+}
+
 
 var cacheCtl;
 function CacheCtl($http){
@@ -954,21 +961,21 @@ function GolfScoreCtl($http){
  	$http.post(urlTarget,params).success(
 		function(data, status, headers, config) {
  			handleServerResponse("Retrieved Golf Score ",startTime, data);
-		golfScoreCtl.bindToForm(data);
+		golfScoreCtl.bindToForm(data.rows[0]);
         	}
     	);
     }// end retrieve
 
     golfScoreCtl.bindToForm =function (data){
-	//golfScoreCtl.golfScoreForm ={};
-    	//golfScoreCtl.golfScoreForm.golf_score = data.rows[0].golf_score_id;
-    	golfScoreCtl.golfScoreForm = data.rows[0];
+    	golfScoreCtl.golfScoreForm = data;
+	golfScoreCtl.golfScoreForm.golferSelect=filterCacheArrayByVal(golfScoreCtl.golfers, data.golfer_id );
     }
 
 
 
 
 }//end GolfScoreCTL
+
 
 
 
@@ -993,6 +1000,7 @@ function showGolfScore(scoreId_){
 </table>
 <input type="hidden" ng:model="golfScoreForm.last_update">
 <input type="hidden" ng:model="golfScoreForm.golfer_id">
+<input type="hidden" ng:model="golfScoreForm.golfer_score_id">
 </form>
 </div> 
 
@@ -1020,8 +1028,8 @@ function GolferHistoryCtl($http){
 
 
 function showGolferHistory(golferId_){
-golferHistoryCtl.retrieveGolferHistory(golferId_); 
-hideCurrentContentPane();
+  golferHistoryCtl.retrieveGolferHistory(golferId_); 
+  hideCurrentContentPane();
   $("#golferHistory").fadeIn();
   currentContentPane="golferHistory";
 }
@@ -1074,13 +1082,15 @@ alert("");
 <script type="text/javascript">
 
 function showClientLogViewer(){
+  hideCurrentContentPane();
+
   $("#clientLogViewer").fadeIn();
   $("ul#clientLogView").find("li").remove();
 	$("ul#clientLogView").html("<li>Log viewed|"+ new Date()+"</li>");
   for(var ndx=0;ndx<clientLog.length;ndx++){
 	$("ul#clientLogView li:last").after("<li>" + clientLog[ndx] + "</li>");
   }
-  return "clientLogViewer";
+  currentContentPane="clientLogViewer";
 }
 
 
