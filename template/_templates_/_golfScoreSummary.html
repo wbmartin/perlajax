@@ -1,16 +1,16 @@
 [%divId="golfScoreSummary"%]
 <script type="text/javascript">
-var golfScoreSummaryCtl;
-function GolfScoreSummaryCtl($http){
-golfScoreSummaryCtl = this;
+var [%divId%]Ctl;
+function [%ucfirst(divId)%]Ctl($http){
+  [%divId%]Ctl = this;
   this.golferSummaries;
-  this.retrieveGolfScoreSummary = function(params){ 
-  var startTime, stopTime;
-  params=  prepParams(params,"golf_score_summary" ,"select" );
-  startTime= new Date();
-  $http.post(urlTarget,params).success(function(data, status, headers, config) {
+  this.retrieve[%ucfirst(divId)%] = function(params){ 
+    var startTime, stopTime;
+    params=  prepParams(params,"golf_score_summary" ,"select" );
+    startTime= new Date();
+    $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	if(handleServerResponse("Sucessfully Retrieved Golfer Handicaps",startTime, data)){
-	        golfScoreSummaryCtl.golferSummaries = deepCopy(data.rows);
+	        [%divId%]Ctl.golferSummaries = deepCopy(data.rows);
 	}
   });
 
@@ -19,7 +19,7 @@ golfScoreSummaryCtl = this;
 
 
 function show[%ucfirst(divId)%](){
-	golfScoreSummaryCtl.retrieveGolfScoreSummary();
+	[%divId%]Ctl.retrieveGolfScoreSummary();
 	hideCurrentContentPane();
   	$("#[%divId%]").fadeIn();
   	currentContentPane= "[%divId%]";

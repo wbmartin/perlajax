@@ -838,7 +838,7 @@ input.button {
 $(document).ready( function(){
 	$("#aboutGolfScore").click(function(){showAboutPane();});
 	$("a#SummaryPage").click(function(){showGolfScoreSummary();});
-	$("a#golfScoreEntry").click(function(){showGolfScoreCreate();});
+	$("a#golfScoreEntry").click(function(){showGolfScore();});
 	$("a#logViewer").click(function(){showClientLogViewer();});
 });
 
@@ -904,13 +904,13 @@ function hideCurrentContentPane(){
 <script type="text/javascript">
 var golfScoreSummaryCtl;
 function GolfScoreSummaryCtl($http){
-golfScoreSummaryCtl = this;
+  golfScoreSummaryCtl = this;
   this.golferSummaries;
   this.retrieveGolfScoreSummary = function(params){ 
-  var startTime, stopTime;
-  params=  prepParams(params,"golf_score_summary" ,"select" );
-  startTime= new Date();
-  $http.post(urlTarget,params).success(function(data, status, headers, config) {
+    var startTime, stopTime;
+    params=  prepParams(params,"golf_score_summary" ,"select" );
+    startTime= new Date();
+    $http.post(urlTarget,params).success(function(data, status, headers, config) {
 	if(handleServerResponse("Sucessfully Retrieved Golfer Handicaps",startTime, data)){
 	        golfScoreSummaryCtl.golferSummaries = deepCopy(data.rows);
 	}

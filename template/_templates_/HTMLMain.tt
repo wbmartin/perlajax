@@ -9,7 +9,7 @@
 <div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" ng:controller="CacheCtl">
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 [%INCLUDE _golfScoreSummary.html%]
-[%INCLUDE _golfScoreCreate.html%]
+[%INCLUDE _golfScore.html%]
 [%INCLUDE _golferHistory.html%]
 [%INCLUDE _about.html%]
 [%INCLUDE core/_clientLog.html%]
