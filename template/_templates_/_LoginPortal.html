@@ -1,0 +1,64 @@
+<!--Begin LoginPortal-->
+
+<script type="text/javascript">
+var loginPageCtl;
+function LoginPageCtl($http){
+loginPageCtl = this;
+this.loginForm={};
+
+this.result="";
+this.authenticateUser = function(params){ "use strict";
+  var startTime, stopTime;
+  params['spwfResource'] = "security_user";
+  params['spwfAction'] = "authenticate";
+
+  startTime= new Date();
+  $http.post(urlTarget,params).success(function(data, status, headers, config) {
+	if(handleServerResponse("Authentication Attempt Answered",startTime, data)){
+	   if(data.rows[0].session_id ==""){
+		alert("Sorry, I Couldn't validate those Credentials");
+		loginPageCtl.loginForm.password="";
+	   }else{
+		var r = data.rows[0];
+		statusMsg("Successfully Authenticated User: " + r.user_id );
+		usrSessionId = r.session_id;
+		usrLoginId = r.user_id;
+		onSuccessfulLogin();
+	   }
+      }
+  });
+}
+
+loginPageCtl.loginForm.user_id="golfscore";
+loginPageCtl.loginForm.password="golfscore";
+}//end LoginPageCtl
+$(document).ready(function(){
+});
+
+</script>
+
+<div id="LoginPortal" style="position:fixed; height:100%; width:100%" ng:controller="LoginPageCtl">
+<img align="center" height="150" width ="470" src="./images/headerphoto.jpg">
+<div  class="vcenter">
+<form name="loginHolder">  
+  <fieldset style="border:0">  
+    <table class="formLayout" style="margin: auto;" vertical-align="middle">
+    <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
+	<span class="small" >Please enter your login credentials</span><hr/></td></tr>
+    <tr>
+    <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
+    <td><input type="text" name="user_id" ng:model="loginForm.user_id" id="user_id" size="30" value="" class="fieldbox" required /> </td> <td><span class="FieldError" ng:show="loginHolder.user_id.$error.REQUIRED">* Required</span></td>
+     </tr><tr>
+    <td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
+    <td><input type="password" ng:model="loginForm.password" id="password" size="30" value="" class="fieldbox" required />  </td>  <td><span class="FieldError" ng:show="loginHolder.password.$error.REQUIRED">* Required</span></td>
+
+     </tr><tr>
+    <td colspan="3" align="center" style="padding: 15px">
+	<button type="button"  id="cmdlogin" class="custombutton"  ng:click="authenticateUser(this.loginForm)" ng:disabled="{{this.loginHolder.$invalid}}"> Login </button>  
+    </td>
+</tr></table>
+  </fieldset>  
+</form>  
+</div>
+</div> <!--loginportal--> 
+<!--End LoginPortal-->

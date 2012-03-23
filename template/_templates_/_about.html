@@ -1,0 +1,29 @@
+[%divId="aboutPane"%]
+<div id="[%divId%]" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
+<div id ="[%divId%]CenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; background-color:white; max-width:300; ">
+<h1 style="width:40em;margin-left: auto; margin-right: auto;text-align:center;">About golfscore</h1>
+
+<p style="width:40em;margin-left: auto; margin-right: auto; ">golfscore is an open source application developed by Martinanalytics.  Part of our open source model leverages software developed by other open source contributors that we recognize here:
+<ul style="width:40em;margin-left: auto; margin-right: auto;padding: 10px 0px 10px 100px;">
+<li><a href="">jQuery</a> provides our AJAX and Javascript handlers</li>
+<li>Site styling provided by <a href="http://www.styleshout.com/">StyleShout's</a> PixelGreen web template</li>
+<li><a href="http://www.apache.org/">Apache Web Server</a> </li>
+<li>Proudly developed in <a href="http://www.perl.org/">Perl</a> </li>
+<li>Database backended by <a href="http://www.postgresql.org/">PostgreSQL</a> </li>
+<li>Developed on the <a href="http://www.ubuntu.org/">Ubuntu</a> Platform </li>
+
+</ul>
+</p>
+
+</div>[%#golfScoreCenterDiv%]
+</div>[%#aboutPane%]
+<script type="text/javascript">
+
+function show[%ucfirst(divId)%](){
+alert("[%serverErrorMsg%]");
+  $("#[%divId%]").fadeIn();
+  return "[%divId%]";
+}
+
+</script>
+
