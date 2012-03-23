@@ -20,7 +20,7 @@ body {
 	margin: 0; 	padding: 0;
 	font: normal 73%/1.6em 'Trebuchet MS', Tahoma, sans-serif;
 	color: #555;
-	background: #FFF url(./img/bg.jpg) repeat-x;
+	background: #FFF url(./images/bg.jpg) repeat-x;
 	text-align: center;		
 }
 
@@ -150,7 +150,7 @@ textarea {
 input.button { 
 	margin: 0; 
 	font: bold 1em Arial, Sans-serif; 
-	background: #FFF url(./img/gradientbg.jpg) repeat-x; 
+	background: #FFF url(./images/gradientbg.jpg) repeat-x; 
 	padding: 2px 3px; 
 	color: #333;	
 	border: 1px solid #DADADA;	
@@ -336,7 +336,7 @@ input.button {
 
 .post {
 	margin: 0; padding: 0;
-	background: #FFF url(./img/gradientbg.jpg) repeat-x;
+	background: #FFF url(./images/gradientbg.jpg) repeat-x;
 	border: 1px solid #EFEDED;
 }
 .post .post-footer {
