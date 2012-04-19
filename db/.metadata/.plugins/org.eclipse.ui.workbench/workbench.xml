@@ -40,6 +40,8 @@
 <part id="6"/>
 <part id="7"/>
 <part id="8"/>
+<part id="9"/>
+<part id="10"/>
 </presentation>
 </folder>
 </info>
@@ -68,6 +70,15 @@
 <editor id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="initialSetup.sql" partName="initialSetup.sql" path="/home/wbmartin/www/firstapp/db/firstapp/initialSetup.sql" title="initialSetup.sql" tooltip="firstapp/initialSetup.sql" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/initialSetup.sql"/>
 </editor>
+<editor id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="InitSession.sql" partName="InitSession.sql" path="/home/wbmartin/www/firstapp/db/firstapp/security/InitSession.sql" title="InitSession.sql" tooltip="firstapp/security/InitSession.sql" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/security/InitSession.sql"/>
+</editor>
+<editor id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="IsSessionValid.sql" partName="IsSessionValid.sql" path="/home/wbmartin/www/firstapp/db/firstapp/security/IsSessionValid.sql" title="IsSessionValid.sql" tooltip="firstapp/security/IsSessionValid.sql" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/security/IsSessionValid.sql"/>
+</editor>
+<editor id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="IsUserAuthorized.sql" partName="IsUserAuthorized.sql" path="/home/wbmartin/www/firstapp/db/firstapp/security/IsUserAuthorized.sql" title="IsUserAuthorized.sql" tooltip="firstapp/security/IsUserAuthorized.sql" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/firstapp/security/IsUserAuthorized.sql"/>
+</editor>
 </editors>
 <views>
 <view id="org.eclipse.ui.navigator.ProjectExplorer" partName="Project Explorer">
@@ -78,10 +89,6 @@
 </view>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
-<expanded>
-<category IMemento.internal.id="Warnings (1 item)"/>
-<category IMemento.internal.id="Warnings"/>
-</expanded>
 <columnWidths org.eclipse.ui.ide.locationField="105" org.eclipse.ui.ide.markerType="259" org.eclipse.ui.ide.pathField="140" org.eclipse.ui.ide.resourceField="105" org.eclipse.ui.ide.severityAndDescriptionField="350"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
@@ -219,16 +226,12 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/security/create.sql"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/create.sql"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/BusinessLogic.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/initialSetup.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/security/InitSession.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/security/IsSessionValid.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" path="/firstapp/security/IsUserAuthorized.sql"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="jp.azzurri.clay.ui.edit.DatabaseModelEditor" path="/firstapp/golfscore.clay"/>
 </editors>
-<item historyLabel="firstapp.sql" index="3"/>
-<item historyLabel="security.clay" index="0"/>
-<item historyLabel="golfscore.clay" index="2"/>
-<item historyLabel="firstapp.sql" index="3">
-<position/>
-</item>
-<item historyLabel="firstapp.sql" index="3"/>
-<item historyLabel="golfscore.clay" index="2"/>
-<item historyLabel="security.clay" index="0"/>
 <item historyLabel="security.sql" index="4"/>
 <item historyLabel="CRUD_golfer.sql" index="5"/>
 <item historyLabel="initialSetup.sql" index="6"/>
@@ -273,17 +276,22 @@
 <item historyLabel="create.sql" index="9"/>
 <item historyLabel="BusinessLogic.sql" index="10"/>
 <item historyLabel="create.sql" index="8"/>
-<item active="true" historyLabel="CRUD_golf_score.sql" index="7"/>
+<item historyLabel="CRUD_golf_score.sql" index="7"/>
+<item historyLabel="initialSetup.sql" index="11"/>
+<item historyLabel="InitSession.sql" index="12"/>
+<item historyLabel="IsSessionValid.sql" index="13"/>
+<item historyLabel="IsUserAuthorized.sql" index="14"/>
+<item historyLabel="IsSessionValid.sql" index="13"/>
+<item historyLabel="golfscore.clay" index="15"/>
+<item active="true" historyLabel="CRUD_golf_score.sql" index="7">
+<position info="not_deleted" x="4997" y="0"/>
+</item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
 <workbenchWindowAdvisor/>
 <actionBarAdvisor/>
 <trimLayout>
-<trimArea IMemento.internal.id="16384">
-<trimItem IMemento.internal.id="topLeft"/>
-<trimItem IMemento.internal.id="bottomLeft"/>
-</trimArea>
 <trimArea IMemento.internal.id="128">
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar"/>
 </trimArea>
@@ -292,12 +300,19 @@
 <trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar"/>
 <trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
-<trimItem IMemento.internal.id="org.eclipse.ui.internal.intro.impl.presentations.IntroLaunchBar"/>
-<trimItem IMemento.internal.id="bottomRight"/>
 </trimArea>
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="IsUserAuthorized.sql" tooltip="firstapp/security/IsUserAuthorized.sql">
+<persistable path="/firstapp/security/IsUserAuthorized.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="IsSessionValid.sql" tooltip="firstapp/security/IsSessionValid.sql">
+<persistable path="/firstapp/security/IsSessionValid.sql"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="InitSession.sql" tooltip="firstapp/security/InitSession.sql">
+<persistable path="/firstapp/security/InitSession.sql"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="initialSetup.sql" tooltip="firstapp/initialSetup.sql">
 <persistable path="/firstapp/initialSetup.sql"/>
 </file>
@@ -319,9 +334,6 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="CRUD_golf_score.sql" tooltip="firstapp/CRUD_golf_score.sql">
 <persistable path="/firstapp/CRUD_golf_score.sql"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="InitSession.sql" tooltip="firstapp/security/InitSession.sql">
-<persistable path="/firstapp/security/InitSession.sql"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="security.sql" tooltip="firstapp/security/security.sql">
 <persistable path="/firstapp/security/security.sql"/>
 </file>
@@ -336,12 +348,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="payment_log.sql" tooltip="firstapp/security/payment_log.sql">
 <persistable path="/firstapp/security/payment_log.sql"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="IsUserAuthorized.sql" tooltip="firstapp/security/IsUserAuthorized.sql">
-<persistable path="/firstapp/security/IsUserAuthorized.sql"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor" name="IsSessionValid.sql" tooltip="firstapp/security/IsSessionValid.sql">
-<persistable path="/firstapp/security/IsSessionValid.sql"/>
 </file>
 </mruList>
 </workbench>
