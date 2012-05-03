@@ -116,7 +116,11 @@ function digest(er, ee) {
 var appModule = angular.module('AppModule', []);
 appModule.filter('pgDate', function(){
    return function(pgDate){
-      return pgDate.substring(0,10);
+      if (pgDate !=null){
+      	return pgDate.substring(0,10);
+      }else{
+	return "";
+      }
    }
 });
 

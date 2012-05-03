@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng:app="AppModule"> 
 <head> 
 <title> Simple2 Demo</title> 
-<script type="text/javascript" src="./angular-0.10.6.min.js" ng:autobind ></script>
 
+<script type="text/javascript" src="./angular-0.10.6.min.js" ng:autobind ></script>
 <script type="text/javascript"> 
 //<![CDATA[
 //header1.js
@@ -125,7 +125,11 @@ function digest(er, ee) {
 var appModule = angular.module('AppModule', []);
 appModule.filter('pgDate', function(){
    return function(pgDate){
-      return pgDate.substring(0,10);
+      if (pgDate !=null){
+      	return pgDate.substring(0,10);
+      }else{
+	return "";
+      }
    }
 });
 
@@ -1889,7 +1893,7 @@ function GolfScoreCtl($http){
  	$http.post(urlTarget,params).success(
 		function(data, status, headers, config) {
  			handleServerResponse("Retrieved Golf Score ",startTime, data);
-		golfScoreCtl.bindToForm(data.rows[0]);
+			golfScoreCtl.bindToForm(data.rows[0]);
         	}
     	);
     }// end retrieve
@@ -1925,8 +1929,8 @@ $(function() {
 <form id="golfScoreForm" action="">
 <table id="golfScoreFormTable" style="" class='formTable'>
 <tr><td> Golfer </td><td><select ng:model="golfScoreForm.golferSelect" ng:options="golferiterator.lbl for golferiterator in golfers" ></select></td></tr>
-<tr><td> Score </td><td><input ng:model="golfScoreForm.golf_score" type="text"/></td></tr>
-<tr><td> Date</td><td><input ng:model="golfScoreForm.golf_score" type="text" id="datePlayedId"/></td></tr>
+<tr><td> Score </td><td><input ng:model="golfScoreForm.golf_score" type="text" id="test"/></td></tr>
+<tr><td> Date</td><td><input ng:model="golfScoreForm.game_dt" type="text" id="datePlayedId"/></td></tr>
 <tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" ng:click="saveGolfScore(this.golfScoreForm)" >Save</button></td></tr>
 </table>
 <input type="hidden" ng:model="golfScoreForm.last_update">
@@ -1997,8 +2001,9 @@ function showGolferHistory(golferId_){
 <script type="text/javascript">
 
 function showAboutPane(){
-alert("");
+  hideCurrentContentPane();
   $("#aboutPane").fadeIn();
+currentContentPane = "aboutPane";
   return "aboutPane";
 }
 

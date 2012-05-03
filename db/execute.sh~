@@ -1,3 +1,0 @@
-#!/bin/bash
-psql -Upostgres -dfirstapp -h localhost -f executeSecurity.sql &> securitySchema.log
-

@@ -22,7 +22,7 @@ function [%ucfirst(divId)%]Ctl($http){
  	$http.post(urlTarget,params).success(
 		function(data, status, headers, config) {
  			handleServerResponse("Retrieved Golf Score ",startTime, data);
-		[%divId%]Ctl.bindToForm(data.rows[0]);
+			[%divId%]Ctl.bindToForm(data.rows[0]);
         	}
     	);
     }// end retrieve
@@ -58,8 +58,8 @@ $(function() {
 <form id="[%divId%]Form" action="">
 <table id="[%divId%]FormTable" style="" class='formTable'>
 <tr><td> Golfer </td><td><select ng:model="[%divId%]Form.golferSelect" ng:options="golferiterator.lbl for golferiterator in golfers" ></select></td></tr>
-<tr><td> Score </td><td><input ng:model="[%divId%]Form.golf_score" type="text"/></td></tr>
-<tr><td> Date</td><td><input ng:model="[%divId%]Form.golf_score" type="text" id="datePlayedId"/></td></tr>
+<tr><td> Score </td><td><input ng:model="[%divId%]Form.golf_score" type="text" id="test"/></td></tr>
+<tr><td> Date</td><td><input ng:model="[%divId%]Form.game_dt" type="text" id="datePlayedId"/></td></tr>
 <tr><td colspan="2"><button type="button" id="[%divId%]FormSave" value="Save" ng:click="saveGolfScore(this.golfScoreForm)" >Save</button></td></tr>
 </table>
 <input type="hidden" ng:model="[%divId%]Form.last_update">

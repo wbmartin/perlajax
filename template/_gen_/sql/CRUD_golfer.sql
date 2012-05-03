@@ -1,22 +1,5 @@
-\o ./log/CRUD_golfer.log
-/*
--- Security Grants
-GRANT ALL ON TABLE golfer TO GROUP golfscore;
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ( 'SELECT_GOLFER', now(), 'Allows users to select golfer'); 
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ('INSERT_GOLFER', now(), 'Allows users to add records to golfer');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ('UPDATE_GOLFER', now(), 'Allows users to update records in golfer');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ( 'DELETE_GOLFER', now(), 'Allows users to delete records from golfer');
-select * from security_privilege where priv_name in ('SELECT_GOLFER','INSERT_GOLFER','UPDATE_GOLFER','DELETE_GOLFER');
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-*/
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-
 
 -- Function: golfer_sq(text, text, text, text, text, integer, integer)
-
 -- DROP FUNCTION golfer_sq(text, text, text, text, text, integer, integer);
 
 CREATE OR REPLACE FUNCTION golfer_sq(alreadyAuth_ text, securityuserid_ text, sessionid_ text, whereClause_ text, orderByClause_ text, rowLimit_ integer, rowOffset_ integer)
@@ -128,17 +111,13 @@ $body$
 alter function golfer_iq(text,  text, text ,character varying) owner to postgres;
 GRANT EXECUTE ON FUNCTION golfer_iq(text,  text, text ,character varying) TO GROUP golfscore;
 
-
-
 --select * from golfer_iq('ALREADY_AUTH', 'test', 'test' , 'text' );
-
-
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function:  golfer_uq(text, text ,integer,timestamp,character varying)
+-- Function:  golfer_uq(text, text, text ,integer,timestamp,character varying)
 
--- DROP FUNCTION golfer_uq( text,  text ,integer,timestamp,character varying);
+-- DROP FUNCTION golfer_uq(text, text, text ,integer,timestamp,character varying);
 
 
 create or replace function golfer_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , golferId_ integer, lastUpdate_ timestamp, name_ character varying)
@@ -172,9 +151,7 @@ GRANT EXECUTE ON FUNCTION golfer_uq(text, text, text ,integer,timestamp,characte
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  golfer_dq(text, text ,integer, timestamp)
-
 -- DROP FUNCTION golfer_dq( text,  text ,integer, timestamp);
-
 
 create or replace function golfer_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,golferId_ integer, lastUpdate_ timestamp  )
   returns boolean as
@@ -193,7 +170,6 @@ $body$
 	else 
 	  raise exception 'Delete Failed for GOLFER- The record may have been changed or deleted before the attempt.';
 	end if;
-
   end;
 $body$
   language 'plpgsql' volatile

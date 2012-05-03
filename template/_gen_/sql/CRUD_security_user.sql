@@ -1,22 +1,5 @@
-\o ./log/CRUD_security_user.log
-/*
--- Security Grants
-GRANT ALL ON TABLE security_user TO GROUP golfscore;
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ( 'SELECT_SECURITY_USER', now(), 'Allows users to select security_user'); 
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ('INSERT_SECURITY_USER', now(), 'Allows users to add records to security_user');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ('UPDATE_SECURITY_USER', now(), 'Allows users to update records in security_user');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ( 'DELETE_SECURITY_USER', now(), 'Allows users to delete records from security_user');
-select * from security_privilege where priv_name in ('SELECT_SECURITY_USER','INSERT_SECURITY_USER','UPDATE_SECURITY_USER','DELETE_SECURITY_USER');
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-*/
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-
 
 -- Function: security_user_sq(text, text, text, text, text, integer, integer)
-
 -- DROP FUNCTION security_user_sq(text, text, text, text, text, integer, integer);
 
 CREATE OR REPLACE FUNCTION security_user_sq(alreadyAuth_ text, securityuserid_ text, sessionid_ text, whereClause_ text, orderByClause_ text, rowLimit_ integer, rowOffset_ integer)
@@ -128,17 +111,13 @@ $body$
 alter function security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character) owner to postgres;
 GRANT EXECUTE ON FUNCTION security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character) TO GROUP golfscore;
 
-
-
 --select * from security_user_iq('ALREADY_AUTH', 'test', 'test' , 'text', 'text' ,1, 'text', 'text', 'text' );
-
-
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function:  security_user_uq(text, text ,text,timestamp,text,integer,text,timestamp,character)
+-- Function:  security_user_uq(text, text, text ,text,timestamp,text,integer,text,timestamp,character)
 
--- DROP FUNCTION security_user_uq( text,  text ,text,timestamp,text,integer,text,timestamp,character);
+-- DROP FUNCTION security_user_uq(text, text, text ,text,timestamp,text,integer,text,timestamp,character);
 
 
 create or replace function security_user_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , userId_ text, lastUpdate_ timestamp, passwordEnc_ text, securityProfileId_ integer, sessionId_ text, sessionExpireDt_ timestamp, activeYn_ character)
@@ -172,9 +151,7 @@ GRANT EXECUTE ON FUNCTION security_user_uq(text, text, text ,text,timestamp,text
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  security_user_dq(text, text ,text, timestamp)
-
 -- DROP FUNCTION security_user_dq( text,  text ,text, timestamp);
-
 
 create or replace function security_user_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,userId_ text, lastUpdate_ timestamp  )
   returns boolean as
@@ -193,7 +170,6 @@ $body$
 	else 
 	  raise exception 'Delete Failed for SECURITY_USER- The record may have been changed or deleted before the attempt.';
 	end if;
-
   end;
 $body$
   language 'plpgsql' volatile

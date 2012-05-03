@@ -64,3 +64,9 @@ INSERT 0 1
 INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) 
 	VALUES ( 1, 10);
 INSERT 0 1
+\i data/020_INSERT_TestDat.sql
+\set ECHO all
+insert into golfer(name, last_update) values ('ABlah',now());
+INSERT 0 1
+insert into golfer(name, last_update) values ('BBlah',now());
+INSERT 0 1

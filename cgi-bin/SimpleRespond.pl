@@ -28,6 +28,8 @@ if (exists $params->{"POSTDATA"}){
    }
   if(!$qaMode){	$DBInfo ={dbname=>"concordc_firstapp", user=>"concordc_fistapp", password=>$prodServerPassword};
   }else{ 	$DBInfo ={dbname=>"golfscore", user=>"golfscore", password=>"golfscore"}; }
+  #$DBInfo ={dbname=>"firstapp", user=>"postgres", password=>'4vrf5btg'};
+
   &UTL::dbConnect(\$dbh, $DBInfo);
   $sth = &UTL::buildSTH($dbh, $params );
 
@@ -180,7 +182,7 @@ sub buildResourceActionDef{
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"cross_table_cache_sq"};
 	}
 } elsif($resource eq "GOLF_SCORE" ){
-	 @allFields = ('golf_score_id', 'last_update', 'golf_score', 'golfer_id' );
+	 @allFields = ('golf_score_id', 'last_update', 'golf_score', 'golfer_id','game_dt' );
 	if($action eq "INSERT"){
 		@paramFields =@allFields;
 		&removeArrayElement(\@paramFields, 'golf_score_id');

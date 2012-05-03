@@ -1,22 +1,5 @@
-\o ./log/CRUD_golf_score.log
-/*
--- Security Grants
-GRANT ALL ON TABLE golf_score TO GROUP golfscore;
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ( 'SELECT_GOLF_SCORE', now(), 'Allows users to select golf_score'); 
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ('INSERT_GOLF_SCORE', now(), 'Allows users to add records to golf_score');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ('UPDATE_GOLF_SCORE', now(), 'Allows users to update records in golf_score');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ( 'DELETE_GOLF_SCORE', now(), 'Allows users to delete records from golf_score');
-select * from security_privilege where priv_name in ('SELECT_GOLF_SCORE','INSERT_GOLF_SCORE','UPDATE_GOLF_SCORE','DELETE_GOLF_SCORE');
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-*/
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-
 
 -- Function: golf_score_sq(text, text, text, text, text, integer, integer)
-
 -- DROP FUNCTION golf_score_sq(text, text, text, text, text, integer, integer);
 
 CREATE OR REPLACE FUNCTION golf_score_sq(alreadyAuth_ text, securityuserid_ text, sessionid_ text, whereClause_ text, orderByClause_ text, rowLimit_ integer, rowOffset_ integer)
@@ -32,7 +15,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_GOLF_SCORE' );
     end if;
---golf_score_id, last_update, golf_score, golfer_id
+--golf_score_id, last_update, golf_score, golfer_id, game_dt
 
     whereClause ='';
     orderByClause='';
@@ -84,7 +67,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_GOLF_SCORE' );
     end if;
---golf_score_id, last_update, golf_score, golfer_id
+--golf_score_id, last_update, golf_score, golfer_id, game_dt
    
 
 
@@ -102,11 +85,11 @@ GRANT EXECUTE ON FUNCTION golf_score_bypk(text,  text, text,integer) TO GROUP go
 
 
 
--- Function:  golf_score_iq(text, text, text ,integer,integer)
+-- Function:  golf_score_iq(text, text, text ,integer,integer,date)
 
--- DROP FUNCTION golf_score_iq( text, text, text,integer,integer);
+-- DROP FUNCTION golf_score_iq( text, text, text,integer,integer,date);
 
-create or replace function golf_score_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,golfScore_ integer,golferId_ integer)
+create or replace function golf_score_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,golfScore_ integer,golferId_ integer,gameDt_ date)
   returns golf_score as
 $body$
   declare
@@ -118,30 +101,26 @@ $body$
     end if;
 
 
-    insert into golf_score( last_update,golf_score,golfer_id) 	values (  now(),golfScore_,golferId_) 
+    insert into golf_score( last_update,golf_score,golfer_id,game_dt) 	values (  now(),golfScore_,golferId_,gameDt_) 
 	returning * into newrow;
       return newrow;
   end;
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function golf_score_iq(text,  text, text ,integer,integer) owner to postgres;
-GRANT EXECUTE ON FUNCTION golf_score_iq(text,  text, text ,integer,integer) TO GROUP golfscore;
+alter function golf_score_iq(text,  text, text ,integer,integer,date) owner to postgres;
+GRANT EXECUTE ON FUNCTION golf_score_iq(text,  text, text ,integer,integer,date) TO GROUP golfscore;
 
-
-
---select * from golf_score_iq('ALREADY_AUTH', 'test', 'test'  ,1 ,1 );
-
-
+--select * from golf_score_iq('ALREADY_AUTH', 'test', 'test'  ,1 ,1, 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function:  golf_score_uq(text, text ,integer,timestamp,integer,integer)
+-- Function:  golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date)
 
--- DROP FUNCTION golf_score_uq( text,  text ,integer,timestamp,integer,integer);
+-- DROP FUNCTION golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date);
 
 
-create or replace function golf_score_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , golfScoreId_ integer, lastUpdate_ timestamp, golfScore_ integer, golferId_ integer)
+create or replace function golf_score_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , golfScoreId_ integer, lastUpdate_ timestamp, golfScore_ integer, golferId_ integer, gameDt_ date)
   returns golf_score as
 $body$
   declare
@@ -151,7 +130,7 @@ $body$
     	perform issessionvalid( securityuserid_,sessionid_) ;
     	perform isuserauthorized( securityuserid_, 'UPDATE_GOLF_SCORE' );
     end if;
-	update golf_score set last_update = now() ,  golf_score= golfScore_ ,  golfer_id= golferId_ 	where golf_score_id=golfScoreId_   and   last_update = lastUpdate_
+	update golf_score set last_update = now() ,  golf_score= golfScore_ ,  golfer_id= golferId_ ,  game_dt= gameDt_ 	where golf_score_id=golfScoreId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then
@@ -164,17 +143,15 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function golf_score_uq(text,  text, text ,integer,timestamp,integer,integer) owner to postgres;
-GRANT EXECUTE ON FUNCTION golf_score_uq(text, text, text ,integer,timestamp,integer,integer) TO GROUP golfscore;
+alter function golf_score_uq(text,  text, text ,integer,timestamp,integer,integer,date) owner to postgres;
+GRANT EXECUTE ON FUNCTION golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date) TO GROUP golfscore;
 
---select * from golf_score_uq('ALREADY_AUTH', 'test', 'test' <golf_score_id> <last_update> ,1 ,1);
+--select * from golf_score_uq('ALREADY_AUTH', 'test', 'test', 'text' <golf_score_id> <last_update> ,1 ,1);
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  golf_score_dq(text, text ,integer, timestamp)
-
 -- DROP FUNCTION golf_score_dq( text,  text ,integer, timestamp);
-
 
 create or replace function golf_score_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,golfScoreId_ integer, lastUpdate_ timestamp  )
   returns boolean as
@@ -193,7 +170,6 @@ $body$
 	else 
 	  raise exception 'Delete Failed for GOLF_SCORE- The record may have been changed or deleted before the attempt.';
 	end if;
-
   end;
 $body$
   language 'plpgsql' volatile

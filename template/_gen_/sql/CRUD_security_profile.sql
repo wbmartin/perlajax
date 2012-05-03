@@ -1,22 +1,5 @@
-\o ./log/CRUD_security_profile.log
-/*
--- Security Grants
-GRANT ALL ON TABLE security_profile TO GROUP golfscore;
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ( 'SELECT_SECURITY_PROFILE', now(), 'Allows users to select security_profile'); 
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ('INSERT_SECURITY_PROFILE', now(), 'Allows users to add records to security_profile');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ('UPDATE_SECURITY_PROFILE', now(), 'Allows users to update records in security_profile');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ( 'DELETE_SECURITY_PROFILE', now(), 'Allows users to delete records from security_profile');
-select * from security_privilege where priv_name in ('SELECT_SECURITY_PROFILE','INSERT_SECURITY_PROFILE','UPDATE_SECURITY_PROFILE','DELETE_SECURITY_PROFILE');
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-*/
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-
 
 -- Function: security_profile_sq(text, text, text, text, text, integer, integer)
-
 -- DROP FUNCTION security_profile_sq(text, text, text, text, text, integer, integer);
 
 CREATE OR REPLACE FUNCTION security_profile_sq(alreadyAuth_ text, securityuserid_ text, sessionid_ text, whereClause_ text, orderByClause_ text, rowLimit_ integer, rowOffset_ integer)
@@ -128,17 +111,13 @@ $body$
 alter function security_profile_iq(text,  text, text ,text) owner to postgres;
 GRANT EXECUTE ON FUNCTION security_profile_iq(text,  text, text ,text) TO GROUP golfscore;
 
-
-
 --select * from security_profile_iq('ALREADY_AUTH', 'test', 'test' , 'text' );
-
-
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function:  security_profile_uq(text, text ,integer,text,timestamp)
+-- Function:  security_profile_uq(text, text, text ,integer,text,timestamp)
 
--- DROP FUNCTION security_profile_uq( text,  text ,integer,text,timestamp);
+-- DROP FUNCTION security_profile_uq(text, text, text ,integer,text,timestamp);
 
 
 create or replace function security_profile_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityProfileId_ integer, profileName_ text, lastUpdate_ timestamp)
@@ -172,9 +151,7 @@ GRANT EXECUTE ON FUNCTION security_profile_uq(text, text, text ,integer,text,tim
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  security_profile_dq(text, text ,integer, timestamp)
-
 -- DROP FUNCTION security_profile_dq( text,  text ,integer, timestamp);
-
 
 create or replace function security_profile_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,securityProfileId_ integer, lastUpdate_ timestamp  )
   returns boolean as
@@ -193,7 +170,6 @@ $body$
 	else 
 	  raise exception 'Delete Failed for SECURITY_PROFILE- The record may have been changed or deleted before the attempt.';
 	end if;
-
   end;
 $body$
   language 'plpgsql' volatile

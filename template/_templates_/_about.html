@@ -20,8 +20,9 @@
 <script type="text/javascript">
 
 function show[%ucfirst(divId)%](){
-alert("[%serverErrorMsg%]");
+  hideCurrentContentPane();
   $("#[%divId%]").fadeIn();
+currentContentPane = "[%divId%]";
   return "[%divId%]";
 }
 

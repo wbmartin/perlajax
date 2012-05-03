@@ -1,6 +1,6 @@
 #!/bin/bash
 PGUNAME=postgres
-PGDB=firstapp
+PGDB=golfscore
 PGHOST=localhost
 psql -U$PGUNAME -d$PGDB -h $PGHOST -f executeSecurity.sql &> _securitySchema.log
 psql -U$PGUNAME -d$PGDB -h $PGHOST -f executeTables.sql &> _tables.log

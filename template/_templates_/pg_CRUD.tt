@@ -1,28 +1,11 @@
 [%- FOREACH tablename IN tbl.keys -%]
 [%- FILTER redirect("sql/CRUD_${tablename}.sql") -%]
-\o ./log/CRUD_[%+tablename+%].log
-/*
--- Security Grants
-GRANT ALL ON TABLE [%+tablename+%] TO GROUP [%+ props.dbgroup -%];
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ( 'SELECT_[%+tablename | upper+%]', now(), 'Allows users to select [%+tablename+%]'); 
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ('INSERT_[%+tablename | upper+%]', now(), 'Allows users to add records to [%+tablename+%]');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ('UPDATE_[%+tablename | upper+%]', now(), 'Allows users to update records in [%+tablename+%]');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ( 'DELETE_[%+tablename | upper+%]', now(), 'Allows users to delete records from [%+tablename+%]');
-select * from security_privilege where priv_name in ('SELECT_[%+tablename | upper+%]','INSERT_[%+tablename | upper+%]','UPDATE_[%+tablename | upper+%]','DELETE_[%+tablename | upper+%]');
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-*/
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-
 [%BLOCK COMMA_COLUMNS%]
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
 [% ", "  IF loop.count()>1; column %]
 [%-END+%]
 [%END #BLOCK %]
 -- Function: [%+tablename+%]_sq(text, text, text, text, text, integer, integer)
-
 -- DROP FUNCTION [%+tablename+%]_sq(text, text, text, text, text, integer, integer);
 
 CREATE OR REPLACE FUNCTION [%+tablename+%]_sq(alreadyAuth_ text, securityuserid_ text, sessionid_ text, whereClause_ text, orderByClause_ text, rowLimit_ integer, rowOffset_ integer)
@@ -188,11 +171,7 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_iq(text,  text, text [%-INCLUDE IQ_FUN
 [%-END #FOREACH-%]
 [%-END #DUMMYDATA-%]
 
-
-
 --select * from [%+tablename+%]_iq('ALREADY_AUTH', 'test', 'test' [%INCLUDE IQ_DUMMY_DATA%] );
-
-
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 [%-BLOCK UQ_FUNC_OMIT_COLUMN_NAMES%]
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
@@ -268,9 +247,7 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_uq(text, text, text [%-INCLUDE UQ_FUNC
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  [%+tablename+%]_dq(text, text [%INCLUDE BYPK_OMIT_NAMES%], timestamp)
-
 -- DROP FUNCTION [%+tablename+%]_dq( text,  text [%INCLUDE BYPK_OMIT_NAMES%], timestamp);
-
 
 create or replace function [%+tablename+%]_dq(alreadyauth_ text,  userid_ text, sessionid_ text [%INCLUDE BYPK_SHOW_NAMES%], lastUpdate_ timestamp  )
   returns boolean as
@@ -289,7 +266,6 @@ $body$
 	else 
 	  raise exception 'Delete Failed for [%+tablename | upper+%]- The record may have been changed or deleted before the attempt.';
 	end if;
-
   end;
 $body$
   language 'plpgsql' volatile

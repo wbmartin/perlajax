@@ -1,22 +1,5 @@
-\o ./log/CRUD_vw_profile_grant.log
-/*
--- Security Grants
-GRANT ALL ON TABLE vw_profile_grant TO GROUP golfscore;
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ( 'SELECT_VW_PROFILE_GRANT', now(), 'Allows users to select vw_profile_grant'); 
-INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ('INSERT_VW_PROFILE_GRANT', now(), 'Allows users to add records to vw_profile_grant');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ('UPDATE_VW_PROFILE_GRANT', now(), 'Allows users to update records in vw_profile_grant');
-INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ( 'DELETE_VW_PROFILE_GRANT', now(), 'Allows users to delete records from vw_profile_grant');
-select * from security_privilege where priv_name in ('SELECT_VW_PROFILE_GRANT','INSERT_VW_PROFILE_GRANT','UPDATE_VW_PROFILE_GRANT','DELETE_VW_PROFILE_GRANT');
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
-*/
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-
 
 -- Function: vw_profile_grant_sq(text, text, text, text, text, integer, integer)
-
 -- DROP FUNCTION vw_profile_grant_sq(text, text, text, text, text, integer, integer);
 
 CREATE OR REPLACE FUNCTION vw_profile_grant_sq(alreadyAuth_ text, securityuserid_ text, sessionid_ text, whereClause_ text, orderByClause_ text, rowLimit_ integer, rowOffset_ integer)
@@ -128,17 +111,13 @@ $body$
 alter function vw_profile_grant_iq(text,  text, text ,integer,text,integer,text) owner to postgres;
 GRANT EXECUTE ON FUNCTION vw_profile_grant_iq(text,  text, text ,integer,text,integer,text) TO GROUP golfscore;
 
-
-
 --select * from vw_profile_grant_iq('ALREADY_AUTH', 'test', 'test'  ,1, 'text' ,1, 'text' );
-
-
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function:  vw_profile_grant_uq(text, text ,integer,text,integer,text,timestamp with time zone)
+-- Function:  vw_profile_grant_uq(text, text, text ,integer,text,integer,text,timestamp with time zone)
 
--- DROP FUNCTION vw_profile_grant_uq( text,  text ,integer,text,integer,text,timestamp with time zone);
+-- DROP FUNCTION vw_profile_grant_uq(text, text, text ,integer,text,integer,text,timestamp with time zone);
 
 
 create or replace function vw_profile_grant_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityProfileId_ integer, profileName_ text, securityPrivilegeId_ integer, privName_ text, lastUpdate_ timestamp with time zone)
@@ -172,9 +151,7 @@ GRANT EXECUTE ON FUNCTION vw_profile_grant_uq(text, text, text ,integer,text,int
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  vw_profile_grant_dq(text, text , timestamp)
-
 -- DROP FUNCTION vw_profile_grant_dq( text,  text , timestamp);
-
 
 create or replace function vw_profile_grant_dq(alreadyauth_ text,  userid_ text, sessionid_ text , lastUpdate_ timestamp  )
   returns boolean as
@@ -193,7 +170,6 @@ $body$
 	else 
 	  raise exception 'Delete Failed for VW_PROFILE_GRANT- The record may have been changed or deleted before the attempt.';
 	end if;
-
   end;
 $body$
   language 'plpgsql' volatile
