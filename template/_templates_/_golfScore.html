@@ -33,11 +33,9 @@ function [%ucfirst(divId)%]Ctl($http){
     }
 
 
-
+//$( "#datePlayedId" ).datepicker();
 
 }//end GolfScoreCTL
-
-
 
 
 function show[%ucfirst(divId)%](scoreId_){
@@ -49,9 +47,9 @@ function show[%ucfirst(divId)%](scoreId_){
 	[%divId%]Ctl.retrieveGolfScore(params);
   }
 }
-$(function() {
-		$( "#datePlayedId" ).datepicker();
-	});
+//$(function() {
+//		$( "#datePlayedId" ).datepicker();
+//	});
 </script>
 
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle" ng:controller="[%ucfirst(divId)%]Ctl">
@@ -59,7 +57,7 @@ $(function() {
 <table id="[%divId%]FormTable" style="" class='formTable'>
 <tr><td> Golfer </td><td><select ng:model="[%divId%]Form.golferSelect" ng:options="golferiterator.lbl for golferiterator in golfers" ></select></td></tr>
 <tr><td> Score </td><td><input ng:model="[%divId%]Form.golf_score" type="text" id="test"/></td></tr>
-<tr><td> Date</td><td><input ng:model="[%divId%]Form.game_dt" type="text" id="datePlayedId"/></td></tr>
+<tr><td> Date</td><td><input ui-date ng:model="[%divId%]Form.game_dt" type="text"  id="datePlayedId"/></td></tr>
 <tr><td colspan="2"><button type="button" id="[%divId%]FormSave" value="Save" ng:click="saveGolfScore(this.golfScoreForm)" >Save</button></td></tr>
 </table>
 <input type="hidden" ng:model="[%divId%]Form.last_update">

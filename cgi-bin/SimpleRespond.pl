@@ -57,7 +57,8 @@ if (exists $params->{"POSTDATA"}){
 	$json->{"errorMsg"} =$sth;
 
     }  
-  	$json_text = to_json($json);
+  	$json->{"requestId"}=$params->{'requestId'};
+	$json_text = to_json($json);
   	print $json_text;
 	print STDERR "JSON Txt: $json_text\n"  if($debug);
 

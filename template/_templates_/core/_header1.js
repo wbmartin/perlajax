@@ -39,9 +39,18 @@ function validateServerResponse(responseTxt){
   return true;
 }
 
-function logMsg(msg){
-  clientLog.push( String(msg) + "|"+ new Date());
-
+function logMsg(msg,requestId){
+  var timingInfo="";
+  var logId = clientLog.length;
+  if (requestId != null && requestId != "NEW"){ logId = requestId; }
+  if( logId == clientLog.length){ 
+	clientLog[logId] = {logDt: new Date()}; 
+  }else{
+	timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
+  }
+  clientLog[logId].msg= msg+timingInfo;
+  
+return logId;
 }
 function statusMsg(msg){
   $("#statusMsg").html(msg);
@@ -113,41 +122,41 @@ function digest(er, ee) {
 
 
 
-var appModule = angular.module('AppModule', []);
-appModule.filter('pgDate', function(){
-   return function(pgDate){
-      if (pgDate !=null){
-      	return pgDate.substring(0,10);
-      }else{
-	return "";
-      }
-   }
-});
+//var appModule = angular.module('AppModule', []);
+//appModule.filter('pgDate', function(){
+//   return function(pgDate){
+//      if (pgDate !=null){
+//      	return pgDate.substring(0,10);
+//      }else{
+//	return "";
+//      }
+//   }
+//});
 
-appModule.filter('FormatNumber',function(){
-	return function(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
-		return FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas);
-	}
-});
+//appModule.filter('FormatNumber',function(){
+//	return function(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
+//		return FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas);
+//	}
+//});
 
-appModule.filter('lbl4Val',function(){
-	return function(val,type){
-	   return getLbl4Val(val,type);
-	}
-});
+//appModule.filter('lbl4Val',function(){
+//	return function(val,type){
+//	   return getLbl4Val(val,type);
+//	}
+//});
 
-appModule.filter('golferNameFromId',function(){
-	return function(id){
-        if(typeof golfScoreCtl.golfers === 'undefined'){return "--";} 
-	  for(var i=0;i<golfScoreCtl.golfers.length;i++){
-		if(golfScoreCtl.golfers[i].val == id){
-			return golfScoreCtl.golfers[i].lbl;
-
-		}
-	  }
-	  return "**";
-	}
-});
+//appModule.filter('golferNameFromId',function(){
+//	return function(id){
+//        if(typeof golfScoreCtl.golfers === 'undefined'){return "--";} 
+//	  for(var i=0;i<golfScoreCtl.golfers.length;i++){
+//		if(golfScoreCtl.golfers[i].val == id){
+//			return golfScoreCtl.golfers[i].lbl;
+//
+//		}
+//	  }
+//	  return "**";
+//	}
+//});
 
 
 

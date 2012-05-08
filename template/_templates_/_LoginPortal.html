@@ -35,26 +35,122 @@ loginPageCtl.loginForm.password="golfscore";
 $(document).ready(function(){
 });
 
+function serverCall(params, successCallback, failCallback){
+var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
+params['requestId'] =logMsg(resourceActionInfo + " Started");
+
+  successCallbackMod = function(rslt){
+	logMsg(resourceActionInfo + " Responded", rslt.requestId);
+ 	if(validateServerResponse(rslt)){
+		successCallback(rslt);
+	}else{
+		logMsg(resourceActionInfo + " Failed to validate the server response");
+	}	
+  }
+  $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
+	  success: successCallbackMod, error: failCallback });
+
+}
+
+function loginCall(){
+  var params = bindForm("loginHolder");
+  params['spwfResource'] = "security_user";
+  params['spwfAction'] = "authenticate";
+  if (validateLoginHolder())serverCall(params,
+	function (rslt){
+	   var r = rslt.rows[0];
+	   if(r.session_id ==""){
+		alert("Sorry, I Couldn't validate those Credentials");
+		$("#password").val("");
+	   }else{
+		statusMsg("Successfully Authenticated User: " + r.user_id );
+		usrSessionId = r.session_id;
+		usrLoginId = r.user_id;
+		onSuccessfulLogin();
+	   }
+	},
+	function(){alert("failed");}
+  );
+
+}
+
+function validateLoginHolder (){
+  var formValid = true;
+  var formName="loginHolder ";
+  $.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
+	span.innerHTML="";
+  });
+
+  $.each($("form#"+formName + ".invalid"),function (ndx,field){
+	$("form#"+formName +" #"+field.id).removeClass("invalid");
+  });
+  $.each($("form#" +formName + " .required"),function (ndx,field){
+	if(field.value == null || field.value==""){
+	 appendValidationMsg(formName,field.id, "Required");
+	 highlightFieldError(formName,field.id,true);
+	formValid =false;
+	}
+  });
+
+
+  return formValid;
+}
+function appendValidationMsg(formId,fieldId, msg){
+	var fullyQName = "form#"+formId+" #" + fieldId;
+	if($("form#"+formId).find("#"+fieldId+"Error").attr("id")==undefined){
+	   $(fullyQName).after("<span id='" +fieldId + "Error' class='ValidationMsg'></span>");
+	}
+	if( $(fullyQName+"Error").html().length ==0){
+		$(fullyQName+"Error").append("*");
+	}
+	$(fullyQName+"Error").append(" " + msg);
+	$(fullyQName).addClass("invalid");
+	
+}
+function highlightFieldError(formId, fieldId, yesNo){
+  var bordercolor="black";
+  if  (yesNo) bordercolor="red"
+  $("form#"+formId+" #"+fieldId).css("border-color:"+bordercolor);
+
+}
+
+
+$(document).ready(function(){
+	$("form#loginHolder #user_id").val("golfscore");
+	$("form#loginHolder #password").val("golfscore");
+//var rslt2 =bindForm("loginHolder");
+//alert(rslt2.password);
+
+});
+
+function bindForm(formName){
+  var rslt={};
+  $.each($("form#"+formName+" :input"), 
+	function(key, field){
+	  if(field.type != 'button') rslt[field.id]= field.value
+	});
+  return rslt;
+}
 </script>
 
-<div id="LoginPortal" style="position:fixed; height:100%; width:100%" ng:controller="LoginPageCtl">
+<div id="LoginPortal" style="position:fixed; height:100%; width:100%" >
 <img align="center" height="150" width ="470" src="./images/headerphoto.jpg">
 <div  class="vcenter">
-<form name="loginHolder">  
+<form id="loginHolder">  
   <fieldset style="border:0">  
     <table class="formLayout" style="margin: auto;" vertical-align="middle">
     <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
 	<span class="small" >Please enter your login credentials</span><hr/></td></tr>
     <tr>
     <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
-    <td><input type="text" name="user_id" ng:model="loginForm.user_id" id="user_id" size="30" value="" class="fieldbox" required /> </td> <td><span class="FieldError" ng:show="loginHolder.user_id.$error.REQUIRED">* Required</span></td>
+    <td><input type="text"  id="user_id" size="30" value="" class="fieldbox required"  /> </td> <td><span class="ValidationMsg" id="user_idError"></span></td>
      </tr><tr>
     <td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
-    <td><input type="password" ng:model="loginForm.password" id="password" size="30" value="" class="fieldbox" required />  </td>  <td><span class="FieldError" ng:show="loginHolder.password.$error.REQUIRED">* Required</span></td>
+    <td><input type="password"  id="password" size="30" value="" class="fieldbox required"  />  </td>  <td><span class="ValidationError" id="passwordError"></span></td>
 
      </tr><tr>
     <td colspan="3" align="center" style="padding: 15px">
-	<button type="button"  id="cmdlogin" class="custombutton"  ng:click="authenticateUser(this.loginForm)" ng:disabled="{{this.loginHolder.$invalid}}"> Login </button>  
+	<button type="button"  id="cmdlogin" class="custombutton"  onclick="loginCall()" > Login </button>  
     </td>
 </tr></table>
   </fieldset>  

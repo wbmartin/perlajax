@@ -1,0 +1,17 @@
+[%- FILTER redirect("sql/INSERT_SECURITY.sql") -%]
+[%- FOREACH tablename IN tbl.keys -%]
+-- Security Grants
+GRANT ALL ON TABLE [%+tablename+%] TO GROUP [%+ props.dbgroup -%];
+INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ( 'SELECT_[%+tablename | upper+%]', now(), 'Allows users to select [%+tablename+%]'); 
+INSERT INTO security_privilege( priv_name, last_update, description)    VALUES ('INSERT_[%+tablename | upper+%]', now(), 'Allows users to add records to [%+tablename+%]');
+INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ('UPDATE_[%+tablename | upper+%]', now(), 'Allows users to update records in [%+tablename+%]');
+INSERT INTO security_privilege(  priv_name, last_update, description)    VALUES ( 'DELETE_[%+tablename | upper+%]', now(), 'Allows users to delete records from [%+tablename+%]');
+select * from security_privilege where priv_name in ('SELECT_[%+tablename | upper+%]','INSERT_[%+tablename | upper+%]','UPDATE_[%+tablename | upper+%]','DELETE_[%+tablename | upper+%]');
+INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
+INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
+INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
+INSERT INTO security_profile_grant( security_profile_id, security_privilege_id) VALUES ( 1, ?);
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+
+[%- END #Foreach table -%]
+[%- END #filter -%]
