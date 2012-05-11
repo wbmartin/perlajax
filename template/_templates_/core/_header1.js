@@ -120,6 +120,72 @@ function digest(er, ee) {
     return er;
 }
 
+function serverCall(params, successCallback, failCallback){
+  var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
+  params['requestId'] =logMsg(resourceActionInfo + " Started");
+
+  var successCallbackMod = function(rslt){
+	logMsg(resourceActionInfo + " Responded", rslt.requestId);
+ 	if(validateServerResponse(rslt)){
+		successCallback(rslt);
+	}else{
+		logMsg(resourceActionInfo + " Failed to validate the server response");
+	}	
+  }
+  $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
+	  success: successCallbackMod, error: failCallback });
+
+}
+
+
+function appendValidationMsg(formId,fieldId, msg){
+	var fullyQName = "form#"+formId+" #" + fieldId;
+	if($("form#"+formId).find("#"+fieldId+"Error").attr("id")==undefined){
+	   $(fullyQName).after("<span id='" +fieldId + "Error' class='ValidationMsg'></span>");
+	}
+	if( $(fullyQName+"Error").html().length ==0){
+		$(fullyQName+"Error").append("*");
+	}
+	$(fullyQName+"Error").append(" " + msg);
+	$(fullyQName).addClass("invalid");
+	
+}
+function highlightFieldError(formId, fieldId, yesNo){
+  var bordercolor="black";
+  if  (yesNo) bordercolor="red"
+  $("form#"+formId+" #"+fieldId).css("border-color:"+bordercolor);
+
+}
+
+function bindForm(formName){
+  var rslt={};
+  $.each($("form#"+formName+" :input"), 
+	function(key, field){
+	  if(field.type != 'button') rslt[field.id]= field.value
+	});
+  return rslt;
+}
+function standardValidate(formName){
+var formValid = true;
+
+$.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
+	span.innerHTML="";
+  });
+
+  $.each($("form#"+formName + ".invalid"),function (ndx,field){
+	$("form#"+formName +" #"+field.id).removeClass("invalid");
+  });
+
+ $.each($("form#" +formName + " .required"),function (ndx,field){
+	if(field.value == null || field.value==""){
+	 appendValidationMsg(formName,field.id, "Required");
+	 highlightFieldError(formName,field.id,true);
+	formValid =false;
+	}
+  });
+
+return formValid;
+}
 
 
 //var appModule = angular.module('AppModule', []);

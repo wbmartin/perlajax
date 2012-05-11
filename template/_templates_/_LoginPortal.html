@@ -1,63 +1,11 @@
 <!--Begin LoginPortal-->
 
 <script type="text/javascript">
-var loginPageCtl;
-function LoginPageCtl($http){
-loginPageCtl = this;
-this.loginForm={};
-
-this.result="";
-this.authenticateUser = function(params){ "use strict";
-  var startTime, stopTime;
-  params['spwfResource'] = "security_user";
-  params['spwfAction'] = "authenticate";
-
-  startTime= new Date();
-  $http.post(urlTarget,params).success(function(data, status, headers, config) {
-	if(handleServerResponse("Authentication Attempt Answered",startTime, data)){
-	   if(data.rows[0].session_id ==""){
-		alert("Sorry, I Couldn't validate those Credentials");
-		loginPageCtl.loginForm.password="";
-	   }else{
-		var r = data.rows[0];
-		statusMsg("Successfully Authenticated User: " + r.user_id );
-		usrSessionId = r.session_id;
-		usrLoginId = r.user_id;
-		onSuccessfulLogin();
-	   }
-      }
-  });
-}
-
-loginPageCtl.loginForm.user_id="golfscore";
-loginPageCtl.loginForm.password="golfscore";
-}//end LoginPageCtl
-$(document).ready(function(){
-});
-
-function serverCall(params, successCallback, failCallback){
-var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
-params['requestId'] =logMsg(resourceActionInfo + " Started");
-
-  successCallbackMod = function(rslt){
-	logMsg(resourceActionInfo + " Responded", rslt.requestId);
- 	if(validateServerResponse(rslt)){
-		successCallback(rslt);
-	}else{
-		logMsg(resourceActionInfo + " Failed to validate the server response");
-	}	
-  }
-  $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
-	  success: successCallbackMod, error: failCallback });
-
-}
-
 function loginCall(){
   var params = bindForm("loginHolder");
   params['spwfResource'] = "security_user";
   params['spwfAction'] = "authenticate";
-  if (validateLoginHolder())serverCall(params,
-	function (rslt){
+  var successf = function (rslt){
 	   var r = rslt.rows[0];
 	   if(r.session_id ==""){
 		alert("Sorry, I Couldn't validate those Credentials");
@@ -68,69 +16,27 @@ function loginCall(){
 		usrLoginId = r.user_id;
 		onSuccessfulLogin();
 	   }
-	},
-	function(){alert("failed");}
-  );
+  };
+  var failf = function(){alert("failed");}
+  if (validateLoginHolder())serverCall(params,successf,failf);
 
 }
+
+
+
 
 function validateLoginHolder (){
-  var formValid = true;
   var formName="loginHolder ";
-  $.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
-	span.innerHTML="";
-  });
-
-  $.each($("form#"+formName + ".invalid"),function (ndx,field){
-	$("form#"+formName +" #"+field.id).removeClass("invalid");
-  });
-  $.each($("form#" +formName + " .required"),function (ndx,field){
-	if(field.value == null || field.value==""){
-	 appendValidationMsg(formName,field.id, "Required");
-	 highlightFieldError(formName,field.id,true);
-	formValid =false;
-	}
-  });
-
-
+  var formValid  = standardValidate("loginHolder");
   return formValid;
-}
-function appendValidationMsg(formId,fieldId, msg){
-	var fullyQName = "form#"+formId+" #" + fieldId;
-	if($("form#"+formId).find("#"+fieldId+"Error").attr("id")==undefined){
-	   $(fullyQName).after("<span id='" +fieldId + "Error' class='ValidationMsg'></span>");
-	}
-	if( $(fullyQName+"Error").html().length ==0){
-		$(fullyQName+"Error").append("*");
-	}
-	$(fullyQName+"Error").append(" " + msg);
-	$(fullyQName).addClass("invalid");
-	
-}
-function highlightFieldError(formId, fieldId, yesNo){
-  var bordercolor="black";
-  if  (yesNo) bordercolor="red"
-  $("form#"+formId+" #"+fieldId).css("border-color:"+bordercolor);
-
 }
 
 
 $(document).ready(function(){
 	$("form#loginHolder #user_id").val("golfscore");
 	$("form#loginHolder #password").val("golfscore");
-//var rslt2 =bindForm("loginHolder");
-//alert(rslt2.password);
-
 });
 
-function bindForm(formName){
-  var rslt={};
-  $.each($("form#"+formName+" :input"), 
-	function(key, field){
-	  if(field.type != 'button') rslt[field.id]= field.value
-	});
-  return rslt;
-}
 </script>
 
 <div id="LoginPortal" style="position:fixed; height:100%; width:100%" >
