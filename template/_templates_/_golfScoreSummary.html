@@ -1,36 +1,39 @@
 [%divId="golfScoreSummary"%]
 <script type="text/javascript">
-var [%divId%]Ctl;
-function [%ucfirst(divId)%]Ctl($http){
-  [%divId%]Ctl = this;
-  this.golferSummaries;
-  this.retrieve[%ucfirst(divId)%] = function(params){ 
-    var startTime, stopTime;
-    params=  prepParams(params,"golf_score_summary" ,"select" );
-    startTime= new Date();
-    $http.post(urlTarget,params).success(function(data, status, headers, config) {
-	if(handleServerResponse("Sucessfully Retrieved Golfer Handicaps",startTime, data)){
-	        [%divId%]Ctl.golferSummaries = deepCopy(data.rows);
-	}
-  });
 
-}//endretrieveGolferSummaries
-}//end class
+var golfScoreSummaryList = new Array();
+function retrieveGolfScoreSummary(){
+ var params =prepParams(params,"golf_score_summary" ,"select" );
+  var successf = function (rslt){
+	golfScoreSummaryList=rslt.rows;
+	displayGolfScoreSummaryList(golfScoreSummaryList);
+  };
+  var failf = function(){alert("failed");}
+  serverCall(params,successf,failf);
 
+}
+function displayGolfScoreSummaryList(golfScoreSummaryList_){
+  var newrowsHTML = "<tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>";
+  var newrow="";
+  var gs = {};
+  for(var ndx=0; ndx<golfScoreSummaryList_.length; ndx++){
+	gs = golfScoreSummaryList_[ndx];
+	newrow ="<tr><td><a onclick='showGolferHistory(" +gs.golfer_id +")'>" + gs.golfer_name+"</a></td>";
+	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
+	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
+	newrow +="</tr>";
+	newrowsHTML +=newrow;
+  }
+  $("#golfScoreSummaryTable").html(newrowsHTML);
+}
 
 function show[%ucfirst(divId)%](){
-	[%divId%]Ctl.retrieveGolfScoreSummary();
-	hideCurrentContentPane();
-  	$("#[%divId%]").fadeIn();
-  	currentContentPane= "[%divId%]";
+	retrieveGolfScoreSummary();
+	standardShowContentPane("[%divId%]");
 }
 </script>
-<div id="[%divId%]" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl" >
+<div id="[%divId%]" class="MainLayout MainContentPaneStyle"  >
 
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
-<tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
-  <tr ng:repeat="summary in golferSummaries">
-  	<td> <a onclick="showGolferHistory({{summary.golfer_id}})"> {{summary.golfer_name}}</a> </td><td>{{summary.golf_score |FormatNumber:2:true:false:true}}</td><td>{{summary.first_date |pgDate}} - {{summary.last_date |pgDate }}</td>
- </tr>
 </table>
 </div> [%# end golfScoreSummary%]

@@ -41,6 +41,13 @@ function hideCurrentContentPane(){
 
 }
 
+
+function standardShowContentPane(name){
+	hideCurrentContentPane();
+  	$("#"+name).fadeIn();
+  	currentContentPane= name;
+}
+
 </script>
 <div id="header"><div id="header-content">	
 	<h1 id="logo"><a href="index.html" title="">golf<span class="gray">score</span></a></h1>	

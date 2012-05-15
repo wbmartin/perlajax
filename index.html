@@ -28,6 +28,11 @@ function isFieldIdEmpty(fieldId_){
   if (document.getElementById(fieldId_).value == "") return true;
   return false;
 }
+function isEmpty(val){
+  if (typeof(val) == "undefined")return true;
+  if (val == null || val =="") return true;
+  return false;
+}
 
 
 function validateServerResponse(responseTxt){
@@ -112,12 +117,11 @@ function registerAction(){
 function logOutUser(){
   usrSessionId="";
   usrLoginId="";
-  loginPageCtl.loginForm.user_id="";
-  loginPageCtl.loginForm.password="";
-	displayMainLayout(false);
-	$("#topMenuBar").hide();
-	hideMainContent();
-
+  $("form#loginHolder #user_id").val("");
+  $("form#loginHolder #password").val("");
+  displayMainLayout(false);
+  $("#topMenuBar").hide();
+  hideMainContent();
   return;
 }
 
@@ -196,23 +200,14 @@ $.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
 return formValid;
 }
 
+function pgDate(val){
+      if (val !=null){
+      	return val.substring(0,10);
+      }else{
+	return "";
+      }
+}
 
-//var appModule = angular.module('AppModule', []);
-//appModule.filter('pgDate', function(){
-//   return function(pgDate){
-//      if (pgDate !=null){
-//      	return pgDate.substring(0,10);
-//      }else{
-//	return "";
-//      }
-//   }
-//});
-
-//appModule.filter('FormatNumber',function(){
-//	return function(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
-//		return FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas);
-//	}
-//});
 
 //appModule.filter('lbl4Val',function(){
 //	return function(val,type){
@@ -254,7 +249,7 @@ function onSuccessfulLogin(){
 	registerAction();
 	timeoutIfNoAction();
 	showGolfScoreSummary();
-	cacheCtl.retrieveCache();
+	//cacheCtl.retrieveCache();
 }
 
 function hideMainContent(){
@@ -262,7 +257,7 @@ function hideMainContent(){
 }
 
 
-function FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
+function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
         if (isNaN(parseInt(num))) return "NaN";
 	var tmpNum = num;
 	var iSign = num < 0 ? -1 : 1;		// Get sign of number
@@ -311,60 +306,63 @@ function filterCacheArrayByVal ( cacheArray, idToSet){
 }
 
 
+function deepCopy(obj){
+  return $.extend(true, [], obj);
+}
+
 //cache.js
-var cacheCtl;
-function CacheCtl($http){
-  cacheCtl = this;
-  cacheCtl.typeLabelValueCache = new Array();
-  cacheCtl.retrieveCache = function(){ 
-    var startTime,typeNdx, params;
-    params = prepParams(params,"cross_table_cache","select");
-    startTime= new Date();
-    $http.post(urlTarget,params).success(
-      function(data, status, headers, config) {
-	if(handleServerResponse("Sucessfully Retrieved Cache ",startTime, data)){
-          onRefreshCache(data.rows);
-	}
-      }
-    );
-  }//end retrieveCache
-
-
-}//end CacheCTL
+//var cacheCtl;
+//function CacheCtl($http){
+//  cacheCtl = this;
+//  cacheCtl.typeLabelValueCache = new Array();
+//  cacheCtl.retrieveCache = function(){ 
+//    var startTime,typeNdx, params;
+//    params = prepParams(params,"cross_table_cache","select");
+//    startTime= new Date();
+//    $http.post(urlTarget,params).success(
+//      function(data, status, headers, config) {
+//	if(handleServerResponse("Sucessfully Retrieved Cache ",startTime, data)){
+//          onRefreshCache(data.rows);
+//	}
+//      }
+//    );
+//  }//end retrieveCache
+//}//end CacheCTL
+var GOLFER_CACHE;
+function retrieveCache(){
+ var params =prepParams(params,"cross_table_cache","select" );
+  var successf = function (rslt){
+	onRefreshCache(rslt.rows);
+  };
+  var failf = function(){alert("failed");}
+  serverCall(params,successf,failf);
+}
 
 function onRefreshCache(data){
-	cacheCtl.typeLabelValueCache =new Array();
-	golfScoreCtl.golfers = new Array();	
+	GOLFER_CACHE={};
 	for(var i=0;i< data.length; i++){
-	   cacheCtl.typeLabelValueCache.push(data[i]);
 	   if(data[i].tp === "golfer"){
-		golfScoreCtl.golfers.push({lbl:data[i].lbl, val:data[i].val}); 
+		GOLFER_CACHE[data[i].val] = data[i].lbl; 
 	  }
 	}
 }
 
 
 function getLbl4Val(val, type){
-  var cacheToSearch;
-	if (type ==="golfer"){ cacheToSearch = deepCopy(golfScoreCtl.golfers);
+  var lbl;
+	if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
 	}else if( type==""){
 	}else{
 		return "INVALID CACHE REQUESTED";
 	}
-//alert(cacheToSearch.length);
-	alert (val + " " + cacheToSearch.length);
-	for (var i=0; i < cacheToSearch.length;i++){
-		if(cacheToSearch.val === val){
-			return cacheToSearch.lbl;
-		}
+	if (isEmpty(lbl) ){
+	  lbl ="--";
 	}
-	return "--";
+	return lbl;
 
 }
 
-function deepCopy(obj){
-return $.extend(true, [], obj);
-}
+
 
 //jquery.js
 /*! jQuery v1.7.1 jquery.com | jquery.org/license */
@@ -1884,6 +1882,13 @@ function hideCurrentContentPane(){
 
 }
 
+
+function standardShowContentPane(name){
+	hideCurrentContentPane();
+  	$("#"+name).fadeIn();
+  	currentContentPane= name;
+}
+
 </script>
 <div id="header"><div id="header-content">	
 	<h1 id="logo"><a href="index.html" title="">golf<span class="gray">score</span></a></h1>	
@@ -1909,38 +1914,41 @@ function hideCurrentContentPane(){
 <div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" ng:controller="CacheCtl">
 
 <script type="text/javascript">
-var golfScoreSummaryCtl;
-function GolfScoreSummaryCtl($http){
-  golfScoreSummaryCtl = this;
-  this.golferSummaries;
-  this.retrieveGolfScoreSummary = function(params){ 
-    var startTime, stopTime;
-    params=  prepParams(params,"golf_score_summary" ,"select" );
-    startTime= new Date();
-    $http.post(urlTarget,params).success(function(data, status, headers, config) {
-	if(handleServerResponse("Sucessfully Retrieved Golfer Handicaps",startTime, data)){
-	        golfScoreSummaryCtl.golferSummaries = deepCopy(data.rows);
-	}
-  });
 
-}//endretrieveGolferSummaries
-}//end class
+var golfScoreSummaryList = new Array();
+function retrieveGolfScoreSummary(){
+ var params =prepParams(params,"golf_score_summary" ,"select" );
+  var successf = function (rslt){
+	golfScoreSummaryList=rslt.rows;
+	displayGolfScoreSummaryList(golfScoreSummaryList);
+  };
+  var failf = function(){alert("failed");}
+  serverCall(params,successf,failf);
 
+}
+function displayGolfScoreSummaryList(golfScoreSummaryList_){
+  var newrowsHTML = "<tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>";
+  var newrow="";
+  var gs = {};
+  for(var ndx=0; ndx<golfScoreSummaryList_.length; ndx++){
+	gs = golfScoreSummaryList_[ndx];
+	newrow ="<tr><td><a onclick='showGolferHistory(" +gs.golfer_id +")'>" + gs.golfer_name+"</a></td>";
+	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
+	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
+	newrow +="</tr>";
+	newrowsHTML +=newrow;
+  }
+  $("#golfScoreSummaryTable").html(newrowsHTML);
+}
 
 function showGolfScoreSummary(){
-	golfScoreSummaryCtl.retrieveGolfScoreSummary();
-	hideCurrentContentPane();
-  	$("#golfScoreSummary").fadeIn();
-  	currentContentPane= "golfScoreSummary";
+	retrieveGolfScoreSummary();
+	standardShowContentPane("golfScoreSummary");
 }
 </script>
-<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreSummaryCtl" >
+<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle"  >
 
 <table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
-<tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>
-  <tr ng:repeat="summary in golferSummaries">
-  	<td> <a onclick="showGolferHistory({{summary.golfer_id}})"> {{summary.golfer_name}}</a> </td><td>{{summary.golf_score |FormatNumber:2:true:false:true}}</td><td>{{summary.first_date |pgDate}} - {{summary.last_date |pgDate }}</td>
- </tr>
 </table>
 </div> 
 
@@ -2014,41 +2022,42 @@ function showGolfScore(scoreId_){
 
 
 <script type="text/javascript">
-var golferHistoryCtl;
-function GolferHistoryCtl($http){
-  golferHistoryCtl = this;
-  var golferId;
-  this.golferId=0;
-  this.retrieveGolferHistory = function(golferId_){ 
-    	var startTime;
-  	var params={};
- 	golferHistoryCtl.golferId = golferId_;
-  	params=  prepParams(params,"golf_score" ,"select" );
-  	params['where_clause'] = "golfer_id =" + golferId_;
-  	startTime= new Date();
-  	$http.post(urlTarget,params).success(function(data, status, headers, config) {
-	  if(handleServerResponse("Sucessfully Retrieved Golfer History",startTime, data)){
-	         golferHistoryCtl.golferHistory = data.rows;
-	  }
-  	});
-  }//endretrieveGolferHistory
-}//end class
 
+function retrieveGolferHistory(golferId_){
+ var params =prepParams(params,"golf_score" ,"select" );
+  params['where_clause'] = "golfer_id =" + golferId_;
+  var successf = function (rslt){
+	populateGolferHistory(rslt.rows)
+  };
+  var failf = function(){alert("failed");}
+  serverCall(params,successf,failf);
 
+}
+function populateGolferHistory(dataRows){
+  var htmlRow,htmlAggregator,data;
+  var headerRow ="<tr> <th>Score</th><th>Date</th> </tr>";
+
+  for(ndx=0;ndx< dataRows.length;ndx++){
+	data = dataRows[ndx];
+	htmlRow ="<tr> <td><a onclick='showGolfScore(" +data.golf_socre_id + "})'>";
+	htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</a></td>";
+	htmlRow += "<td>" + pgDate(data.last_update) + " </td> </tr>";
+	htmlAggregator +=htmlRow;
+  }
+  $("#golferHistoryTable").html(headerRow +htmlAggregator);
+
+}
 function showGolferHistory(golferId_){
-  golferHistoryCtl.retrieveGolferHistory(golferId_); 
+  retrieveGolferHistory(golferId_); 
   hideCurrentContentPane();
   $("#golferHistory").fadeIn();
   currentContentPane="golferHistory";
 }
 </script>
-<div id="golferHistory" class="MainLayout MainContentPaneStyle" ng:controller="GolferHistoryCtl" >
+<div id="golferHistory" class="MainLayout MainContentPaneStyle"  >
 {{this.golferId | golferNameFromId}}
 <table id="golferHistoryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Score</th><th>Date</th> </tr>
-  <tr ng:repeat="history in golferHistory">
-  	<td><a onclick="showGolfScore({{history.golf_score_id}})">{{history.golf_score |FormatNumber:0:true:false:true}}</a></td><td>{{history.last_update |pgDate}} </td>
- </tr>
 </table>
 </div> <!--end:GolferHistory-->
 

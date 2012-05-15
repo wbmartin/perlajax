@@ -1,39 +1,40 @@
 [%divId="golferHistory"%]
 <script type="text/javascript">
-var [%divId%]Ctl;
-function [%ucfirst(divId)%]Ctl($http){
-  [%divId%]Ctl = this;
-  var golferId;
-  this.golferId=0;
-  this.retrieve[%ucfirst(divId)%] = function(golferId_){ 
-    	var startTime;
-  	var params={};
- 	[%divId%]Ctl.golferId = golferId_;
-  	params=  prepParams(params,"golf_score" ,"select" );
-  	params['where_clause'] = "golfer_id =" + golferId_;
-  	startTime= new Date();
-  	$http.post(urlTarget,params).success(function(data, status, headers, config) {
-	  if(handleServerResponse("Sucessfully Retrieved Golfer History",startTime, data)){
-	         [%divId%]Ctl.[%divId%] = data.rows;
-	  }
-  	});
-  }//endretrieveGolferHistory
-}//end class
 
+function retrieve[%ucfirst(divId)%](golferId_){
+ var params =prepParams(params,"golf_score" ,"select" );
+  params['where_clause'] = "golfer_id =" + golferId_;
+  var successf = function (rslt){
+	populate[%ucfirst(divId)%](rslt.rows)
+  };
+  var failf = function(){alert("failed");}
+  serverCall(params,successf,failf);
 
+}
+function populate[%ucfirst(divId)%](dataRows){
+  var htmlRow,htmlAggregator,data;
+  var headerRow ="<tr> <th>Score</th><th>Date</th> </tr>";
+
+  for(ndx=0;ndx< dataRows.length;ndx++){
+	data = dataRows[ndx];
+	htmlRow ="<tr> <td><a onclick='showGolfScore(" +data.golf_socre_id + "})'>";
+	htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</a></td>";
+	htmlRow += "<td>" + pgDate(data.last_update) + " </td> </tr>";
+	htmlAggregator +=htmlRow;
+  }
+  $("#[%divId%]Table").html(headerRow +htmlAggregator);
+
+}
 function show[%ucfirst(divId)%](golferId_){
-  [%divId%]Ctl.retrieve[%ucfirst(divId)%](golferId_); 
+  retrieve[%ucfirst(divId)%](golferId_); 
   hideCurrentContentPane();
   $("#[%divId%]").fadeIn();
   currentContentPane="[%divId%]";
 }
 </script>
-<div id="[%divId%]" class="MainLayout MainContentPaneStyle" ng:controller="[%ucfirst(divId)%]Ctl" >
+<div id="[%divId%]" class="MainLayout MainContentPaneStyle"  >
 {{this.golferId | golferNameFromId}}
 <table id="[%divId%]Table" style="border-width: 1px; border-style:solid;" class='dataTable' >
 <tr> <th>Score</th><th>Date</th> </tr>
-  <tr ng:repeat="history in golferHistory">
-  	<td><a onclick="showGolfScore({{history.golf_score_id}})">{{history.golf_score |FormatNumber:0:true:false:true}}</a></td><td>{{history.last_update |pgDate}} </td>
- </tr>
 </table>
 </div> <!--end:[%ucfirst(divId)%]-->

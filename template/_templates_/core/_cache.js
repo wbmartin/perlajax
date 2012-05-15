@@ -1,53 +1,52 @@
-var cacheCtl;
-function CacheCtl($http){
-  cacheCtl = this;
-  cacheCtl.typeLabelValueCache = new Array();
-  cacheCtl.retrieveCache = function(){ 
-    var startTime,typeNdx, params;
-    params = prepParams(params,"cross_table_cache","select");
-    startTime= new Date();
-    $http.post(urlTarget,params).success(
-      function(data, status, headers, config) {
-	if(handleServerResponse("Sucessfully Retrieved Cache ",startTime, data)){
-          onRefreshCache(data.rows);
-	}
-      }
-    );
-  }//end retrieveCache
-
-
-}//end CacheCTL
+//var cacheCtl;
+//function CacheCtl($http){
+//  cacheCtl = this;
+//  cacheCtl.typeLabelValueCache = new Array();
+//  cacheCtl.retrieveCache = function(){ 
+//    var startTime,typeNdx, params;
+//    params = prepParams(params,"cross_table_cache","select");
+//    startTime= new Date();
+//    $http.post(urlTarget,params).success(
+//      function(data, status, headers, config) {
+//	if(handleServerResponse("Sucessfully Retrieved Cache ",startTime, data)){
+//          onRefreshCache(data.rows);
+//	}
+//      }
+//    );
+//  }//end retrieveCache
+//}//end CacheCTL
+var GOLFER_CACHE;
+function retrieveCache(){
+ var params =prepParams(params,"cross_table_cache","select" );
+  var successf = function (rslt){
+	onRefreshCache(rslt.rows);
+  };
+  var failf = function(){alert("failed");}
+  serverCall(params,successf,failf);
+}
 
 function onRefreshCache(data){
-	cacheCtl.typeLabelValueCache =new Array();
-	golfScoreCtl.golfers = new Array();	
+	GOLFER_CACHE={};
 	for(var i=0;i< data.length; i++){
-	   cacheCtl.typeLabelValueCache.push(data[i]);
 	   if(data[i].tp === "golfer"){
-		golfScoreCtl.golfers.push({lbl:data[i].lbl, val:data[i].val}); 
+		GOLFER_CACHE[data[i].val] = data[i].lbl; 
 	  }
 	}
 }
 
 
 function getLbl4Val(val, type){
-  var cacheToSearch;
-	if (type ==="golfer"){ cacheToSearch = deepCopy(golfScoreCtl.golfers);
+  var lbl;
+	if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
 	}else if( type==""){
 	}else{
 		return "INVALID CACHE REQUESTED";
 	}
-//alert(cacheToSearch.length);
-	alert (val + " " + cacheToSearch.length);
-	for (var i=0; i < cacheToSearch.length;i++){
-		if(cacheToSearch.val === val){
-			return cacheToSearch.lbl;
-		}
+	if (isEmpty(lbl) ){
+	  lbl ="--";
 	}
-	return "--";
+	return lbl;
 
 }
 
-function deepCopy(obj){
-return $.extend(true, [], obj);
-}
+

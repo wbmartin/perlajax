@@ -19,6 +19,11 @@ function isFieldIdEmpty(fieldId_){
   if (document.getElementById(fieldId_).value == "") return true;
   return false;
 }
+function isEmpty(val){
+  if (typeof(val) == "undefined")return true;
+  if (val == null || val =="") return true;
+  return false;
+}
 
 
 function validateServerResponse(responseTxt){
@@ -103,12 +108,11 @@ function registerAction(){
 function logOutUser(){
   usrSessionId="";
   usrLoginId="";
-  loginPageCtl.loginForm.user_id="";
-  loginPageCtl.loginForm.password="";
-	displayMainLayout(false);
-	$("#topMenuBar").hide();
-	hideMainContent();
-
+  $("form#loginHolder #user_id").val("");
+  $("form#loginHolder #password").val("");
+  displayMainLayout(false);
+  $("#topMenuBar").hide();
+  hideMainContent();
   return;
 }
 
@@ -187,23 +191,14 @@ $.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
 return formValid;
 }
 
+function pgDate(val){
+      if (val !=null){
+      	return val.substring(0,10);
+      }else{
+	return "";
+      }
+}
 
-//var appModule = angular.module('AppModule', []);
-//appModule.filter('pgDate', function(){
-//   return function(pgDate){
-//      if (pgDate !=null){
-//      	return pgDate.substring(0,10);
-//      }else{
-//	return "";
-//      }
-//   }
-//});
-
-//appModule.filter('FormatNumber',function(){
-//	return function(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
-//		return FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas);
-//	}
-//});
 
 //appModule.filter('lbl4Val',function(){
 //	return function(val,type){
@@ -245,7 +240,7 @@ function onSuccessfulLogin(){
 	registerAction();
 	timeoutIfNoAction();
 	showGolfScoreSummary();
-	cacheCtl.retrieveCache();
+	//cacheCtl.retrieveCache();
 }
 
 function hideMainContent(){
@@ -253,7 +248,7 @@ function hideMainContent(){
 }
 
 
-function FormatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
+function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
         if (isNaN(parseInt(num))) return "NaN";
 	var tmpNum = num;
 	var iSign = num < 0 ? -1 : 1;		// Get sign of number
@@ -301,3 +296,7 @@ function filterCacheArrayByVal ( cacheArray, idToSet){
 	return {};
 }
 
+
+function deepCopy(obj){
+  return $.extend(true, [], obj);
+}
