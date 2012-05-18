@@ -1,8 +1,9 @@
 [%divId="golfScoreSummary"%]
 <script type="text/javascript">
-
+//<![CDATA[
 var golfScoreSummaryList = new Array();
 function retrieveGolfScoreSummary(){
+$("#[%divId%]Table").html("");
  var params =prepParams(params,"golf_score_summary" ,"select" );
   var successf = function (rslt){
 	golfScoreSummaryList=rslt.rows;
@@ -31,6 +32,8 @@ function show[%ucfirst(divId)%](){
 	retrieveGolfScoreSummary();
 	standardShowContentPane("[%divId%]");
 }
+//]]>
+
 </script>
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle"  >
 

@@ -1,11 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCType html>
+
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 <head> 
 <title> Simple2 Demo</title> 
-
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 <script type="text/javascript"> 
 //<![CDATA[
-
 //header1.js
 "use strict";
 //shared variables
@@ -17,8 +17,7 @@ var usrLogoutScheduled=false;
 var usrTimeOutDuration = 20*60*1000;
 var clientLog=new Array();
 var insertUpdateChoose = "INSERTUPDATE";
-
-
+var FAILF = function(){alert("FAIL");}
 
 //validation functions
 function isFieldIdEmpty(fieldId_){
@@ -28,12 +27,12 @@ function isFieldIdEmpty(fieldId_){
   if (document.getElementById(fieldId_).value == "") return true;
   return false;
 }
+
 function isEmpty(val){
   if (typeof(val) == "undefined")return true;
   if (val == null || val =="") return true;
   return false;
 }
-
 
 function validateServerResponse(responseTxt){
 	if(responseTxt == undefined ||responseTxt==null ){
@@ -66,6 +65,7 @@ function logMsg(msg,requestId){
   
 return logId;
 }
+
 function statusMsg(msg){
   $("#statusMsg").html(msg);
   logMsg("Console Msg:" +msg);
@@ -136,7 +136,6 @@ function digest(er, ee) {
 function serverCall(params, successCallback, failCallback){
   var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
   params['requestId'] =logMsg(resourceActionInfo + " Started");
-
   var successCallbackMod = function(rslt){
 	logMsg(resourceActionInfo + " Responded", rslt.requestId);
  	if(validateServerResponse(rslt)){
@@ -161,7 +160,6 @@ function appendValidationMsg(formId,fieldId, msg){
 	}
 	$(fullyQName+"Error").append(" " + msg);
 	$(fullyQName).addClass("invalid");
-	
 }
 function highlightFieldError(formId, fieldId, yesNo){
   var bordercolor="black";
@@ -172,28 +170,39 @@ function highlightFieldError(formId, fieldId, yesNo){
 
 function bindForm(formName){
   var rslt={};
+  var fieldId="";
   $.each($("form#"+formName+" :input"), 
 	function(key, field){
-	  if(field.type != 'button') rslt[field.id]= field.value
+	  fieldId = field.id.replace(formName+"-","");
+	  if(field.type != 'button') rslt[fieldId]= field.value
 	});
   return rslt;
 }
-function standardValidate(formName){
-var formValid = true;
 
-$.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
+function bindToForm(formName, obj){
+var fieldId="";
+ $.each($("form#"+formName+" :input"), 
+	function(key, field){
+	  fieldId = field.id.replace(formName+"-","");
+	  if(field.type != 'button')  field.value = obj[fieldId];
+	});
+
+
+}
+
+function standardValidate(formName){
+  var formValid = true;
+  $.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
 	span.innerHTML="";
   });
-
   $.each($("form#"+formName + ".invalid"),function (ndx,field){
 	$("form#"+formName +" #"+field.id).removeClass("invalid");
   });
-
- $.each($("form#" +formName + " .required"),function (ndx,field){
+  $.each($("form#" +formName + " .required"),function (ndx,field){
 	if(field.value == null || field.value==""){
 	 appendValidationMsg(formName,field.id, "Required");
 	 highlightFieldError(formName,field.id,true);
-	formValid =false;
+	 formValid =false;
 	}
   });
 
@@ -201,32 +210,14 @@ return formValid;
 }
 
 function pgDate(val){
+var rslt;
       if (val !=null){
-      	return val.substring(0,10);
+	rslt = val.substring(5,7)+"/"+val.substring(8,10) +"/"+ val.substring(0,4);
       }else{
-	return "";
+	rslt= "";
       }
+  return rslt;
 }
-
-
-//appModule.filter('lbl4Val',function(){
-//	return function(val,type){
-//	   return getLbl4Val(val,type);
-//	}
-//});
-
-//appModule.filter('golferNameFromId',function(){
-//	return function(id){
-//        if(typeof golfScoreCtl.golfers === 'undefined'){return "--";} 
-//	  for(var i=0;i<golfScoreCtl.golfers.length;i++){
-//		if(golfScoreCtl.golfers[i].val == id){
-//			return golfScoreCtl.golfers[i].lbl;
-//
-//		}
-//	  }
-//	  return "**";
-//	}
-//});
 
 
 
@@ -249,7 +240,7 @@ function onSuccessfulLogin(){
 	registerAction();
 	timeoutIfNoAction();
 	showGolfScoreSummary();
-	//cacheCtl.retrieveCache();
+	retrieveCache();
 }
 
 function hideMainContent(){
@@ -310,42 +301,6 @@ function deepCopy(obj){
   return $.extend(true, [], obj);
 }
 
-//cache.js
-//var cacheCtl;
-//function CacheCtl($http){
-//  cacheCtl = this;
-//  cacheCtl.typeLabelValueCache = new Array();
-//  cacheCtl.retrieveCache = function(){ 
-//    var startTime,typeNdx, params;
-//    params = prepParams(params,"cross_table_cache","select");
-//    startTime= new Date();
-//    $http.post(urlTarget,params).success(
-//      function(data, status, headers, config) {
-//	if(handleServerResponse("Sucessfully Retrieved Cache ",startTime, data)){
-//          onRefreshCache(data.rows);
-//	}
-//      }
-//    );
-//  }//end retrieveCache
-//}//end CacheCTL
-var GOLFER_CACHE;
-function retrieveCache(){
- var params =prepParams(params,"cross_table_cache","select" );
-  var successf = function (rslt){
-	onRefreshCache(rslt.rows);
-  };
-  var failf = function(){alert("failed");}
-  serverCall(params,successf,failf);
-}
-
-function onRefreshCache(data){
-	GOLFER_CACHE={};
-	for(var i=0;i< data.length; i++){
-	   if(data[i].tp === "golfer"){
-		GOLFER_CACHE[data[i].val] = data[i].lbl; 
-	  }
-	}
-}
 
 
 function getLbl4Val(val, type){
@@ -360,6 +315,38 @@ function getLbl4Val(val, type){
 	}
 	return lbl;
 
+}
+function setSelectOptions(selectId, obj){
+  var newhtml="<option value=''></option>";
+  $.each(obj,function(key,val){
+   newhtml += "<option value='" + key + "'>"+val +"</option>";
+  });
+  $(selectId).html(newhtml);
+
+}
+
+
+//cache.js
+var GOLFER_CACHE;
+function onRefreshCache(data){
+	GOLFER_CACHE={};
+	for(var i=0;i< data.length; i++){
+	   if(data[i].tp === "golfer"){
+		GOLFER_CACHE[data[i].val] = data[i].lbl; 
+	  }
+	}
+
+setSelectOptions("#golfScoreForm select[name=golfer_id]", GOLFER_CACHE);
+}
+
+
+
+function retrieveCache(){
+ var params =prepParams(params,"cross_table_cache","select" );
+  var successf = function (rslt){
+	onRefreshCache(rslt.rows);
+  };
+  serverCall(params,successf,FAILF);
 }
 
 
@@ -726,7 +713,7 @@ a._keyEvent=!1;return K},_generateMonthYearHeader:function(a,b,c,d,e,f,g,h){var 
  * Depends:
  *	jquery.effects.core.js
  */(function(a,b){a.effects.transfer=function(b){return this.queue(function(){var c=a(this),d=a(b.options.to),e=d.offset(),f={top:e.top,left:e.left,height:d.innerHeight(),width:d.innerWidth()},g=c.offset(),h=a('<div class="ui-effects-transfer"></div>').appendTo(document.body).addClass(b.options.className).css({top:g.top,left:g.left,height:c.innerHeight(),width:c.innerWidth(),position:"absolute"}).animate(f,b.duration,b.options.easing,function(){h.remove(),b.callback&&b.callback.apply(c[0],arguments),c.dequeue()})})}})(jQuery);
-//]]
+//]]>
 </script>
 <style type="text/css">
 .MainContentPaneStyle{
@@ -1840,6 +1827,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();" > 
 <script type="text/javascript">
+//<![CDATA[
 $(document).ready( function(){
 	$("#aboutGolfScore").click(function(){showAboutPane();});
 	$("a#SummaryPage").click(function(){showGolfScoreSummary();});
@@ -1888,7 +1876,7 @@ function standardShowContentPane(name){
   	$("#"+name).fadeIn();
   	currentContentPane= name;
 }
-
+//]]>
 </script>
 <div id="header"><div id="header-content">	
 	<h1 id="logo"><a href="index.html" title="">golf<span class="gray">score</span></a></h1>	
@@ -1897,7 +1885,7 @@ function standardShowContentPane(name){
 		<div id = "topMenuBar" style="display:none;"> 
 		<ul>
 			<li><a id="SummaryPage">Home</a></li>
-			<li><a id="">Golfers</a></li>
+			<li><a id="GolfersPage">Golfers</a></li>
 			<li><a id="golfScoreEntry">Scores</a></li>
 			<li><a id="aboutGolfScore">About</a></li>
 			<li><a id="logViewer">Log</a></li>
@@ -1911,12 +1899,13 @@ function standardShowContentPane(name){
 </div>
 
 
-<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" ng:controller="CacheCtl">
+<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" >
 
 <script type="text/javascript">
-
+//<![CDATA[
 var golfScoreSummaryList = new Array();
 function retrieveGolfScoreSummary(){
+$("#golfScoreSummaryTable").html("");
  var params =prepParams(params,"golf_score_summary" ,"select" );
   var successf = function (rslt){
 	golfScoreSummaryList=rslt.rows;
@@ -1945,6 +1934,8 @@ function showGolfScoreSummary(){
 	retrieveGolfScoreSummary();
 	standardShowContentPane("golfScoreSummary");
 }
+//]]>
+
 </script>
 <div id="golfScoreSummary" class="MainLayout MainContentPaneStyle"  >
 
@@ -1954,43 +1945,32 @@ function showGolfScoreSummary(){
 
 
 <script type="text/javascript">
-var golfScoreCtl;
-function GolfScoreCtl($http){
-   golfScoreCtl = this;
-   golfScoreCtl.saveGolfScore = function (params){ "use strict";
-      var startTime;
-      params = prepParams(params,"golf_score",insertUpdateChoose);
-      params['golfer_id'] = params.golferSelect.val;
-      params['golferSelect']=null;//don't forward to server
-      startTime=new Date();
-      $http.post(urlTarget,params).success(
-	function(data, status, headers, config) {
- 		handleServerResponse("Saved Golf Score ",startTime, data);
-        }
-      );
-    }// end save
+//<![CDATA[
+function saveGolfScoreForm(){
+  var params = bindForm("golfScoreForm");
+  saveGolfScore(params);
+}
+function saveGolfScore(params){
+  params = prepParams(params,"golf_score",insertUpdateChoose);
+  var successf=function(rslt){
+	rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+    	bindToForm("golfScoreForm", rslt.rows[0]);
+  };
+  serverCall(params,successf,FAILF);
+}
 
-    golfScoreCtl.retrieveGolfScore = function(params){"use strict";
-	var startTime = new Date();
-	params = prepParams(params,"golf_score","SELECT");
- 	$http.post(urlTarget,params).success(
-		function(data, status, headers, config) {
- 			handleServerResponse("Retrieved Golf Score ",startTime, data);
-			golfScoreCtl.bindToForm(data.rows[0]);
-        	}
-    	);
-    }// end retrieve
+function retrieveGolfScore(params){"use strict";
+  params = prepParams(params,"golf_score","SELECT");
+  var successf = function(rslt){
+	rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+	bindToForm("golfScoreForm", rslt.rows[0]);
+  }
+  serverCall(params,successf,FAILF);
+}
 
-    golfScoreCtl.bindToForm =function (data){
-    	golfScoreCtl.golfScoreForm = data;
-	golfScoreCtl.golfScoreForm.golferSelect=filterCacheArrayByVal(golfScoreCtl.golfers, data.golfer_id );
-    }
-
-
-//$( "#datePlayedId" ).datepicker();
-
-}//end GolfScoreCTL
-
+$(document).ready(function(){
+  $( "#golfScoreForm-game_dt" ).datepicker();
+});
 
 function showGolfScore(scoreId_){
   hideCurrentContentPane();
@@ -1998,54 +1978,49 @@ function showGolfScore(scoreId_){
   currentContentPane = "golfScore";
   if(scoreId_){
 	var params ={"where_clause":"golf_score_id=" +scoreId_};
-	golfScoreCtl.retrieveGolfScore(params);
+	retrieveGolfScore(params);
   }
 }
-//$(function() {
-//		$( "#datePlayedId" ).datepicker();
-//	});
+//]]>
+
 </script>
 
-<div id="golfScore" class="MainLayout MainContentPaneStyle" ng:controller="GolfScoreCtl">
-<form id="golfScoreForm" action="">
+<div id="golfScore" class="MainLayout MainContentPaneStyle" >
+<form id="golfScoreForm" >
 <table id="golfScoreFormTable" style="" class='formTable'>
-<tr><td> Golfer </td><td><select ng:model="golfScoreForm.golferSelect" ng:options="golferiterator.lbl for golferiterator in golfers" ></select></td></tr>
-<tr><td> Score </td><td><input ng:model="golfScoreForm.golf_score" type="text" id="test"/></td></tr>
-<tr><td> Date</td><td><input ui-date ng:model="golfScoreForm.game_dt" type="text"  id="datePlayedId"/></td></tr>
-<tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" ng:click="saveGolfScore(this.golfScoreForm)" >Save</button></td></tr>
+<tr><td> Golfer </td><td><select name="golfer_id" id="golfScoreForm-golfer_id"></select></td></tr>
+<tr><td> Score </td><td><input  type="text" name="golf_score" id="golfScoreForm-golf_score"/></td></tr>
+<tr><td> Date</td><td><input type="text"  name="game_dt" id="golfScoreForm-game_dt"/></td></tr>
+<tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button></td></tr>
 </table>
-<input type="hidden" ng:model="golfScoreForm.last_update">
-<input type="hidden" ng:model="golfScoreForm.golfer_id">
-<input type="hidden" ng:model="golfScoreForm.golfer_score_id">
+<input type="hidden" name="last_update" id="golfScoreForm-last_update">
+<input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
 </form>
 </div> 
 
 
 <script type="text/javascript">
-
+//<![CDATA[
 function retrieveGolferHistory(golferId_){
- var params =prepParams(params,"golf_score" ,"select" );
+  $("#golferHistoryTable").html("");
+  var params =prepParams(params,"golf_score" ,"select" );
   params['where_clause'] = "golfer_id =" + golferId_;
   var successf = function (rslt){
 	populateGolferHistory(rslt.rows)
   };
-  var failf = function(){alert("failed");}
-  serverCall(params,successf,failf);
-
+  serverCall(params,successf,FAILF);
 }
 function populateGolferHistory(dataRows){
   var htmlRow,htmlAggregator,data;
   var headerRow ="<tr> <th>Score</th><th>Date</th> </tr>";
-
   for(ndx=0;ndx< dataRows.length;ndx++){
 	data = dataRows[ndx];
-	htmlRow ="<tr> <td><a onclick='showGolfScore(" +data.golf_socre_id + "})'>";
+	htmlRow ="<tr> <td><a onclick='showGolfScore(" +data.golf_score_id + ")'>";
 	htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</a></td>";
-	htmlRow += "<td>" + pgDate(data.last_update) + " </td> </tr>";
+	htmlRow += "<td>" + pgDate(data.game_dt) + " </td> </tr>";
 	htmlAggregator +=htmlRow;
   }
   $("#golferHistoryTable").html(headerRow +htmlAggregator);
-
 }
 function showGolferHistory(golferId_){
   retrieveGolferHistory(golferId_); 
@@ -2053,11 +2028,11 @@ function showGolferHistory(golferId_){
   $("#golferHistory").fadeIn();
   currentContentPane="golferHistory";
 }
+//]]>
+
 </script>
 <div id="golferHistory" class="MainLayout MainContentPaneStyle"  >
-{{this.golferId | golferNameFromId}}
 <table id="golferHistoryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
-<tr> <th>Score</th><th>Date</th> </tr>
 </table>
 </div> <!--end:GolferHistory-->
 
@@ -2067,6 +2042,7 @@ function showGolferHistory(golferId_){
 <h1 style="width:40em;margin-left: auto; margin-right: auto;text-align:center;">About golfscore</h1>
 
 <p style="width:40em;margin-left: auto; margin-right: auto; ">golfscore is an open source application developed by Martinanalytics.  Part of our open source model leverages software developed by other open source contributors that we recognize here:
+</p>
 <ul style="width:40em;margin-left: auto; margin-right: auto;padding: 10px 0px 10px 100px;">
 <li><a href="">jQuery</a> provides our AJAX and Javascript handlers</li>
 <li>Site styling provided by <a href="http://www.styleshout.com/">StyleShout's</a> PixelGreen web template</li>
@@ -2076,7 +2052,6 @@ function showGolferHistory(golferId_){
 <li>Developed on the <a href="http://www.ubuntu.org/">Ubuntu</a> Platform </li>
 
 </ul>
-</p>
 
 </div>
 </div>
@@ -2101,25 +2076,26 @@ currentContentPane = "aboutPane";
 
 function showClientLogViewer(){
   hideCurrentContentPane();
-
+  var newHTML="";
   $("#clientLogViewer").fadeIn();
   $("ul#clientLogView").find("li").remove();
-	$("ul#clientLogView").html("<li>Log viewed|"+ new Date()+"</li>");
+   logMsg("Log Viewed");
   for(var ndx=0;ndx<clientLog.length;ndx++){
-	$("ul#clientLogView li:last").after("<li>" + clientLog[ndx] + "</li>");
+	newHTML +="<li>"+ clientLog[ndx].logDt+"|" + clientLog[ndx].msg + "</li>";
   }
+  $("ul#clientLogView").html(newHTML);
   currentContentPane="clientLogViewer";
 }
-
-
 </script>
 
 </div><!--End Main Content-->
 <!--Begin LoginPortal-->
 
 <script type="text/javascript">
+//<![CDATA[
 function loginCall(){
   var params = bindForm("loginHolder");
+  
   params['spwfResource'] = "security_user";
   params['spwfAction'] = "authenticate";
   var successf = function (rslt){
@@ -2134,12 +2110,8 @@ function loginCall(){
 		onSuccessfulLogin();
 	   }
   };
-  var failf = function(){alert("failed");}
-  if (validateLoginHolder())serverCall(params,successf,failf);
-
+  if (validateLoginHolder())serverCall(params,successf,FAILF);
 }
-
-
 
 
 function validateLoginHolder (){
@@ -2153,26 +2125,26 @@ $(document).ready(function(){
 	$("form#loginHolder #user_id").val("golfscore");
 	$("form#loginHolder #password").val("golfscore");
 });
-
+//]]>
 </script>
 
 <div id="LoginPortal" style="position:fixed; height:100%; width:100%" >
-<img align="center" height="150" width ="470" src="./images/headerphoto.jpg">
+<img  height="150" width ="470" src="./images/headerphoto.jpg" alt="Login Page Splash">
 <div  class="vcenter">
 <form id="loginHolder">  
   <fieldset style="border:0">  
-    <table class="formLayout" style="margin: auto;" vertical-align="middle">
+    <table class="formLayout" style="margin: auto;" >
     <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
 	<span class="small" >Please enter your login credentials</span><hr/></td></tr>
     <tr>
     <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
-    <td><input type="text"  id="user_id" size="30" value="" class="fieldbox required"  /> </td> <td><span class="ValidationMsg" id="user_idError"></span></td>
+    <td><input type="text"  name="user_id" id="user_id" size="30" value="" class="fieldbox required"  /> </td> <td><span class="ValidationMsg" id="user_idError"></span></td>
      </tr><tr>
     <td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
-    <td><input type="password"  id="password" size="30" value="" class="fieldbox required"  />  </td>  <td><span class="ValidationError" id="passwordError"></span></td>
+    <td><input type="password" name="password" id="password" size="30" value="" class="fieldbox required"  />  </td>  <td><span class="ValidationError" id="passwordError"></span></td>
 
      </tr><tr>
-    <td colspan="3" align="center" style="padding: 15px">
+    <td colspan="3"  style="padding: 15px">
 	<button type="button"  id="cmdlogin" class="custombutton"  onclick="loginCall()" > Login </button>  
     </td>
 </tr></table>

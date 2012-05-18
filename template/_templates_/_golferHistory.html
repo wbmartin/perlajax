@@ -1,29 +1,26 @@
 [%divId="golferHistory"%]
 <script type="text/javascript">
-
+//<![CDATA[
 function retrieve[%ucfirst(divId)%](golferId_){
- var params =prepParams(params,"golf_score" ,"select" );
+  $("#[%divId%]Table").html("");
+  var params =prepParams(params,"golf_score" ,"select" );
   params['where_clause'] = "golfer_id =" + golferId_;
   var successf = function (rslt){
 	populate[%ucfirst(divId)%](rslt.rows)
   };
-  var failf = function(){alert("failed");}
-  serverCall(params,successf,failf);
-
+  serverCall(params,successf,FAILF);
 }
 function populate[%ucfirst(divId)%](dataRows){
   var htmlRow,htmlAggregator,data;
   var headerRow ="<tr> <th>Score</th><th>Date</th> </tr>";
-
   for(ndx=0;ndx< dataRows.length;ndx++){
 	data = dataRows[ndx];
-	htmlRow ="<tr> <td><a onclick='showGolfScore(" +data.golf_socre_id + "})'>";
+	htmlRow ="<tr> <td><a onclick='showGolfScore(" +data.golf_score_id + ")'>";
 	htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</a></td>";
-	htmlRow += "<td>" + pgDate(data.last_update) + " </td> </tr>";
+	htmlRow += "<td>" + pgDate(data.game_dt) + " </td> </tr>";
 	htmlAggregator +=htmlRow;
   }
   $("#[%divId%]Table").html(headerRow +htmlAggregator);
-
 }
 function show[%ucfirst(divId)%](golferId_){
   retrieve[%ucfirst(divId)%](golferId_); 
@@ -31,10 +28,10 @@ function show[%ucfirst(divId)%](golferId_){
   $("#[%divId%]").fadeIn();
   currentContentPane="[%divId%]";
 }
+//]]>
+
 </script>
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle"  >
-{{this.golferId | golferNameFromId}}
 <table id="[%divId%]Table" style="border-width: 1px; border-style:solid;" class='dataTable' >
-<tr> <th>Score</th><th>Date</th> </tr>
 </table>
 </div> <!--end:[%ucfirst(divId)%]-->

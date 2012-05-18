@@ -1,12 +1,15 @@
 [%- FILTER redirect("/index.html") -%]
 [%- serverErrorMsg_Communication ="Sorry, there was a problem communicating with the server." -%]
+<!DOCType html>
+[%#
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+%]
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 [%INCLUDE _header.html%]
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();" > 
 [%INCLUDE _LayoutComponents.html%]
 
-<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" ng:controller="CacheCtl">
+<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" >
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 [%INCLUDE _golfScoreSummary.html%]
 [%INCLUDE _golfScore.html%]

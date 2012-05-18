@@ -1,4 +1,5 @@
 <script type="text/javascript">
+//<![CDATA[
 $(document).ready( function(){
 	$("#aboutGolfScore").click(function(){showAboutPane();});
 	$("a#SummaryPage").click(function(){showGolfScoreSummary();});
@@ -47,7 +48,7 @@ function standardShowContentPane(name){
   	$("#"+name).fadeIn();
   	currentContentPane= name;
 }
-
+//]]>
 </script>
 <div id="header"><div id="header-content">	
 	<h1 id="logo"><a href="index.html" title="">golf<span class="gray">score</span></a></h1>	
@@ -56,7 +57,7 @@ function standardShowContentPane(name){
 		<div id = "topMenuBar" style="display:none;"> [%#initially hidden%]
 		<ul>
 			<li><a id="SummaryPage">Home</a></li>
-			<li><a id="">Golfers</a></li>
+			<li><a id="GolfersPage">Golfers</a></li>
 			<li><a id="golfScoreEntry">Scores</a></li>
 			<li><a id="aboutGolfScore">About</a></li>
 			<li><a id="logViewer">Log</a></li>

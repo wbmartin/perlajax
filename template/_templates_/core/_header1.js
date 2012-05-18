@@ -8,8 +8,7 @@ var usrLogoutScheduled=false;
 var usrTimeOutDuration = 20*60*1000;
 var clientLog=new Array();
 var insertUpdateChoose = "INSERTUPDATE";
-
-
+var FAILF = function(){alert("FAIL");}
 
 //validation functions
 function isFieldIdEmpty(fieldId_){
@@ -19,12 +18,12 @@ function isFieldIdEmpty(fieldId_){
   if (document.getElementById(fieldId_).value == "") return true;
   return false;
 }
+
 function isEmpty(val){
   if (typeof(val) == "undefined")return true;
   if (val == null || val =="") return true;
   return false;
 }
-
 
 function validateServerResponse(responseTxt){
 	if(responseTxt == undefined ||responseTxt==null ){
@@ -57,6 +56,7 @@ function logMsg(msg,requestId){
   
 return logId;
 }
+
 function statusMsg(msg){
   $("#statusMsg").html(msg);
   logMsg("Console Msg:" +msg);
@@ -127,7 +127,6 @@ function digest(er, ee) {
 function serverCall(params, successCallback, failCallback){
   var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
   params['requestId'] =logMsg(resourceActionInfo + " Started");
-
   var successCallbackMod = function(rslt){
 	logMsg(resourceActionInfo + " Responded", rslt.requestId);
  	if(validateServerResponse(rslt)){
@@ -152,7 +151,6 @@ function appendValidationMsg(formId,fieldId, msg){
 	}
 	$(fullyQName+"Error").append(" " + msg);
 	$(fullyQName).addClass("invalid");
-	
 }
 function highlightFieldError(formId, fieldId, yesNo){
   var bordercolor="black";
@@ -163,28 +161,39 @@ function highlightFieldError(formId, fieldId, yesNo){
 
 function bindForm(formName){
   var rslt={};
+  var fieldId="";
   $.each($("form#"+formName+" :input"), 
 	function(key, field){
-	  if(field.type != 'button') rslt[field.id]= field.value
+	  fieldId = field.id.replace(formName+"-","");
+	  if(field.type != 'button') rslt[fieldId]= field.value
 	});
   return rslt;
 }
-function standardValidate(formName){
-var formValid = true;
 
-$.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
+function bindToForm(formName, obj){
+var fieldId="";
+ $.each($("form#"+formName+" :input"), 
+	function(key, field){
+	  fieldId = field.id.replace(formName+"-","");
+	  if(field.type != 'button')  field.value = obj[fieldId];
+	});
+
+
+}
+
+function standardValidate(formName){
+  var formValid = true;
+  $.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
 	span.innerHTML="";
   });
-
   $.each($("form#"+formName + ".invalid"),function (ndx,field){
 	$("form#"+formName +" #"+field.id).removeClass("invalid");
   });
-
- $.each($("form#" +formName + " .required"),function (ndx,field){
+  $.each($("form#" +formName + " .required"),function (ndx,field){
 	if(field.value == null || field.value==""){
 	 appendValidationMsg(formName,field.id, "Required");
 	 highlightFieldError(formName,field.id,true);
-	formValid =false;
+	 formValid =false;
 	}
   });
 
@@ -192,32 +201,14 @@ return formValid;
 }
 
 function pgDate(val){
+var rslt;
       if (val !=null){
-      	return val.substring(0,10);
+	rslt = val.substring(5,7)+"/"+val.substring(8,10) +"/"+ val.substring(0,4);
       }else{
-	return "";
+	rslt= "";
       }
+  return rslt;
 }
-
-
-//appModule.filter('lbl4Val',function(){
-//	return function(val,type){
-//	   return getLbl4Val(val,type);
-//	}
-//});
-
-//appModule.filter('golferNameFromId',function(){
-//	return function(id){
-//        if(typeof golfScoreCtl.golfers === 'undefined'){return "--";} 
-//	  for(var i=0;i<golfScoreCtl.golfers.length;i++){
-//		if(golfScoreCtl.golfers[i].val == id){
-//			return golfScoreCtl.golfers[i].lbl;
-//
-//		}
-//	  }
-//	  return "**";
-//	}
-//});
 
 
 
@@ -240,7 +231,7 @@ function onSuccessfulLogin(){
 	registerAction();
 	timeoutIfNoAction();
 	showGolfScoreSummary();
-	//cacheCtl.retrieveCache();
+	retrieveCache();
 }
 
 function hideMainContent(){
@@ -300,3 +291,28 @@ function filterCacheArrayByVal ( cacheArray, idToSet){
 function deepCopy(obj){
   return $.extend(true, [], obj);
 }
+
+
+
+function getLbl4Val(val, type){
+  var lbl;
+	if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
+	}else if( type==""){
+	}else{
+		return "INVALID CACHE REQUESTED";
+	}
+	if (isEmpty(lbl) ){
+	  lbl ="--";
+	}
+	return lbl;
+
+}
+function setSelectOptions(selectId, obj){
+  var newhtml="<option value=''></option>";
+  $.each(obj,function(key,val){
+   newhtml += "<option value='" + key + "'>"+val +"</option>";
+  });
+  $(selectId).html(newhtml);
+
+}
+

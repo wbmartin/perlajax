@@ -1,8 +1,10 @@
 <!--Begin LoginPortal-->
 
 <script type="text/javascript">
+//<![CDATA[
 function loginCall(){
   var params = bindForm("loginHolder");
+  [%#prepParams will not work here %]
   params['spwfResource'] = "security_user";
   params['spwfAction'] = "authenticate";
   var successf = function (rslt){
@@ -17,12 +19,8 @@ function loginCall(){
 		onSuccessfulLogin();
 	   }
   };
-  var failf = function(){alert("failed");}
-  if (validateLoginHolder())serverCall(params,successf,failf);
-
+  if (validateLoginHolder())serverCall(params,successf,FAILF);
 }
-
-
 
 
 function validateLoginHolder (){
@@ -36,26 +34,26 @@ $(document).ready(function(){
 	$("form#loginHolder #user_id").val("golfscore");
 	$("form#loginHolder #password").val("golfscore");
 });
-
+//]]>
 </script>
 
 <div id="LoginPortal" style="position:fixed; height:100%; width:100%" >
-<img align="center" height="150" width ="470" src="./images/headerphoto.jpg">
+<img  height="150" width ="470" src="./images/headerphoto.jpg" alt="Login Page Splash">
 <div  class="vcenter">
 <form id="loginHolder">  
   <fieldset style="border:0">  
-    <table class="formLayout" style="margin: auto;" vertical-align="middle">
+    <table class="formLayout" style="margin: auto;" >
     <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
 	<span class="small" >Please enter your login credentials</span><hr/></td></tr>
     <tr>
     <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
-    <td><input type="text"  id="user_id" size="30" value="" class="fieldbox required"  /> </td> <td><span class="ValidationMsg" id="user_idError"></span></td>
+    <td><input type="text"  name="user_id" id="user_id" size="30" value="" class="fieldbox required"  /> </td> <td><span class="ValidationMsg" id="user_idError"></span></td>
      </tr><tr>
     <td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
-    <td><input type="password"  id="password" size="30" value="" class="fieldbox required"  />  </td>  <td><span class="ValidationError" id="passwordError"></span></td>
+    <td><input type="password" name="password" id="password" size="30" value="" class="fieldbox required"  />  </td>  <td><span class="ValidationError" id="passwordError"></span></td>
 
      </tr><tr>
-    <td colspan="3" align="center" style="padding: 15px">
+    <td colspan="3"  style="padding: 15px">
 	<button type="button"  id="cmdlogin" class="custombutton"  onclick="loginCall()" > Login </button>  
     </td>
 </tr></table>

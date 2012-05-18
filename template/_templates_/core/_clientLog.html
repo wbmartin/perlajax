@@ -7,15 +7,14 @@
 
 function show[%ucfirst(divId)%](){
   hideCurrentContentPane();
-
+  var newHTML="";
   $("#[%divId%]").fadeIn();
   $("ul#clientLogView").find("li").remove();[%#remove all list items.%]
-	$("ul#clientLogView").html("<li>Log viewed|"+ new Date()+"</li>");
+   logMsg("Log Viewed");
   for(var ndx=0;ndx<clientLog.length;ndx++){
-	$("ul#clientLogView li:last").after("<li>" + clientLog[ndx] + "</li>");
+	newHTML +="<li>"+ clientLog[ndx].logDt+"|" + clientLog[ndx].msg + "</li>";
   }
+  $("ul#clientLogView").html(newHTML);
   currentContentPane="[%divId%]";
 }
-
-
 </script>
