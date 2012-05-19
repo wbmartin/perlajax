@@ -18,6 +18,7 @@ var usrTimeOutDuration = 20*60*1000;
 var clientLog=new Array();
 var insertUpdateChoose = "INSERTUPDATE";
 var FAILF = function(){alert("FAIL");}
+var currentContentPane="";
 
 //validation functions
 function isFieldIdEmpty(fieldId_){
@@ -186,9 +187,16 @@ var fieldId="";
 	  fieldId = field.id.replace(formName+"-","");
 	  if(field.type != 'button')  field.value = obj[fieldId];
 	});
-
-
 }
+function clearForm(formName){
+var fieldId="";
+ $.each($("form#"+formName+" :input"), 
+	function(key, field){
+	  fieldId = field.id.replace(formName+"-","");
+	  if(field.type != 'button')  field.value = "";
+	});
+}
+
 
 function standardValidate(formName){
   var formValid = true;
@@ -324,6 +332,30 @@ function setSelectOptions(selectId, obj){
   $(selectId).html(newhtml);
 
 }
+
+
+
+function bodyOnLoad(){
+  sizeLeftNav();
+}
+function bodyOnResize(){
+  sizeLeftNav();
+}
+
+function hideCurrentContentPane(){
+  if(document.getElementById(currentContentPane)!= undefined){
+	document.getElementById(currentContentPane).style.display="none";
+  }
+  $(document).unbind("keypress");
+}
+
+
+function standardShowContentPane(name){
+	hideCurrentContentPane();
+  	$("#"+name).fadeIn();
+  	currentContentPane= name;
+}
+
 
 
 //cache.js
@@ -1828,22 +1860,6 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();" > 
 <script type="text/javascript">
 //<![CDATA[
-$(document).ready( function(){
-	$("#aboutGolfScore").click(function(){showAboutPane();});
-	$("a#SummaryPage").click(function(){showGolfScoreSummary();});
-	$("a#golfScoreEntry").click(function(){showGolfScore();});
-	$("a#logViewer").click(function(){showClientLogViewer();});
-});
-
-//Layout Functions
-var currentContentPane="";
-function bodyOnLoad(){
-  sizeLeftNav();
-}
-function bodyOnResize(){
-  sizeLeftNav();
-}
-
 function sizeLeftNav(){
 
 
@@ -1861,21 +1877,11 @@ function displayMainLayout(showHide){
   document.getElementById('mainContent').style.display=display;
   display = (showHide)?"none":"block";
   document.getElementById('LoginPortal').style.display=display;
-
-}
-function hideCurrentContentPane(){
-  if(document.getElementById(currentContentPane)!= undefined){
-	document.getElementById(currentContentPane).style.display="none";
-  }
-
 }
 
+$(document).ready( function(){
+});
 
-function standardShowContentPane(name){
-	hideCurrentContentPane();
-  	$("#"+name).fadeIn();
-  	currentContentPane= name;
-}
 //]]>
 </script>
 <div id="header"><div id="header-content">	
@@ -1884,11 +1890,11 @@ function standardShowContentPane(name){
 
 		<div id = "topMenuBar" style="display:none;"> 
 		<ul>
-			<li><a id="SummaryPage">Home</a></li>
-			<li><a id="GolfersPage">Golfers</a></li>
-			<li><a id="golfScoreEntry">Scores</a></li>
-			<li><a id="aboutGolfScore">About</a></li>
-			<li><a id="logViewer">Log</a></li>
+			<li><a id="SummaryPage" onclick="showGolfScoreSummary();">Home</a></li>
+			<li><a id="GolfersPage" onclick="showGolfer();">Golfers</a></li>
+			<li><a id="golfScoreEntry" onclick="showGolfScore();">Scores</a></li>
+			<li><a id="aboutGolfScore" onclick="showAboutPane();">About</a></li>
+			<li><a id="logViewer" onclick="showClientLogViewer();">Log</a></li>
 			<li id="logout"><a >Logout</a></li>			
 		</ul>	</div>
 	</div ></div >
@@ -2037,6 +2043,108 @@ function showGolferHistory(golferId_){
 </div> <!--end:GolferHistory-->
 
 
+<script type="text/javascript">
+//<![CDATA[
+function saveGolferForm(){"use strict";
+  var params = bindForm("golferForm");
+  saveGolfer(params);
+}
+function saveGolfer(params){"use strict";
+  params = prepParams(params,"golfer",insertUpdateChoose);
+  var successf=function(rslt){
+    	bindToForm("golferForm", rslt.rows[0]);
+        if (rslt.spwfAction == "UPDATE"){
+		replaceRowGolferListTable(rslt.rows[0]);
+	}else if (rslt.spwfAction == "INSERT"){
+		addNewRowGolferListTable(rslt.rows[0]);
+	}
+
+  };
+  serverCall(params,successf,FAILF);
+}
+
+function retrieveGolfer(params){"use strict";
+  params = prepParams(params,"golfer","SELECT");
+  var successf = function(rslt){
+	if(rslt.rowCount==1){
+		bindToForm("golferForm", rslt.rows[0]);
+	}else{
+	  populateGolferListTable(rslt.rows);
+	}
+  }
+  serverCall(params,successf,FAILF);
+}
+
+function populateGolferListTable(rslt) {"use strict";
+  var newHTML="";
+  for (var i=0;i<rslt.length;i++){
+    newHTML +=buildRowGolferListTable(rslt[i]);   
+  }
+  $("#golferListTable").html(newHTML);
+}
+
+function buildRowGolferListTable(row){"use strict";
+ var newRow= "<tr id='GolferListTableTR-" +row.golfer_id + "'><td>"
+ newRow +="<span onclick='editGolfer("
+ newRow += row.golfer_id + ")'> " + row.name + "</span>"
+ newRow +="</td></tr>";
+
+ return newRow;
+}
+
+function replaceRowGolferListTable(row){"use strict";
+$("table#golferListTable #GolferListTableTR-"+row.golfer_id  ).replaceWith(buildRowGolferListTable(row));
+}
+function addNewRowGolferListTable(row){"use strict";
+$("table#golferListTable TR").first().after(buildRowGolferListTable(row));
+}
+
+
+
+
+function editGolfer(rowId_){
+  if(rowId_){
+	var params ={"where_clause":"golfer_id=" +rowId_};
+	retrieveGolfer(params);
+  }
+}
+
+
+
+function showGolfer(golferId_){"use strict";
+  hideCurrentContentPane();
+  $("#golfer").fadeIn();
+  currentContentPane = "golfer";
+  if(golferId_){
+	var params ={"where_clause":"golfer_id=" +golferId_};
+  }
+	retrieveGolfer(params);
+}
+
+$(document).ready(function(){
+});
+//]]>
+</script>
+
+<div id="golfer" class="MainLayout MainContentPaneStyle" >
+<form id="golferForm" >
+<table id="golferListTable">
+</table>
+
+<table id="golferFormTable" style="" class='formTable'>
+<tr><td> Name</td><td><input name="name" id="golferForm-name"></select></td></tr>
+<tr><td colspan="2">
+	<button type="button" id="golferFormSave" value="Save" onclick="saveGolferForm();" >Save</button>
+	<button type="button" id="golferFormClear" value="Clear" onclick="clearForm('golferForm');" >Clear</button>
+
+</td></tr>
+</table>
+<input type="hidden" name="last_update" id="golferForm-last_update">
+<input type="hidden" name="golfer_id" id="golferForm-golfer_id">
+</form>
+</div> 
+
+
 <div id="aboutPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
 <div id ="aboutPaneCenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; background-color:white; max-width:300; ">
 <h1 style="width:40em;margin-left: auto; margin-right: auto;text-align:center;">About golfscore</h1>
@@ -2124,7 +2232,15 @@ function validateLoginHolder (){
 $(document).ready(function(){
 	$("form#loginHolder #user_id").val("golfscore");
 	$("form#loginHolder #password").val("golfscore");
+
 });
+
+$(document).keypress(function(e) {
+    if(e.keyCode == 13) {
+        loginCall();
+    }
+});
+
 //]]>
 </script>
 

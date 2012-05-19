@@ -1,21 +1,5 @@
 <script type="text/javascript">
 //<![CDATA[
-$(document).ready( function(){
-	$("#aboutGolfScore").click(function(){showAboutPane();});
-	$("a#SummaryPage").click(function(){showGolfScoreSummary();});
-	$("a#golfScoreEntry").click(function(){showGolfScore();});
-	$("a#logViewer").click(function(){showClientLogViewer();});
-});
-
-//Layout Functions
-var currentContentPane="";
-function bodyOnLoad(){
-  sizeLeftNav();
-}
-function bodyOnResize(){
-  sizeLeftNav();
-}
-
 function sizeLeftNav(){
 [%headerHeight = 100%]
 [%leftNavWidth = 0%]
@@ -33,21 +17,11 @@ function displayMainLayout(showHide){
   document.getElementById('mainContent').style.display=display;
   display = (showHide)?"none":"block";
   document.getElementById('LoginPortal').style.display=display;
-
-}
-function hideCurrentContentPane(){
-  if(document.getElementById(currentContentPane)!= undefined){
-	document.getElementById(currentContentPane).style.display="none";
-  }
-
 }
 
+$(document).ready( function(){
+});
 
-function standardShowContentPane(name){
-	hideCurrentContentPane();
-  	$("#"+name).fadeIn();
-  	currentContentPane= name;
-}
 //]]>
 </script>
 <div id="header"><div id="header-content">	
@@ -56,11 +30,11 @@ function standardShowContentPane(name){
 
 		<div id = "topMenuBar" style="display:none;"> [%#initially hidden%]
 		<ul>
-			<li><a id="SummaryPage">Home</a></li>
-			<li><a id="GolfersPage">Golfers</a></li>
-			<li><a id="golfScoreEntry">Scores</a></li>
-			<li><a id="aboutGolfScore">About</a></li>
-			<li><a id="logViewer">Log</a></li>
+			<li><a id="SummaryPage" onclick="showGolfScoreSummary();">Home</a></li>
+			<li><a id="GolfersPage" onclick="showGolfer();">Golfers</a></li>
+			<li><a id="golfScoreEntry" onclick="showGolfScore();">Scores</a></li>
+			<li><a id="aboutGolfScore" onclick="showAboutPane();">About</a></li>
+			<li><a id="logViewer" onclick="showClientLogViewer();">Log</a></li>
 			<li id="logout"><a >Logout</a></li>			
 		</ul>	</div>[%#End Top Menu Bar%]
 	</div [%# end header%]></div [%# end header-content%]>

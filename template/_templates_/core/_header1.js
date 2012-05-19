@@ -9,6 +9,7 @@ var usrTimeOutDuration = 20*60*1000;
 var clientLog=new Array();
 var insertUpdateChoose = "INSERTUPDATE";
 var FAILF = function(){alert("FAIL");}
+var currentContentPane="";
 
 //validation functions
 function isFieldIdEmpty(fieldId_){
@@ -177,9 +178,16 @@ var fieldId="";
 	  fieldId = field.id.replace(formName+"-","");
 	  if(field.type != 'button')  field.value = obj[fieldId];
 	});
-
-
 }
+function clearForm(formName){
+var fieldId="";
+ $.each($("form#"+formName+" :input"), 
+	function(key, field){
+	  fieldId = field.id.replace(formName+"-","");
+	  if(field.type != 'button')  field.value = "";
+	});
+}
+
 
 function standardValidate(formName){
   var formValid = true;
@@ -315,4 +323,28 @@ function setSelectOptions(selectId, obj){
   $(selectId).html(newhtml);
 
 }
+
+
+
+function bodyOnLoad(){
+  sizeLeftNav();
+}
+function bodyOnResize(){
+  sizeLeftNav();
+}
+
+function hideCurrentContentPane(){
+  if(document.getElementById(currentContentPane)!= undefined){
+	document.getElementById(currentContentPane).style.display="none";
+  }
+  $(document).unbind("keypress");
+}
+
+
+function standardShowContentPane(name){
+	hideCurrentContentPane();
+  	$("#"+name).fadeIn();
+  	currentContentPane= name;
+}
+
 

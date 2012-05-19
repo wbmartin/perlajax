@@ -52,6 +52,8 @@ if (exists $params->{"POSTDATA"}){
  
 
 	}
+	$json->{"spwfAction"}= uc($params->{'spwfAction'});
+	$json->{"spwfResource"}= uc($params->{'spwfResource'});
 	print STDERR "Package Successful\n" if($debug);
     }else{
 	$json->{"errorMsg"} =$sth;
@@ -196,6 +198,21 @@ sub buildResourceActionDef{
 		@paramFields=@allFields;
 		#splice @paramFields,0,1; #remove client_id, prkey
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_uq"};
+	}
+} elsif($resource eq "GOLFER" ){
+	 @allFields = ('golfer_id', 'last_update', 'name');
+	if($action eq "INSERT"){
+		@paramFields =@allFields;
+		&removeArrayElement(\@paramFields, 'golfer_id');
+		&removeArrayElement(\@paramFields, 'last_update');
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_iq"};
+	} elsif($action eq "SELECT"){
+		@paramFields=@stdSelectParamFields;
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_sq"};
+	}elsif($action eq "UPDATE"){
+		@paramFields=@allFields;
+		#splice @paramFields,0,1; #remove client_id, prkey
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_uq"};
 	}
 
 

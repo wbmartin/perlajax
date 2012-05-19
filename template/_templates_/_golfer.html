@@ -1,0 +1,101 @@
+[%divId="golfer"%]
+<script type="text/javascript">
+//<![CDATA[
+function save[%ucfirst(divId)%]Form(){"use strict";
+  var params = bindForm("[%divId%]Form");
+  save[%ucfirst(divId)%](params);
+}
+function save[%ucfirst(divId)%](params){"use strict";
+  params = prepParams(params,"golfer",insertUpdateChoose);
+  var successf=function(rslt){
+    	bindToForm("[%divId%]Form", rslt.rows[0]);
+        if (rslt.spwfAction == "UPDATE"){
+		replaceRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
+	}else if (rslt.spwfAction == "INSERT"){
+		addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
+	}
+
+  };
+  serverCall(params,successf,FAILF);
+}
+
+function retrieve[%ucfirst(divId)%](params){"use strict";
+  params = prepParams(params,"golfer","SELECT");
+  var successf = function(rslt){
+	if(rslt.rowCount==1){
+		bindToForm("[%divId%]Form", rslt.rows[0]);
+	}else{
+	  populate[%ucfirst(divId)%]ListTable(rslt.rows);
+	}
+  }
+  serverCall(params,successf,FAILF);
+}
+
+function populate[%ucfirst(divId)%]ListTable(rslt) {"use strict";
+  var newHTML="";
+  for (var i=0;i<rslt.length;i++){
+    newHTML +=buildRow[%ucfirst(divId)%]ListTable(rslt[i]);   
+  }
+  $("#[%divId%]ListTable").html(newHTML);
+}
+
+function buildRow[%ucfirst(divId)%]ListTable(row){"use strict";
+ var newRow= "<tr id='[%ucfirst(divId)%]ListTableTR-" +row.golfer_id + "'><td>"
+ newRow +="<span onclick='edit[%ucfirst(divId)%]("
+ newRow += row.golfer_id + ")'> " + row.name + "</span>"
+ newRow +="</td></tr>";
+
+ return newRow;
+}
+
+function replaceRow[%ucfirst(divId)%]ListTable(row){"use strict";
+$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.golfer_id  ).replaceWith(buildRow[%ucfirst(divId)%]ListTable(row));
+}
+function addNewRow[%ucfirst(divId)%]ListTable(row){"use strict";
+$("table#[%divId%]ListTable TR").first().after(buildRow[%ucfirst(divId)%]ListTable(row));
+}
+
+
+
+
+function edit[%ucfirst(divId)%](rowId_){
+  if(rowId_){
+	var params ={"where_clause":"golfer_id=" +rowId_};
+	retrieve[%ucfirst(divId)%](params);
+  }
+}
+
+
+
+function show[%ucfirst(divId)%](golferId_){"use strict";
+  hideCurrentContentPane();
+  $("#[%divId%]").fadeIn();
+  currentContentPane = "[%divId%]";
+  if(golferId_){
+	var params ={"where_clause":"golfer_id=" +golferId_};
+  }
+	retrieve[%ucfirst(divId)%](params);
+}
+
+$(document).ready(function(){
+});
+//]]>
+</script>
+
+<div id="[%divId%]" class="MainLayout MainContentPaneStyle" >
+<form id="[%divId%]Form" >
+<table id="[%divId%]ListTable">
+</table>
+
+<table id="[%divId%]FormTable" style="" class='formTable'>
+<tr><td> Name</td><td><input name="name" id="[%divId%]Form-name"></select></td></tr>
+<tr><td colspan="2">
+	<button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+	<button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
+
+</td></tr>
+</table>
+<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+<input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
+</form>
+</div> [%# end golfScoreSummary%]

@@ -33,7 +33,15 @@ function validateLoginHolder (){
 $(document).ready(function(){
 	$("form#loginHolder #user_id").val("golfscore");
 	$("form#loginHolder #password").val("golfscore");
+
 });
+
+$(document).keypress(function(e) {
+    if(e.keyCode == 13) {
+        loginCall();
+    }
+});
+
 //]]>
 </script>
 
