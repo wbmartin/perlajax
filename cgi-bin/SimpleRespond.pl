@@ -52,8 +52,17 @@ if (exists $params->{"POSTDATA"}){
  
 
 	}
+	if (uc($params->{'spwfAction'}) eq "DELETE"){
+		while ( my ($key, $value) = each(%$params) ) {
+			if($key ne 'last_update' && $key ne 'user_id' && $key ne 'session_id'){
+        			$json->{$key} = $value;
+			}
+    		}
+	}
+
 	$json->{"spwfAction"}= uc($params->{'spwfAction'});
 	$json->{"spwfResource"}= uc($params->{'spwfResource'});
+	
 	print STDERR "Package Successful\n" if($debug);
     }else{
 	$json->{"errorMsg"} =$sth;
@@ -168,16 +177,7 @@ sub buildResourceActionDef{
 	@paramFields =();
 	if($action eq "SELECT"){
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_handicap_sq"};
-	}#elsif($action eq "INSERT"){
-	#	splice @paramFields,5,1; #remove last_update
-	#	splice @paramFields,0,2; #remove client_id, prkey
-	#  	$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"sys_code_iq" };
-	#}elsif($action eq "UPDATE"){
-	#	splice @paramFields,0,1; #remove client_id, prkey 
-	#	$rad= { rf=>\@allFields, pf=>\@paramFields, proc=>"sys_code_uq" };
-  	#}elsif($action eq "DELETE"){
-	#	$rad =   { rf=>[], pf=>['sys_code_id','last_update'], proc=>"sys_code_dq" };
-	#}
+	}
 } elsif($resource eq "CROSS_TABLE_CACHE" ){
 	 @allFields = ('tp', 'lbl', 'val' );
 	@paramFields =();
@@ -198,6 +198,9 @@ sub buildResourceActionDef{
 		@paramFields=@allFields;
 		#splice @paramFields,0,1; #remove client_id, prkey
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_uq"};
+	}elsif($action eq "DELETE"){
+		@paramFields = ('golf_score_id', 'last_update');
+		  $rad = { rf=>['golf_score_dq'], pf=>\@paramFields, proc=>"golf_score_dq"};
 	}
 } elsif($resource eq "GOLFER" ){
 	 @allFields = ('golfer_id', 'last_update', 'name');

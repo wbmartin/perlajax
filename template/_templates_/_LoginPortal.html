@@ -49,8 +49,9 @@ $(document).keypress(function(e) {
 <img  height="150" width ="470" src="./images/headerphoto.jpg" alt="Login Page Splash">
 <div  class="vcenter">
 <form id="loginHolder">  
-  <fieldset style="border:0">  
-    <table class="formLayout" style="margin: auto;" >
+  <fieldset >  
+   <div class="prettyFormHolder"> 
+   <table class="formLayout" style="margin: auto; " id="testTable">
     <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
 	<span class="small" >Please enter your login credentials</span><hr/></td></tr>
     <tr>
@@ -65,7 +66,8 @@ $(document).keypress(function(e) {
 	<button type="button"  id="cmdlogin" class="custombutton"  onclick="loginCall()" > Login </button>  
     </td>
 </tr></table>
-  </fieldset>  
+</div[%#prettyFormHolder%]>  
+</fieldset>  
 </form>  
 </div>
 </div> <!--loginportal--> 

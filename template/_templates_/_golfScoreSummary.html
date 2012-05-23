@@ -1,10 +1,11 @@
 [%divId="golfScoreSummary"%]
+[%spwfAction="golf_score_summary"%]
 <script type="text/javascript">
-//<![CDATA[
+
 var golfScoreSummaryList = new Array();
 function retrieveGolfScoreSummary(){
 $("#[%divId%]Table").html("");
- var params =prepParams(params,"golf_score_summary" ,"select" );
+ var params =prepParams(params,"[%spwfAction%]" ,"select" );
   var successf = function (rslt){
 	golfScoreSummaryList=rslt.rows;
 	displayGolfScoreSummaryList(golfScoreSummaryList);
@@ -13,30 +14,33 @@ $("#[%divId%]Table").html("");
   serverCall(params,successf,failf);
 
 }
-function displayGolfScoreSummaryList(golfScoreSummaryList_){
-  var newrowsHTML = "<tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>";
-  var newrow="";
+function display[%ucfirst(divId)%]List([%divId%]List_){
+  var newrowsHTML = "<tr> <th>Golfer</th><th>Score</th><th>Period</th><th>Action</th></tr>";
   var gs = {};
-  for(var ndx=0; ndx<golfScoreSummaryList_.length; ndx++){
-	gs = golfScoreSummaryList_[ndx];
-	newrow ="<tr><td><a onclick='showGolferHistory(" +gs.golfer_id +")'>" + gs.golfer_name+"</a></td>";
+  for(var ndx=0; ndx<[%divId%]List_.length; ndx++){
+	newrowsHTML +=build[%ucfirst(divId)%]Row(golfScoreSummaryList_[ndx]);
+  }
+  $("#[%divId%]Table").html(newrowsHTML);
+}
+
+function build[%ucfirst(divId)%]Row(gs){
+var newrow ="<tr><td>" + gs.golfer_name+"</td>";
 	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
 	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
+	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>History</a> | ";
+	newrow +="<a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>Add Score</a></td>";
 	newrow +="</tr>";
-	newrowsHTML +=newrow;
-  }
-  $("#golfScoreSummaryTable").html(newrowsHTML);
+return newrow;
+
 }
 
 function show[%ucfirst(divId)%](){
-	retrieveGolfScoreSummary();
+	retrieve[%ucfirst(divId)%]();
 	standardShowContentPane("[%divId%]");
 }
-//]]>
-
 </script>
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle"  >
 
-<table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
+<table id="[%divId%]Table" style="border-width: 1px; border-style:solid;" class='dataTable' >
 </table>
 </div> [%# end golfScoreSummary%]

@@ -25,9 +25,9 @@ body {
 }
 
 /* links */
-a:link, a:visited { background: inherit; color: #72A545; text-decoration: none; }
+a:link, a:visited { background: inherit; color: #72A545; text-decoration: underline; }
 a:hover { background: inherit; color: #006699; text-decoration: underline; }
-
+.alink{background: inherit; color: #72A545; text-decoration: underline; }
 /* headers */
 h1, h2, h3 { font: bold 1em 'Trebuchet MS', Tahoma, Sans-serif; }
 h1 { font-size: 1.4em; color: #65944A; }

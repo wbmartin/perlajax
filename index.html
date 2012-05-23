@@ -1,5 +1,4 @@
 <!DOCType html>
-
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 <head> 
 <title> Simple2 Demo</title> 
@@ -257,7 +256,7 @@ function hideMainContent(){
 
 
 function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
-        if (isNaN(parseInt(num))) return "NaN";
+        if (isNaN(parseInt(num))) return "---";
 	var tmpNum = num;
 	var iSign = num < 0 ? -1 : 1;		// Get sign of number
 	tmpNum *= Math.pow(10,decimalNum);
@@ -748,112 +747,6 @@ a._keyEvent=!1;return K},_generateMonthYearHeader:function(a,b,c,d,e,f,g,h){var 
 //]]>
 </script>
 <style type="text/css">
-.MainContentPaneStyle{
-  width:100%;
-  height:100%;
-  display:none;
-  overflow:auto;
-  /*background-color:green;*/
-  padding: 5px 5px 5px 5px ;
-}
-.MainLayout{
-  display:none;/*Initially Hidden*/
-}
-
-body{
-  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
-  font-size:12px;
-}
-.small{
-  color:#666666;
-  display:block;
-  font-size:11px;
-  font-weight:normal;
-  text-align:left;
-}
-
-.error{
-  color: red;
-}
-
-input{
-  float:left;
-  font-size:12px;
-  padding:4px 2px;
-  border:solid 1px ;
-  width:200px;
-  margin:2px 0 20px 10px;
-}
-select{
-width:200px;
-}
-
-.formLayout .labelColumn{
-  text-align:right;
-  font-weight:bold;
-  padding:7px 25px 20px 50px;
-}
-table.formLayout{
-  border-width: 2px;
-  border-style: solid;
-  border-color:green;
-  background-color:white;
-}
-.formLayout button{
-  clear:both;
-  background-color:#666666;
-  width:125px;
-  height:31px;
-  text-align:center;
-  line-height:31px;
-  color:#FFFFFF;
-  font-size:11px;
-  font-weight:bold;
-}
-.formLayout .formHeader{
-  font-weight: bold;
-  font-size: 150%;
-}
-
-.formLayout .errorColumn{
-  width:50px;
-}
-.formHeaderTD{
-  padding:15px;
-}
-.vcenter {
-  position:absolute; 
-  top:0; bottom:0; left:0; right:0;
-  margin:auto; 
-  height:240px; width:70%;
-}
-#statusMsg{
-  display:block;
-  position: relative;
-  top: 5px;
-  left: 5px;
-  border-width: 1px;
-  border-style: outset;
-  width: 500px;
-  padding:1px;
-}
-
-.dataTable{
-
-}
-.dataTable th{
-font-weight:bold;
-}
-
-.formTable{
-border-style:none;
-}
-.formTable td{
-border-style:none;
-}
-
-
-
 /* ----------------------------------------------------
 
    AUTHOR           :  	Erwin Aligam
@@ -881,9 +774,9 @@ body {
 }
 
 /* links */
-a:link, a:visited { background: inherit; color: #72A545; text-decoration: none; }
+a:link, a:visited { background: inherit; color: #72A545; text-decoration: underline; }
 a:hover { background: inherit; color: #006699; text-decoration: underline; }
-
+.alink{background: inherit; color: #72A545; text-decoration: underline; }
 /* headers */
 h1, h2, h3 { font: bold 1em 'Trebuchet MS', Tahoma, Sans-serif; }
 h1 { font-size: 1.4em; color: #65944A; }
@@ -1850,10 +1743,133 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-progressbar { height:2em; text-align: left; overflow: hidden; }
 .ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
     input.invalid { border: solid 1px red; }
-    .ng-form {display: block;}
     .ValidationMsg{
 	color:red;
     }
+.MainContentPaneStyle{
+  width:100%;
+  height:100%;
+  display:none;
+  overflow:auto;
+  /*background-color:green;*/
+  padding: 5px 5px 5px 5px ;
+}
+.MainLayout{
+  display:none;/*Initially Hidden*/
+}
+
+body{
+  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+  font-size:12px;
+}
+.small{
+  color:#666666;
+  display:block;
+  font-size:11px;
+  font-weight:normal;
+  text-align:left;
+}
+
+.error{
+  color: red;
+}
+
+
+
+input{
+  float:left;
+  font-size:12px;
+  padding:4px 2px;
+  border:solid 1px ;
+  width:200px;
+  margin:2px 0 20px 10px;
+}
+select{
+width:200px;
+}
+
+.formLayout .labelColumn{
+  text-align:right;
+  font-weight:bold;
+  padding:7px 25px 20px 50px;
+}
+table.formLayout{
+  /*border-width: 2px;
+  border-style: solid;
+  border-color:green;
+*/
+  background-color:white;
+}
+.prettyFormHolder{
+  border-width: 2px;
+  border-style: solid;
+  border-color:green;
+  border-radius:25px;
+  background-color:white;
+  display:inline-block;
+  padding: 15px;
+}
+.formLayout button{
+  clear:both;
+  background-color:#666666;
+  width:125px;
+  height:31px;
+  text-align:center;
+  line-height:31px;
+  color:#FFFFFF;
+  font-size:11px;
+  font-weight:bold;
+}
+.formLayout .formHeader{
+  font-weight: bold;
+  font-size: 150%;
+}
+fieldset {
+border-width:0px;
+border-style:transparent;
+
+}
+
+.formLayout .errorColumn{
+  width:50px;
+}
+.formHeaderTD{
+  padding:15px;
+}
+
+.vcenter {
+  position:absolute; 
+  top:0; bottom:0; left:0; right:0;
+  margin:auto; 
+  height:240px; width:70%;
+}
+#statusMsg{
+  display:block;
+  position: relative;
+  top: 5px;
+  left: 5px;
+  border-width: 1px;
+  border-style: outset;
+  width: 500px;
+  padding:1px;
+}
+
+.dataTable{
+
+}
+.dataTable th{
+font-weight:bold;
+}
+
+.formTable{
+border-style:none;
+}
+.formTable td{
+border-style:none;
+}
+
+
+
 </style>
 </head>
 
@@ -1907,8 +1923,9 @@ $(document).ready( function(){
 
 <div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" >
 
+
 <script type="text/javascript">
-//<![CDATA[
+
 var golfScoreSummaryList = new Array();
 function retrieveGolfScoreSummary(){
 $("#golfScoreSummaryTable").html("");
@@ -1922,26 +1939,29 @@ $("#golfScoreSummaryTable").html("");
 
 }
 function displayGolfScoreSummaryList(golfScoreSummaryList_){
-  var newrowsHTML = "<tr> <th>Golfer</th><th>Score</th><th>Period</th> </tr>";
-  var newrow="";
+  var newrowsHTML = "<tr> <th>Golfer</th><th>Score</th><th>Period</th><th>Action</th></tr>";
   var gs = {};
   for(var ndx=0; ndx<golfScoreSummaryList_.length; ndx++){
-	gs = golfScoreSummaryList_[ndx];
-	newrow ="<tr><td><a onclick='showGolferHistory(" +gs.golfer_id +")'>" + gs.golfer_name+"</a></td>";
-	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
-	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-	newrow +="</tr>";
-	newrowsHTML +=newrow;
+	newrowsHTML +=buildGolfScoreSummaryRow(golfScoreSummaryList_[ndx]);
   }
   $("#golfScoreSummaryTable").html(newrowsHTML);
+}
+
+function buildGolfScoreSummaryRow(gs){
+var newrow ="<tr><td>" + gs.golfer_name+"</td>";
+	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
+	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
+	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>History</a> | ";
+	newrow +="<a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>Add Score</a></td>";
+	newrow +="</tr>";
+return newrow;
+
 }
 
 function showGolfScoreSummary(){
 	retrieveGolfScoreSummary();
 	standardShowContentPane("golfScoreSummary");
 }
-//]]>
-
 </script>
 <div id="golfScoreSummary" class="MainLayout MainContentPaneStyle"  >
 
@@ -1950,21 +1970,80 @@ function showGolfScoreSummary(){
 </div> 
 
 
+
+
 <script type="text/javascript">
 //<![CDATA[
-function saveGolfScoreForm(){
-  var params = bindForm("golfScoreForm");
-  saveGolfScore(params);
+function saveGolfScore2Form(){
+  var params = bindForm("golfScore2Form");
+  saveGolfScore2(params);
 }
-function saveGolfScore(params){
+function saveGolfScore2(params){
   params = prepParams(params,"golf_score",insertUpdateChoose);
   var successf=function(rslt){
 	rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-    	bindToForm("golfScoreForm", rslt.rows[0]);
+    	bindToForm("golfScore2Form", rslt.rows[0]);
   };
   serverCall(params,successf,FAILF);
 }
 
+function retrieveGolfScore2(params){"use strict";
+  params = prepParams(params,"golf_score","SELECT");
+  var successf = function(rslt){
+	rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+	bindToForm("golfScore2Form", rslt.rows[0]);
+  }
+  serverCall(params,successf,FAILF);
+}
+
+$(document).ready(function(){
+  $("#golfScore2Form-game_dt" ).datepicker();
+});
+
+function showGolfScore2(scoreId_){
+  hideCurrentContentPane();
+  $("#golfScore2").fadeIn();
+  currentContentPane = "golfScore2";
+  if(scoreId_){
+	var params ={"where_clause":"golf_score_id=" +scoreId_};
+	retrieveGolfScore(params);
+  }
+}
+
+//]]>
+
+</script>
+
+<div id="golfScore2" class="MainLayout MainContentPaneStyle" >
+<form id="golfScore2Form" >
+<table id="golfScore2FormTable" style="" class='formTable'>
+<tr><td> Golfer </td><td><select name="golfer_id" id="golfScore2Form-golfer_id"></select></td></tr>
+<tr><td> Score </td><td><input  type="text" name="golf_score" id="golfScore2Form-golf_score"/></td></tr>
+<tr><td> Date</td><td><input type="text"  name="game_dt" id="golfScore2Form-game_dt"/></td></tr>
+<tr><td colspan="2"><button type="button" id="golfScore2FormSave" value="Save" onclick="saveGolfScore2Form();" >Save</button></td></tr>
+</table>
+<input type="hidden" name="last_update" id="golfScore2Form-last_update">
+<input type="hidden" name="golfer_score_id" id="golfScore2Form-golf_score_id">
+</form>
+</div> 
+
+
+
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+//Server Calls
+function retrieveGolfScoreList(golferId_){
+  $("#golfScoreListTable").html("");
+  var params =prepParams(params,"golf_score" ,"select" );
+  params['where_clause'] = "golfer_id =" + golferId_;
+  var successf = function (rslt){
+	populateGolfScore(rslt.rows)
+  };
+  serverCall(params,successf,FAILF);
+}
 function retrieveGolfScore(params){"use strict";
   params = prepParams(params,"golf_score","SELECT");
   var successf = function(rslt){
@@ -1973,74 +2052,109 @@ function retrieveGolfScore(params){"use strict";
   }
   serverCall(params,successf,FAILF);
 }
-
-$(document).ready(function(){
-  $( "#golfScoreForm-game_dt" ).datepicker();
-});
-
-function showGolfScore(scoreId_){
-  hideCurrentContentPane();
-  $("#golfScore").fadeIn();
-  currentContentPane = "golfScore";
-  if(scoreId_){
-	var params ={"where_clause":"golf_score_id=" +scoreId_};
-	retrieveGolfScore(params);
-  }
-}
-//]]>
-
-</script>
-
-<div id="golfScore" class="MainLayout MainContentPaneStyle" >
-<form id="golfScoreForm" >
-<table id="golfScoreFormTable" style="" class='formTable'>
-<tr><td> Golfer </td><td><select name="golfer_id" id="golfScoreForm-golfer_id"></select></td></tr>
-<tr><td> Score </td><td><input  type="text" name="golf_score" id="golfScoreForm-golf_score"/></td></tr>
-<tr><td> Date</td><td><input type="text"  name="game_dt" id="golfScoreForm-game_dt"/></td></tr>
-<tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button></td></tr>
-</table>
-<input type="hidden" name="last_update" id="golfScoreForm-last_update">
-<input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
-</form>
-</div> 
-
-
-<script type="text/javascript">
-//<![CDATA[
-function retrieveGolferHistory(golferId_){
-  $("#golferHistoryTable").html("");
-  var params =prepParams(params,"golf_score" ,"select" );
-  params['where_clause'] = "golfer_id =" + golferId_;
+function deleteGolfScore(golfScoreId_, lastUpdate_){
+  var params =prepParams(params,"golf_score" ,"delete" );
+  params['golf_score_id'] = golfScoreId_;
+  params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-	populateGolferHistory(rslt.rows)
+	removeGolfScoreListTableRow(rslt.golf_score_id)
   };
   serverCall(params,successf,FAILF);
 }
-function populateGolferHistory(dataRows){
-  var htmlRow,htmlAggregator,data;
-  var headerRow ="<tr> <th>Score</th><th>Date</th> </tr>";
-  for(ndx=0;ndx< dataRows.length;ndx++){
-	data = dataRows[ndx];
-	htmlRow ="<tr> <td><a onclick='showGolfScore(" +data.golf_score_id + ")'>";
-	htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</a></td>";
-	htmlRow += "<td>" + pgDate(data.game_dt) + " </td> </tr>";
-	htmlAggregator +=htmlRow;
+
+function saveGolfScore(params){
+  params = prepParams(params,"golf_score",insertUpdateChoose);
+  var successf=function(rslt){
+	//rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+    	//bindToForm("golfScoreForm", rslt.rows[0]);
+	clearForm('golfScoreForm');
+	if (rslt.spwfAction == "UPDATE"){
+		replaceGolfScoreListTableRow(rslt.rows[0]);
+	}else if (rslt.spwfAction == "INSERT"){
+		addNewGolfScoreListTableRow(rslt.rows[0]);
+	}
+
+  };
+  serverCall(params,successf,FAILF);
+}
+
+//ServerCall Wrappers
+function editGolfScore(golfScoreId_){
+  if(golfScoreId_){
+	var params ={"where_clause":"golf_score_id=" +golfScoreId_};
+	retrieveGolfScore(params);
   }
-  $("#golferHistoryTable").html(headerRow +htmlAggregator);
 }
-function showGolferHistory(golferId_){
-  retrieveGolferHistory(golferId_); 
+
+function saveGolfScoreForm(){
+  var params = bindForm("golfScoreForm");
+  saveGolfScore(params);
+}
+
+
+//Top Level HTML Manip
+function populateGolfScore(dataRows){
+  var htmlAggregator ="<tr> <th>Score</th><th>Date</th> <th>Action</th></tr>";
+  for(ndx=0;ndx< dataRows.length;ndx++){
+	htmlAggregator +=buildGolfScoreListTableRow(dataRows[ndx]);
+  }
+  $("#golfScoreListTable").html(htmlAggregator);
+}
+
+function buildGolfScoreListTableRow(data){
+	var htmlRow ="<tr id='GolfScoreListTableTR-" +data.golf_score_id + "'><td>";
+	htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</td>";
+	htmlRow += "<td>" + pgDate(data.game_dt) + " </td> ";
+	htmlRow += "<td><a class='alink' onclick='editGolfScore(" +data.golf_score_id + ")'>Edit</a> |"
+	htmlRow += "<a class='alink' onclick=\"deleteGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+	return htmlRow;
+}
+
+function replaceGolfScoreListTableRow(row){"use strict";
+  $("table#golfScoreListTable #GolfScoreListTableTR-"+row.golf_score_id  ).replaceWith(buildGolfScoreListTableRow(row));
+}
+function addNewGolfScoreListTableRow(row){"use strict";
+  $("table#golfScoreListTable TR").first().after(buildGolfScoreListTableRow(row));
+}
+function removeGolfScoreListTableRow(golfScoreId_){"use strict";
+  $("table#golfScoreListTable #GolfScoreListTableTR-"+golfScoreId_  ).replaceWith("");
+}
+
+
+
+//Div Access and App Layout Calls
+function showGolfScore(golferId_){
+  retrieveGolfScoreList(golferId_); 
   hideCurrentContentPane();
-  $("#golferHistory").fadeIn();
-  currentContentPane="golferHistory";
+  $("#golfScore").fadeIn();
+  currentContentPane="golfScore";
 }
+
+//After complete Load setup
+$(document).ready(function(){
+  $("#golfScoreForm-game_dt" ).datepicker();
+});
+
 //]]>
 
 </script>
-<div id="golferHistory" class="MainLayout MainContentPaneStyle"  >
-<table id="golferHistoryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
-</table>
-</div> <!--end:GolferHistory-->
+<div id="golfScore" class="MainLayout MainContentPaneStyle"  >
+<table ><tr><td style="border-left:none;vertical-align:top;" >
+  <table id="golfScoreListTable" style="border-width: 1px; border-style:solid; " class='dataTable' >
+  </table>
+</td><td style="border-left:none;">
+	<form id="golfScoreForm" >
+	<table id="golfScoreFormTable" style="" class='formTable'>
+	  <tr><td> Golfer </td><td><select name="golfer_id" id="golfScoreForm-golfer_id"></select></td></tr>
+	  <tr><td> Score </td><td><input  type="text" name="golf_score" id="golfScoreForm-golf_score"/></td></tr>
+	  <tr><td> Date</td><td><input type="text"  name="game_dt" id="golfScoreForm-game_dt"/></td></tr>
+	  <tr><td colspan="2"><button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button></td></tr>
+	</table>
+	<input type="hidden" name="last_update" id="golfScoreForm-last_update">
+	<input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
+	</form>
+</td></tr></table>
+</div> <!--end:GolfScore-->
 
 
 <script type="text/javascript">
@@ -2058,7 +2172,6 @@ function saveGolfer(params){"use strict";
 	}else if (rslt.spwfAction == "INSERT"){
 		addNewRowGolferListTable(rslt.rows[0]);
 	}
-
   };
   serverCall(params,successf,FAILF);
 }
@@ -2088,19 +2201,15 @@ function buildRowGolferListTable(row){"use strict";
  newRow +="<span onclick='editGolfer("
  newRow += row.golfer_id + ")'> " + row.name + "</span>"
  newRow +="</td></tr>";
-
  return newRow;
 }
 
 function replaceRowGolferListTable(row){"use strict";
-$("table#golferListTable #GolferListTableTR-"+row.golfer_id  ).replaceWith(buildRowGolferListTable(row));
+  $("table#golferListTable #GolferListTableTR-"+row.golfer_id  ).replaceWith(buildRowGolferListTable(row));
 }
 function addNewRowGolferListTable(row){"use strict";
-$("table#golferListTable TR").first().after(buildRowGolferListTable(row));
+  $("table#golferListTable TR").first().after(buildRowGolferListTable(row));
 }
-
-
-
 
 function editGolfer(rowId_){
   if(rowId_){
@@ -2109,8 +2218,6 @@ function editGolfer(rowId_){
   }
 }
 
-
-
 function showGolfer(golferId_){"use strict";
   hideCurrentContentPane();
   $("#golfer").fadeIn();
@@ -2118,7 +2225,7 @@ function showGolfer(golferId_){"use strict";
   if(golferId_){
 	var params ={"where_clause":"golfer_id=" +golferId_};
   }
-	retrieveGolfer(params);
+  retrieveGolfer(params);
 }
 
 $(document).ready(function(){
@@ -2248,8 +2355,9 @@ $(document).keypress(function(e) {
 <img  height="150" width ="470" src="./images/headerphoto.jpg" alt="Login Page Splash">
 <div  class="vcenter">
 <form id="loginHolder">  
-  <fieldset style="border:0">  
-    <table class="formLayout" style="margin: auto;" >
+  <fieldset >  
+   <div class="prettyFormHolder"> 
+   <table class="formLayout" style="margin: auto; " id="testTable">
     <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
 	<span class="small" >Please enter your login credentials</span><hr/></td></tr>
     <tr>
@@ -2264,7 +2372,8 @@ $(document).keypress(function(e) {
 	<button type="button"  id="cmdlogin" class="custombutton"  onclick="loginCall()" > Login </button>  
     </td>
 </tr></table>
-  </fieldset>  
+</div>  
+</fieldset>  
 </form>  
 </div>
 </div> <!--loginportal--> 

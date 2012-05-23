@@ -1,4 +1,6 @@
-[%divId="golfScore"%]
+[%divId="golfScore2"%]
+[%spwfAction="golf_score"%]
+
 <script type="text/javascript">
 //<![CDATA[
 function save[%ucfirst(divId)%]Form(){
@@ -6,7 +8,7 @@ function save[%ucfirst(divId)%]Form(){
   save[%ucfirst(divId)%](params);
 }
 function save[%ucfirst(divId)%](params){
-  params = prepParams(params,"golf_score",insertUpdateChoose);
+  params = prepParams(params,"[%spwfAction%]",insertUpdateChoose);
   var successf=function(rslt){
 	rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
     	bindToForm("[%divId%]Form", rslt.rows[0]);
@@ -15,7 +17,7 @@ function save[%ucfirst(divId)%](params){
 }
 
 function retrieve[%ucfirst(divId)%](params){"use strict";
-  params = prepParams(params,"golf_score","SELECT");
+  params = prepParams(params,"[%spwfAction%]","SELECT");
   var successf = function(rslt){
 	rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
 	bindToForm("[%divId%]Form", rslt.rows[0]);
@@ -24,7 +26,7 @@ function retrieve[%ucfirst(divId)%](params){"use strict";
 }
 
 $(document).ready(function(){
-  $( "#[%divId%]Form-game_dt" ).datepicker();
+  $("#[%divId%]Form-game_dt" ).datepicker();
 });
 
 function show[%ucfirst(divId)%](scoreId_){
@@ -36,6 +38,7 @@ function show[%ucfirst(divId)%](scoreId_){
 	retrieveGolfScore(params);
   }
 }
+
 //]]>
 
 </script>

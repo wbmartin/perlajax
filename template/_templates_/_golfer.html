@@ -14,7 +14,6 @@ function save[%ucfirst(divId)%](params){"use strict";
 	}else if (rslt.spwfAction == "INSERT"){
 		addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
 	}
-
   };
   serverCall(params,successf,FAILF);
 }
@@ -44,19 +43,15 @@ function buildRow[%ucfirst(divId)%]ListTable(row){"use strict";
  newRow +="<span onclick='edit[%ucfirst(divId)%]("
  newRow += row.golfer_id + ")'> " + row.name + "</span>"
  newRow +="</td></tr>";
-
  return newRow;
 }
 
 function replaceRow[%ucfirst(divId)%]ListTable(row){"use strict";
-$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.golfer_id  ).replaceWith(buildRow[%ucfirst(divId)%]ListTable(row));
+  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.golfer_id  ).replaceWith(buildRow[%ucfirst(divId)%]ListTable(row));
 }
 function addNewRow[%ucfirst(divId)%]ListTable(row){"use strict";
-$("table#[%divId%]ListTable TR").first().after(buildRow[%ucfirst(divId)%]ListTable(row));
+  $("table#[%divId%]ListTable TR").first().after(buildRow[%ucfirst(divId)%]ListTable(row));
 }
-
-
-
 
 function edit[%ucfirst(divId)%](rowId_){
   if(rowId_){
@@ -65,8 +60,6 @@ function edit[%ucfirst(divId)%](rowId_){
   }
 }
 
-
-
 function show[%ucfirst(divId)%](golferId_){"use strict";
   hideCurrentContentPane();
   $("#[%divId%]").fadeIn();
@@ -74,7 +67,7 @@ function show[%ucfirst(divId)%](golferId_){"use strict";
   if(golferId_){
 	var params ={"where_clause":"golfer_id=" +golferId_};
   }
-	retrieve[%ucfirst(divId)%](params);
+  retrieve[%ucfirst(divId)%](params);
 }
 
 $(document).ready(function(){

@@ -248,7 +248,7 @@ function hideMainContent(){
 
 
 function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
-        if (isNaN(parseInt(num))) return "NaN";
+        if (isNaN(parseInt(num))) return "---";
 	var tmpNum = num;
 	var iSign = num < 0 ? -1 : 1;		// Get sign of number
 	tmpNum *= Math.pow(10,decimalNum);
