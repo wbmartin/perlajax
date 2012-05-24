@@ -42,6 +42,7 @@ function save[%ucfirst(divId)%](params){
 	}else if (rslt.spwfAction == "INSERT"){
 		addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
 	}
+	briefNotify("Successfully Saved");
 
   };
   serverCall(params,successf,FAILF);
@@ -108,10 +109,10 @@ $(document).ready(function(){
 
 </script>
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle"  >
-<table ><tr><td style="border-left:none;vertical-align:top;" >
+<table ><tr><td class="noborder" style="vertical-align:top;" >
   <table id="[%divId%]ListTable" style="border-width: 1px; border-style:solid; " class='dataTable' >
   </table>
-</td><td style="border-left:none;">
+</td><td class="noborder">
 	<form id="[%divId%]Form" >
 	<table id="[%divId%]FormTable" style="" class='formTable'>
 	  <tr><td> Golfer </td><td><select name="golfer_id" id="[%divId%]Form-golfer_id"></select></td></tr>

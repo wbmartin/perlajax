@@ -347,4 +347,9 @@ function standardShowContentPane(name){
   	currentContentPane= name;
 }
 
+function briefNotify(msg){
+$("#briefNoticeMsg").html(msg);
+$('#briefNotice').fadeIn(300).delay(800).fadeOut(400);
+
+}
 

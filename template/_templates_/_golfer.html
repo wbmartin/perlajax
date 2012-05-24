@@ -31,7 +31,7 @@ function retrieve[%ucfirst(divId)%](params){"use strict";
 }
 
 function populate[%ucfirst(divId)%]ListTable(rslt) {"use strict";
-  var newHTML="";
+  var newHTML="<tr><th>Golfer Name</th><th>Action</th></tr>";
   for (var i=0;i<rslt.length;i++){
     newHTML +=buildRow[%ucfirst(divId)%]ListTable(rslt[i]);   
   }
@@ -39,9 +39,10 @@ function populate[%ucfirst(divId)%]ListTable(rslt) {"use strict";
 }
 
 function buildRow[%ucfirst(divId)%]ListTable(row){"use strict";
- var newRow= "<tr id='[%ucfirst(divId)%]ListTableTR-" +row.golfer_id + "'><td>"
- newRow +="<span onclick='edit[%ucfirst(divId)%]("
- newRow += row.golfer_id + ")'> " + row.name + "</span>"
+ var newRow= "<tr id='[%ucfirst(divId)%]ListTableTR-" +row.golfer_id + "'><td>";
+ newRow += row.name + "</td><td>";
+ newRow +="<a href='#'onclick='edit[%ucfirst(divId)%]("
+ newRow += row.golfer_id + ")'>Edit</a>"
  newRow +="</td></tr>";
  return newRow;
 }
@@ -77,16 +78,20 @@ $(document).ready(function(){
 
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle" >
 <form id="[%divId%]Form" >
-<table id="[%divId%]ListTable">
-</table>
-
-<table id="[%divId%]FormTable" style="" class='formTable'>
-<tr><td> Name</td><td><input name="name" id="[%divId%]Form-name"></select></td></tr>
-<tr><td colspan="2">
-	<button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-	<button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
-
-</td></tr>
+<table>
+    <tr>
+     <td class="noborder"> <table id="[%divId%]ListTable"></table> </td>
+     <td class= "noborder">
+       <table id="[%divId%]FormTable" style="" class='formTable'>
+	   <tr><td> Name</td><td><input name="name" id="[%divId%]Form-name"></select></td></tr>
+	   <tr><td colspan="2">
+	      <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+	      <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
+	      </td>
+	   </tr>
+       </table>
+     </td>
+    </tr>
 </table>
 <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 <input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">

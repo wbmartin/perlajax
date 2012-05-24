@@ -355,6 +355,11 @@ function standardShowContentPane(name){
   	currentContentPane= name;
 }
 
+function briefNotify(msg){
+$("#briefNoticeMsg").html(msg);
+$('#briefNotice').fadeIn(300).delay(800).fadeOut(400);
+
+}
 
 
 //cache.js
@@ -1868,7 +1873,18 @@ border-style:none;
 border-style:none;
 }
 
-
+#briefNotice {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:75px;   
+}
+#briefNoticeMsg{
+   background-color:red;
+}
+.noborder{
+border-left:none;
+}
 
 </style>
 </head>
@@ -1908,7 +1924,6 @@ $(document).ready( function(){
 		<ul>
 			<li><a id="SummaryPage" onclick="showGolfScoreSummary();">Home</a></li>
 			<li><a id="GolfersPage" onclick="showGolfer();">Golfers</a></li>
-			<li><a id="golfScoreEntry" onclick="showGolfScore();">Scores</a></li>
 			<li><a id="aboutGolfScore" onclick="showAboutPane();">About</a></li>
 			<li><a id="logViewer" onclick="showClientLogViewer();">Log</a></li>
 			<li id="logout"><a >Logout</a></li>			
@@ -1918,6 +1933,14 @@ $(document).ready( function(){
 <div id="footer" class="MainLayout" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:#DCDCDC;"><span id="statusMsg" ></span></div>
 
 <div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto;'> 
+</div>
+<div id="briefNotice" style="display:none;">
+<table style="width:100%">
+  <tr>  <td style="width:33%" class="noborder">&nbsp;</td>
+	<td style="width:33%" class="noborder" id="briefNoticeMsg"></td>
+	<td style="width:33%"class="noborder">&nbsp;</td>
+  </tr>
+</table>
 </div>
 
 
@@ -1951,8 +1974,7 @@ function buildGolfScoreSummaryRow(gs){
 var newrow ="<tr><td>" + gs.golfer_name+"</td>";
 	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
 	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>History</a> | ";
-	newrow +="<a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>Add Score</a></td>";
+	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>History</a></td>";
 	newrow +="</tr>";
 return newrow;
 
@@ -2065,14 +2087,13 @@ function deleteGolfScore(golfScoreId_, lastUpdate_){
 function saveGolfScore(params){
   params = prepParams(params,"golf_score",insertUpdateChoose);
   var successf=function(rslt){
-	//rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-    	//bindToForm("golfScoreForm", rslt.rows[0]);
 	clearForm('golfScoreForm');
 	if (rslt.spwfAction == "UPDATE"){
 		replaceGolfScoreListTableRow(rslt.rows[0]);
 	}else if (rslt.spwfAction == "INSERT"){
 		addNewGolfScoreListTableRow(rslt.rows[0]);
 	}
+	briefNotify("Successfully Saved");
 
   };
   serverCall(params,successf,FAILF);
@@ -2139,10 +2160,10 @@ $(document).ready(function(){
 
 </script>
 <div id="golfScore" class="MainLayout MainContentPaneStyle"  >
-<table ><tr><td style="border-left:none;vertical-align:top;" >
+<table ><tr><td class="noborder" style="vertical-align:top;" >
   <table id="golfScoreListTable" style="border-width: 1px; border-style:solid; " class='dataTable' >
   </table>
-</td><td style="border-left:none;">
+</td><td class="noborder">
 	<form id="golfScoreForm" >
 	<table id="golfScoreFormTable" style="" class='formTable'>
 	  <tr><td> Golfer </td><td><select name="golfer_id" id="golfScoreForm-golfer_id"></select></td></tr>
@@ -2189,7 +2210,7 @@ function retrieveGolfer(params){"use strict";
 }
 
 function populateGolferListTable(rslt) {"use strict";
-  var newHTML="";
+  var newHTML="<tr><th>Golfer Name</th><th>Action</th></tr>";
   for (var i=0;i<rslt.length;i++){
     newHTML +=buildRowGolferListTable(rslt[i]);   
   }
@@ -2197,9 +2218,10 @@ function populateGolferListTable(rslt) {"use strict";
 }
 
 function buildRowGolferListTable(row){"use strict";
- var newRow= "<tr id='GolferListTableTR-" +row.golfer_id + "'><td>"
- newRow +="<span onclick='editGolfer("
- newRow += row.golfer_id + ")'> " + row.name + "</span>"
+ var newRow= "<tr id='GolferListTableTR-" +row.golfer_id + "'><td>";
+ newRow += row.name + "</td><td>";
+ newRow +="<a href='#'onclick='editGolfer("
+ newRow += row.golfer_id + ")'>Edit</a>"
  newRow +="</td></tr>";
  return newRow;
 }
@@ -2235,16 +2257,20 @@ $(document).ready(function(){
 
 <div id="golfer" class="MainLayout MainContentPaneStyle" >
 <form id="golferForm" >
-<table id="golferListTable">
-</table>
-
-<table id="golferFormTable" style="" class='formTable'>
-<tr><td> Name</td><td><input name="name" id="golferForm-name"></select></td></tr>
-<tr><td colspan="2">
-	<button type="button" id="golferFormSave" value="Save" onclick="saveGolferForm();" >Save</button>
-	<button type="button" id="golferFormClear" value="Clear" onclick="clearForm('golferForm');" >Clear</button>
-
-</td></tr>
+<table>
+    <tr>
+     <td class="noborder"> <table id="golferListTable"></table> </td>
+     <td class= "noborder">
+       <table id="golferFormTable" style="" class='formTable'>
+	   <tr><td> Name</td><td><input name="name" id="golferForm-name"></select></td></tr>
+	   <tr><td colspan="2">
+	      <button type="button" id="golferFormSave" value="Save" onclick="saveGolferForm();" >Save</button>
+	      <button type="button" id="golferFormClear" value="Clear" onclick="clearForm('golferForm');" >Clear</button>
+	      </td>
+	   </tr>
+       </table>
+     </td>
+    </tr>
 </table>
 <input type="hidden" name="last_update" id="golferForm-last_update">
 <input type="hidden" name="golfer_id" id="golferForm-golfer_id">

@@ -120,4 +120,15 @@ border-style:none;
 border-style:none;
 }
 
-
+#briefNotice {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:75px;   
+}
+#briefNoticeMsg{
+   background-color:red;
+}
+.noborder{
+border-left:none;
+}

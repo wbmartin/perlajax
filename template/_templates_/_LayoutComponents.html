@@ -32,7 +32,6 @@ $(document).ready( function(){
 		<ul>
 			<li><a id="SummaryPage" onclick="showGolfScoreSummary();">Home</a></li>
 			<li><a id="GolfersPage" onclick="showGolfer();">Golfers</a></li>
-			<li><a id="golfScoreEntry" onclick="showGolfScore();">Scores</a></li>
 			<li><a id="aboutGolfScore" onclick="showAboutPane();">About</a></li>
 			<li><a id="logViewer" onclick="showClientLogViewer();">Log</a></li>
 			<li id="logout"><a >Logout</a></li>			
@@ -42,4 +41,12 @@ $(document).ready( function(){
 <div id="footer" class="MainLayout" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:#DCDCDC;"><span id="statusMsg" ></span></div>
 
 <div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto;'> 
+</div>
+<div id="briefNotice" style="display:none;">
+<table style="width:100%">
+  <tr>  <td style="width:33%" class="noborder">&nbsp;</td>
+	<td style="width:33%" class="noborder" id="briefNoticeMsg"></td>
+	<td style="width:33%"class="noborder">&nbsp;</td>
+  </tr>
+</table>
 </div>
