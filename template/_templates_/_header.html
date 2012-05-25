@@ -1,5 +1,5 @@
 <head> 
-<title> Simple2 Demo</title> 
+<title> Golf Score Tracker</title> 
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 <script type="text/javascript"> 
 //<![CDATA[
@@ -11,15 +11,20 @@
 [%INCLUDE "includes/jquery-1.7.1.min.js"%]
 //jqueryui.js
 [%INCLUDE "includes/jquery-ui-1.8.18.custom.min.js"%]
+
+function bodyOnLoad(){
+  sizeLeftNav();
+}
+
+function bodyOnResize(){
+  sizeLeftNav();
+}
+
 //]]>
 </script>
 <style type="text/css">
 [%INCLUDE style/_PixelGreen.css%]
 [%INCLUDE "style/jquery-ui-1.8.18.custom.css"%]
-    input.invalid { border: solid 1px red; }
-    .ValidationMsg{
-	color:red;
-    }
 [%INCLUDE style/_main.css%]
 </style>
 </head>

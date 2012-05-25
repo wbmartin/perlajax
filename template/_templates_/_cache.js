@@ -20,4 +20,19 @@ function retrieveCache(){
   serverCall(params,successf,FAILF);
 }
 
+function getLbl4Val(val, type){
+  var lbl;
+	if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
+	}else if( type==""){
+	}else{
+		return "INVALID CACHE REQUESTED";
+	}
+	if (isEmpty(lbl) ){
+	  lbl ="--";
+	}
+	return lbl;
+
+}
+
+
 

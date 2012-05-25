@@ -1,7 +1,7 @@
 <!DOCType html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 <head> 
-<title> Simple2 Demo</title> 
+<title> Golf Score Tracker</title> 
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 <script type="text/javascript"> 
 //<![CDATA[
@@ -19,137 +19,8 @@ var insertUpdateChoose = "INSERTUPDATE";
 var FAILF = function(){alert("FAIL");}
 var currentContentPane="";
 
-//validation functions
-function isFieldIdEmpty(fieldId_){
-  if (document.getElementById(fieldId_) == undefined) return true;
-  if (document.getElementById(fieldId_).value == undefined) return true;
-  if (document.getElementById(fieldId_).value == null) return true;
-  if (document.getElementById(fieldId_).value == "") return true;
-  return false;
-}
-
-function isEmpty(val){
-  if (typeof(val) == "undefined")return true;
-  if (val == null || val =="") return true;
-  return false;
-}
-
-function validateServerResponse(responseTxt){
-	if(responseTxt == undefined ||responseTxt==null ){
-	  logMsg("validateServerResponse - undefined response");
-	  alert("Sorry, there was an unexpected error communicating with the server.");
-	  return false;
-	}else if(responseTxt.errorMsg != undefined){
-		if(responseTxt.errorMsg.indexOf('Session Invalid')>-1 ){
-	  		alert("Sorry, the session has expired and you will be logged out");
-			usrSessionId="";
-	  		//window.location.reload();
-		}
-	   logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
-	   return false;
-	}
-  registerAction();
-  return true;
-}
-
-function logMsg(msg,requestId){
-  var timingInfo="";
-  var logId = clientLog.length;
-  if (requestId != null && requestId != "NEW"){ logId = requestId; }
-  if( logId == clientLog.length){ 
-	clientLog[logId] = {logDt: new Date()}; 
-  }else{
-	timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
-  }
-  clientLog[logId].msg= msg+timingInfo;
-  
-return logId;
-}
-
-function statusMsg(msg){
-  $("#statusMsg").html(msg);
-  logMsg("Console Msg:" +msg);
-}
-
-
-
-window.onbeforeunload = function () {
-  if(usrSessionId !=""){
-   return "If you click OK and continue to refresh this page, you will lose any data that has not been saved"
-  }
-}
-
-function prepParams(params, resource, action){
- 	if(params == null){ params = {}; }
-  	params['spwfResource'] = resource;
-	params['user_id'] = usrLoginId;
-	params['session_id'] = usrSessionId;
-  	if (action ==insertUpdateChoose){
- 	  if(params['last_update']!= null && params['last_update']!= ""){
-      		action = "update";
-    	  }else{
-      		action= "insert";
-    	  }
-        }
-  	params['spwfAction'] = action;
-	return params;
-}
-
-
-// timeout function
-function timeoutIfNoAction(){ "use strict";
-	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
-	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
-		usrLogoutScheduled = true;
-		statusMsg("Logging Out User in 1 minute");
-		window.setTimeout(function(){if (usrLogoutScheduled){logOutUser();}},60000);
-	}else{
-	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
-	}
-
-}
-function registerAction(){
-  usrLastAction= new Date();
-  usrLogoutScheduled = false;
-}
-
-
-function logOutUser(){
-  usrSessionId="";
-  usrLoginId="";
-  $("form#loginHolder #user_id").val("");
-  $("form#loginHolder #password").val("");
-  displayMainLayout(false);
-  $("#topMenuBar").hide();
-  hideMainContent();
-  return;
-}
-
-function digest(er, ee) {
-    if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
-    for (var attr in ee) {
-        er[attr] = ee[attr];
-    }
-    return er;
-}
-
-function serverCall(params, successCallback, failCallback){
-  var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
-  params['requestId'] =logMsg(resourceActionInfo + " Started");
-  var successCallbackMod = function(rslt){
-	logMsg(resourceActionInfo + " Responded", rslt.requestId);
- 	if(validateServerResponse(rslt)){
-		successCallback(rslt);
-	}else{
-		logMsg(resourceActionInfo + " Failed to validate the server response");
-	}	
-  }
-  $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
-	  success: successCallbackMod, error: failCallback });
-
-}
-
-
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Form Functions
 function appendValidationMsg(formId,fieldId, msg){
 	var fullyQName = "form#"+formId+" #" + fieldId;
 	if($("form#"+formId).find("#"+fieldId+"Error").attr("id")==undefined){
@@ -161,6 +32,7 @@ function appendValidationMsg(formId,fieldId, msg){
 	$(fullyQName+"Error").append(" " + msg);
 	$(fullyQName).addClass("invalid");
 }
+
 function highlightFieldError(formId, fieldId, yesNo){
   var bordercolor="black";
   if  (yesNo) bordercolor="red"
@@ -187,6 +59,7 @@ var fieldId="";
 	  if(field.type != 'button')  field.value = obj[fieldId];
 	});
 }
+
 function clearForm(formName){
 var fieldId="";
  $.each($("form#"+formName+" :input"), 
@@ -216,6 +89,23 @@ function standardValidate(formName){
 return formValid;
 }
 
+function isFieldIdEmpty(fieldId_){
+  if (document.getElementById(fieldId_) == undefined) return true;
+  if (document.getElementById(fieldId_).value == undefined) return true;
+  if (document.getElementById(fieldId_).value == null) return true;
+  if (document.getElementById(fieldId_).value == "") return true;
+  return false;
+}
+
+function isEmpty(val){
+  if (typeof(val) == "undefined")return true;
+  if (val == null || val =="") return true;
+  return false;
+}
+
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Formatting Functions
 function pgDate(val){
 var rslt;
       if (val !=null){
@@ -225,35 +115,6 @@ var rslt;
       }
   return rslt;
 }
-
-
-
-
-
-function handleServerResponse(msg, startTime, data){
-	if(!validateServerResponse(data)){
-		alert("Sorry, there was a problem communicating with the server.");
-		return false
-	}
-	statusMsg( msg +" in " + (new Date().getTime()-startTime.getTime())/1000 + "s" );
-	return true;
-}
-
-
-function onSuccessfulLogin(){
-	$("#password").val("");
-	displayMainLayout(true);
-	$("#topMenuBar").show();
-	registerAction();
-	timeoutIfNoAction();
-	showGolfScoreSummary();
-	retrieveCache();
-}
-
-function hideMainContent(){
- return "";
-}
-
 
 function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
         if (isNaN(parseInt(num))) return "---";
@@ -296,6 +157,9 @@ function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 	return tmpNumStr.toString();		// Return our formatted string!
 }
 
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//js Utility Functions
 function filterCacheArrayByVal ( cacheArray, idToSet){
 	for(var i=0;i<cacheArray.length;i++){
 		if(cacheArray[i].val == idToSet)return cacheArray[i];
@@ -303,26 +167,19 @@ function filterCacheArrayByVal ( cacheArray, idToSet){
 	return {};
 }
 
+function digest(er, ee) {
+    if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
+    for (var attr in ee) {
+        er[attr] = ee[attr];
+    }
+    return er;
+}
+
 
 function deepCopy(obj){
   return $.extend(true, [], obj);
 }
 
-
-
-function getLbl4Val(val, type){
-  var lbl;
-	if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
-	}else if( type==""){
-	}else{
-		return "INVALID CACHE REQUESTED";
-	}
-	if (isEmpty(lbl) ){
-	  lbl ="--";
-	}
-	return lbl;
-
-}
 function setSelectOptions(selectId, obj){
   var newhtml="<option value=''></option>";
   $.each(obj,function(key,val){
@@ -333,13 +190,20 @@ function setSelectOptions(selectId, obj){
 }
 
 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Content Functions
+function timeoutIfNoAction(){ "use strict";
+	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
+	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
+		usrLogoutScheduled = true;
+		statusMsg("Logging Out User in 1 minute");
+		window.setTimeout(function(){if (usrLogoutScheduled){logOutUser();}},60000);
+	}else{
+	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
+	}
 
-function bodyOnLoad(){
-  sizeLeftNav();
 }
-function bodyOnResize(){
-  sizeLeftNav();
-}
+
 
 function hideCurrentContentPane(){
   if(document.getElementById(currentContentPane)!= undefined){
@@ -355,11 +219,107 @@ function standardShowContentPane(name){
   	currentContentPane= name;
 }
 
+function hideMainContent(){
+ return "";
+}
+
+function registerAction(){
+  usrLastAction= new Date();
+  usrLogoutScheduled = false;
+}
+
+window.onbeforeunload = function () {
+  if(usrSessionId !=""){
+   return "If you click OK and continue to refresh this page, you will lose any data that has not been saved"
+  }
+}
+
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Log Msg Functions
 function briefNotify(msg){
-$("#briefNoticeMsg").html(msg);
-$('#briefNotice').fadeIn(300).delay(800).fadeOut(400);
+  $("#briefNoticeMsg").html(msg);
+  $('#briefNotice').fadeIn(300).delay(800).fadeOut(400);
+  statusMsg(msg);
+}
+function statusMsg(msg){
+  $("#statusMsg").html(msg);
+  logMsg("Console Msg:" +msg);
+}
+function logMsg(msg,requestId){
+  var timingInfo="";
+  var logId = clientLog.length;
+  if (requestId != null && requestId != "NEW"){ logId = requestId; }
+  if( logId == clientLog.length){ 
+	clientLog[logId] = {logDt: new Date()}; 
+  }else{
+	timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
+  }
+  clientLog[logId].msg= msg+timingInfo;
+  
+return logId;
+}
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Server Call Functions
+function serverCall(params, successCallback, failCallback){
+  var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
+  params['requestId'] =logMsg(resourceActionInfo + " Started");
+  var successCallbackMod = function(rslt){
+	logMsg(resourceActionInfo + " Responded", rslt.requestId);
+ 	if(validateServerResponse(rslt)){
+		successCallback(rslt);
+	}else{
+		logMsg(resourceActionInfo + " Failed to validate the server response");
+	}	
+  }
+  $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
+	  success: successCallbackMod, error: failCallback });
 
 }
+
+function handleServerResponse(msg, startTime, data){
+	if(!validateServerResponse(data)){
+		alert("Sorry, there was a problem communicating with the server.");
+		return false
+	}
+	statusMsg( msg +" in " + (new Date().getTime()-startTime.getTime())/1000 + "s" );
+	return true;
+}
+
+function prepParams(params, resource, action){
+ 	if(params == null){ params = {}; }
+  	params['spwfResource'] = resource;
+	params['user_id'] = usrLoginId;
+	params['session_id'] = usrSessionId;
+  	if (action ==insertUpdateChoose){
+ 	  if(params['last_update']!= null && params['last_update']!= ""){
+      		action = "update";
+    	  }else{
+      		action= "insert";
+    	  }
+        }
+  	params['spwfAction'] = action;
+	return params;
+}
+
+function validateServerResponse(responseTxt){
+	if(responseTxt == undefined ||responseTxt==null ){
+	  logMsg("validateServerResponse - undefined response");
+	  alert("Sorry, there was an unexpected error communicating with the server.");
+	  return false;
+	}else if(responseTxt.errorMsg != undefined){
+		if(responseTxt.errorMsg.indexOf('Session Invalid')>-1 ){
+	  		alert("Sorry, the session has expired and you will be logged out");
+			usrSessionId="";
+		}
+	   logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
+	   return false;
+	}
+  registerAction();
+  return true;
+}
+
 
 
 //cache.js
@@ -384,6 +344,21 @@ function retrieveCache(){
   };
   serverCall(params,successf,FAILF);
 }
+
+function getLbl4Val(val, type){
+  var lbl;
+	if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
+	}else if( type==""){
+	}else{
+		return "INVALID CACHE REQUESTED";
+	}
+	if (isEmpty(lbl) ){
+	  lbl ="--";
+	}
+	return lbl;
+
+}
+
 
 
 
@@ -749,6 +724,15 @@ a._keyEvent=!1;return K},_generateMonthYearHeader:function(a,b,c,d,e,f,g,h){var 
  * Depends:
  *	jquery.effects.core.js
  */(function(a,b){a.effects.transfer=function(b){return this.queue(function(){var c=a(this),d=a(b.options.to),e=d.offset(),f={top:e.top,left:e.left,height:d.innerHeight(),width:d.innerWidth()},g=c.offset(),h=a('<div class="ui-effects-transfer"></div>').appendTo(document.body).addClass(b.options.className).css({top:g.top,left:g.left,height:c.innerHeight(),width:c.innerWidth(),position:"absolute"}).animate(f,b.duration,b.options.easing,function(){h.remove(),b.callback&&b.callback.apply(c[0],arguments),c.dequeue()})})}})(jQuery);
+
+function bodyOnLoad(){
+  sizeLeftNav();
+}
+
+function bodyOnResize(){
+  sizeLeftNav();
+}
+
 //]]>
 </script>
 <style type="text/css">
@@ -1747,10 +1731,6 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  */
 .ui-progressbar { height:2em; text-align: left; overflow: hidden; }
 .ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
-    input.invalid { border: solid 1px red; }
-    .ValidationMsg{
-	color:red;
-    }
 .MainContentPaneStyle{
   width:100%;
   height:100%;
@@ -1764,8 +1744,9 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 }
 
 body{
-  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+/*  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
   font-size:12px;
+*/
 }
 .small{
   color:#666666;
@@ -1790,7 +1771,7 @@ input{
   margin:2px 0 20px 10px;
 }
 select{
-width:200px;
+  width:200px;
 }
 
 .formLayout .labelColumn{
@@ -1830,9 +1811,8 @@ table.formLayout{
   font-size: 150%;
 }
 fieldset {
-border-width:0px;
-border-style:transparent;
-
+  border-width:0px;
+  border-style:transparent;
 }
 
 .formLayout .errorColumn{
@@ -1877,14 +1857,33 @@ border-style:none;
    position:absolute;
    bottom:0;
    width:100%;
-   height:75px;   
+   height:75px; 
+   padding-bottom:15px;  
 }
 #briefNoticeMsg{
-   background-color:red;
+  display:inline-block;
+  padding:15px;
+  width:200px;
+  background: #FFF url(./images/gradientbg.jpg) repeat-x;
+  color:#74A846;
+  border-width:1px;
+  border-style:solid;
+  border-radius:15px;
+/*background: #74A846;
+color: #fff;
+*/
 }
 .noborder{
-border-left:none;
+  border-left:none;
 }
+
+input.invalid { 
+  border: solid 1px red; 
+}
+.ValidationMsg{
+  color:red;
+}
+
 
 </style>
 </head>
@@ -1937,8 +1936,8 @@ $(document).ready( function(){
 <div id="briefNotice" style="display:none;">
 <table style="width:100%">
   <tr>  <td style="width:33%" class="noborder">&nbsp;</td>
-	<td style="width:33%" class="noborder" id="briefNoticeMsg"></td>
-	<td style="width:33%"class="noborder">&nbsp;</td>
+	<td style="width:33%" class="noborder"><div id="briefNoticeMsg"></div></td>
+	<td style="width:33%" class="noborder">&nbsp;</td>
   </tr>
 </table>
 </div>
@@ -1974,7 +1973,7 @@ function buildGolfScoreSummaryRow(gs){
 var newrow ="<tr><td>" + gs.golfer_name+"</td>";
 	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
 	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>History</a></td>";
+	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>Scores</a></td>";
 	newrow +="</tr>";
 return newrow;
 
@@ -1994,68 +1993,10 @@ function showGolfScoreSummary(){
 
 
 
-<script type="text/javascript">
-//<![CDATA[
-function saveGolfScore2Form(){
-  var params = bindForm("golfScore2Form");
-  saveGolfScore2(params);
-}
-function saveGolfScore2(params){
-  params = prepParams(params,"golf_score",insertUpdateChoose);
-  var successf=function(rslt){
-	rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-    	bindToForm("golfScore2Form", rslt.rows[0]);
-  };
-  serverCall(params,successf,FAILF);
-}
-
-function retrieveGolfScore2(params){"use strict";
-  params = prepParams(params,"golf_score","SELECT");
-  var successf = function(rslt){
-	rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-	bindToForm("golfScore2Form", rslt.rows[0]);
-  }
-  serverCall(params,successf,FAILF);
-}
-
-$(document).ready(function(){
-  $("#golfScore2Form-game_dt" ).datepicker();
-});
-
-function showGolfScore2(scoreId_){
-  hideCurrentContentPane();
-  $("#golfScore2").fadeIn();
-  currentContentPane = "golfScore2";
-  if(scoreId_){
-	var params ={"where_clause":"golf_score_id=" +scoreId_};
-	retrieveGolfScore(params);
-  }
-}
-
-//]]>
-
-</script>
-
-<div id="golfScore2" class="MainLayout MainContentPaneStyle" >
-<form id="golfScore2Form" >
-<table id="golfScore2FormTable" style="" class='formTable'>
-<tr><td> Golfer </td><td><select name="golfer_id" id="golfScore2Form-golfer_id"></select></td></tr>
-<tr><td> Score </td><td><input  type="text" name="golf_score" id="golfScore2Form-golf_score"/></td></tr>
-<tr><td> Date</td><td><input type="text"  name="game_dt" id="golfScore2Form-game_dt"/></td></tr>
-<tr><td colspan="2"><button type="button" id="golfScore2FormSave" value="Save" onclick="saveGolfScore2Form();" >Save</button></td></tr>
-</table>
-<input type="hidden" name="last_update" id="golfScore2Form-last_update">
-<input type="hidden" name="golfer_score_id" id="golfScore2Form-golf_score_id">
-</form>
-</div> 
-
-
-
-
 
 <script type="text/javascript">
 //<![CDATA[
-
+"use strict";
 //Server Calls
 function retrieveGolfScoreList(golferId_){
   $("#golfScoreListTable").html("");
@@ -2066,7 +2007,7 @@ function retrieveGolfScoreList(golferId_){
   };
   serverCall(params,successf,FAILF);
 }
-function retrieveGolfScore(params){"use strict";
+function retrieveGolfScore(params){
   params = prepParams(params,"golf_score","SELECT");
   var successf = function(rslt){
 	rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
@@ -2079,7 +2020,8 @@ function deleteGolfScore(golfScoreId_, lastUpdate_){
   params['golf_score_id'] = golfScoreId_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-	removeGolfScoreListTableRow(rslt.golf_score_id)
+	removeGolfScoreListTableRow(rslt.golf_score_id);
+	briefNotify("Golf Score Deleted Successfully");
   };
   serverCall(params,successf,FAILF);
 }
@@ -2093,7 +2035,7 @@ function saveGolfScore(params){
 	}else if (rslt.spwfAction == "INSERT"){
 		addNewGolfScoreListTableRow(rslt.rows[0]);
 	}
-	briefNotify("Successfully Saved");
+	briefNotify("Golf Score Successfully Saved");
 
   };
   serverCall(params,successf,FAILF);
@@ -2116,32 +2058,30 @@ function saveGolfScoreForm(){
 //Top Level HTML Manip
 function populateGolfScore(dataRows){
   var htmlAggregator ="<tr> <th>Score</th><th>Date</th> <th>Action</th></tr>";
-  for(ndx=0;ndx< dataRows.length;ndx++){
+  for(var ndx=0;ndx< dataRows.length;ndx++){
 	htmlAggregator +=buildGolfScoreListTableRow(dataRows[ndx]);
   }
   $("#golfScoreListTable").html(htmlAggregator);
 }
 
 function buildGolfScoreListTableRow(data){
-	var htmlRow ="<tr id='GolfScoreListTableTR-" +data.golf_score_id + "'><td>";
-	htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</td>";
-	htmlRow += "<td>" + pgDate(data.game_dt) + " </td> ";
-	htmlRow += "<td><a class='alink' onclick='editGolfScore(" +data.golf_score_id + ")'>Edit</a> |"
-	htmlRow += "<a class='alink' onclick=\"deleteGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
-	return htmlRow;
+  var htmlRow ="<tr id='GolfScoreListTableTR-" +data.golf_score_id + "'><td>";
+  htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</td>";
+  htmlRow += "<td>" + pgDate(data.game_dt) + " </td> ";
+  htmlRow += "<td><a class='alink' onclick='editGolfScore(" +data.golf_score_id + ")'>Edit</a> |"
+  htmlRow += "<a class='alink' onclick=\"deleteGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+  return htmlRow;
 }
 
-function replaceGolfScoreListTableRow(row){"use strict";
-  $("table#golfScoreListTable #GolfScoreListTableTR-"+row.golf_score_id  ).replaceWith(buildGolfScoreListTableRow(row));
+function replaceGolfScoreListTableRow(row){
+  $("table#golfScoreListTable #GolfScoreListTableTR-"+row.golf_score_id).replaceWith(buildGolfScoreListTableRow(row));
 }
-function addNewGolfScoreListTableRow(row){"use strict";
+function addNewGolfScoreListTableRow(row){
   $("table#golfScoreListTable TR").first().after(buildGolfScoreListTableRow(row));
 }
-function removeGolfScoreListTableRow(golfScoreId_){"use strict";
-  $("table#golfScoreListTable #GolfScoreListTableTR-"+golfScoreId_  ).replaceWith("");
+function removeGolfScoreListTableRow(golfScoreId_){
+  $("table#golfScoreListTable #GolfScoreListTableTR-"+golfScoreId_).replaceWith("");
 }
-
-
 
 //Div Access and App Layout Calls
 function showGolfScore(golferId_){
@@ -2180,11 +2120,10 @@ $(document).ready(function(){
 
 <script type="text/javascript">
 //<![CDATA[
-function saveGolferForm(){"use strict";
-  var params = bindForm("golferForm");
-  saveGolfer(params);
-}
-function saveGolfer(params){"use strict";
+"use strict";
+//----------------------------------------------------
+//server calls
+function saveGolfer(params){
   params = prepParams(params,"golfer",insertUpdateChoose);
   var successf=function(rslt){
     	bindToForm("golferForm", rslt.rows[0]);
@@ -2193,11 +2132,14 @@ function saveGolfer(params){"use strict";
 	}else if (rslt.spwfAction == "INSERT"){
 		addNewRowGolferListTable(rslt.rows[0]);
 	}
+	briefNotify("Golfer Saved Successfully");
+
   };
   serverCall(params,successf,FAILF);
 }
 
-function retrieveGolfer(params){"use strict";
+
+function retrieveGolfer(params){
   params = prepParams(params,"golfer","SELECT");
   var successf = function(rslt){
 	if(rslt.rowCount==1){
@@ -2208,31 +2150,8 @@ function retrieveGolfer(params){"use strict";
   }
   serverCall(params,successf,FAILF);
 }
-
-function populateGolferListTable(rslt) {"use strict";
-  var newHTML="<tr><th>Golfer Name</th><th>Action</th></tr>";
-  for (var i=0;i<rslt.length;i++){
-    newHTML +=buildRowGolferListTable(rslt[i]);   
-  }
-  $("#golferListTable").html(newHTML);
-}
-
-function buildRowGolferListTable(row){"use strict";
- var newRow= "<tr id='GolferListTableTR-" +row.golfer_id + "'><td>";
- newRow += row.name + "</td><td>";
- newRow +="<a href='#'onclick='editGolfer("
- newRow += row.golfer_id + ")'>Edit</a>"
- newRow +="</td></tr>";
- return newRow;
-}
-
-function replaceRowGolferListTable(row){"use strict";
-  $("table#golferListTable #GolferListTableTR-"+row.golfer_id  ).replaceWith(buildRowGolferListTable(row));
-}
-function addNewRowGolferListTable(row){"use strict";
-  $("table#golferListTable TR").first().after(buildRowGolferListTable(row));
-}
-
+//-----------------------
+//Server Call Wrappers
 function editGolfer(rowId_){
   if(rowId_){
 	var params ={"where_clause":"golfer_id=" +rowId_};
@@ -2240,7 +2159,43 @@ function editGolfer(rowId_){
   }
 }
 
-function showGolfer(golferId_){"use strict";
+function saveGolferForm(){
+  var params = bindForm("golferForm");
+  saveGolfer(params);
+}
+
+
+
+
+//----------------------------------------------------
+//html building functions
+function populateGolferListTable(rslt) {
+  var newHTML="<tr><th>Golfer Name</th><th>Action</th></tr>";
+  for (var i=0;i<rslt.length;i++){
+    newHTML +=buildRowGolferListTable(rslt[i]);   
+  }
+  $("#golferListTable").html(newHTML);
+}
+
+function buildRowGolferListTable(row){
+  var newRow= "<tr id='GolferListTableTR-" +row.golfer_id + "'><td>";
+  newRow += row.name + "</td><td>";
+  newRow +="<a href='#' onclick='editGolfer("
+  newRow += row.golfer_id + ")'>Edit</a>"
+  newRow +="</td></tr>";
+  return newRow;
+}
+
+function replaceRowGolferListTable(row){
+  $("table#golferListTable #GolferListTableTR-"+row.golfer_id  ).replaceWith(buildRowGolferListTable(row));
+}
+function addNewRowGolferListTable(row){
+  $("table#golferListTable TR").first().after(buildRowGolferListTable(row));
+}
+
+//-------------------------------------------------
+//Div Access and App Layout Calls
+function showGolfer(golferId_){
   hideCurrentContentPane();
   $("#golfer").fadeIn();
   currentContentPane = "golfer";
@@ -2262,7 +2217,7 @@ $(document).ready(function(){
      <td class="noborder"> <table id="golferListTable"></table> </td>
      <td class= "noborder">
        <table id="golferFormTable" style="" class='formTable'>
-	   <tr><td> Name</td><td><input name="name" id="golferForm-name"></select></td></tr>
+	   <tr><td> Name</td><td><input name="name" id="golferForm-name"></td></tr>
 	   <tr><td colspan="2">
 	      <button type="button" id="golferFormSave" value="Save" onclick="saveGolferForm();" >Save</button>
 	      <button type="button" id="golferFormClear" value="Clear" onclick="clearForm('golferForm');" >Clear</button>
@@ -2359,6 +2314,26 @@ function validateLoginHolder (){
   var formName="loginHolder ";
   var formValid  = standardValidate("loginHolder");
   return formValid;
+}
+
+function onSuccessfulLogin(){
+	$("#password").val("");
+	displayMainLayout(true);
+	$("#topMenuBar").show();
+	registerAction();
+	timeoutIfNoAction();
+	showGolfScoreSummary();
+	retrieveCache();
+}
+function logOutUser(){
+  usrSessionId="";
+  usrLoginId="";
+  $("form#loginHolder #user_id").val("");
+  $("form#loginHolder #password").val("");
+  displayMainLayout(false);
+  $("#topMenuBar").hide();
+  hideMainContent();
+  return;
 }
 
 

@@ -11,8 +11,9 @@
 }
 
 body{
-  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+/*  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
   font-size:12px;
+*/
 }
 .small{
   color:#666666;
@@ -37,7 +38,7 @@ input{
   margin:2px 0 20px 10px;
 }
 select{
-width:200px;
+  width:200px;
 }
 
 .formLayout .labelColumn{
@@ -77,9 +78,8 @@ table.formLayout{
   font-size: 150%;
 }
 fieldset {
-border-width:0px;
-border-style:transparent;
-
+  border-width:0px;
+  border-style:transparent;
 }
 
 .formLayout .errorColumn{
@@ -124,11 +124,30 @@ border-style:none;
    position:absolute;
    bottom:0;
    width:100%;
-   height:75px;   
+   height:75px; 
+   padding-bottom:15px;  
 }
 #briefNoticeMsg{
-   background-color:red;
+  display:inline-block;
+  padding:15px;
+  width:200px;
+  background: #FFF url(./images/gradientbg.jpg) repeat-x;
+  color:#74A846;
+  border-width:1px;
+  border-style:solid;
+  border-radius:15px;
+/*background: #74A846;
+color: #fff;
+*/
 }
 .noborder{
-border-left:none;
+  border-left:none;
 }
+
+input.invalid { 
+  border: solid 1px red; 
+}
+.ValidationMsg{
+  color:red;
+}
+

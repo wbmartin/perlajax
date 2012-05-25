@@ -11,137 +11,8 @@ var insertUpdateChoose = "INSERTUPDATE";
 var FAILF = function(){alert("FAIL");}
 var currentContentPane="";
 
-//validation functions
-function isFieldIdEmpty(fieldId_){
-  if (document.getElementById(fieldId_) == undefined) return true;
-  if (document.getElementById(fieldId_).value == undefined) return true;
-  if (document.getElementById(fieldId_).value == null) return true;
-  if (document.getElementById(fieldId_).value == "") return true;
-  return false;
-}
-
-function isEmpty(val){
-  if (typeof(val) == "undefined")return true;
-  if (val == null || val =="") return true;
-  return false;
-}
-
-function validateServerResponse(responseTxt){
-	if(responseTxt == undefined ||responseTxt==null ){
-	  logMsg("validateServerResponse - undefined response");
-	  alert("Sorry, there was an unexpected error communicating with the server.");
-	  return false;
-	}else if(responseTxt.errorMsg != undefined){
-		if(responseTxt.errorMsg.indexOf('Session Invalid')>-1 ){
-	  		alert("Sorry, the session has expired and you will be logged out");
-			usrSessionId="";
-	  		//window.location.reload();
-		}
-	   logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
-	   return false;
-	}
-  registerAction();
-  return true;
-}
-
-function logMsg(msg,requestId){
-  var timingInfo="";
-  var logId = clientLog.length;
-  if (requestId != null && requestId != "NEW"){ logId = requestId; }
-  if( logId == clientLog.length){ 
-	clientLog[logId] = {logDt: new Date()}; 
-  }else{
-	timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
-  }
-  clientLog[logId].msg= msg+timingInfo;
-  
-return logId;
-}
-
-function statusMsg(msg){
-  $("#statusMsg").html(msg);
-  logMsg("Console Msg:" +msg);
-}
-
-
-[%#http://stackoverflow.com/questions/5263583/implement-a-back-button-warning-in-javascript-for-use-in-flex%]
-window.onbeforeunload = function () {
-  if(usrSessionId !=""){
-   return "If you click OK and continue to refresh this page, you will lose any data that has not been saved"
-  }
-}
-
-function prepParams(params, resource, action){
- 	if(params == null){ params = {}; }
-  	params['spwfResource'] = resource;
-	params['user_id'] = usrLoginId;
-	params['session_id'] = usrSessionId;
-  	if (action ==insertUpdateChoose){
- 	  if(params['last_update']!= null && params['last_update']!= ""){
-      		action = "update";
-    	  }else{
-      		action= "insert";
-    	  }
-        }
-  	params['spwfAction'] = action;
-	return params;
-}
-
-
-// timeout function
-function timeoutIfNoAction(){ "use strict";
-	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
-	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
-		usrLogoutScheduled = true;
-		statusMsg("Logging Out User in 1 minute");
-		window.setTimeout(function(){if (usrLogoutScheduled){logOutUser();}},60000);
-	}else{
-	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
-	}
-
-}
-function registerAction(){
-  usrLastAction= new Date();
-  usrLogoutScheduled = false;
-}
-
-
-function logOutUser(){
-  usrSessionId="";
-  usrLoginId="";
-  $("form#loginHolder #user_id").val("");
-  $("form#loginHolder #password").val("");
-  displayMainLayout(false);
-  $("#topMenuBar").hide();
-  hideMainContent();
-  return;
-}
-
-function digest(er, ee) {
-    if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
-    for (var attr in ee) {
-        er[attr] = ee[attr];
-    }
-    return er;
-}
-
-function serverCall(params, successCallback, failCallback){
-  var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
-  params['requestId'] =logMsg(resourceActionInfo + " Started");
-  var successCallbackMod = function(rslt){
-	logMsg(resourceActionInfo + " Responded", rslt.requestId);
- 	if(validateServerResponse(rslt)){
-		successCallback(rslt);
-	}else{
-		logMsg(resourceActionInfo + " Failed to validate the server response");
-	}	
-  }
-  $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
-	  success: successCallbackMod, error: failCallback });
-
-}
-
-
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Form Functions
 function appendValidationMsg(formId,fieldId, msg){
 	var fullyQName = "form#"+formId+" #" + fieldId;
 	if($("form#"+formId).find("#"+fieldId+"Error").attr("id")==undefined){
@@ -153,6 +24,7 @@ function appendValidationMsg(formId,fieldId, msg){
 	$(fullyQName+"Error").append(" " + msg);
 	$(fullyQName).addClass("invalid");
 }
+
 function highlightFieldError(formId, fieldId, yesNo){
   var bordercolor="black";
   if  (yesNo) bordercolor="red"
@@ -179,6 +51,7 @@ var fieldId="";
 	  if(field.type != 'button')  field.value = obj[fieldId];
 	});
 }
+
 function clearForm(formName){
 var fieldId="";
  $.each($("form#"+formName+" :input"), 
@@ -208,6 +81,23 @@ function standardValidate(formName){
 return formValid;
 }
 
+function isFieldIdEmpty(fieldId_){
+  if (document.getElementById(fieldId_) == undefined) return true;
+  if (document.getElementById(fieldId_).value == undefined) return true;
+  if (document.getElementById(fieldId_).value == null) return true;
+  if (document.getElementById(fieldId_).value == "") return true;
+  return false;
+}
+
+function isEmpty(val){
+  if (typeof(val) == "undefined")return true;
+  if (val == null || val =="") return true;
+  return false;
+}
+
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Formatting Functions
 function pgDate(val){
 var rslt;
       if (val !=null){
@@ -217,35 +107,6 @@ var rslt;
       }
   return rslt;
 }
-
-
-
-
-
-function handleServerResponse(msg, startTime, data){
-	if(!validateServerResponse(data)){
-		alert("[%serverErrorMsg_Communication%]");
-		return false
-	}
-	statusMsg( msg +" in " + (new Date().getTime()-startTime.getTime())/1000 + "s" );
-	return true;
-}
-
-
-function onSuccessfulLogin(){
-	$("#password").val("");
-	displayMainLayout(true);
-	$("#topMenuBar").show();
-	registerAction();
-	timeoutIfNoAction();
-	showGolfScoreSummary();
-	retrieveCache();
-}
-
-function hideMainContent(){
- return "";
-}
-
 
 function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
         if (isNaN(parseInt(num))) return "---";
@@ -288,6 +149,9 @@ function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 	return tmpNumStr.toString();		// Return our formatted string!
 }
 
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//js Utility Functions
 function filterCacheArrayByVal ( cacheArray, idToSet){
 	for(var i=0;i<cacheArray.length;i++){
 		if(cacheArray[i].val == idToSet)return cacheArray[i];
@@ -295,26 +159,19 @@ function filterCacheArrayByVal ( cacheArray, idToSet){
 	return {};
 }
 
+function digest(er, ee) {
+    if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
+    for (var attr in ee) {
+        er[attr] = ee[attr];
+    }
+    return er;
+}
+
 
 function deepCopy(obj){
   return $.extend(true, [], obj);
 }
 
-
-
-function getLbl4Val(val, type){
-  var lbl;
-	if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
-	}else if( type==""){
-	}else{
-		return "INVALID CACHE REQUESTED";
-	}
-	if (isEmpty(lbl) ){
-	  lbl ="--";
-	}
-	return lbl;
-
-}
 function setSelectOptions(selectId, obj){
   var newhtml="<option value=''></option>";
   $.each(obj,function(key,val){
@@ -325,13 +182,20 @@ function setSelectOptions(selectId, obj){
 }
 
 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Content Functions
+function timeoutIfNoAction(){ "use strict";
+	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
+	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
+		usrLogoutScheduled = true;
+		statusMsg("Logging Out User in 1 minute");
+		window.setTimeout(function(){if (usrLogoutScheduled){logOutUser();}},60000);
+	}else{
+	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
+	}
 
-function bodyOnLoad(){
-  sizeLeftNav();
 }
-function bodyOnResize(){
-  sizeLeftNav();
-}
+
 
 function hideCurrentContentPane(){
   if(document.getElementById(currentContentPane)!= undefined){
@@ -347,9 +211,105 @@ function standardShowContentPane(name){
   	currentContentPane= name;
 }
 
+function hideMainContent(){
+ return "";
+}
+
+function registerAction(){
+  usrLastAction= new Date();
+  usrLogoutScheduled = false;
+}
+
+window.onbeforeunload = function () {
+  if(usrSessionId !=""){
+   return "If you click OK and continue to refresh this page, you will lose any data that has not been saved"
+  }
+}
+
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Log Msg Functions
 function briefNotify(msg){
-$("#briefNoticeMsg").html(msg);
-$('#briefNotice').fadeIn(300).delay(800).fadeOut(400);
+  $("#briefNoticeMsg").html(msg);
+  $('#briefNotice').fadeIn(300).delay(800).fadeOut(400);
+  statusMsg(msg);
+}
+function statusMsg(msg){
+  $("#statusMsg").html(msg);
+  logMsg("Console Msg:" +msg);
+}
+function logMsg(msg,requestId){
+  var timingInfo="";
+  var logId = clientLog.length;
+  if (requestId != null && requestId != "NEW"){ logId = requestId; }
+  if( logId == clientLog.length){ 
+	clientLog[logId] = {logDt: new Date()}; 
+  }else{
+	timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
+  }
+  clientLog[logId].msg= msg+timingInfo;
+  
+return logId;
+}
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Server Call Functions
+function serverCall(params, successCallback, failCallback){
+  var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
+  params['requestId'] =logMsg(resourceActionInfo + " Started");
+  var successCallbackMod = function(rslt){
+	logMsg(resourceActionInfo + " Responded", rslt.requestId);
+ 	if(validateServerResponse(rslt)){
+		successCallback(rslt);
+	}else{
+		logMsg(resourceActionInfo + " Failed to validate the server response");
+	}	
+  }
+  $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
+	  success: successCallbackMod, error: failCallback });
 
 }
+
+function handleServerResponse(msg, startTime, data){
+	if(!validateServerResponse(data)){
+		alert("[%serverErrorMsg_Communication%]");
+		return false
+	}
+	statusMsg( msg +" in " + (new Date().getTime()-startTime.getTime())/1000 + "s" );
+	return true;
+}
+
+function prepParams(params, resource, action){
+ 	if(params == null){ params = {}; }
+  	params['spwfResource'] = resource;
+	params['user_id'] = usrLoginId;
+	params['session_id'] = usrSessionId;
+  	if (action ==insertUpdateChoose){
+ 	  if(params['last_update']!= null && params['last_update']!= ""){
+      		action = "update";
+    	  }else{
+      		action= "insert";
+    	  }
+        }
+  	params['spwfAction'] = action;
+	return params;
+}
+
+function validateServerResponse(responseTxt){
+	if(responseTxt == undefined ||responseTxt==null ){
+	  logMsg("validateServerResponse - undefined response");
+	  alert("Sorry, there was an unexpected error communicating with the server.");
+	  return false;
+	}else if(responseTxt.errorMsg != undefined){
+		if(responseTxt.errorMsg.indexOf('Session Invalid')>-1 ){
+	  		alert("Sorry, the session has expired and you will be logged out");
+			usrSessionId="";
+		}
+	   logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
+	   return false;
+	}
+  registerAction();
+  return true;
+}
+
 

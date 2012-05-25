@@ -10,7 +10,6 @@
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 [%INCLUDE _golfScoreSummary.html%]
 [%INCLUDE _golfScore.html%]
-[%INCLUDE _golferHistory.html%]
 [%INCLUDE _golfer.html%]
 [%INCLUDE _about.html%]
 [%INCLUDE core/_clientLog.html%]

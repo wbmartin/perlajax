@@ -1,11 +1,10 @@
 [%divId="golfer"%]
 <script type="text/javascript">
 //<![CDATA[
-function save[%ucfirst(divId)%]Form(){"use strict";
-  var params = bindForm("[%divId%]Form");
-  save[%ucfirst(divId)%](params);
-}
-function save[%ucfirst(divId)%](params){"use strict";
+"use strict";
+//----------------------------------------------------
+//server calls
+function save[%ucfirst(divId)%](params){
   params = prepParams(params,"golfer",insertUpdateChoose);
   var successf=function(rslt){
     	bindToForm("[%divId%]Form", rslt.rows[0]);
@@ -14,11 +13,14 @@ function save[%ucfirst(divId)%](params){"use strict";
 	}else if (rslt.spwfAction == "INSERT"){
 		addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
 	}
+	briefNotify("Golfer Saved Successfully");
+
   };
   serverCall(params,successf,FAILF);
 }
 
-function retrieve[%ucfirst(divId)%](params){"use strict";
+
+function retrieve[%ucfirst(divId)%](params){
   params = prepParams(params,"golfer","SELECT");
   var successf = function(rslt){
 	if(rslt.rowCount==1){
@@ -29,31 +31,8 @@ function retrieve[%ucfirst(divId)%](params){"use strict";
   }
   serverCall(params,successf,FAILF);
 }
-
-function populate[%ucfirst(divId)%]ListTable(rslt) {"use strict";
-  var newHTML="<tr><th>Golfer Name</th><th>Action</th></tr>";
-  for (var i=0;i<rslt.length;i++){
-    newHTML +=buildRow[%ucfirst(divId)%]ListTable(rslt[i]);   
-  }
-  $("#[%divId%]ListTable").html(newHTML);
-}
-
-function buildRow[%ucfirst(divId)%]ListTable(row){"use strict";
- var newRow= "<tr id='[%ucfirst(divId)%]ListTableTR-" +row.golfer_id + "'><td>";
- newRow += row.name + "</td><td>";
- newRow +="<a href='#'onclick='edit[%ucfirst(divId)%]("
- newRow += row.golfer_id + ")'>Edit</a>"
- newRow +="</td></tr>";
- return newRow;
-}
-
-function replaceRow[%ucfirst(divId)%]ListTable(row){"use strict";
-  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.golfer_id  ).replaceWith(buildRow[%ucfirst(divId)%]ListTable(row));
-}
-function addNewRow[%ucfirst(divId)%]ListTable(row){"use strict";
-  $("table#[%divId%]ListTable TR").first().after(buildRow[%ucfirst(divId)%]ListTable(row));
-}
-
+//-----------------------
+//Server Call Wrappers
 function edit[%ucfirst(divId)%](rowId_){
   if(rowId_){
 	var params ={"where_clause":"golfer_id=" +rowId_};
@@ -61,7 +40,43 @@ function edit[%ucfirst(divId)%](rowId_){
   }
 }
 
-function show[%ucfirst(divId)%](golferId_){"use strict";
+function save[%ucfirst(divId)%]Form(){
+  var params = bindForm("[%divId%]Form");
+  save[%ucfirst(divId)%](params);
+}
+
+
+
+
+//----------------------------------------------------
+//html building functions
+function populate[%ucfirst(divId)%]ListTable(rslt) {
+  var newHTML="<tr><th>Golfer Name</th><th>Action</th></tr>";
+  for (var i=0;i<rslt.length;i++){
+    newHTML +=buildRow[%ucfirst(divId)%]ListTable(rslt[i]);   
+  }
+  $("#[%divId%]ListTable").html(newHTML);
+}
+
+function buildRow[%ucfirst(divId)%]ListTable(row){
+  var newRow= "<tr id='[%ucfirst(divId)%]ListTableTR-" +row.golfer_id + "'><td>";
+  newRow += row.name + "</td><td>";
+  newRow +="<a href='#' onclick='edit[%ucfirst(divId)%]("
+  newRow += row.golfer_id + ")'>Edit</a>"
+  newRow +="</td></tr>";
+  return newRow;
+}
+
+function replaceRow[%ucfirst(divId)%]ListTable(row){
+  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.golfer_id  ).replaceWith(buildRow[%ucfirst(divId)%]ListTable(row));
+}
+function addNewRow[%ucfirst(divId)%]ListTable(row){
+  $("table#[%divId%]ListTable TR").first().after(buildRow[%ucfirst(divId)%]ListTable(row));
+}
+
+//-------------------------------------------------
+//Div Access and App Layout Calls
+function show[%ucfirst(divId)%](golferId_){
   hideCurrentContentPane();
   $("#[%divId%]").fadeIn();
   currentContentPane = "[%divId%]";
@@ -83,7 +98,7 @@ $(document).ready(function(){
      <td class="noborder"> <table id="[%divId%]ListTable"></table> </td>
      <td class= "noborder">
        <table id="[%divId%]FormTable" style="" class='formTable'>
-	   <tr><td> Name</td><td><input name="name" id="[%divId%]Form-name"></select></td></tr>
+	   <tr><td> Name</td><td><input name="name" id="[%divId%]Form-name"></td></tr>
 	   <tr><td colspan="2">
 	      <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
 	      <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>

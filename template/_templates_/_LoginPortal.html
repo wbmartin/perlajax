@@ -29,6 +29,26 @@ function validateLoginHolder (){
   return formValid;
 }
 
+function onSuccessfulLogin(){
+	$("#password").val("");
+	displayMainLayout(true);
+	$("#topMenuBar").show();
+	registerAction();
+	timeoutIfNoAction();
+	showGolfScoreSummary();
+	retrieveCache();
+}
+function logOutUser(){
+  usrSessionId="";
+  usrLoginId="";
+  $("form#loginHolder #user_id").val("");
+  $("form#loginHolder #password").val("");
+  displayMainLayout(false);
+  $("#topMenuBar").hide();
+  hideMainContent();
+  return;
+}
+
 
 $(document).ready(function(){
 	$("form#loginHolder #user_id").val("golfscore");

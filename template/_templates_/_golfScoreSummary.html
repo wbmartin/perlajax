@@ -27,7 +27,7 @@ function build[%ucfirst(divId)%]Row(gs){
 var newrow ="<tr><td>" + gs.golfer_name+"</td>";
 	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
 	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>History</a></td>";
+	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>Scores</a></td>";
 	newrow +="</tr>";
 return newrow;
 
