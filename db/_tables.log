@@ -12,6 +12,7 @@ CREATE TABLE golf_score
 (
   golf_score_id serial NOT NULL,
   last_update timestamp(3) without time zone,
+  updated_by text,
   golf_score integer,
   golfer_id integer,
   game_dt date,
@@ -23,8 +24,8 @@ CREATE TABLE golf_score
 WITH (
   OIDS=FALSE
 );
-psql:tables/010_CreateTableGolfScore.sql:16: NOTICE:  CREATE TABLE will create implicit sequence "golf_score_golf_score_id_seq" for serial column "golf_score.golf_score_id"
-psql:tables/010_CreateTableGolfScore.sql:16: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "golf_score_pkey" for table "golf_score"
+psql:tables/010_CreateTableGolfScore.sql:17: NOTICE:  CREATE TABLE will create implicit sequence "golf_score_golf_score_id_seq" for serial column "golf_score.golf_score_id"
+psql:tables/010_CreateTableGolfScore.sql:17: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "golf_score_pkey" for table "golf_score"
 CREATE TABLE
 \i tables/020_CreateTable_Golfer.sql
 drop table golfer cascade;
@@ -39,14 +40,15 @@ CREATE TABLE golfer
 (
   golfer_id serial NOT NULL,
   last_update timestamp(3) without time zone,
+  updated_by text,
   "name" character varying(25),
   CONSTRAINT golfer_pkey PRIMARY KEY (golfer_id)
 )
 WITH (
   OIDS=FALSE
 );
-psql:tables/020_CreateTable_Golfer.sql:11: NOTICE:  CREATE TABLE will create implicit sequence "golfer_golfer_id_seq" for serial column "golfer.golfer_id"
-psql:tables/020_CreateTable_Golfer.sql:11: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "golfer_pkey" for table "golfer"
+psql:tables/020_CreateTable_Golfer.sql:12: NOTICE:  CREATE TABLE will create implicit sequence "golfer_golfer_id_seq" for serial column "golfer.golfer_id"
+psql:tables/020_CreateTable_Golfer.sql:12: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "golfer_pkey" for table "golfer"
 CREATE TABLE
 \i tables/999_posttables.sql
 --post tables

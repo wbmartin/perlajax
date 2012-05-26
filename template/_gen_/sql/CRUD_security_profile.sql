@@ -15,7 +15,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PROFILE' );
     end if;
---security_profile_id, profile_name, last_update
+--security_profile_id, profile_name, last_update, updated_by
 
     whereClause ='';
     orderByClause='';
@@ -53,32 +53,30 @@ GRANT EXECUTE ON FUNCTION security_profile_sq(text, text, text, text, text, inte
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function: security_profile_bypk(text,  text, text ,integer)
+-- Function: security_profile_bypk(text, text, text ,integer)
 
--- DROP FUNCTION security_profile_pybk(text,  text, text,integer);
+-- DROP FUNCTION security_profile_pybk(text, text, text,integer);
 
-CREATE OR REPLACE FUNCTION security_profile_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text ,securityProfileId_ integer)
-  RETURNS security_profile AS
-$BODY$
-  Declare
-    result security_profile;
-  Begin
-    if alreadyAuth_ <>'ALREADY_AUTH' then
-    	perform isSessionValid( securityuserId_,sessionId_) ;
-    	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PROFILE' );
-    end if;
---security_profile_id, profile_name, last_update
-   
-
-
-     select * into result from security_profile where security_profile_id=securityProfileId_;
-     return result;
-  End;
-$BODY$
-  LANGUAGE 'plpgsql' VOLATILE
-  COST 100;
-ALTER FUNCTION security_profile_bypk(text,  text, text,integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION security_profile_bypk(text,  text, text,integer) TO GROUP golfscore;
+--CREATE OR REPLACE FUNCTION security_profile_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
+--,securityProfileId_ integer)
+--  RETURNS security_profile AS
+--$BODY$
+--  Declare
+--    result security_profile;
+--  Begin
+--    if alreadyAuth_ <>'ALREADY_AUTH' then
+--    	perform isSessionValid( securityuserId_,sessionId_) ;
+--    	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PROFILE' );
+--    end if;
+--security_profile_id, profile_name, last_update, updated_by
+--     select * into result from security_profile where security_profile_id=securityProfileId_;
+--     return result;
+--  End;
+--$BODY$
+--  LANGUAGE 'plpgsql' VOLATILE
+--  COST 100;
+--ALTER FUNCTION security_profile_bypk(text,  text, text,integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_bypk(text,  text, text,integer) TO GROUP golfscore;
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -101,7 +99,7 @@ $body$
     end if;
 
 
-    insert into security_profile( profile_name,last_update) 	values ( profileName_, now()) 
+    insert into security_profile( profile_name,last_update,updated_by)  values ( profileName_, now(), securityuserid_) 
 	returning * into newrow;
       return newrow;
   end;
@@ -111,7 +109,7 @@ $body$
 alter function security_profile_iq(text,  text, text ,text) owner to postgres;
 GRANT EXECUTE ON FUNCTION security_profile_iq(text,  text, text ,text) TO GROUP golfscore;
 
---select * from security_profile_iq('ALREADY_AUTH', 'test', 'test' , 'text' );
+--select * from security_profile_iq('ALREADY_AUTH', 'test', 'test' , 'text', 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
@@ -130,7 +128,7 @@ $body$
     	perform issessionvalid( securityuserid_,sessionid_) ;
     	perform isuserauthorized( securityuserid_, 'UPDATE_SECURITY_PROFILE' );
     end if;
-	update security_profile set profile_name= profileName_ ,  last_update = now() 	where security_profile_id=securityProfileId_   and   last_update = lastUpdate_
+	update security_profile set profile_name= profileName_ ,  last_update = now() , updated_by = securityuserid_	where security_profile_id=securityProfileId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then
@@ -146,7 +144,7 @@ $body$
 alter function security_profile_uq(text,  text, text ,integer,text,timestamp) owner to postgres;
 GRANT EXECUTE ON FUNCTION security_profile_uq(text, text, text ,integer,text,timestamp) TO GROUP golfscore;
 
---select * from security_profile_uq('ALREADY_AUTH', 'test', 'test' <security_profile_id> <last_update>, 'text');
+--select * from security_profile_uq('ALREADY_AUTH', 'test', 'test' <security_profile_id> <last_update>, 'text', 'text');
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

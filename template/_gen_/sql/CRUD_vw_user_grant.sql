@@ -53,32 +53,30 @@ GRANT EXECUTE ON FUNCTION vw_user_grant_sq(text, text, text, text, text, integer
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function: vw_user_grant_bypk(text,  text, text )
+-- Function: vw_user_grant_bypk(text, text, text )
 
--- DROP FUNCTION vw_user_grant_pybk(text,  text, text);
+-- DROP FUNCTION vw_user_grant_pybk(text, text, text);
 
-CREATE OR REPLACE FUNCTION vw_user_grant_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text )
-  RETURNS vw_user_grant AS
-$BODY$
-  Declare
-    result vw_user_grant;
-  Begin
-    if alreadyAuth_ <>'ALREADY_AUTH' then
-    	perform isSessionValid( securityuserId_,sessionId_) ;
-    	perform isUserAuthorized( securityuserId_, 'SELECT_VW_USER_GRANT' );
-    end if;
+--CREATE OR REPLACE FUNCTION vw_user_grant_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
+--)
+--  RETURNS vw_user_grant AS
+--$BODY$
+--  Declare
+--    result vw_user_grant;
+--  Begin
+--    if alreadyAuth_ <>'ALREADY_AUTH' then
+--    	perform isSessionValid( securityuserId_,sessionId_) ;
+--    	perform isUserAuthorized( securityuserId_, 'SELECT_VW_USER_GRANT' );
+--    end if;
 --user_id, profile_name, priv_name
-   
-
-
-     select * into result from vw_user_grant where ;
-     return result;
-  End;
-$BODY$
-  LANGUAGE 'plpgsql' VOLATILE
-  COST 100;
-ALTER FUNCTION vw_user_grant_bypk(text,  text, text) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION vw_user_grant_bypk(text,  text, text) TO GROUP golfscore;
+--     select * into result from vw_user_grant where ;
+--     return result;
+--  End;
+--$BODY$
+--  LANGUAGE 'plpgsql' VOLATILE
+--  COST 100;
+--ALTER FUNCTION vw_user_grant_bypk(text,  text, text) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION vw_user_grant_bypk(text,  text, text) TO GROUP golfscore;
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -101,7 +99,7 @@ $body$
     end if;
 
 
-    insert into vw_user_grant( user_id,profile_name,priv_name) 	values ( userId_,profileName_,privName_) 
+    insert into vw_user_grant( user_id,profile_name,priv_name)  values ( userId_,profileName_,privName_) 
 	returning * into newrow;
       return newrow;
   end;

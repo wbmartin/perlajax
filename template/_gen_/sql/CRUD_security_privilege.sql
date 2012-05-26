@@ -15,7 +15,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PRIVILEGE' );
     end if;
---security_privilege_id, priv_name, description, last_update
+--security_privilege_id, priv_name, description, last_update, updated_by
 
     whereClause ='';
     orderByClause='';
@@ -53,32 +53,30 @@ GRANT EXECUTE ON FUNCTION security_privilege_sq(text, text, text, text, text, in
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function: security_privilege_bypk(text,  text, text ,integer)
+-- Function: security_privilege_bypk(text, text, text ,integer)
 
--- DROP FUNCTION security_privilege_pybk(text,  text, text,integer);
+-- DROP FUNCTION security_privilege_pybk(text, text, text,integer);
 
-CREATE OR REPLACE FUNCTION security_privilege_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text ,securityPrivilegeId_ integer)
-  RETURNS security_privilege AS
-$BODY$
-  Declare
-    result security_privilege;
-  Begin
-    if alreadyAuth_ <>'ALREADY_AUTH' then
-    	perform isSessionValid( securityuserId_,sessionId_) ;
-    	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PRIVILEGE' );
-    end if;
---security_privilege_id, priv_name, description, last_update
-   
-
-
-     select * into result from security_privilege where security_privilege_id=securityPrivilegeId_;
-     return result;
-  End;
-$BODY$
-  LANGUAGE 'plpgsql' VOLATILE
-  COST 100;
-ALTER FUNCTION security_privilege_bypk(text,  text, text,integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION security_privilege_bypk(text,  text, text,integer) TO GROUP golfscore;
+--CREATE OR REPLACE FUNCTION security_privilege_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
+--,securityPrivilegeId_ integer)
+--  RETURNS security_privilege AS
+--$BODY$
+--  Declare
+--    result security_privilege;
+--  Begin
+--    if alreadyAuth_ <>'ALREADY_AUTH' then
+--    	perform isSessionValid( securityuserId_,sessionId_) ;
+--    	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PRIVILEGE' );
+--    end if;
+--security_privilege_id, priv_name, description, last_update, updated_by
+--     select * into result from security_privilege where security_privilege_id=securityPrivilegeId_;
+--     return result;
+--  End;
+--$BODY$
+--  LANGUAGE 'plpgsql' VOLATILE
+--  COST 100;
+--ALTER FUNCTION security_privilege_bypk(text,  text, text,integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION security_privilege_bypk(text,  text, text,integer) TO GROUP golfscore;
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -101,7 +99,7 @@ $body$
     end if;
 
 
-    insert into security_privilege( security_privilege_id,priv_name,description,last_update) 	values ( securityPrivilegeId_,privName_,description_, now()) 
+    insert into security_privilege( security_privilege_id,priv_name,description,last_update,updated_by)  values ( securityPrivilegeId_,privName_,description_, now(), securityuserid_) 
 	returning * into newrow;
       return newrow;
   end;
@@ -111,7 +109,7 @@ $body$
 alter function security_privilege_iq(text,  text, text ,integer,text,text) owner to postgres;
 GRANT EXECUTE ON FUNCTION security_privilege_iq(text,  text, text ,integer,text,text) TO GROUP golfscore;
 
---select * from security_privilege_iq('ALREADY_AUTH', 'test', 'test'  ,1, 'text', 'text' );
+--select * from security_privilege_iq('ALREADY_AUTH', 'test', 'test'  ,1, 'text', 'text', 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
@@ -130,7 +128,7 @@ $body$
     	perform issessionvalid( securityuserid_,sessionid_) ;
     	perform isuserauthorized( securityuserid_, 'UPDATE_SECURITY_PRIVILEGE' );
     end if;
-	update security_privilege set priv_name= privName_ ,  description= description_ ,  last_update = now() 	where security_privilege_id=securityPrivilegeId_   and   last_update = lastUpdate_
+	update security_privilege set priv_name= privName_ ,  description= description_ ,  last_update = now() , updated_by = securityuserid_	where security_privilege_id=securityPrivilegeId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then
@@ -146,7 +144,7 @@ $body$
 alter function security_privilege_uq(text,  text, text ,integer,text,text,timestamp) owner to postgres;
 GRANT EXECUTE ON FUNCTION security_privilege_uq(text, text, text ,integer,text,text,timestamp) TO GROUP golfscore;
 
---select * from security_privilege_uq('ALREADY_AUTH', 'test', 'test', 'text' ,1 <last_update>, 'text');
+--select * from security_privilege_uq('ALREADY_AUTH', 'test', 'test', 'text' ,1 <last_update>, 'text', 'text');
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

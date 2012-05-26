@@ -4,6 +4,7 @@ CREATE TABLE security_user
 (
   user_id text NOT NULL,
   last_update timestamp(3) without time zone,
+  updated_by text,
   password_enc text,
   security_profile_id integer NOT NULL,
   session_id text,

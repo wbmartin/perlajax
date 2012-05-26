@@ -3,6 +3,7 @@ CREATE TABLE golf_score
 (
   golf_score_id serial NOT NULL,
   last_update timestamp(3) without time zone,
+  updated_by text,
   golf_score integer,
   golfer_id integer,
   game_dt date,

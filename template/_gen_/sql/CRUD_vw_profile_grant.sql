@@ -53,32 +53,30 @@ GRANT EXECUTE ON FUNCTION vw_profile_grant_sq(text, text, text, text, text, inte
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function: vw_profile_grant_bypk(text,  text, text )
+-- Function: vw_profile_grant_bypk(text, text, text )
 
--- DROP FUNCTION vw_profile_grant_pybk(text,  text, text);
+-- DROP FUNCTION vw_profile_grant_pybk(text, text, text);
 
-CREATE OR REPLACE FUNCTION vw_profile_grant_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text )
-  RETURNS vw_profile_grant AS
-$BODY$
-  Declare
-    result vw_profile_grant;
-  Begin
-    if alreadyAuth_ <>'ALREADY_AUTH' then
-    	perform isSessionValid( securityuserId_,sessionId_) ;
-    	perform isUserAuthorized( securityuserId_, 'SELECT_VW_PROFILE_GRANT' );
-    end if;
+--CREATE OR REPLACE FUNCTION vw_profile_grant_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
+--)
+--  RETURNS vw_profile_grant AS
+--$BODY$
+--  Declare
+--    result vw_profile_grant;
+--  Begin
+--    if alreadyAuth_ <>'ALREADY_AUTH' then
+--    	perform isSessionValid( securityuserId_,sessionId_) ;
+--    	perform isUserAuthorized( securityuserId_, 'SELECT_VW_PROFILE_GRANT' );
+--    end if;
 --security_profile_id, profile_name, security_privilege_id, priv_name, last_update
-   
-
-
-     select * into result from vw_profile_grant where ;
-     return result;
-  End;
-$BODY$
-  LANGUAGE 'plpgsql' VOLATILE
-  COST 100;
-ALTER FUNCTION vw_profile_grant_bypk(text,  text, text) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION vw_profile_grant_bypk(text,  text, text) TO GROUP golfscore;
+--     select * into result from vw_profile_grant where ;
+--     return result;
+--  End;
+--$BODY$
+--  LANGUAGE 'plpgsql' VOLATILE
+--  COST 100;
+--ALTER FUNCTION vw_profile_grant_bypk(text,  text, text) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION vw_profile_grant_bypk(text,  text, text) TO GROUP golfscore;
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -101,7 +99,7 @@ $body$
     end if;
 
 
-    insert into vw_profile_grant( security_profile_id,profile_name,security_privilege_id,priv_name,last_update) 	values ( securityProfileId_,profileName_,securityPrivilegeId_,privName_, now()) 
+    insert into vw_profile_grant( security_profile_id,profile_name,security_privilege_id,priv_name,last_update)  values ( securityProfileId_,profileName_,securityPrivilegeId_,privName_, now()) 
 	returning * into newrow;
       return newrow;
   end;

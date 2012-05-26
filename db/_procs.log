@@ -33,8 +33,8 @@ $BODY$
     end if;
   for golfers in select * from golfer order by name loop
     select golfers.golfer_id, golfers.name,  avg(golf_score) as avg_score, 
-      max(last_update) as last_date, min(last_update) as first_date  into result from (
-	select golf_score, last_update from golf_score
+      max(game_dt) as last_date, min(game_dt) as first_date  into result from (
+	select golf_score, game_dt from golf_score
 	where golfer_id =golfers.golfer_id order by last_update desc limit 10) as temp1 ; 
 	 return next result;
   end loop;
@@ -61,7 +61,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_GOLFER' );
     end if;
---golfer_id, last_update, name
+--golfer_id, last_update, updated_by, name
 
     whereClause ='';
     orderByClause='';
@@ -97,36 +97,31 @@ GRANT EXECUTE ON FUNCTION golfer_sq(text, text, text, text, text, integer, integ
 GRANT
 --select * from golfer_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function: golfer_bypk(text,  text, text ,integer)
--- DROP FUNCTION golfer_pybk(text,  text, text,integer);
-CREATE OR REPLACE FUNCTION golfer_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text ,golferId_ integer)
-  RETURNS golfer AS
-$BODY$
-  Declare
-    result golfer;
-  Begin
-    if alreadyAuth_ <>'ALREADY_AUTH' then
-    	perform isSessionValid( securityuserId_,sessionId_) ;
-    	perform isUserAuthorized( securityuserId_, 'SELECT_GOLFER' );
-    end if;
---golfer_id, last_update, name
-   
-
-
-     select * into result from golfer where golfer_id=golferId_;
-     return result;
-  End;
-$BODY$
-  LANGUAGE 'plpgsql' VOLATILE
-  COST 100;
-CREATE FUNCTION
-ALTER FUNCTION golfer_bypk(text,  text, text,integer) OWNER TO postgres;
-ALTER FUNCTION
-GRANT EXECUTE ON FUNCTION golfer_bypk(text,  text, text,integer) TO GROUP golfscore;
-GRANT
+-- Function: golfer_bypk(text, text, text ,integer)
+-- DROP FUNCTION golfer_pybk(text, text, text,integer);
+--CREATE OR REPLACE FUNCTION golfer_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
+--,golferId_ integer)
+--  RETURNS golfer AS
+--$BODY$
+--  Declare
+--    result golfer;
+--  Begin
+--    if alreadyAuth_ <>'ALREADY_AUTH' then
+--    	perform isSessionValid( securityuserId_,sessionId_) ;
+--    	perform isUserAuthorized( securityuserId_, 'SELECT_GOLFER' );
+--    end if;
+--golfer_id, last_update, updated_by, name
+--     select * into result from golfer where golfer_id=golferId_;
+--     return result;
+--  End;
+--$BODY$
+--  LANGUAGE 'plpgsql' VOLATILE
+--  COST 100;
+--ALTER FUNCTION golfer_bypk(text,  text, text,integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION golfer_bypk(text,  text, text,integer) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function:  golfer_iq(text,  text ,character varying)
--- DROP FUNCTION golfer_iq( text,  text,character varying);
+-- Function:  golfer_iq(text, text, text ,character varying)
+-- DROP FUNCTION golfer_iq( text, text, text,character varying);
 create or replace function golfer_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,name_ character varying)
   returns golfer as
 $body$
@@ -139,7 +134,7 @@ $body$
     end if;
 
 
-    insert into golfer( last_update,name) 	values (  now(),name_) 
+    insert into golfer( last_update,updated_by,name)  values (  now(), securityuserid_,name_) 
 	returning * into newrow;
       return newrow;
   end;
@@ -151,10 +146,10 @@ alter function golfer_iq(text,  text, text ,character varying) owner to postgres
 ALTER FUNCTION
 GRANT EXECUTE ON FUNCTION golfer_iq(text,  text, text ,character varying) TO GROUP golfscore;
 GRANT
---select * from golfer_iq('ALREADY_AUTH', 'test', 'test' , 'text' );
+--select * from golfer_iq('ALREADY_AUTH', 'test', 'test' , 'text', 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function:  golfer_uq(text, text ,integer,timestamp,character varying)
--- DROP FUNCTION golfer_uq( text,  text ,integer,timestamp,character varying);
+-- Function:  golfer_uq(text, text, text ,integer,timestamp,character varying)
+-- DROP FUNCTION golfer_uq(text, text, text ,integer,timestamp,character varying);
 create or replace function golfer_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , golferId_ integer, lastUpdate_ timestamp, name_ character varying)
   returns golfer as
 $body$
@@ -165,7 +160,7 @@ $body$
     	perform issessionvalid( securityuserid_,sessionid_) ;
     	perform isuserauthorized( securityuserid_, 'UPDATE_GOLFER' );
     end if;
-	update golfer set last_update = now() ,  name= name_ 	where golfer_id=golferId_   and   last_update = lastUpdate_
+	update golfer set last_update = now() , updated_by = securityuserid_,  name= name_ 	where golfer_id=golferId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then
@@ -183,7 +178,7 @@ alter function golfer_uq(text,  text, text ,integer,timestamp,character varying)
 ALTER FUNCTION
 GRANT EXECUTE ON FUNCTION golfer_uq(text, text, text ,integer,timestamp,character varying) TO GROUP golfscore;
 GRANT
---select * from golfer_uq('ALREADY_AUTH', 'test', 'test' <last_update>, 'text' <golfer_id>);
+--select * from golfer_uq('ALREADY_AUTH', 'test', 'test' <last_update>, 'text', 'text' <golfer_id>);
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  golfer_dq(text, text ,integer, timestamp)
 -- DROP FUNCTION golfer_dq( text,  text ,integer, timestamp);
@@ -204,7 +199,6 @@ $body$
 	else 
 	  raise exception 'Delete Failed for GOLFER- The record may have been changed or deleted before the attempt.';
 	end if;
-
   end;
 $body$
   language 'plpgsql' volatile
@@ -231,7 +225,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_GOLF_SCORE' );
     end if;
---golf_score_id, last_update, golf_score, golfer_id, game_dt
+--golf_score_id, last_update, updated_by, golf_score, golfer_id, game_dt
 
     whereClause ='';
     orderByClause='';
@@ -267,33 +261,28 @@ GRANT EXECUTE ON FUNCTION golf_score_sq(text, text, text, text, text, integer, i
 GRANT
 --select * from golf_score_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function: golf_score_bypk(text,  text, text ,integer)
--- DROP FUNCTION golf_score_pybk(text,  text, text,integer);
-CREATE OR REPLACE FUNCTION golf_score_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text ,golfScoreId_ integer)
-  RETURNS golf_score AS
-$BODY$
-  Declare
-    result golf_score;
-  Begin
-    if alreadyAuth_ <>'ALREADY_AUTH' then
-    	perform isSessionValid( securityuserId_,sessionId_) ;
-    	perform isUserAuthorized( securityuserId_, 'SELECT_GOLF_SCORE' );
-    end if;
---golf_score_id, last_update, golf_score, golfer_id, game_dt
-   
-
-
-     select * into result from golf_score where golf_score_id=golfScoreId_;
-     return result;
-  End;
-$BODY$
-  LANGUAGE 'plpgsql' VOLATILE
-  COST 100;
-CREATE FUNCTION
-ALTER FUNCTION golf_score_bypk(text,  text, text,integer) OWNER TO postgres;
-ALTER FUNCTION
-GRANT EXECUTE ON FUNCTION golf_score_bypk(text,  text, text,integer) TO GROUP golfscore;
-GRANT
+-- Function: golf_score_bypk(text, text, text ,integer)
+-- DROP FUNCTION golf_score_pybk(text, text, text,integer);
+--CREATE OR REPLACE FUNCTION golf_score_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
+--,golfScoreId_ integer)
+--  RETURNS golf_score AS
+--$BODY$
+--  Declare
+--    result golf_score;
+--  Begin
+--    if alreadyAuth_ <>'ALREADY_AUTH' then
+--    	perform isSessionValid( securityuserId_,sessionId_) ;
+--    	perform isUserAuthorized( securityuserId_, 'SELECT_GOLF_SCORE' );
+--    end if;
+--golf_score_id, last_update, updated_by, golf_score, golfer_id, game_dt
+--     select * into result from golf_score where golf_score_id=golfScoreId_;
+--     return result;
+--  End;
+--$BODY$
+--  LANGUAGE 'plpgsql' VOLATILE
+--  COST 100;
+--ALTER FUNCTION golf_score_bypk(text,  text, text,integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION golf_score_bypk(text,  text, text,integer) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  golf_score_iq(text, text, text ,integer,integer,date)
 -- DROP FUNCTION golf_score_iq( text, text, text,integer,integer,date);
@@ -309,7 +298,7 @@ $body$
     end if;
 
 
-    insert into golf_score( last_update,golf_score,golfer_id,game_dt) 	values (  now(),golfScore_,golferId_,gameDt_) 
+    insert into golf_score( last_update,updated_by,golf_score,golfer_id,game_dt)  values (  now(), securityuserid_,golfScore_,golferId_,gameDt_) 
 	returning * into newrow;
       return newrow;
   end;
@@ -321,7 +310,7 @@ alter function golf_score_iq(text,  text, text ,integer,integer,date) owner to p
 ALTER FUNCTION
 GRANT EXECUTE ON FUNCTION golf_score_iq(text,  text, text ,integer,integer,date) TO GROUP golfscore;
 GRANT
---select * from golf_score_iq('ALREADY_AUTH', 'test', 'test'  ,1 ,1, 'text' );
+--select * from golf_score_iq('ALREADY_AUTH', 'test', 'test' , 'text' ,1 ,1, 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date)
 -- DROP FUNCTION golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date);
@@ -335,7 +324,7 @@ $body$
     	perform issessionvalid( securityuserid_,sessionid_) ;
     	perform isuserauthorized( securityuserid_, 'UPDATE_GOLF_SCORE' );
     end if;
-	update golf_score set last_update = now() ,  golf_score= golfScore_ ,  golfer_id= golferId_ ,  game_dt= gameDt_ 	where golf_score_id=golfScoreId_   and   last_update = lastUpdate_
+	update golf_score set last_update = now() , updated_by = securityuserid_,  golf_score= golfScore_ ,  golfer_id= golferId_ ,  game_dt= gameDt_ 	where golf_score_id=golfScoreId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then
@@ -353,7 +342,7 @@ alter function golf_score_uq(text,  text, text ,integer,timestamp,integer,intege
 ALTER FUNCTION
 GRANT EXECUTE ON FUNCTION golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date) TO GROUP golfscore;
 GRANT
---select * from golf_score_uq('ALREADY_AUTH', 'test', 'test', 'text' <golf_score_id> <last_update> ,1 ,1);
+--select * from golf_score_uq('ALREADY_AUTH', 'test', 'test', 'text' <golf_score_id> <last_update> ,1, 'text' ,1);
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  golf_score_dq(text, text ,integer, timestamp)
 -- DROP FUNCTION golf_score_dq( text,  text ,integer, timestamp);

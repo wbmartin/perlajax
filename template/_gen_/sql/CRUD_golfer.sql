@@ -15,7 +15,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_GOLFER' );
     end if;
---golfer_id, last_update, name
+--golfer_id, last_update, updated_by, name
 
     whereClause ='';
     orderByClause='';
@@ -53,32 +53,30 @@ GRANT EXECUTE ON FUNCTION golfer_sq(text, text, text, text, text, integer, integ
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function: golfer_bypk(text,  text, text ,integer)
+-- Function: golfer_bypk(text, text, text ,integer)
 
--- DROP FUNCTION golfer_pybk(text,  text, text,integer);
+-- DROP FUNCTION golfer_pybk(text, text, text,integer);
 
-CREATE OR REPLACE FUNCTION golfer_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text ,golferId_ integer)
-  RETURNS golfer AS
-$BODY$
-  Declare
-    result golfer;
-  Begin
-    if alreadyAuth_ <>'ALREADY_AUTH' then
-    	perform isSessionValid( securityuserId_,sessionId_) ;
-    	perform isUserAuthorized( securityuserId_, 'SELECT_GOLFER' );
-    end if;
---golfer_id, last_update, name
-   
-
-
-     select * into result from golfer where golfer_id=golferId_;
-     return result;
-  End;
-$BODY$
-  LANGUAGE 'plpgsql' VOLATILE
-  COST 100;
-ALTER FUNCTION golfer_bypk(text,  text, text,integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION golfer_bypk(text,  text, text,integer) TO GROUP golfscore;
+--CREATE OR REPLACE FUNCTION golfer_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
+--,golferId_ integer)
+--  RETURNS golfer AS
+--$BODY$
+--  Declare
+--    result golfer;
+--  Begin
+--    if alreadyAuth_ <>'ALREADY_AUTH' then
+--    	perform isSessionValid( securityuserId_,sessionId_) ;
+--    	perform isUserAuthorized( securityuserId_, 'SELECT_GOLFER' );
+--    end if;
+--golfer_id, last_update, updated_by, name
+--     select * into result from golfer where golfer_id=golferId_;
+--     return result;
+--  End;
+--$BODY$
+--  LANGUAGE 'plpgsql' VOLATILE
+--  COST 100;
+--ALTER FUNCTION golfer_bypk(text,  text, text,integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION golfer_bypk(text,  text, text,integer) TO GROUP golfscore;
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -101,7 +99,7 @@ $body$
     end if;
 
 
-    insert into golfer( last_update,name) 	values (  now(),name_) 
+    insert into golfer( last_update,updated_by,name)  values (  now(), securityuserid_,name_) 
 	returning * into newrow;
       return newrow;
   end;
@@ -111,7 +109,7 @@ $body$
 alter function golfer_iq(text,  text, text ,character varying) owner to postgres;
 GRANT EXECUTE ON FUNCTION golfer_iq(text,  text, text ,character varying) TO GROUP golfscore;
 
---select * from golfer_iq('ALREADY_AUTH', 'test', 'test' , 'text' );
+--select * from golfer_iq('ALREADY_AUTH', 'test', 'test' , 'text', 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
@@ -130,7 +128,7 @@ $body$
     	perform issessionvalid( securityuserid_,sessionid_) ;
     	perform isuserauthorized( securityuserid_, 'UPDATE_GOLFER' );
     end if;
-	update golfer set last_update = now() ,  name= name_ 	where golfer_id=golferId_   and   last_update = lastUpdate_
+	update golfer set last_update = now() , updated_by = securityuserid_,  name= name_ 	where golfer_id=golferId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then
@@ -146,7 +144,7 @@ $body$
 alter function golfer_uq(text,  text, text ,integer,timestamp,character varying) owner to postgres;
 GRANT EXECUTE ON FUNCTION golfer_uq(text, text, text ,integer,timestamp,character varying) TO GROUP golfscore;
 
---select * from golfer_uq('ALREADY_AUTH', 'test', 'test' <last_update>, 'text' <golfer_id>);
+--select * from golfer_uq('ALREADY_AUTH', 'test', 'test' <last_update>, 'text', 'text' <golfer_id>);
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

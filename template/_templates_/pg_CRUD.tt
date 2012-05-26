@@ -74,46 +74,49 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_sq(text, text, text, text, text, integ
 [%-END #foreach-%]
 [%-END #BLOCK -%]
 
--- Function: [%+tablename+%]_bypk(text,  text, text [%INCLUDE BYPK_OMIT_NAMES%])
+-- Function: [%+tablename+%]_bypk(text, text, text [%INCLUDE BYPK_OMIT_NAMES%])
 
--- DROP FUNCTION [%+tablename+%]_pybk(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%]);
+-- DROP FUNCTION [%+tablename+%]_pybk(text, text, text[%INCLUDE BYPK_OMIT_NAMES%]);
 
-CREATE OR REPLACE FUNCTION [%+tablename+%]_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
-[%- INCLUDE BYPK_SHOW_NAMES -%])
-  RETURNS [%+tablename+%] AS
-$BODY$
-  Declare
-    result [%+tablename+%];
-  Begin
-    if alreadyAuth_ <>'ALREADY_AUTH' then
-    	perform isSessionValid( securityuserId_,sessionId_) ;
-    	perform isUserAuthorized( securityuserId_, 'SELECT_[%+tablename | upper+%]' );
-    end if;
+--CREATE OR REPLACE FUNCTION [%+tablename+%]_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
+--[%- INCLUDE BYPK_SHOW_NAMES -%])
+--  RETURNS [%+tablename+%] AS
+--$BODY$
+--  Declare
+--    result [%+tablename+%];
+--  Begin
+--    if alreadyAuth_ <>'ALREADY_AUTH' then
+--    	perform isSessionValid( securityuserId_,sessionId_) ;
+--    	perform isUserAuthorized( securityuserId_, 'SELECT_[%+tablename | upper+%]' );
+--    end if;
 --[%-INCLUDE COMMA_COLUMNS-%] 
-   
-
-
-     select * into result from [%+tablename+%] where [%+INCLUDE PRKEY_WHERE_CLAUSE +%];
-     return result;
-  End;
-$BODY$
-  LANGUAGE 'plpgsql' VOLATILE
-  COST 100;
-ALTER FUNCTION [%+tablename+%]_bypk(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%]) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION [%+tablename+%]_bypk(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%]) TO GROUP [%+ props.dbgroup -%];
+--     select * into result from [%+tablename+%] where [%+INCLUDE PRKEY_WHERE_CLAUSE +%];
+--     return result;
+--  End;
+--$BODY$
+--  LANGUAGE 'plpgsql' VOLATILE
+--  COST 100;
+--ALTER FUNCTION [%+tablename+%]_bypk(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%]) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION [%+tablename+%]_bypk(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%]) TO GROUP [%+ props.dbgroup -%];
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 [%-BLOCK IQ_FUNC_OMIT_COLUMN_NAMES%]
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
-[%   IF tbl.$tablename.columns.$column.auto_inc != "Y" && column != "client_id" && column !="last_update"; ",";tbl.$tablename.columns.$column.data_type; END %]
+[%   IF tbl.$tablename.columns.$column.auto_inc != "Y" 
+	&& column != "client_id" 
+	&& column != "updated_by" 
+	&& column !="last_update"; ",";tbl.$tablename.columns.$column.data_type; END %]
 [%-END #FOREACH-%]
 [%-END #BLOCK -%]
 
 
 [%-BLOCK IQ_FUNC_SHOW_COLUMN_NAMES-%]
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
-[%   IF tbl.$tablename.columns.$column.auto_inc != "Y" && column != "client_id" && column !="last_update"; ",";tbl.$tablename.columns.$column.java_name;"_ ";tbl.$tablename.columns.$column.data_type; END %]
+[%   IF tbl.$tablename.columns.$column.auto_inc != "Y" 
+	&& column != "client_id" 
+	&& column != "updated_by" 
+	&& column !="last_update"; ",";tbl.$tablename.columns.$column.java_name;"_ ";tbl.$tablename.columns.$column.data_type; END %]
 [%-END#foreach+%]
 [%-END #BLOCK -%]
 
@@ -143,11 +146,13 @@ $body$
 [%-END #FOREACH-%]
 ) 
 [%- matchCount =0 -%]
-	values ( 
+ values ( 
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
 [%   IF tbl.$tablename.columns.$column.auto_inc != "Y"  && matchCount>0; ","; END -%]
 [%   IF tbl.$tablename.columns.$column.auto_inc == "Y"  ; -%] 
-[%ELSIF column == "last_update";" now()";matchCount = matchCount+1;ELSE; matchCount = matchCount+1 ;tbl.$tablename.columns.$column.java_name;"_"; -%]
+[%-ELSIF column == "last_update";" now()";matchCount = matchCount+1;-%]
+[%-ELSIF column == "updated_by";" securityuserid_";matchCount = matchCount+1;-%]
+[%-ELSE; matchCount = matchCount+1 ;tbl.$tablename.columns.$column.java_name;"_"; -%]
 [%- END #IF-%]
 [%-END #FOREACH - %]) 
 	returning * into newrow;
@@ -175,7 +180,7 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_iq(text,  text, text [%-INCLUDE IQ_FUN
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 [%-BLOCK UQ_FUNC_OMIT_COLUMN_NAMES%]
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
-[%-  IF  column != "client_id" ; ",";tbl.$tablename.columns.$column.data_type; -%]
+[%-  IF  column != "client_id" && column != "updated_by"; ",";tbl.$tablename.columns.$column.data_type; -%]
 [%END #IF-%]
 [%-END #FOREACH-%]
 [%-END #BLOCK -%]
@@ -183,7 +188,7 @@ GRANT EXECUTE ON FUNCTION [%+tablename+%]_iq(text,  text, text [%-INCLUDE IQ_FUN
 
 [%-BLOCK UQ_FUNC_SHOW_COLUMN_NAMES-%]
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
-[%- IF column != "client_id" +%], [%+tbl.$tablename.columns.$column.java_name%]_ [%tbl.$tablename.columns.$column.data_type; -%]
+[%- IF column != "client_id" && column != "updated_by" +%], [%+tbl.$tablename.columns.$column.java_name%]_ [%tbl.$tablename.columns.$column.data_type; -%]
 [%END #IF-%]
 [%-END #FOREACH-%]
 [%-END #BLOCK -%]
@@ -209,6 +214,7 @@ $body$
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
 [%-  IF tbl.$tablename.columns.$column.auto_inc == "Y" || tbl.$tablename.columns.$column.prkey =="Y"-%]
 [%-ELSIF column == "last_update"; IF colCount>0;", ";END; +%] last_update = now() [%- SET colCount=colCount+1 -%]
+[%-ELSIF column == "updated_by"; IF colCount>0;", ";END; "updated_by = securityuserid_";colCount=colCount+1%]
 [%-ELSE;  IF colCount>0;", ";END; -%] [%+ column -%]= [%- tbl.$tablename.columns.$column.java_name -%]_ [%- SET colCount=colCount+1 -%]
 [%-END #IF -%]
 [%-END #FOREACH -%]

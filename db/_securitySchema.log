@@ -19,13 +19,14 @@ CREATE TABLE security_profile
   security_profile_id serial NOT NULL,
   profile_name text,
   last_update timestamp(3) without time zone,
+  updated_by text,
   CONSTRAINT security_profile_pkey PRIMARY KEY (security_profile_id)
 )
 WITH (
   OIDS=FALSE
 );
-psql:securitySchema/001_CreateSecurityProfile.sql:12: NOTICE:  CREATE TABLE will create implicit sequence "security_profile_security_profile_id_seq" for serial column "security_profile.security_profile_id"
-psql:securitySchema/001_CreateSecurityProfile.sql:12: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_profile_pkey" for table "security_profile"
+psql:securitySchema/001_CreateSecurityProfile.sql:13: NOTICE:  CREATE TABLE will create implicit sequence "security_profile_security_profile_id_seq" for serial column "security_profile.security_profile_id"
+psql:securitySchema/001_CreateSecurityProfile.sql:13: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_profile_pkey" for table "security_profile"
 CREATE TABLE
 commit;
 COMMIT
@@ -39,6 +40,7 @@ CREATE TABLE security_user
 (
   user_id text NOT NULL,
   last_update timestamp(3) without time zone,
+  updated_by text,
   password_enc text,
   security_profile_id integer NOT NULL,
   session_id text,
@@ -52,7 +54,7 @@ CREATE TABLE security_user
 WITH (
   OIDS=FALSE
 );
-psql:securitySchema/002_CreateSecurityUser.sql:19: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_user_pkey" for table "security_user"
+psql:securitySchema/002_CreateSecurityUser.sql:20: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_user_pkey" for table "security_user"
 CREATE TABLE
 commit;
 COMMIT
@@ -68,12 +70,13 @@ CREATE TABLE security_privilege
   priv_name text,
   description text,
   last_update timestamp(3) without time zone,
+  updated_by text,
   CONSTRAINT security_privilege_pkey PRIMARY KEY (security_privilege_id)
 )
 WITH (
   OIDS=FALSE
 );
-psql:securitySchema/003_CreateSecurityPrivilege.sql:13: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_privilege_pkey" for table "security_privilege"
+psql:securitySchema/003_CreateSecurityPrivilege.sql:14: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_privilege_pkey" for table "security_privilege"
 CREATE TABLE
 commit;
 COMMIT
@@ -87,6 +90,7 @@ CREATE TABLE security_profile_grant
   security_privilege_id integer NOT NULL,
   security_profile_id integer NOT NULL,
   last_update timestamp(3) with time zone,
+  updated_by text,
   CONSTRAINT security_profile_grant_pkey PRIMARY KEY (security_privilege_id, security_profile_id),
   CONSTRAINT fk_security_profile_grant_2 FOREIGN KEY (security_profile_id)
       REFERENCES security_profile (security_profile_id) MATCH SIMPLE
@@ -98,7 +102,7 @@ CREATE TABLE security_profile_grant
 WITH (
   OIDS=FALSE
 );
-psql:securitySchema/004_CreateSecurityProfileGrant.sql:18: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_profile_grant_pkey" for table "security_profile_grant"
+psql:securitySchema/004_CreateSecurityProfileGrant.sql:19: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_profile_grant_pkey" for table "security_profile_grant"
 CREATE TABLE
 commit;
 COMMIT

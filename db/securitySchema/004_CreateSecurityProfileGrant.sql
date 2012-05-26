@@ -5,6 +5,7 @@ CREATE TABLE security_profile_grant
   security_privilege_id integer NOT NULL,
   security_profile_id integer NOT NULL,
   last_update timestamp(3) with time zone,
+  updated_by text,
   CONSTRAINT security_profile_grant_pkey PRIMARY KEY (security_privilege_id, security_profile_id),
   CONSTRAINT fk_security_profile_grant_2 FOREIGN KEY (security_profile_id)
       REFERENCES security_profile (security_profile_id) MATCH SIMPLE
