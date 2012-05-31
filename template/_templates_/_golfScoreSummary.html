@@ -15,7 +15,7 @@ $("#[%divId%]Table").html("");
 
 }
 function display[%ucfirst(divId)%]List([%divId%]List_){
-  var newrowsHTML = "<tr> <th>Golfer</th><th>Score</th><th>Period</th><th>Action</th></tr>";
+  var newrowsHTML = "<tr> <th>Golfer</th><th>Last 10 Avg</th><th>Period</th><th>I want to&hellip;</th></tr>";
   var gs = {};
   for(var ndx=0; ndx<[%divId%]List_.length; ndx++){
 	newrowsHTML +=build[%ucfirst(divId)%]Row(golfScoreSummaryList_[ndx]);
@@ -27,7 +27,8 @@ function build[%ucfirst(divId)%]Row(gs){
 var newrow ="<tr><td>" + gs.golfer_name+"</td>";
 	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
 	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>Scores</a></td>";
+	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a> | ";
+	newrow +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a></td>";
 	newrow +="</tr>";
 return newrow;
 

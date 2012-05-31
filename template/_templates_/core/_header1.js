@@ -53,17 +53,28 @@ var fieldId="";
 }
 
 function clearForm(formName){
-var fieldId="";
- $.each($("form#"+formName+" :input"), 
+  var fieldId="";
+  $.each($("form#"+formName+" :input"), 
 	function(key, field){
 	  fieldId = field.id.replace(formName+"-","");
 	  if(field.type != 'button')  field.value = "";
-	});
+	}
+  );
+  toggleSaveMode(formName, false);
 }
+
+function toggleSaveMode(formName, saveMode){
+  var buttonToShow = (saveMode)?"Save":"Add";
+  var buttonToHide = (!saveMode)?"Save":"Add";
+  $("form#"+formName+" #" +formName +buttonToShow).show();
+  $("form#"+formName+" #" +formName +buttonToHide).hide();
+}
+
 
 
 function standardValidate(formName){
   var formValid = true;
+  if($("#"+formName).length==0) formValid=false;
   $.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
 	span.innerHTML="";
   });
@@ -231,7 +242,7 @@ window.onbeforeunload = function () {
 //Log Msg Functions
 function briefNotify(msg){
   $("#briefNoticeMsg").html(msg);
-  $('#briefNotice').fadeIn(300).delay(800).fadeOut(400);
+  $('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
   statusMsg(msg);
 }
 function statusMsg(msg){

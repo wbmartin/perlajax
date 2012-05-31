@@ -27,6 +27,30 @@ body{
   color: red;
 }
 
+.largeIconSpan{
+  display:inline-block; 
+  border-style:none;
+  text-align:center;
+  padding:15px;
+  margin:15px;
+}
+
+.sprite64Icon{
+ display:inline-block;
+ height:64px;
+ width:64px;
+ background:url(images/nuvolo/consolidatedIcons.png) no-repeat;
+ padding: 0 0 0 0;
+}
+.kolfIcon{
+background-position:0 0 ;
+}
+.peopleIcon{
+background-position:0px -100px;
+}
+
+	
+
 
 
 input{

@@ -23,6 +23,17 @@ function retrieve[%ucfirst(divId)%](params){
   }
   serverCall(params,successf,FAILF);
 }
+
+function retrieveGolferNameForGolfScore(golferId_){
+  var params = prepParams(params,"GOLFER","SELECT");
+  params['where_clause'] = "golfer_id =" + golferId_;
+  var successf = function(rslt){
+	 $("#[%divId%]GolferNameId").html(rslt.rows[0].name);
+  }
+  serverCall(params,successf,FAILF);
+}
+
+
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
   var params =prepParams(params,"[%spwfResource%]" ,"delete" );
   params['[%prkey%]'] = [%toCC(prkey)%]_;
@@ -44,7 +55,6 @@ function save[%ucfirst(divId)%](params){
 		addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
 	}
 	briefNotify("Golf Score Successfully Saved");
-
   };
   serverCall(params,successf,FAILF);
 }
@@ -58,14 +68,22 @@ function edit[%ucfirst(divId)%]([%divId%]Id_){
 }
 
 function save[%ucfirst(divId)%]Form(){
+if(validate[%ucfirst(divId)%]Form()){
   var params = bindForm("[%divId%]Form");
   save[%ucfirst(divId)%](params);
 }
+}
 
+//validation
+function validate[%ucfirst(divId)%]Form(){
+  var formName="[%divId%]Form";
+  var formValid  = standardValidate(formName);
+  return formValid;
+}
 
 //Top Level HTML Manip
 function populate[%ucfirst(divId)%](dataRows){
-  var htmlAggregator ="<tr> <th>Score</th><th>Date</th> <th>Action</th></tr>";
+  var htmlAggregator ="<tr> <th>Score</th><th>Date</th> <th>I want to&hellip;</th></tr>";
   for(var ndx=0;ndx< dataRows.length;ndx++){
 	htmlAggregator +=build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
   }
@@ -94,9 +112,11 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](golferId_){
   retrieve[%ucfirst(divId)%]List(golferId_); 
+  retrieveGolferNameForGolfScore(golferId_);
   hideCurrentContentPane();
   $("#[%divId%]").fadeIn();
   currentContentPane="[%divId%]";
+  toggleSaveMode("[%divId%]Form",false);
 }
 
 //After complete Load setup
@@ -108,16 +128,34 @@ $(document).ready(function(){
 
 </script>
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle"  >
+<h1 id="[%divId%]GolferNameId"></h1>
 <table ><tr><td class="noborder" style="vertical-align:top;" >
   <table id="[%divId%]ListTable" style="border-width: 1px; border-style:solid; " class='dataTable' >
   </table>
 </td><td class="noborder">
 	<form id="[%divId%]Form" >
 	<table id="[%divId%]FormTable" style="" class='formTable'>
-	  <tr><td> Golfer </td><td><select name="golfer_id" id="[%divId%]Form-golfer_id"></select></td></tr>
-	  <tr><td> Score </td><td><input  type="text" name="golf_score" id="[%divId%]Form-golf_score"/></td></tr>
-	  <tr><td> Date</td><td><input type="text"  name="game_dt" id="[%divId%]Form-game_dt"/></td></tr>
-	  <tr><td colspan="2"><button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button></td></tr>
+	  <tr>
+		<td> Golfer </td>
+		<td><select name="golfer_id" id="[%divId%]Form-golfer_id"></select></td>
+		<td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
+	  </tr>
+	  <tr>
+		<td> Score </td>
+		<td><input  type="text" name="golf_score" id="[%divId%]Form-golf_score"/></td>
+		<td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
+	  </tr>
+	  <tr>
+		<td> Date</td>
+		<td><input type="text"  name="game_dt" id="[%divId%]Form-game_dt"/></td>
+		<td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
+	   </tr>
+	  <tr><td colspan="3">
+		<button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+		<button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
+		<button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
+	      </td>
+	  </tr>
 	</table>
 	<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 	<input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">

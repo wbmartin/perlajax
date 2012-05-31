@@ -12,6 +12,8 @@
 [%INCLUDE _golfScore.html%]
 [%INCLUDE _golfer.html%]
 [%INCLUDE _about.html%]
+[%INCLUDE _help.html%]
+[%INCLUDE _launch.html%]
 [%INCLUDE core/_clientLog.html%]
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 </div><!--End Main Content-->

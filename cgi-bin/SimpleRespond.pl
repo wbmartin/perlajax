@@ -6,7 +6,7 @@ use DBI;
 use strict;
 Main:{
   my ($DBInfo,$dbh, $json, $json_text,$ndx, $sth,$rowRef ,$params, $cgi, $debug, $qaMode, $prodServerPassword,@rows, $rowCount);
-  my($keywords);
+  my($keywords, @passThrus, $key,$value);
   $debug =1;#1 for debug mode, 0 for normal
   $qaMode=1;#1 for qa mode 0 for production
   $prodServerPassword="";#Changed on Server after publish
@@ -62,6 +62,15 @@ if (exists $params->{"POSTDATA"}){
 
 	$json->{"spwfAction"}= uc($params->{'spwfAction'});
 	$json->{"spwfResource"}= uc($params->{'spwfResource'});
+        if(exists $params->{'passThru'}){
+	  @passThrus = split(/;/,$params->{'passThru'});
+	  foreach(@passThrus){
+	    ($key,$value) = split(/~/,$_);
+	    $key ="PT_$key";
+	    $json->{$key} = $value;	
+	  }
+
+	}
 	
 	print STDERR "Package Successful\n" if($debug);
     }else{
@@ -216,8 +225,10 @@ sub buildResourceActionDef{
 		@paramFields=@allFields;
 		#splice @paramFields,0,1; #remove client_id, prkey
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_uq"};
+	}elsif($action eq "DELETE"){
+		@paramFields=('golfer_id','last_update');
+		$rad = { rf=>['golfer_dq'], pf=>\@paramFields, proc=>"golfer_dq"};
 	}
-
 
 } else {return;}
   return $rad;
