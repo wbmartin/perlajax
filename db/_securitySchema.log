@@ -7,7 +7,7 @@ COMMIT
 \i securitySchema/001_CreateSecurityProfile.sql
 begin;
 BEGIN
-drop table security_profile cascade;
+drop table if exists security_profile cascade;
 psql:securitySchema/001_CreateSecurityProfile.sql:2: NOTICE:  drop cascades to 4 other objects
 DETAIL:  drop cascades to constraint fk_security_user_2 on table security_user
 drop cascades to constraint fk_security_profile_grant_2 on table security_profile_grant
@@ -33,7 +33,7 @@ COMMIT
 \i securitySchema/002_CreateSecurityUser.sql
 begin;
 BEGIN
-DROP TABLE SECURITY_USER cascade;
+DROP TABLE  if exists SECURITY_USER cascade;
 psql:securitySchema/002_CreateSecurityUser.sql:2: NOTICE:  drop cascades to function initsession(text,text,text,text)
 DROP TABLE
 CREATE TABLE security_user
@@ -61,7 +61,7 @@ COMMIT
 \i securitySchema/003_CreateSecurityPrivilege.sql
 begin;
 BEGIN
-drop TABLE security_privilege cascade;
+drop TABLE if exists security_privilege cascade;
 psql:securitySchema/003_CreateSecurityPrivilege.sql:2: NOTICE:  drop cascades to constraint fk_securityprofilegrant_securityprivilege on table security_profile_grant
 DROP TABLE
 CREATE TABLE security_privilege
@@ -83,7 +83,7 @@ COMMIT
 \i securitySchema/004_CreateSecurityProfileGrant.sql
 begin;
 BEGIN
-drop table  security_profile_grant cascade;
+drop table if exists security_profile_grant cascade;
 DROP TABLE
 CREATE TABLE security_profile_grant
 (

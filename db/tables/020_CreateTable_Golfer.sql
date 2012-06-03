@@ -1,4 +1,5 @@
-drop table golfer cascade;
+drop table if exists golfer cascade;
+commit;
 CREATE TABLE golfer
 (
   golfer_id serial NOT NULL,
@@ -10,3 +11,4 @@ CREATE TABLE golfer
 WITH (
   OIDS=FALSE
 );
+commit;

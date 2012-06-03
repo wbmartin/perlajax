@@ -1,4 +1,4 @@
-drop table golf_score cascade;
+drop table if exists golf_score cascade;
 CREATE TABLE golf_score
 (
   golf_score_id serial NOT NULL,
@@ -15,3 +15,4 @@ CREATE TABLE golf_score
 WITH (
   OIDS=FALSE
 );
+commit;

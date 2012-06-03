@@ -1,5 +1,5 @@
 begin;
-DROP TABLE SECURITY_USER cascade;
+DROP TABLE  if exists SECURITY_USER cascade;
 CREATE TABLE security_user
 (
   user_id text NOT NULL,

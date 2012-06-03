@@ -91,10 +91,8 @@ $BODY$
   COST 100
   ROWS 1000;
 CREATE FUNCTION
-ALTER FUNCTION golfer_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
-ALTER FUNCTION
-GRANT EXECUTE ON FUNCTION golfer_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
-GRANT
+--ALTER FUNCTION golfer_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION golfer_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
 --select * from golfer_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function: golfer_bypk(text, text, text ,integer)
@@ -142,10 +140,8 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 CREATE FUNCTION
-alter function golfer_iq(text,  text, text ,character varying) owner to postgres;
-ALTER FUNCTION
-GRANT EXECUTE ON FUNCTION golfer_iq(text,  text, text ,character varying) TO GROUP golfscore;
-GRANT
+--alter function golfer_iq(text,  text, text ,character varying) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golfer_iq(text,  text, text ,character varying) TO GROUP golfscore;
 --select * from golfer_iq('ALREADY_AUTH', 'test', 'test' , 'text', 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  golfer_uq(text, text, text ,integer,timestamp,character varying)
@@ -174,10 +170,8 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 CREATE FUNCTION
-alter function golfer_uq(text,  text, text ,integer,timestamp,character varying) owner to postgres;
-ALTER FUNCTION
-GRANT EXECUTE ON FUNCTION golfer_uq(text, text, text ,integer,timestamp,character varying) TO GROUP golfscore;
-GRANT
+--alter function golfer_uq(text,  text, text ,integer,timestamp,character varying) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golfer_uq(text, text, text ,integer,timestamp,character varying) TO GROUP golfscore;
 --select * from golfer_uq('ALREADY_AUTH', 'test', 'test' <last_update>, 'text', 'text' <golfer_id>);
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  golfer_dq(text, text ,integer, timestamp)
@@ -204,10 +198,8 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 CREATE FUNCTION
-alter function golfer_dq(text, text, text,integer, timestamp) owner to postgres;
-ALTER FUNCTION
-GRANT EXECUTE ON FUNCTION golfer_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
-GRANT
+--alter function golfer_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golfer_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 \i procs/040_CreateProc_CRUD_golf_score.sql
 -- Function: golf_score_sq(text, text, text, text, text, integer, integer)
@@ -255,10 +247,8 @@ $BODY$
   COST 100
   ROWS 1000;
 CREATE FUNCTION
-ALTER FUNCTION golf_score_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
-ALTER FUNCTION
-GRANT EXECUTE ON FUNCTION golf_score_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
-GRANT
+--ALTER FUNCTION golf_score_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION golf_score_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
 --select * from golf_score_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function: golf_score_bypk(text, text, text ,integer)
@@ -306,10 +296,8 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 CREATE FUNCTION
-alter function golf_score_iq(text,  text, text ,integer,integer,date) owner to postgres;
-ALTER FUNCTION
-GRANT EXECUTE ON FUNCTION golf_score_iq(text,  text, text ,integer,integer,date) TO GROUP golfscore;
-GRANT
+--alter function golf_score_iq(text,  text, text ,integer,integer,date) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golf_score_iq(text,  text, text ,integer,integer,date) TO GROUP golfscore;
 --select * from golf_score_iq('ALREADY_AUTH', 'test', 'test' , 'text' ,1 ,1, 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date)
@@ -338,10 +326,8 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 CREATE FUNCTION
-alter function golf_score_uq(text,  text, text ,integer,timestamp,integer,integer,date) owner to postgres;
-ALTER FUNCTION
-GRANT EXECUTE ON FUNCTION golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date) TO GROUP golfscore;
-GRANT
+--alter function golf_score_uq(text,  text, text ,integer,timestamp,integer,integer,date) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date) TO GROUP golfscore;
 --select * from golf_score_uq('ALREADY_AUTH', 'test', 'test', 'text' <golf_score_id> <last_update> ,1, 'text' ,1);
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  golf_score_dq(text, text ,integer, timestamp)
@@ -368,10 +354,8 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 CREATE FUNCTION
-alter function golf_score_dq(text, text, text,integer, timestamp) owner to postgres;
-ALTER FUNCTION
-GRANT EXECUTE ON FUNCTION golf_score_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
-GRANT
+--alter function golf_score_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golf_score_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
  
 \i procs/999_postprocs.sql

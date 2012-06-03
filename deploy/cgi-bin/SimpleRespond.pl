@@ -5,12 +5,11 @@ use JSON;
 use DBI;
 use strict;
 Main:{
-  my ($DBInfo,$dbh, $json, $json_text,$ndx, $sth,$rowRef ,$params, $cgi, $debug, $codeEnv, $prodServerPassword,@rows, $rowCount);
-  my($keywords, @passThrus, $key,$value, $uatServerPassword);
+  my ($DBInfo,$dbh, $json, $json_text,$ndx, $sth,$rowRef ,$params, $cgi, $debug, $qaMode, $prodServerPassword,@rows, $rowCount);
+  my($keywords, @passThrus, $key,$value);
   $debug =1;#1 for debug mode, 0 for normal
-  $codeEnv="DEV";#1 for qa mode 0 for production
+  $qaMode=1;#1 for qa mode 0 for production
   $prodServerPassword="";#Changed on Server after publish
-  $uatServerPassword="";#Changed on Server after publish
   $cgi = CGI->new;
   print header('application/json');
   $params = Vars;
@@ -27,13 +26,8 @@ if (exists $params->{"POSTDATA"}){
           print STDERR "\t$key => $value\n";
     	}
    }
-  if($codeEnv eq "PROD"){
-	$DBInfo ={dbname=>"concordc_golfscore", user=>"concordc_golfscore", password=>$prodServerPassword};
-  }elsif($codeEnv eq "UAT"){
-	$DBInfo ={dbname=>"concordc_golfscoreuat", user=>"concordc_golfscoreuat", password=>$uatServerPassword};
-  }else{
- 	$DBInfo ={dbname=>"concordc_golfscoredev", user=>"concordc_golfscoredev", password=>"golfscore"}; 
-  }
+  if(!$qaMode){	$DBInfo ={dbname=>"concordc_firstapp", user=>"concordc_fistapp", password=>$prodServerPassword};
+  }else{ 	$DBInfo ={dbname=>"golfscore", user=>"golfscore", password=>"golfscore"}; }
   #$DBInfo ={dbname=>"firstapp", user=>"postgres", password=>'4vrf5btg'};
 
   &UTL::dbConnect(\$dbh, $DBInfo);

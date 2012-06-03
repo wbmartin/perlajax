@@ -44,8 +44,8 @@ $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION security_privilege_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION security_privilege_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
+--ALTER FUNCTION security_privilege_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION security_privilege_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
 
 --select * from security_privilege_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 
@@ -106,8 +106,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function security_privilege_iq(text,  text, text ,integer,text,text) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_privilege_iq(text,  text, text ,integer,text,text) TO GROUP golfscore;
+--alter function security_privilege_iq(text,  text, text ,integer,text,text) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_privilege_iq(text,  text, text ,integer,text,text) TO GROUP golfscore;
 
 --select * from security_privilege_iq('ALREADY_AUTH', 'test', 'test'  ,1, 'text', 'text', 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -141,8 +141,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function security_privilege_uq(text,  text, text ,integer,text,text,timestamp) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_privilege_uq(text, text, text ,integer,text,text,timestamp) TO GROUP golfscore;
+--alter function security_privilege_uq(text,  text, text ,integer,text,text,timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_privilege_uq(text, text, text ,integer,text,text,timestamp) TO GROUP golfscore;
 
 --select * from security_privilege_uq('ALREADY_AUTH', 'test', 'test', 'text' ,1 <last_update>, 'text', 'text');
 
@@ -172,7 +172,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function security_privilege_dq(text, text, text,integer, timestamp) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_privilege_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
+--alter function security_privilege_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_privilege_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

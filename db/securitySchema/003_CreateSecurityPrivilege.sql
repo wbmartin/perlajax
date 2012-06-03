@@ -1,5 +1,5 @@
 begin;
-drop TABLE security_privilege cascade;
+drop TABLE if exists security_privilege cascade;
 CREATE TABLE security_privilege
 (
   security_privilege_id int4 NOT NULL,

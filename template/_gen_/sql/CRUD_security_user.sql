@@ -44,8 +44,8 @@ $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION security_user_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION security_user_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
+--ALTER FUNCTION security_user_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION security_user_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
 
 --select * from security_user_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 
@@ -106,8 +106,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character) TO GROUP golfscore;
+--alter function security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character) TO GROUP golfscore;
 
 --select * from security_user_iq('ALREADY_AUTH', 'test', 'test' , 'text', 'text', 'text' ,1, 'text', 'text', 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -141,8 +141,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function security_user_uq(text,  text, text ,text,timestamp,text,integer,text,timestamp,character) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_user_uq(text, text, text ,text,timestamp,text,integer,text,timestamp,character) TO GROUP golfscore;
+--alter function security_user_uq(text,  text, text ,text,timestamp,text,integer,text,timestamp,character) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_user_uq(text, text, text ,text,timestamp,text,integer,text,timestamp,character) TO GROUP golfscore;
 
 --select * from security_user_uq('ALREADY_AUTH', 'test', 'test', 'text', 'text' <last_update>, 'text' ,1, 'text', 'text', 'text');
 
@@ -172,7 +172,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function security_user_dq(text, text, text,text, timestamp) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_user_dq(text,  text, text,text, timestamp) TO GROUP golfscore;
+--alter function security_user_dq(text, text, text,text, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_user_dq(text,  text, text,text, timestamp) TO GROUP golfscore;
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

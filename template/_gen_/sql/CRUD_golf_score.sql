@@ -44,8 +44,8 @@ $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION golf_score_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION golf_score_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
+--ALTER FUNCTION golf_score_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION golf_score_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
 
 --select * from golf_score_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 
@@ -106,8 +106,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function golf_score_iq(text,  text, text ,integer,integer,date) owner to postgres;
-GRANT EXECUTE ON FUNCTION golf_score_iq(text,  text, text ,integer,integer,date) TO GROUP golfscore;
+--alter function golf_score_iq(text,  text, text ,integer,integer,date) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golf_score_iq(text,  text, text ,integer,integer,date) TO GROUP golfscore;
 
 --select * from golf_score_iq('ALREADY_AUTH', 'test', 'test' , 'text' ,1 ,1, 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -141,8 +141,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function golf_score_uq(text,  text, text ,integer,timestamp,integer,integer,date) owner to postgres;
-GRANT EXECUTE ON FUNCTION golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date) TO GROUP golfscore;
+--alter function golf_score_uq(text,  text, text ,integer,timestamp,integer,integer,date) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golf_score_uq(text, text, text ,integer,timestamp,integer,integer,date) TO GROUP golfscore;
 
 --select * from golf_score_uq('ALREADY_AUTH', 'test', 'test', 'text' <golf_score_id> <last_update> ,1, 'text' ,1);
 
@@ -172,7 +172,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function golf_score_dq(text, text, text,integer, timestamp) owner to postgres;
-GRANT EXECUTE ON FUNCTION golf_score_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
+--alter function golf_score_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golf_score_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

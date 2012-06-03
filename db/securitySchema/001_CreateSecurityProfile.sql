@@ -1,5 +1,5 @@
 begin;
-drop table security_profile cascade;
+drop table if exists security_profile cascade;
 CREATE TABLE security_profile
 (
   security_profile_id serial NOT NULL,

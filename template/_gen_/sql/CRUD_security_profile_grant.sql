@@ -44,8 +44,8 @@ $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION security_profile_grant_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION security_profile_grant_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
+--ALTER FUNCTION security_profile_grant_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_grant_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
 
 --select * from security_profile_grant_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 
@@ -106,8 +106,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function security_profile_grant_iq(text,  text, text ,integer,integer) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_profile_grant_iq(text,  text, text ,integer,integer) TO GROUP golfscore;
+--alter function security_profile_grant_iq(text,  text, text ,integer,integer) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_grant_iq(text,  text, text ,integer,integer) TO GROUP golfscore;
 
 --select * from security_profile_grant_iq('ALREADY_AUTH', 'test', 'test'  ,1 ,1, 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -141,8 +141,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function security_profile_grant_uq(text,  text, text ,integer,integer,timestamp with time zone) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_profile_grant_uq(text, text, text ,integer,integer,timestamp with time zone) TO GROUP golfscore;
+--alter function security_profile_grant_uq(text,  text, text ,integer,integer,timestamp with time zone) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_grant_uq(text, text, text ,integer,integer,timestamp with time zone) TO GROUP golfscore;
 
 --select * from security_profile_grant_uq('ALREADY_AUTH', 'test', 'test' ,1 ,1 <last_update>, 'text');
 
@@ -172,7 +172,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function security_profile_grant_dq(text, text, text,integer,integer, timestamp) owner to postgres;
-GRANT EXECUTE ON FUNCTION security_profile_grant_dq(text,  text, text,integer,integer, timestamp) TO GROUP golfscore;
+--alter function security_profile_grant_dq(text, text, text,integer,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_grant_dq(text,  text, text,integer,integer, timestamp) TO GROUP golfscore;
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

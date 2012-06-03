@@ -1,5 +1,5 @@
 begin;
-drop table  security_profile_grant cascade;
+drop table if exists security_profile_grant cascade;
 CREATE TABLE security_profile_grant
 (
   security_privilege_id integer NOT NULL,

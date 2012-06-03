@@ -49,8 +49,8 @@ $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION [%+tablename+%]_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION [%+tablename+%]_sq(text, text, text, text, text, integer, integer) TO GROUP [%+ props.dbgroup -%];
+--ALTER FUNCTION [%+tablename+%]_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION [%+tablename+%]_sq(text, text, text, text, text, integer, integer) TO GROUP [%+ props.dbgroup -%];
 
 --select * from [%+tablename+%]_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
 
@@ -161,8 +161,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function [%+tablename+%]_iq(text,  text, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]) owner to postgres;
-GRANT EXECUTE ON FUNCTION [%+tablename+%]_iq(text,  text, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]) TO GROUP [%+ props.dbgroup -%];
+--alter function [%+tablename+%]_iq(text,  text, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]) owner to postgres;
+--GRANT EXECUTE ON FUNCTION [%+tablename+%]_iq(text,  text, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]) TO GROUP [%+ props.dbgroup -%];
 
 [%-BLOCK IQ_DUMMY_DATA-%]
 [%- FOREACH column IN tbl.$tablename.col_ord_pos -%]
@@ -231,8 +231,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function [%+tablename+%]_uq(text,  text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]) owner to postgres;
-GRANT EXECUTE ON FUNCTION [%+tablename+%]_uq(text, text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]) TO GROUP [%+ props.dbgroup -%];
+--alter function [%+tablename+%]_uq(text,  text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]) owner to postgres;
+--GRANT EXECUTE ON FUNCTION [%+tablename+%]_uq(text, text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]) TO GROUP [%+ props.dbgroup -%];
 
 
 [%-BLOCK UQ_DUMMY_DATA-%]
@@ -276,8 +276,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function [%+tablename+%]_dq(text, text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) owner to postgres;
-GRANT EXECUTE ON FUNCTION [%+tablename+%]_dq(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) TO GROUP [%+ props.dbgroup -%];
+--alter function [%+tablename+%]_dq(text, text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION [%+tablename+%]_dq(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) TO GROUP [%+ props.dbgroup -%];
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
