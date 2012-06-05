@@ -174,4 +174,8 @@ input.invalid {
 .ValidationMsg{
   color:red;
 }
-
+.centerblock{
+display: block;
+margin-left: auto;
+ margin-right: auto;
+}

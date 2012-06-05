@@ -24,18 +24,20 @@ $(document).ready( function(){
 
 //]]>
 </script>
-<div id="header"><div id="header-content">	
+<div id="header" class="row"><div id="header-content">	
+    <div class="sixcol">
 	<h1 id="logo"><a href="index.html" title="">golf<span class="gray">score</span></a></h1>	
 		<h2 id="slogan">keepin' it honest...</h2>
-
-		<div id = "topMenuBar" style="display:none;"> [%#initially hidden%]
+    </div>
+    <div class="sixcol last" id= "topMenuBar" style="display:none;"> [%#initially hidden%]
 		<ul>
 			<li><a id="SummaryPage" onclick="showLaunchPane();">Home</a></li>
 			<li><a id="GolfersPage" onclick="showGolfer();">Golfers</a></li>
 			<li><a id="aboutGolfScore" onclick="showHelpPane();">Help</a></li>
 			<li id="logout"><a >Logout</a></li>			
-		</ul>	</div>[%#End Top Menu Bar%]
-	</div [%# end header%]></div [%# end header-content%]>
+		</ul>	
+     </div>[%#End Top Menu Bar%]
+</div [%# end header%]></div [%# end header-content%]>
 
 <div id="footer" class="MainLayout" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:#DCDCDC;"><span id="statusMsg" ></span></div>
 

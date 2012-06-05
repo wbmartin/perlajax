@@ -1,16 +1,20 @@
 [%divId="launchPane"%]
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
-<div id ="[%divId%]CenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; max-width:300; ">
-<h1 id="[%divId%]Title" >I want to&hellip;</h1>
-<span class="largeIconSpan"><a id="aboutGolfScore" onclick="showGolfScoreSummary();">
+<div id ="[%divId%]CenterDiv" >
+[%#style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; max-width:300; " %]
+  <div class="row">
+	<h1 id="[%divId%]Title" >I want to&hellip;</h1>
+  </div>
+<div class="row">
+  <span class="twocol largeIconSpan"><a id="aboutGolfScore" onclick="showGolfScoreSummary();">
 	<span class="sprite64Icon kolfIcon"></span><br/>
 	View Averages</a>
-</span>
-<span class="largeIconSpan"><a id="aboutGolfScore" onclick="showGolfer();">
+  </span>
+  <span class="twocol last largeIconSpan"><a id="aboutGolfScore" onclick="showGolfer();">
 	<span class="sprite64Icon peopleIcon"></span><br/>
 	View Golfer Profiles</a>
-</span>
-
+  </span>
+</div>
 
 </div>
 </div>

@@ -6,8 +6,10 @@
 <body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();" > 
 [%INCLUDE _LayoutComponents.html%]
 
-<div id="mainContent" class="MainLayout" style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;" >
-[% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
+<div id="mainContent" class="container MainLayout"  >
+[% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;"
+-%]
 [%INCLUDE _golfScoreSummary.html%]
 [%INCLUDE _golfScore.html%]
 [%INCLUDE _golfer.html%]

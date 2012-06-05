@@ -1,6 +1,10 @@
 <head> 
-<title> Golf Score Tracker</title> 
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+  <title> Golf Score Tracker</title> 
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 1140px Grid styles for IE -->
+  <!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
+
 <script type="text/javascript"> 
 //<![CDATA[
 //header1.js
@@ -11,7 +15,6 @@
 [%INCLUDE "includes/jquery-1.7.1.min.js"%]
 //jqueryui.js
 [%INCLUDE "includes/jquery-ui-1.8.18.custom.min.js"%]
-
 function bodyOnLoad(){
   sizeLeftNav();
 }
@@ -22,9 +25,24 @@ function bodyOnResize(){
 
 //]]>
 </script>
+<script type="text/javascript"> 
+//<![CDATA[
+//1140 mediaqueries not strict safe
+[%INCLUDE "includes/css3-mediaqueries.js"%]
+//]]>
+</script>
+
+
 <style type="text/css">
+/* PixelGreen */
 [%INCLUDE style/_PixelGreen.css%]
+/* _jqueryui*/
 [%INCLUDE "style/jquery-ui-1.8.18.custom.css"%]
+/*_main.css */
 [%INCLUDE style/_main.css%]
+/*1140.css */
+[%INCLUDE style/1140.css%]
+/*ie.css */
+[%INCLUDE style/ie.css%]
 </style>
 </head>
