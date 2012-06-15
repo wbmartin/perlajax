@@ -3,7 +3,7 @@
 function sizeLeftNav(){
 [%headerHeight = 100%]
 [%leftNavWidth = 0%]
-  document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
+ // document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
   document.getElementById('mainContent').style.top="[%headerHeight%]px";
   document.getElementById('mainContent').style.left="0px";
   document.getElementById('mainContent').style.height=(window.innerHeight - [%headerHeight + 35%] ) +"px";
@@ -21,33 +21,44 @@ function displayMainLayout(showHide){
 
 $(document).ready( function(){
 });
-
 //]]>
 </script>
-<div id="header" class="row"><div id="header-content">	
-    <div class="sixcol">
-	<h1 id="logo"><a href="index.html" title="">golf<span class="gray">score</span></a></h1>	
+<div id="header" class="container">
+ <div class="row">
+    <div class="sixcol ">
+	<div class="logoBlock center" style="width:17em">
+	  <h1 id="logo"><a href="index.html" title=""><span class="primary">golf</span><span class="secondary">score</span></a></h1>
 		<h2 id="slogan">keepin' it honest...</h2>
+    	</div>
     </div>
-    <div class="sixcol last" id= "topMenuBar" style="display:none;"> [%#initially hidden%]
-		<ul>
+    <div class="sixcol last" id= "topMenuBar" > 
+		<div class="center" style="width:25em;"> 
+		  <ul class="buttonbar" style = "">
 			<li><a id="SummaryPage" onclick="showLaunchPane();">Home</a></li>
 			<li><a id="GolfersPage" onclick="showGolfer();">Golfers</a></li>
 			<li><a id="aboutGolfScore" onclick="showHelpPane();">Help</a></li>
-			<li id="logout"><a >Logout</a></li>			
-		</ul>	
-     </div>[%#End Top Menu Bar%]
-</div [%# end header%]></div [%# end header-content%]>
+			<li><a id="logoutButtonId" onclick="logOutUser();">Logout</a></li>			
+		  </ul>
+		</div>	
+    </div>
+ </div>
+</div>
 
-<div id="footer" class="MainLayout" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:#DCDCDC;"><span id="statusMsg" ></span></div>
-
+<div id="footer" class="MainLayout container" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:#DCDCDC;">
+  <div class="row">
+	<span id="statusMsg" ></span>
+  </div>
+</div>
+<!--
 <div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto;'> 
 </div>
+
+-->
 <div id="briefNotice" style="display:none;">
 <table style="width:100%">
-  <tr>  <td style="width:33%" class="noborder">&nbsp;</td>
-	<td style="width:33%" class="noborder"><div id="briefNoticeMsg"></div></td>
-	<td style="width:33%" class="noborder">&nbsp;</td>
+  <tr>  <td style="width:33%" >&nbsp;</td>
+	<td style="width:33%" ><div id="briefNoticeMsg"></div></td>
+	<td style="width:33%" >&nbsp;</td>
   </tr>
 </table>
 </div>

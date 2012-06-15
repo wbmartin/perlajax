@@ -15,7 +15,7 @@ $("#[%divId%]Table").html("");
 
 }
 function display[%ucfirst(divId)%]List([%divId%]List_){
-  var newrowsHTML = "<tr> <th>Golfer</th><th>Last 10 Avg</th><th>Period</th><th>I want to&hellip;</th></tr>";
+  var newrowsHTML = "<tr> <th>Golfer</th><th class='accentColumn'>Last 10 Avg</th><th>Period</th><th class='accentColumn'>I want to&hellip;</th></tr>";
   var gs = {};
   for(var ndx=0; ndx<[%divId%]List_.length; ndx++){
 	newrowsHTML +=build[%ucfirst(divId)%]Row(golfScoreSummaryList_[ndx]);
@@ -25,9 +25,9 @@ function display[%ucfirst(divId)%]List([%divId%]List_){
 
 function build[%ucfirst(divId)%]Row(gs){
 var newrow ="<tr><td>" + gs.golfer_name+"</td>";
-	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
+	newrow +="<td class='accentColumn'>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
 	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a> | ";
+	newrow +="<td class ='accentColumn'><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a> | ";
 	newrow +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a></td>";
 	newrow +="</tr>";
 return newrow;
@@ -39,8 +39,8 @@ function show[%ucfirst(divId)%](){
 	standardShowContentPane("[%divId%]");
 }
 </script>
-<div id="[%divId%]" class="MainLayout MainContentPaneStyle"  >
+<div id="[%divId%]" class="MainLayout MainContentPaneStyle contentPane"  >
 
-<table id="[%divId%]Table" style="border-width: 1px; border-style:solid;" class='dataTable' >
+<table id="[%divId%]Table"  class='dataTable' >
 </table>
 </div> [%# end golfScoreSummary%]

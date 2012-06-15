@@ -1538,434 +1538,6 @@ catch(e){
 
 <style type="text/css">
 /* PixelGreen */
-/* ----------------------------------------------------
-
-   AUTHOR           :  	Erwin Aligam
-   WEBSITE          :   http://www.styleshout.com/
-   TEMPLATE NAME    : 	PixelGreen
-   TEMPLATE CODE    : 	S-0010
-   VERSION          :   1.3
-   LAST MODIFIED    :   January 19, 2010
-
-------------------------------------------------------- */
- 
-/* ----------------------------------------------------
-   HTML ELEMENTS
-------------------------------------------------------- */
-
-/* top elements */
-* { padding: 0; margin: 0; outline: 0; }
-
-body {
-	margin: 0; 	padding: 0;
-	font: normal 73%/1.6em 'Trebuchet MS', Tahoma, sans-serif;
-	color: #555;
-	background: #FFF url(./images/bg.jpg) repeat-x;
-	text-align: center;		
-}
-
-/* links */
-a:link, a:visited { background: inherit; color: #72A545; text-decoration: underline; }
-a:hover { background: inherit; color: #006699; text-decoration: underline; }
-.alink{background: inherit; color: #72A545; text-decoration: underline; }
-/* headers */
-h1, h2, h3 { font: bold 1em 'Trebuchet MS', Tahoma, Sans-serif; }
-h1 { font-size: 1.4em; color: #65944A; }
-h2 { font-size: 1.2em; text-transform: uppercase; }
-h3 { font-size: 1.2em; }
-
-p, h1, h2, h3 {
-	margin: 10px 15px;
-}
-ul, ol {
-	text-align: left;
-	margin: 10px 30px;
-	padding: 0 15px;		
-}
-
-/* images */
-img {
-	border: 1px solid #DADADA;
-	padding: 8px;
-	background: #FAFAFA;
-}
-img.float-right {
-  margin: 5px 0px 5px 15px;  
-}
-img.float-left {
-  margin: 5px 15px 5px 0px;
-}
-
-code {
-  margin: 5px 0;
-  padding: 10px;
-  text-align: left;
-  display: block;
-  overflow: auto;  
-  font: 500 1em/1.5em 'Lucida Console', 'courier new', monospace;
-  /* white-space: pre; */
-  background: #FAFAFA;
-  border: 1px solid #f2f2f2;  
-  border-left: 3px solid #72A545;
-}
-acronym {
-  cursor: help;
-  border-bottom: 1px solid #777;
-}
-blockquote {
-	margin: 15px; 	padding: 0 0 0 20px;  	
-  	background-color: #FAFAFA; 
-	background-position: 8px 10px;
-	border: 1px solid #f2f2f2; 
-	border-left: 3px solid #72A545;  
-	font: bold 1.2em/1.5em "Trebuchet MS", Tahoma, sans-serif; 
-	color: #666666;	
-}
-
-/* start - table */
-table {
-	border-collapse: collapse;
-	margin: 10px 15px;	
-}
-th strong {
-	color: #fff;
-}
-th {
-	background: #74A846;
-	height: 29px;
-	padding-left: 11px;
-	padding-right: 11px;
-	color: #fff;
-	text-align: left;
-	border-left: 1px solid #B6D59A;
-	border-bottom: solid 2px #FFF;
-}
-tr {
-	height: 30px;
-}
-td {
-	padding-left: 11px;
-	padding-right: 11px;
-	/* border-left: 1px solid #FFE1C3; */
-	border-left: 1px solid #FFF;
-	border-bottom: solid 1px #ffffff;
-}
-td.first,th.first {
-	border-left: 0px;
-}
-tr.row-a {
-	background: #F8F8F8;
-}
-tr.row-b {
-	background: #EFEFEF;
-}
-/* end - table */
-
-/* form elements 
-form {
-	margin:10px 15px; padding: 0;
-	border: 1px solid #f2f2f2; 
-	background-color: #FAFAFA; 
-}
-label {
-	display:block;
-	font-weight:bold;
-	margin:5px 0;
-}
-input {
-	padding: 2px;
-	border:1px solid #eee;
-	font: normal 1em "Trebuchet MS", Tahoma, sans-serif;
-	color:#777;
-}
-textarea {
-	width:400px;
-	padding:2px;
-	font: normal 1em "Trebuchet MS", Tahoma, sans-serif;
-	border:1px solid #eee;
-	height:100px;
-	display:block;
-	color:#777;
-}
-input.button { 
-	margin: 0; 
-	font: bold 1em Arial, Sans-serif; 
-	background: #FFF url(./images/gradientbg.jpg) repeat-x; 
-	padding: 2px 3px; 
-	color: #333;	
-	border: 1px solid #DADADA;	
-}
-*/
-/* search form */
-.searchform {
-	background-color: transparent;
-	border: none;	margin: 0; padding: 0;	
-}
-.searchform p { margin: 10px; padding: 0; }
-.searchform input.textbox { 
-	width: 130px;
-	color: #333; 
-	height: 20px;
-	padding: 2px;	
-	vertical-align: top;
-}
-.searchform input.button { 
-	font: bold 12px Arial, Sans-serif; 
-	color: #333;	
-	width: 60px;
-	height: 26px;
-	border: 1px solid #DADADA;
-	padding: 3px 5px;	
-	vertical-align: top;
-}
-
-/* ----------------------------
-	  LAYOUT
-------------------------------- */
-
-#header-content, #content, #footer-content {
-	width: 760px;
-}
-
-/* header */
-#header {
-	height: 100px;
-	text-align: left;	
-}
-#header-content {	
-	margin: 0 auto; padding: 0;
-	position: relative;
-}
-#header-content h1#logo {
-	position: absolute;	
-	font: bold 45px 'Trebuchet MS', Sans-serif;
-	letter-spacing: -2px; 
-	color: #FFF;
-	margin: 0; padding: 0;		
-	
-	/* change the values of left and top to adjust the position of the logo */
-	top: 0; left: 0px;
-}
-#header-content h1#logo a {
-	text-decoration: none;
-	color: #FFF;
-}
-#header-content #slogan {
-	position: absolute;	
-	font: bold 12px 'Trebuchet Ms', Sans-serif;
-	text-transform: none;
-	color: #FFF;	
-	margin: 0; padding: 0;
-	
-	/* change the values of left and top to adjust the position of the slogan */
-	top: 55px; left: 40px;
-}
-
-/* header menu */
-#header-content ul {
-	position: absolute;
-	right: -5px; top: 15px;
-	font: bolder 1.3em 'Trebuchet MS', sans-serif;
-	color: #FFF;
-	list-style: none;
-	margin: 0; padding: 0;		
-}
-#header-content li {
-	display: inline;
-}
-#header-content li a {
-	float: left;
-	display: block;
-	padding: 3px 12px;	
-	color: #FFF;
-	background-color: #333;
-	text-decoration: none;
-	border-right: 1px solid #272727;
-}
-#header-content li a:hover {
-	background: #65944A;
-	color: #FFF;
-}
-#header-content li a#current  {
-	background: #65944A;
-	color: #FFF;
-}
-
-/* header photo */
-.headerphoto {
-	margin: 0 auto;
-	width: 770px;
-	height: 200px;
-	padding: 15px 10px 10px 10px; 
-	/*background: #FFF url(headerphoto.jpg) no-repeat center;	*/
-}
-
-/* content */
-#content-wrap {
-	clear: both;
-	float: left;
-	width: 100%;
-}
-#content {
-	text-align: left;	
-	padding: 0;
-	margin: 0 auto;	
-}
-
-/* sidebar */
-#sidebar {
-	float: right;
-	width: 30%;
-	margin: 0 0 10px 0; padding: 0;	
-}	
-#sidebar h1 {
-	padding: 10px 0px 5px 10px;
-	margin: 0;	
-	font: bold 1.3em 'Trebuchet MS', Tahoma, Sans-serif;
-}
-.sidebox {
-	background: #F5F5F5;
-	border: 1px solid #EFEDED;
-	margin-bottom: 10px;
-}
-
-/* sidebar menu */
-#sidebar ul.sidemenu {
-	list-style:none;
-	margin: 10px 0 15px 0;
-	padding: 0;
-	background: #F2F2F2;			
-}
-#sidebar ul.sidemenu li {
-	padding: 0px 10px;
-}
-#sidebar ul.sidemenu a {
-	display:block;
-	font-weight:normal;
-	color: #333;
-	height: 1.5em;	
-	padding:.3em 0 .3em 15px;
-	line-height: 1.5em;
-	border-bottom: 1px dashed #D4D4D4;
-	text-decoration:none;
-}
-#sidebar ul.sidemenu a.top{	
-	border-top: 1px dashed #D4D4D4;
-}
-#sidebar ul.sidemenu a:hover {
-	padding: .3em 0 .3em 10px;
-	border-left: 5px solid  #65944A;
-	color: #65944A;		
-}
-
-/* main */
-#main {
-	float: left;
-	width: 68%;	
-	margin: 0 0 10px 0; padding: 0;	
-}
-#main h1 {
-	padding: 10px 0px 0px 5px;
-	margin: 0 0 0 10px;
-	border-bottom: 1px solid #f2f2f2; 	
-	font: normal 1.8em 'Trebuchet MS', Tahoma, Sans-serif;
-}
-#main ul li {
-	list-style-image: url(bullet.gif);
-}
-
-.post {
-	margin: 0; padding: 0;
-	background: #FFF url(./images/gradientbg.jpg) repeat-x;
-	border: 1px solid #EFEDED;
-}
-.post .post-footer {
-	background-color: #FAFAFA;
-	border: 1px solid #f2f2f2;
-	padding: 5px; margin-top: 20px;
-	font-size: 95%;
-}
-.post .post-footer .date {
-	background: url('clock.gif') no-repeat 0 center;
-	padding-left: 20px; margin: 0 10px 0 5px;
-}
-.post .post-footer .comments {
-	background: url('comment.gif') no-repeat 0 center;
-	padding-left: 20px; margin: 0 10px 0 5px;
-}
-.post .post-footer .readmore {
-	background: url('page.gif') no-repeat 0 center;
-	padding-left: 20px; margin: 0 10px 0 5px;
-}
-
-/* footer */
-#footer {
-	clear: both;
-	margin: 0; padding: 0;
-	font: normal .95em/1.6em 'Trebuchet MS', Tahoma, Arial, sans-serif;
-	text-align: left;	
-}
-
-#footer h1, #footer p {	margin-left: 0; }
-
-#footer-content {	
-	border-top: 1px solid #EAEAEA;
-	margin: 0 auto;
-	padding-left: 15px;
-}
-#footer-content a {
-	text-decoration: none;
-}
-#footer-content a:hover {
-	color: #333;
-}
-
-/* footer list */
-#footer-content ul.flist {
-	list-style: none;
-	margin: 0; padding: 0;
-    border-top: 1px solid #f2f2f2;
-}
-#footer-content ul.flist li {
-    border-bottom: 1px solid #f2f2f2;
-}
-#footer-content ul.flist li a:link,
-#footer-content ul.flist li a:visited {
-    color: #555;
-    display: block;
-	font-weight: normal;
-	padding: 5px 0 ;
-	width: 98%;
-}
-#footer-content ul.flist li a:hover {
-  text-decoration: none;
-  color: #222;
-}
-
-
-#footer-content .col {
-	width: 240px;
-	padding: 0 5px 30px 0;	
-}
-#footer-content .col2 {
-	width: 230px;
-	padding: 0 0 30px 0;	
-}
-#footer-content .space-sep {
-	margin-right: 20px;
-}
-
-/* alignment classes */
-.float-left  { float: left; }
-.float-right { float: right; }
-.align-left  { text-align: left; }
-.align-right {	text-align: right; }
-
-/* additional classes */
-.clear { clear: both; }
-.gray  { color: #BFBFBF; }
-
-
 
 
 /* _jqueryui*/
@@ -2534,188 +2106,6 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  */
 .ui-progressbar { height:2em; text-align: left; overflow: hidden; }
 .ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
-/*_main.css */
-.MainContentPaneStyle{
-  width:100%;
-  height:100%;
-  display:none;
-  overflow:auto;
-  /*background-color:green;*/
-  padding: 5px 5px 5px 5px ;
-}
-.MainLayout{
-  display:none;/*Initially Hidden*/
-}
-
-body{
-/*  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
-  font-size:12px;
-*/
-}
-.small{
-  color:#666666;
-  display:block;
-  font-size:11px;
-  font-weight:normal;
-  text-align:left;
-}
-
-.error{
-  color: red;
-}
-
-.largeIconSpan{
-  display:inline-block; 
-  border-style:none;
-  text-align:center;
-  padding:15px;
-  margin:15px;
-}
-
-.sprite64Icon{
- display:inline-block;
- height:64px;
- width:64px;
- background:url(images/consolidatedIcons.png) no-repeat;
- padding: 0 0 0 0;
-}
-.kolfIcon{
-background-position:0 0 ;
-}
-.peopleIcon{
-background-position:0px -100px;
-}
-
-	
-
-
-
-input{
-  float:left;
-  font-size:12px;
-  padding:4px 2px;
-  border:solid 1px ;
-  width:200px;
-  margin:2px 0 20px 10px;
-}
-select{
-  width:200px;
-}
-
-.formLayout .labelColumn{
-  text-align:right;
-  font-weight:bold;
-  padding:7px 25px 20px 50px;
-}
-table.formLayout{
-  /*border-width: 2px;
-  border-style: solid;
-  border-color:green;
-*/
-  background-color:white;
-}
-.prettyFormHolder{
-  border-width: 2px;
-  border-style: solid;
-  border-color:green;
-  border-radius:25px;
-  background-color:white;
-  display:inline-block;
-  padding: 15px;
-}
-.formLayout button{
-  clear:both;
-  background-color:#666666;
-  width:125px;
-  height:31px;
-  text-align:center;
-  line-height:31px;
-  color:#FFFFFF;
-  font-size:11px;
-  font-weight:bold;
-}
-.formLayout .formHeader{
-  font-weight: bold;
-  font-size: 150%;
-}
-fieldset {
-  border-width:0px;
-  border-style:transparent;
-}
-
-.formLayout .errorColumn{
-  width:50px;
-}
-.formHeaderTD{
-  padding:15px;
-}
-
-.vcenter {
-  position:absolute; 
-  top:0; bottom:0; left:0; right:0;
-  margin:auto; 
-  height:240px; width:70%;
-}
-#statusMsg{
-  display:block;
-  position: relative;
-  top: 5px;
-  left: 5px;
-  border-width: 1px;
-  border-style: outset;
-  width: 500px;
-  padding:1px;
-}
-
-.dataTable{
-
-}
-.dataTable th{
-font-weight:bold;
-}
-
-.formTable{
-border-style:none;
-}
-.formTable td{
-border-style:none;
-}
-
-#briefNotice {
-   position:absolute;
-   bottom:0;
-   width:100%;
-   height:75px; 
-   padding-bottom:15px;  
-}
-#briefNoticeMsg{
-  display:inline-block;
-  padding:15px;
-  width:200px;
-  background: #FFF url(./images/gradientbg.jpg) repeat-x;
-  color:#74A846;
-  border-width:1px;
-  border-style:solid;
-  border-radius:15px;
-/*background: #74A846;
-color: #fff;
-*/
-}
-.noborder{
-  border-left:none;
-}
-
-input.invalid { 
-  border: solid 1px red; 
-}
-.ValidationMsg{
-  color:red;
-}
-.centerblock{
-display: block;
-margin-left: auto;
- margin-right: auto;
-}
 
 /*1140.css */
 /* CSS Resets */
@@ -2848,6 +2238,7 @@ img {
 	}
 
 }
+
 /*ie.css */
 .onecol {
 width: 4.7%;
@@ -2892,6 +2283,286 @@ width: 82%;
 .elevencol {
 width: 91.35%;
 }
+
+/*_main.css */
+.MainContentPaneStyle{
+  width:100%;
+  height:100%;
+  display:none;
+  overflow:auto;
+  /*background-color:green;*/
+  padding: .4em ;
+}
+.MainLayout{
+  background: #FFF url(./images/gradientbg.jpg) repeat-x;
+  display:none;/*Initially Hidden*/
+}
+
+body{
+  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+  font-size:1.1em;
+
+}
+.small{
+  color:#666666;
+  display:block;
+  font-size:.8em;
+  font-weight:normal;
+  text-align:left;
+}
+
+.error{
+  color: red;
+}
+
+.largeIconSpan{
+  display:inline-block; 
+  border-style:none;
+  text-align:center;
+  padding:15px;
+  margin:15px;
+}
+
+.sprite64Icon{
+ display:inline-block;
+ height:64px;
+ width:64px;
+ background:url(images/consolidatedIcons.png) no-repeat;
+ padding: 0 0 0 0;
+}
+.kolfIcon{
+  background-position:0 0 ;
+}
+.peopleIcon{
+  background-position:0px -100px;
+}
+.learnMoreIcon{
+  background-position:0px -200px;
+}
+.helpIcon{
+  background-position:0px -300px;
+}
+
+input{
+  float:left;
+  padding:4px 2px;
+  border:solid 1px ;
+  width:200px;
+  margin:2px 0 20px 10px;
+}
+select{
+  width:200px;
+  margin:2px 0 20px 10px;
+}
+
+.formLayout .labelColumn{
+  text-align:right;
+  font-weight:bold;
+  padding:7px 25px 20px 50px;
+}
+table.formLayout{
+   background-color:white;
+}
+.prettyFormHolder{
+  border-width: 2px;
+  border-style: solid;
+  border-color:green;
+  border-radius:25px;
+  background-color:white;
+  display:inline-block;
+  padding: 15px;
+}
+.formLayout button{
+  clear:both;
+  background-color:#666666;
+  width:125px;
+  height:31px;
+  text-align:center;
+  line-height:31px;
+  color:#FFFFFF;
+  font-weight:bold;
+}
+.formLayout .formHeader{
+  font-weight: bold;
+  font-size: 1.5em;
+}
+fieldset {
+  border-width:0px;
+  border-style:transparent;
+}
+
+.formLayout .errorColumn{
+  width:50px;
+}
+.formHeaderTD{
+  padding:15px;
+}
+
+.vcenter {
+  position:absolute; 
+  top:0; bottom:0; left:0; right:0;
+  margin:auto; 
+  height:240px; width:70%;
+}
+#statusMsg{
+  display:block;
+  position: relative;
+  top: 5px;
+  left: 5px;
+  border-width: 1px;
+  border-style: outset;
+  width: 500px;
+  padding:1px;
+}
+
+
+.formTable{
+border-style:none;
+}
+.formTable td{
+border-style:none;
+}
+
+#briefNotice {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:75px; 
+   padding-bottom:15px;  
+}
+#briefNoticeMsg{
+  display:inline-block;
+  padding:15px;
+  width:200px;
+  background: #FFF url(./images/gradientbg.jpg) repeat-x;
+  color:#74A846;
+  border-width:1px;
+  border-style:solid;
+  border-radius:15px;
+}
+
+input.invalid { 
+  border: solid 1px red; 
+}
+.ValidationMsg{
+  color:red;
+}
+.centerblock{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+/*PixelGreen Extract*/
+#header{
+	background: #000;
+	border-bottom-style: solid;
+	border-width:medium;
+	border-color:#65944A
+}
+#header .primary{
+  color: #65944A;
+}
+#header .secondary{
+  color:#BFBFBF;
+}
+#header a{
+  text-decoration:none;
+}
+
+ul.buttonbar{
+	display:inline;
+	font: bolder 1.1em 'Trebuchet MS', sans-serif;
+	list-style: none;
+	margin: 0; padding: 0;
+	color:white;	
+}
+ul.buttonbar li{
+  display: inline;
+  background: #1C1C1C;
+  padding: .2em;
+  font: 0.7em;
+}
+ul.buttonbar li:hover{
+  background: #65944A;
+}
+#topMenuBar{
+  margin-top: 2em;
+  display:none; /*Initially hidden*/
+}
+
+
+.logoBlock{
+  margin-top:.5em;
+}
+.logoBlock h1 {
+  display:inline-block;
+  font-size: 3.5em;
+}
+.logoBlock h2 {
+  font-size: .75em;
+  margin-left: 2.5em;
+  color: #BFBFBF;
+  margin-top: -.5em
+  
+}
+.center {
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#LoginPortal{
+  background: #FFF url(./images/gradientbg.jpg) repeat-x;
+}
+#LoginPortal img{
+  display:block;
+  margin-top:2em;
+}
+
+.contentPane{
+  padding-top:2em;
+  padding-bottom:2em;
+
+}
+
+#loginFormRow{
+margin-top: 2em;
+}
+
+table.dataTable{
+  border-style:none;
+  border-spacing:0;
+}
+.dataTable th{
+  border-top-style:double;
+  border-bottom-style:double;
+  border-width: 3px;
+  padding-left: 1.1em;
+  padding-right: 1.1em;
+  border-color: #BFBFBF;
+  color: #BFBFBF;
+  font-weight:bold;
+
+}
+.dataTable td{
+  padding-left: 1.1em;
+  padding-right: 1.1em;
+  border-color: #BFBFBF;
+  border-width: 1px;
+  border-bottom-style:solid;
+  color:#65944A;
+
+}
+.dataTable a {
+text-decoration: none;
+}
+.dataTable a:visited{
+ color:#65944A;
+}
+
+.dataTable .accentColumn{
+ background:#F5F5F5;
+}
+
 </style>
 </head>
 
@@ -2901,7 +2572,7 @@ width: 91.35%;
 function sizeLeftNav(){
 
 
-  document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
+ // document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
   document.getElementById('mainContent').style.top="100px";
   document.getElementById('mainContent').style.left="0px";
   document.getElementById('mainContent').style.height=(window.innerHeight - 135 ) +"px";
@@ -2919,33 +2590,44 @@ function displayMainLayout(showHide){
 
 $(document).ready( function(){
 });
-
 //]]>
 </script>
-<div id="header" class="row"><div id="header-content">	
-    <div class="sixcol">
-	<h1 id="logo"><a href="index.html" title="">golf<span class="gray">score</span></a></h1>	
+<div id="header" class="container">
+ <div class="row">
+    <div class="sixcol ">
+	<div class="logoBlock center" style="width:17em">
+	  <h1 id="logo"><a href="index.html" title=""><span class="primary">golf</span><span class="secondary">score</span></a></h1>
 		<h2 id="slogan">keepin' it honest...</h2>
+    	</div>
     </div>
-    <div class="sixcol last" id= "topMenuBar" style="display:none;"> 
-		<ul>
+    <div class="sixcol last" id= "topMenuBar" > 
+		<div class="center" style="width:25em;"> 
+		  <ul class="buttonbar" style = "">
 			<li><a id="SummaryPage" onclick="showLaunchPane();">Home</a></li>
 			<li><a id="GolfersPage" onclick="showGolfer();">Golfers</a></li>
 			<li><a id="aboutGolfScore" onclick="showHelpPane();">Help</a></li>
-			<li id="logout"><a >Logout</a></li>			
-		</ul>	
-     </div>
-</div ></div >
+			<li><a id="logoutButtonId" onclick="logOutUser();">Logout</a></li>			
+		  </ul>
+		</div>	
+    </div>
+ </div>
+</div>
 
-<div id="footer" class="MainLayout" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:#DCDCDC;"><span id="statusMsg" ></span></div>
-
+<div id="footer" class="MainLayout container" style="position:fixed; bottom: 0; left:0; min-height:25px; height:auto!important;height:25px;width:100%; background-color:#DCDCDC;">
+  <div class="row">
+	<span id="statusMsg" ></span>
+  </div>
+</div>
+<!--
 <div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto;'> 
 </div>
+
+-->
 <div id="briefNotice" style="display:none;">
 <table style="width:100%">
-  <tr>  <td style="width:33%" class="noborder">&nbsp;</td>
-	<td style="width:33%" class="noborder"><div id="briefNoticeMsg"></div></td>
-	<td style="width:33%" class="noborder">&nbsp;</td>
+  <tr>  <td style="width:33%" >&nbsp;</td>
+	<td style="width:33%" ><div id="briefNoticeMsg"></div></td>
+	<td style="width:33%" >&nbsp;</td>
   </tr>
 </table>
 </div>
@@ -2969,7 +2651,7 @@ $("#golfScoreSummaryTable").html("");
 
 }
 function displayGolfScoreSummaryList(golfScoreSummaryList_){
-  var newrowsHTML = "<tr> <th>Golfer</th><th>Last 10 Avg</th><th>Period</th><th>I want to&hellip;</th></tr>";
+  var newrowsHTML = "<tr> <th>Golfer</th><th class='accentColumn'>Last 10 Avg</th><th>Period</th><th class='accentColumn'>I want to&hellip;</th></tr>";
   var gs = {};
   for(var ndx=0; ndx<golfScoreSummaryList_.length; ndx++){
 	newrowsHTML +=buildGolfScoreSummaryRow(golfScoreSummaryList_[ndx]);
@@ -2979,9 +2661,9 @@ function displayGolfScoreSummaryList(golfScoreSummaryList_){
 
 function buildGolfScoreSummaryRow(gs){
 var newrow ="<tr><td>" + gs.golfer_name+"</td>";
-	newrow +="<td>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
+	newrow +="<td class='accentColumn'>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
 	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-	newrow +="<td><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a> | ";
+	newrow +="<td class ='accentColumn'><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a> | ";
 	newrow +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a></td>";
 	newrow +="</tr>";
 return newrow;
@@ -2993,9 +2675,9 @@ function showGolfScoreSummary(){
 	standardShowContentPane("golfScoreSummary");
 }
 </script>
-<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle"  >
+<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle contentPane"  >
 
-<table id="golfScoreSummaryTable" style="border-width: 1px; border-style:solid;" class='dataTable' >
+<table id="golfScoreSummaryTable"  class='dataTable' >
 </table>
 </div> 
 
@@ -3004,7 +2686,7 @@ function showGolfScoreSummary(){
 
 
 <script type="text/javascript">
-//<![CDATA[
+  //<![CDATA[
 "use strict";
 //Server Calls
 function retrieveGolfScoreList(golferId_){
@@ -3012,15 +2694,15 @@ function retrieveGolfScoreList(golferId_){
   var params =prepParams(params,"golf_score" ,"select" );
   params['where_clause'] = "golfer_id =" + golferId_;
   var successf = function (rslt){
-	populateGolfScore(rslt.rows)
+    populateGolfScore(rslt.rows)
   };
   serverCall(params,successf,FAILF);
 }
 function retrieveGolfScore(params){
   params = prepParams(params,"golf_score","SELECT");
   var successf = function(rslt){
-	rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-	bindToForm("golfScoreForm", rslt.rows[0]);
+    rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+    bindToForm("golfScoreForm", rslt.rows[0]);
   }
   serverCall(params,successf,FAILF);
 }
@@ -3029,7 +2711,7 @@ function retrieveGolferNameForGolfScore(golferId_){
   var params = prepParams(params,"GOLFER","SELECT");
   params['where_clause'] = "golfer_id =" + golferId_;
   var successf = function(rslt){
-	 $("#golfScoreGolferNameId").html(rslt.rows[0].name);
+    $("#golfScoreGolferNameId").html(rslt.rows[0].name);
   }
   serverCall(params,successf,FAILF);
 }
@@ -3040,8 +2722,8 @@ function deleteGolfScore(golfScoreId_, lastUpdate_){
   params['golf_score_id'] = golfScoreId_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-	removeGolfScoreListTableRow(rslt.golf_score_id);
-	briefNotify("Golf Score Deleted Successfully");
+    removeGolfScoreListTableRow(rslt.golf_score_id);
+    briefNotify("Golf Score Deleted Successfully");
   };
   serverCall(params,successf,FAILF);
 }
@@ -3049,13 +2731,13 @@ function deleteGolfScore(golfScoreId_, lastUpdate_){
 function saveGolfScore(params){
   params = prepParams(params,"golf_score",insertUpdateChoose);
   var successf=function(rslt){
-	clearForm('golfScoreForm');
-	if (rslt.spwfAction == "UPDATE"){
-		replaceGolfScoreListTableRow(rslt.rows[0]);
-	}else if (rslt.spwfAction == "INSERT"){
-		addNewGolfScoreListTableRow(rslt.rows[0]);
-	}
-	briefNotify("Golf Score Successfully Saved");
+    clearForm('golfScoreForm');
+    if (rslt.spwfAction == "UPDATE"){
+      replaceGolfScoreListTableRow(rslt.rows[0]);
+    }else if (rslt.spwfAction == "INSERT"){
+      addNewGolfScoreListTableRow(rslt.rows[0]);
+    }
+    briefNotify("Golf Score Successfully Saved");
   };
   serverCall(params,successf,FAILF);
 }
@@ -3063,16 +2745,16 @@ function saveGolfScore(params){
 //ServerCall Wrappers
 function editGolfScore(golfScoreId_){
   if(golfScoreId_){
-	var params ={"where_clause":"golf_score_id=" +golfScoreId_};
-	retrieveGolfScore(params);
+    var params ={"where_clause":"golf_score_id=" +golfScoreId_};
+    retrieveGolfScore(params);
   }
 }
 
 function saveGolfScoreForm(){
-if(validateGolfScoreForm()){
-  var params = bindForm("golfScoreForm");
-  saveGolfScore(params);
-}
+  if(validateGolfScoreForm()){
+    var params = bindForm("golfScoreForm");
+    saveGolfScore(params);
+  }
 }
 
 //validation
@@ -3084,19 +2766,19 @@ function validateGolfScoreForm(){
 
 //Top Level HTML Manip
 function populateGolfScore(dataRows){
-  var htmlAggregator ="<tr> <th>Score</th><th>Date</th> <th>I want to&hellip;</th></tr>";
+  var htmlAggregator ="<tr> <th>Score</th><th class='accentColumn'>Date</th> <th>I want to&hellip;</th></tr>";
   for(var ndx=0;ndx< dataRows.length;ndx++){
-	htmlAggregator +=buildGolfScoreListTableRow(dataRows[ndx]);
+    htmlAggregator +=buildGolfScoreListTableRow(dataRows[ndx]);
   }
-  $("#golfScoreListTable").html(htmlAggregator);
+    $("#golfScoreListTable").html(htmlAggregator);
 }
 
 function buildGolfScoreListTableRow(data){
   var htmlRow ="<tr id='GolfScoreListTableTR-" +data.golf_score_id + "'><td>";
   htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</td>";
-  htmlRow += "<td>" + pgDate(data.game_dt) + " </td> ";
+  htmlRow += "<td class='accentColumn'>" + pgDate(data.game_dt) + " </td> ";
   htmlRow += "<td><a class='alink' onclick='editGolfScore(" +data.golf_score_id + ")'>Edit</a> |"
-  htmlRow += "<a class='alink' onclick=\"deleteGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+    htmlRow += "<a class='alink' onclick=\"deleteGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
   return htmlRow;
 }
 
@@ -3122,47 +2804,49 @@ function showGolfScore(golferId_){
 
 //After complete Load setup
 $(document).ready(function(){
-  $("#golfScoreForm-game_dt" ).datepicker();
-});
+    $("#golfScoreForm-game_dt" ).datepicker();
+    });
 
 //]]>
 
 </script>
-<div id="golfScore" class="MainLayout MainContentPaneStyle"  >
-<h1 id="golfScoreGolferNameId"></h1>
-<table ><tr><td class="noborder" style="vertical-align:top;" >
-  <table id="golfScoreListTable" style="border-width: 1px; border-style:solid; " class='dataTable' >
-  </table>
-</td><td class="noborder">
-	<form id="golfScoreForm" >
-	<table id="golfScoreFormTable" style="" class='formTable'>
-	  <tr>
-		<td> Golfer </td>
-		<td><select name="golfer_id" id="golfScoreForm-golfer_id"></select></td>
-		<td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
-	  </tr>
-	  <tr>
-		<td> Score </td>
-		<td><input  type="text" name="golf_score" id="golfScoreForm-golf_score"/></td>
-		<td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
-	  </tr>
-	  <tr>
-		<td> Date</td>
-		<td><input type="text"  name="game_dt" id="golfScoreForm-game_dt"/></td>
-		<td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
-	   </tr>
-	  <tr><td colspan="3">
-		<button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button>
-		<button type="button" id="golfScoreFormAdd" value="Add" onclick="saveGolfScoreForm();" >Add</button>
-		<button type="button" id="golfScoreFormClear" value="Clear" onclick="clearForm('golfScoreForm');" >Clear</button>
-	      </td>
-	  </tr>
-	</table>
-	<input type="hidden" name="last_update" id="golfScoreForm-last_update">
-	<input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
-	</form>
-</td></tr></table>
-</div> <!--end:GolfScore-->
+<div id="golfScore" class="contentPane MainLayout"  >
+  <h1 id="golfScoreGolferNameId"></h1>
+	<div class="row">
+	  <span class="sixcol">
+	    <table id="golfScoreListTable"  class='dataTable' >
+	    </table>
+	  </span>
+	  <span class = "sixcol last">
+	    <form id="golfScoreForm" >
+	      <table id="golfScoreFormTable"  class='formTable'>
+		<tr>
+		  <td> Golfer </td>
+		  <td><select name="golfer_id" id="golfScoreForm-golfer_id"></select></td>
+		  <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span> </td>
+		</tr>
+		<tr>
+		  <td> Score </td>
+		  <td><input  type="text" name="golf_score" id="golfScoreForm-golf_score"/></td>
+		  <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
+		</tr>
+		<tr>
+		  <td> Date</td>
+		  <td><input type="text"  name="game_dt" id="golfScoreForm-game_dt"/></td>
+		  <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
+		</tr>
+		<tr><td colspan="3">
+		    <button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button>
+		    <button type="button" id="golfScoreFormAdd" value="Add" onclick="saveGolfScoreForm();" >Add</button>
+		    <button type="button" id="golfScoreFormClear" value="Clear" onclick="clearForm('golfScoreForm');" >Clear</button>
+		</td></tr>
+		</table>
+	      </span>
+	    </div>
+	    <input type="hidden" name="last_update" id="golfScoreForm-last_update">
+	    <input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
+	  </form>
+  </div> <!--end:GolfScore-->
 
 
 
@@ -3176,14 +2860,14 @@ $(document).ready(function(){
 function saveGolfer(params){
   params = prepParams(params,"golfer",insertUpdateChoose);
   var successf=function(rslt){
-    	bindToForm("golferForm", rslt.rows[0]);
-        if (rslt.spwfAction == "UPDATE"){
-		replaceRowGolferListTable(rslt.rows[0]);
-	}else if (rslt.spwfAction == "INSERT"){
-		addNewRowGolferListTable(rslt.rows[0]);
-	}
-	briefNotify("Golfer Saved Successfully");
-	toggleSaveMode("golferForm", true);
+    bindToForm("golferForm", rslt.rows[0]);
+    if (rslt.spwfAction == "UPDATE"){
+      replaceRowGolferListTable(rslt.rows[0]);
+    }else if (rslt.spwfAction == "INSERT"){
+      addNewRowGolferListTable(rslt.rows[0]);
+    }
+    briefNotify("Golfer Saved Successfully");
+    toggleSaveMode("golferForm", true);
 
   };
   serverCall(params,successf,FAILF);
@@ -3196,13 +2880,13 @@ function retrieveGolfer(params,selectedKey_){
     params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
   }
   var successf = function(rslt){
-	if(rslt.rowCount==1){
-		bindToForm("golferForm", rslt.rows[0]);
-		toggleSaveMode("golferForm",true);
-	}else{
-	  populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
-	  
-	}
+    if(rslt.rowCount==1){
+      bindToForm("golferForm", rslt.rows[0]);
+      toggleSaveMode("golferForm",true);
+    }else{
+      populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
+
+    }
   }
   serverCall(params,successf,FAILF);
 }
@@ -3211,8 +2895,8 @@ function deleteGolfer(golferId_, lastUpdate_){
   params['golfer_id'] = golferId_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-	removeGolferListTableRow(rslt.golfer_id);
-	briefNotify("Golfer Deleted Successfully");
+    removeGolferListTableRow(rslt.golfer_id);
+    briefNotify("Golfer Deleted Successfully");
   };
   serverCall(params,successf,FAILF);
 }
@@ -3222,8 +2906,8 @@ function deleteGolfer(golferId_, lastUpdate_){
 //Server Call Wrappers
 function editGolfer(rowId_){
   if(rowId_){
-	var params ={"where_clause":"golfer_id=" +rowId_};
-	retrieveGolfer(params);
+    var params ={"where_clause":"golfer_id=" +rowId_};
+    retrieveGolfer(params);
   }
 }
 
@@ -3232,7 +2916,7 @@ function saveGolferForm(){
     var params = bindForm("golferForm");
     saveGolfer(params);
   }else{
-	briefNotify("Please Correct Form Validation Errors To Continue");
+    briefNotify("Please Correct Form Validation Errors To Continue");
   }
 }
 
@@ -3246,23 +2930,23 @@ function validateGolferForm(){
 //----------------------------------------------------
 //html building functions
 function populateGolferListTable(rslt,selectedKey_) {
-  var newHTML="<tr><th>Golfer Name</th><th>I want to&hellip;</th></tr>";
+  var newHTML="<tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr>";
   for (var i=0;i<rslt.length;i++){
     newHTML +=buildRowGolferListTable(rslt[i]);
     if (rslt[i].golfer_id == selectedKey_){
-	bindToForm("golferForm", rslt[i]);
-	toggleSaveMode("golferForm",true);
+      bindToForm("golferForm", rslt[i]);
+      toggleSaveMode("golferForm",true);
     }   
   }
   $("#golferListTable").html(newHTML);
 }
 
 function buildRowGolferListTable(row){
-  var newRow= "<tr id='GolferListTableTR-" +row.golfer_id + "'><td>";
-  newRow += row.name + "</td><td>";
+  var newRow= "<tr id='GolferListTableTR-" +row.golfer_id + "'><td >";
+  newRow += row.name + "</td><td class='accentColumn'>";
   newRow +="<a href='#' onclick='editGolfer("+ row.golfer_id + ")'>Edit</a> | "
-  newRow +="<a href='#' onclick=\"deleteGolfer("+ row.golfer_id + ",'" + row.last_update + "')\">Delete</a>"
-  newRow +="</td></tr>";
+    newRow +="<a href='#' onclick=\"deleteGolfer("+ row.golfer_id + ",'" + row.last_update + "')\">Delete</a>"
+    newRow +="</td></tr>";
   return newRow;
 }
 
@@ -3286,39 +2970,39 @@ function showGolfer(golferId_){
   currentContentPane = "golfer";
   if(golferId_){
   }else{
-	toggleSaveMode("golferForm", false);
-        clearForm("golferForm");
+    toggleSaveMode("golferForm", false);
+    clearForm("golferForm");
   }
   retrieveGolfer(params,golferId_);
 }
 
 $(document).ready(function(){
-});
+    });
 //]]>
 </script>
 
-<div id="golfer" class="MainLayout MainContentPaneStyle" >
-<form id="golferForm" >
-<table>
-    <tr>
-     <td class="noborder"> <table id="golferListTable"></table> </td>
-     <td class= "noborder">
-       <table id="golferFormTable" style="" class='formTable'>
-	   <tr><td class="labelColumn"><label for="golferForm-name" id="golferFormLabel-name" > Name</label></td><td><input name="name" id="golferForm-name" class="required"></td><td><span class="ValidationMsg" id="golferFormLabel-nameError"></span></td>
-</tr>
-	   <tr><td colspan="2">
+<div id="golfer" class="MainLayout contentPane" >
+  <form id="golferForm" >
+    <div class="row">
+      <span class="sixcol">
+	<table id="golferListTable" class='dataTable'></table> 
+      </span>
+      <span class="sixcol last">	  
+	<table id="golferFormTable" class='formTable'>
+	  <tr><td class="labelColumn"><label for="golferForm-name" id="golferFormLabel-name" > Name</label></td><td><input name="name" id="golferForm-name" class="required"></td><td><span class="ValidationMsg" id="golferFormLabel-nameError"></span></td>
+	  </tr>
+	  <tr><td colspan="2">
 	      <button type="button" id="golferFormSave" value="Save" onclick="saveGolferForm();" >Save</button>
 	      <button type="button" id="golferFormAdd" value="Save" onclick="saveGolferForm();" >Add</button>
 	      <button type="button" id="golferFormClear" value="Clear" onclick="clearForm('golferForm');" >Clear</button>
-	      </td>
-	   </tr>
-       </table>
-     </td>
-    </tr>
-</table>
-<input type="hidden" name="last_update" id="golferForm-last_update">
-<input type="hidden" name="golfer_id" id="golferForm-golfer_id">
-</form>
+	    </td>
+	  </tr>
+	</table>
+      </span>
+    </div >	  
+    <input type="hidden" name="last_update" id="golferForm-last_update">
+    <input type="hidden" name="golfer_id" id="golferForm-golfer_id">
+  </form>
 </div> 
 
 
@@ -3386,21 +3070,32 @@ function showHelpPane(){
 
 
 
-<div id="launchPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
+<!--MainLayout MainContentPaneStyle -->
+<div id="launchPane" class=" contentPane" style="text-align:left; ">
 <div id ="launchPaneCenterDiv" >
 
   <div class="row">
 	<h1 id="launchPaneTitle" >I want to&hellip;</h1>
   </div>
 <div class="row">
-  <span class="twocol largeIconSpan"><a id="aboutGolfScore" onclick="showGolfScoreSummary();">
+  <span class="twocol largeIconSpan"><a id="launcherShowGolfScore" onclick="showGolfScoreSummary();">
 	<span class="sprite64Icon kolfIcon"></span><br/>
 	View Averages</a>
   </span>
-  <span class="twocol last largeIconSpan"><a id="aboutGolfScore" onclick="showGolfer();">
+  <span class="twocol last largeIconSpan"><a id="launcherShowGolfer" onclick="showGolfer();">
 	<span class="sprite64Icon peopleIcon"></span><br/>
-	View Golfer Profiles</a>
+	View Golfers</a>
   </span>
+  <span class="twocol last largeIconSpan"><a id="launcherShowAbout" onclick="showAboutPane();">
+	<span class="sprite64Icon learnMoreIcon"></span><br/>
+	Learn More</a>
+  </span>
+  <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showHelpPane();">
+	<span class="sprite64Icon helpIcon"></span><br/>
+	Get Help</a>
+  </span>
+
+
 </div>
 
 </div>
@@ -3505,28 +3200,37 @@ $(document).keypress(function(e) {
 
 //]]>
 </script>
-
-<div id="LoginPortal" style="position:fixed; height:100%; width:100%" >
-<img  height="150" width ="470" src="./images/headerphoto.jpg" alt="Login Page Splash">
-<div  class="vcenter">
-<form id="loginHolder">  
-  <fieldset >  
-   <div class="prettyFormHolder"> 
-   <table class="formLayout" style="margin: auto; " id="testTable">
-    <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
-	<span class="small" >Please enter your login credentials</span><hr/></td></tr>
-    <tr>
-    <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
-    <td><input type="text"  name="user_id" id="user_id" size="30" value="" class="fieldbox required"  /> </td> <td><span class="ValidationMsg" id="user_idError"></span></td>
-     </tr><tr>
-    <td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
-    <td><input type="password" name="password" id="password" size="30" value="" class="fieldbox required"  />  </td>  <td><span class="ValidationError" id="passwordError"></span></td>
-
-     </tr><tr>
-    <td colspan="3"  style="padding: 15px">
-	<button type="button"  id="cmdlogin" class="custombutton"  onclick="loginCall()" > Login </button>  
-    </td>
-</tr></table>
+<div id="LoginPortal"  class="contentPane container">
+  <div class="row ">
+	<img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash">
+  </div>
+  <div  id="loginFormRow" class="row ">
+    <form id="loginHolder"  >  
+      <fieldset > 
+       <div class="center" style="width:25em;"> 
+   	<div class="prettyFormHolder "  > 
+   	  <table class="formLayout" >
+    	    <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
+		<span class="small" >Please enter your login credentials</span><hr/></td>
+	    </tr>
+    	    <tr>
+    	      <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
+              <td><input type="text"  name="user_id" id="user_id" size="30" class="fieldbox required"  /> </td> <td>
+			<span class="ValidationMsg" id="user_idError"></span></td>
+     	    </tr>
+	    <tr>
+    		<td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
+    		<td><input type="password" name="password" id="password" size="30" class="fieldbox required"  />  
+		</td>  
+		<td><span class="ValidationError" id="passwordError"></span></td>
+     	    </tr>
+	    <tr>
+    		<td colspan="3" align="center" style="padding: 15px; ">
+		  <button type="button"  id="cmdlogin" class="custombutton "  onclick="loginCall()" > Login </button>  
+    		</td>
+	    </tr>
+        </table>
+</div>
 </div>  
 </fieldset>  
 </form>  

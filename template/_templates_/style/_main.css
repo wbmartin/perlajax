@@ -4,21 +4,22 @@
   display:none;
   overflow:auto;
   /*background-color:green;*/
-  padding: 5px 5px 5px 5px ;
+  padding: .4em ;
 }
 .MainLayout{
+  background: #FFF url(./images/gradientbg.jpg) repeat-x;
   display:none;/*Initially Hidden*/
 }
 
 body{
-/*  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
-  font-size:12px;
-*/
+  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+  font-size:1.1em;
+
 }
 .small{
   color:#666666;
   display:block;
-  font-size:11px;
+  font-size:.8em;
   font-weight:normal;
   text-align:left;
 }
@@ -43,19 +44,20 @@ body{
  padding: 0 0 0 0;
 }
 .kolfIcon{
-background-position:0 0 ;
+  background-position:0 0 ;
 }
 .peopleIcon{
-background-position:0px -100px;
+  background-position:0px -100px;
 }
-
-	
-
-
+.learnMoreIcon{
+  background-position:0px -200px;
+}
+.helpIcon{
+  background-position:0px -300px;
+}
 
 input{
   float:left;
-  font-size:12px;
   padding:4px 2px;
   border:solid 1px ;
   width:200px;
@@ -63,6 +65,7 @@ input{
 }
 select{
   width:200px;
+  margin:2px 0 20px 10px;
 }
 
 .formLayout .labelColumn{
@@ -71,11 +74,7 @@ select{
   padding:7px 25px 20px 50px;
 }
 table.formLayout{
-  /*border-width: 2px;
-  border-style: solid;
-  border-color:green;
-*/
-  background-color:white;
+   background-color:white;
 }
 .prettyFormHolder{
   border-width: 2px;
@@ -94,12 +93,11 @@ table.formLayout{
   text-align:center;
   line-height:31px;
   color:#FFFFFF;
-  font-size:11px;
   font-weight:bold;
 }
 .formLayout .formHeader{
   font-weight: bold;
-  font-size: 150%;
+  font-size: 1.5em;
 }
 fieldset {
   border-width:0px;
@@ -130,18 +128,12 @@ fieldset {
   padding:1px;
 }
 
-.dataTable{
-
-}
-.dataTable th{
-font-weight:bold;
-}
 
 .formTable{
-border-style:none;
+  border-style:none;
 }
 .formTable td{
-border-style:none;
+  border-style:none;
 }
 
 #briefNotice {
@@ -160,12 +152,6 @@ border-style:none;
   border-width:1px;
   border-style:solid;
   border-radius:15px;
-/*background: #74A846;
-color: #fff;
-*/
-}
-.noborder{
-  border-left:none;
 }
 
 input.invalid { 
@@ -175,7 +161,116 @@ input.invalid {
   color:red;
 }
 .centerblock{
-display: block;
-margin-left: auto;
- margin-right: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+/*PixelGreen Extract*/
+#header{
+	background: #000;
+	border-bottom-style: solid;
+	border-width:medium;
+	border-color:#65944A
+}
+#header .primary{
+  color: #65944A;
+}
+#header .secondary{
+  color:#BFBFBF;
+}
+#header a{
+  text-decoration:none;
+}
+
+ul.buttonbar{
+	display:inline;
+	font: bolder 1.1em 'Trebuchet MS', sans-serif;
+	list-style: none;
+	margin: 0; padding: 0;
+	color:white;	
+}
+ul.buttonbar li{
+  display: inline;
+  background: #1C1C1C;
+  padding: .2em;
+  font: 0.7em;
+}
+ul.buttonbar li:hover{
+  background: #65944A;
+}
+#topMenuBar{
+  margin-top: 2em;
+  display:none; /*Initially hidden*/
+}
+
+
+.logoBlock{
+  margin-top:.5em;
+}
+.logoBlock h1 {
+  display:inline-block;
+  font-size: 3.5em;
+}
+.logoBlock h2 {
+  font-size: .75em;
+  margin-left: 2.5em;
+  color: #BFBFBF;
+  margin-top: -.5em
+  
+}
+.center {
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#LoginPortal{
+  background: #FFF url(./images/gradientbg.jpg) repeat-x;
+}
+#LoginPortal img{
+  display:block;
+  margin-top:2em;
+}
+
+.contentPane{
+  padding-top:2em;
+  padding-bottom:2em;
+
+}
+
+#loginFormRow{
+  margin-top: 2em;
+}
+
+table.dataTable{
+  border-style:none;
+  border-spacing:0;
+}
+.dataTable th{
+  border-top-style:double;
+  border-bottom-style:double;
+  border-width: 3px;
+  padding-left: 1.1em;
+  padding-right: 1.1em;
+  border-color: #BFBFBF;
+  color: #BFBFBF;
+  font-weight:bold;
+}
+.dataTable td{
+  padding-left: 1.1em;
+  padding-right: 1.1em;
+  border-color: #BFBFBF;
+  border-width: 1px;
+  border-bottom-style:solid;
+  color:#65944A;
+
+}
+.dataTable a {
+  text-decoration: none;
+}
+.dataTable a:visited{
+  color:#65944A;
+}
+
+.dataTable .accentColumn{
+  background:#F5F5F5;
 }

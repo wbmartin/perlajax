@@ -1,19 +1,30 @@
 [%divId="launchPane"%]
-<div id="[%divId%]" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
+<!--MainLayout MainContentPaneStyle -->
+<div id="[%divId%]" class=" contentPane" style="text-align:left; ">
 <div id ="[%divId%]CenterDiv" >
 [%#style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; max-width:300; " %]
   <div class="row">
 	<h1 id="[%divId%]Title" >I want to&hellip;</h1>
   </div>
 <div class="row">
-  <span class="twocol largeIconSpan"><a id="aboutGolfScore" onclick="showGolfScoreSummary();">
+  <span class="twocol largeIconSpan"><a id="launcherShowGolfScore" onclick="showGolfScoreSummary();">
 	<span class="sprite64Icon kolfIcon"></span><br/>
 	View Averages</a>
   </span>
-  <span class="twocol last largeIconSpan"><a id="aboutGolfScore" onclick="showGolfer();">
+  <span class="twocol last largeIconSpan"><a id="launcherShowGolfer" onclick="showGolfer();">
 	<span class="sprite64Icon peopleIcon"></span><br/>
-	View Golfer Profiles</a>
+	View Golfers</a>
   </span>
+  <span class="twocol last largeIconSpan"><a id="launcherShowAbout" onclick="showAboutPane();">
+	<span class="sprite64Icon learnMoreIcon"></span><br/>
+	Learn More</a>
+  </span>
+  <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showHelpPane();">
+	<span class="sprite64Icon helpIcon"></span><br/>
+	Get Help</a>
+  </span>
+
+
 </div>
 
 </div>

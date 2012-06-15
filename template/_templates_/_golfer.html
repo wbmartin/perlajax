@@ -10,14 +10,14 @@
 function save[%ucfirst(divId)%](params){
   params = prepParams(params,"golfer",insertUpdateChoose);
   var successf=function(rslt){
-    	bindToForm("[%divId%]Form", rslt.rows[0]);
-        if (rslt.spwfAction == "UPDATE"){
-		replaceRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
-	}else if (rslt.spwfAction == "INSERT"){
-		addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
-	}
-	briefNotify("Golfer Saved Successfully");
-	toggleSaveMode("[%divId%]Form", true);
+    bindToForm("[%divId%]Form", rslt.rows[0]);
+    if (rslt.spwfAction == "UPDATE"){
+      replaceRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
+    }else if (rslt.spwfAction == "INSERT"){
+      addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
+    }
+    briefNotify("Golfer Saved Successfully");
+    toggleSaveMode("[%divId%]Form", true);
 
   };
   serverCall(params,successf,FAILF);
@@ -30,13 +30,13 @@ function retrieve[%ucfirst(divId)%](params,selectedKey_){
     params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
   }
   var successf = function(rslt){
-	if(rslt.rowCount==1){
-		bindToForm("[%divId%]Form", rslt.rows[0]);
-		toggleSaveMode("[%divId%]Form",true);
-	}else{
-	  populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
-	  
-	}
+    if(rslt.rowCount==1){
+      bindToForm("[%divId%]Form", rslt.rows[0]);
+      toggleSaveMode("[%divId%]Form",true);
+    }else{
+      populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
+
+    }
   }
   serverCall(params,successf,FAILF);
 }
@@ -45,8 +45,8 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
   params['[%prkey%]'] = [%toCC(prkey)%]_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-	remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-	briefNotify("Golfer Deleted Successfully");
+    remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
+    briefNotify("Golfer Deleted Successfully");
   };
   serverCall(params,successf,FAILF);
 }
@@ -56,8 +56,8 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
 //Server Call Wrappers
 function edit[%ucfirst(divId)%](rowId_){
   if(rowId_){
-	var params ={"where_clause":"golfer_id=" +rowId_};
-	retrieve[%ucfirst(divId)%](params);
+    var params ={"where_clause":"golfer_id=" +rowId_};
+    retrieve[%ucfirst(divId)%](params);
   }
 }
 
@@ -66,7 +66,7 @@ function save[%ucfirst(divId)%]Form(){
     var params = bindForm("[%divId%]Form");
     save[%ucfirst(divId)%](params);
   }else{
-	briefNotify("Please Correct Form Validation Errors To Continue");
+    briefNotify("Please Correct Form Validation Errors To Continue");
   }
 }
 
@@ -80,23 +80,23 @@ function validate[%ucfirst(divId)%]Form(){
 //----------------------------------------------------
 //html building functions
 function populate[%ucfirst(divId)%]ListTable(rslt,selectedKey_) {
-  var newHTML="<tr><th>Golfer Name</th><th>I want to&hellip;</th></tr>";
+  var newHTML="<tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr>";
   for (var i=0;i<rslt.length;i++){
     newHTML +=buildRow[%ucfirst(divId)%]ListTable(rslt[i]);
     if (rslt[i].[%prkey%] == selectedKey_){
-	bindToForm("[%divId%]Form", rslt[i]);
-	toggleSaveMode("[%divId%]Form",true);
+      bindToForm("[%divId%]Form", rslt[i]);
+      toggleSaveMode("[%divId%]Form",true);
     }   
   }
   $("#[%divId%]ListTable").html(newHTML);
 }
 
 function buildRow[%ucfirst(divId)%]ListTable(row){
-  var newRow= "<tr id='[%ucfirst(divId)%]ListTableTR-" +row.golfer_id + "'><td>";
-  newRow += row.name + "</td><td>";
+  var newRow= "<tr id='[%ucfirst(divId)%]ListTableTR-" +row.golfer_id + "'><td >";
+  newRow += row.name + "</td><td class='accentColumn'>";
   newRow +="<a href='#' onclick='edit[%ucfirst(divId)%]("+ row.golfer_id + ")'>Edit</a> | "
-  newRow +="<a href='#' onclick=\"delete[%ucfirst(divId)%]("+ row.golfer_id + ",'" + row.last_update + "')\">Delete</a>"
-  newRow +="</td></tr>";
+    newRow +="<a href='#' onclick=\"delete[%ucfirst(divId)%]("+ row.golfer_id + ",'" + row.last_update + "')\">Delete</a>"
+    newRow +="</td></tr>";
   return newRow;
 }
 
@@ -120,37 +120,37 @@ function show[%ucfirst(divId)%](golferId_){
   currentContentPane = "[%divId%]";
   if(golferId_){
   }else{
-	toggleSaveMode("[%divId%]Form", false);
-        clearForm("[%divId%]Form");
+    toggleSaveMode("[%divId%]Form", false);
+    clearForm("[%divId%]Form");
   }
   retrieve[%ucfirst(divId)%](params,golferId_);
 }
 
 $(document).ready(function(){
-});
+    });
 //]]>
 </script>
 
-<div id="[%divId%]" class="MainLayout MainContentPaneStyle" >
-<form id="[%divId%]Form" >
-<table>
-    <tr>
-     <td class="noborder"> <table id="[%divId%]ListTable"></table> </td>
-     <td class= "noborder">
-       <table id="[%divId%]FormTable" style="" class='formTable'>
-	   <tr><td class="labelColumn"><label for="[%divId%]Form-name" id="[%divId%]FormLabel-name" > Name</label></td><td><input name="name" id="[%divId%]Form-name" class="required"></td><td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
-</tr>
-	   <tr><td colspan="2">
+<div id="[%divId%]" class="MainLayout contentPane" >
+  <form id="[%divId%]Form" >
+    <div class="row">
+      <span class="sixcol">
+	<table id="[%divId%]ListTable" class='dataTable'></table> 
+      </span>
+      <span class="sixcol last">	  
+	<table id="[%divId%]FormTable" class='formTable'>
+	  <tr><td class="labelColumn"><label for="[%divId%]Form-name" id="[%divId%]FormLabel-name" > Name</label></td><td><input name="name" id="[%divId%]Form-name" class="required"></td><td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
+	  </tr>
+	  <tr><td colspan="2">
 	      <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
 	      <button type="button" id="[%divId%]FormAdd" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
 	      <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
-	      </td>
-	   </tr>
-       </table>
-     </td>
-    </tr>
-</table>
-<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-<input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
-</form>
+	    </td>
+	  </tr>
+	</table>
+      </span>
+    </div [%# row%]>	  
+    <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+    <input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
+  </form>
 </div> [%# end golfScoreSummary%]
