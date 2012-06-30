@@ -15,7 +15,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PROFILE_GRANT' );
     end if;
---security_privilege_id, security_profile_id, last_update, updated_by
+--security_profile_grant_id, security_privilege_id, security_profile_id, last_update, updated_by
 
     whereClause ='';
     orderByClause='';
@@ -53,12 +53,12 @@ $BODY$
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function: security_profile_grant_bypk(text, text, text ,integer,integer)
+-- Function: security_profile_grant_bypk(text, text, text ,integer)
 
--- DROP FUNCTION security_profile_grant_pybk(text, text, text,integer,integer);
+-- DROP FUNCTION security_profile_grant_pybk(text, text, text,integer);
 
 --CREATE OR REPLACE FUNCTION security_profile_grant_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
---,securityPrivilegeId_ integer,securityProfileId_ integer)
+--,securityProfileGrantId_ integer)
 --  RETURNS security_profile_grant AS
 --$BODY$
 --  Declare
@@ -68,15 +68,15 @@ $BODY$
 --    	perform isSessionValid( securityuserId_,sessionId_) ;
 --    	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PROFILE_GRANT' );
 --    end if;
---security_privilege_id, security_profile_id, last_update, updated_by
---     select * into result from security_profile_grant where security_privilege_id=securityPrivilegeId_ and security_profile_id=securityProfileId_;
+--security_profile_grant_id, security_privilege_id, security_profile_id, last_update, updated_by
+--     select * into result from security_profile_grant where security_profile_grant_id=securityProfileGrantId_;
 --     return result;
 --  End;
 --$BODY$
 --  LANGUAGE 'plpgsql' VOLATILE
 --  COST 100;
---ALTER FUNCTION security_profile_grant_bypk(text,  text, text,integer,integer) OWNER TO postgres;
---GRANT EXECUTE ON FUNCTION security_profile_grant_bypk(text,  text, text,integer,integer) TO GROUP golfscore;
+--ALTER FUNCTION security_profile_grant_bypk(text,  text, text,integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_grant_bypk(text,  text, text,integer) TO GROUP golfscore;
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -113,12 +113,12 @@ $body$
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function:  security_profile_grant_uq(text, text, text ,integer,integer,timestamp with time zone)
+-- Function:  security_profile_grant_uq(text, text, text ,integer,integer,integer,timestamp with time zone)
 
--- DROP FUNCTION security_profile_grant_uq(text, text, text ,integer,integer,timestamp with time zone);
+-- DROP FUNCTION security_profile_grant_uq(text, text, text ,integer,integer,integer,timestamp with time zone);
 
 
-create or replace function security_profile_grant_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityPrivilegeId_ integer, securityProfileId_ integer, lastUpdate_ timestamp with time zone)
+create or replace function security_profile_grant_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityProfileGrantId_ integer, securityPrivilegeId_ integer, securityProfileId_ integer, lastUpdate_ timestamp with time zone)
   returns security_profile_grant as
 $body$
   declare
@@ -128,7 +128,7 @@ $body$
     	perform issessionvalid( securityuserid_,sessionid_) ;
     	perform isuserauthorized( securityuserid_, 'UPDATE_SECURITY_PROFILE_GRANT' );
     end if;
-	update security_profile_grant set last_update = now() , updated_by = securityuserid_	where security_privilege_id=securityPrivilegeId_ and security_profile_id=securityProfileId_   and   last_update = lastUpdate_
+	update security_profile_grant set security_privilege_id= securityPrivilegeId_ ,  security_profile_id= securityProfileId_ ,  last_update = now() , updated_by = securityuserid_	where security_profile_grant_id=securityProfileGrantId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then
@@ -141,17 +141,17 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
---alter function security_profile_grant_uq(text,  text, text ,integer,integer,timestamp with time zone) owner to postgres;
---GRANT EXECUTE ON FUNCTION security_profile_grant_uq(text, text, text ,integer,integer,timestamp with time zone) TO GROUP golfscore;
+--alter function security_profile_grant_uq(text,  text, text ,integer,integer,integer,timestamp with time zone) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_grant_uq(text, text, text ,integer,integer,integer,timestamp with time zone) TO GROUP golfscore;
 
---select * from security_profile_grant_uq('ALREADY_AUTH', 'test', 'test' ,1 ,1 <last_update>, 'text');
+--select * from security_profile_grant_uq('ALREADY_AUTH', 'test', 'test' ,1 ,1 <last_update> <security_profile_grant_id>, 'text');
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function:  security_profile_grant_dq(text, text ,integer,integer, timestamp)
--- DROP FUNCTION security_profile_grant_dq( text,  text ,integer,integer, timestamp);
+-- Function:  security_profile_grant_dq(text, text ,integer, timestamp)
+-- DROP FUNCTION security_profile_grant_dq( text,  text ,integer, timestamp);
 
-create or replace function security_profile_grant_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,securityPrivilegeId_ integer,securityProfileId_ integer, lastUpdate_ timestamp  )
+create or replace function security_profile_grant_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,securityProfileGrantId_ integer, lastUpdate_ timestamp  )
   returns boolean as
 $body$
   declare
@@ -161,7 +161,7 @@ $body$
     	perform issessionvalid( userid_,sessionid_) ;
     	perform isuserauthorized(userid_,'DELETE_SECURITY_PROFILE_GRANT' );
     end if;
-	delete from security_profile_grant where security_privilege_id=securityPrivilegeId_ and security_profile_id=securityProfileId_  and last_update = lastUpdate_;
+	delete from security_profile_grant where security_profile_grant_id=securityProfileGrantId_  and last_update = lastUpdate_;
 
 	if found then
 	  return true;
@@ -172,7 +172,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
---alter function security_profile_grant_dq(text, text, text,integer,integer, timestamp) owner to postgres;
---GRANT EXECUTE ON FUNCTION security_profile_grant_dq(text,  text, text,integer,integer, timestamp) TO GROUP golfscore;
+--alter function security_profile_grant_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_grant_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

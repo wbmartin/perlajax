@@ -17,6 +17,7 @@ style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:
 [%INCLUDE _help.html%]
 [%INCLUDE _launch.html%]
 [%INCLUDE core/_clientLog.html%]
+[%INCLUDE _securityGrants.html%]
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 </div><!--End Main Content-->
 [%INCLUDE _LoginPortal.html%]

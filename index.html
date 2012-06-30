@@ -1537,8 +1537,6 @@ catch(e){
 
 
 <style type="text/css">
-/* PixelGreen */
-
 
 /* _jqueryui*/
 /*
@@ -2330,6 +2328,17 @@ body{
  background:url(images/consolidatedIcons.png) no-repeat;
  padding: 0 0 0 0;
 }
+
+.sprite32Icon{
+ display:inline-block;
+ height:32px;
+ width:32px;
+ background:url(images/consolidatedIcons.png) no-repeat;
+ padding: 0 0 0 0;
+}
+
+
+
 .kolfIcon{
   background-position:0 0 ;
 }
@@ -2342,6 +2351,22 @@ body{
 .helpIcon{
   background-position:0px -300px;
 }
+.keyIcon{
+  background-position:0px -400px;
+}
+.keyManIcon{
+  background-position:0px -500px;
+}
+.plusIcon{
+ background-position:0px -268px;
+
+}
+.cancelIcon{
+ background-position:-32px -268px;
+
+}
+
+
 
 input{
   float:left;
@@ -2413,14 +2438,15 @@ fieldset {
   border-style: outset;
   width: 500px;
   padding:1px;
+  font-size: .75em;
 }
 
 
 .formTable{
-border-style:none;
+  border-style:none;
 }
 .formTable td{
-border-style:none;
+  border-style:none;
 }
 
 #briefNotice {
@@ -2453,6 +2479,17 @@ input.invalid {
   margin-right: auto;
 }
 /*PixelGreen Extract*/
+/* ----------------------------------------------------
+
+   AUTHOR           :  	Erwin Aligam
+   WEBSITE          :   http://www.styleshout.com/
+   TEMPLATE NAME    : 	PixelGreen
+   TEMPLATE CODE    : 	S-0010
+   VERSION          :   1.3
+   LAST MODIFIED    :   January 19, 2010
+
+------------------------------------------------------- */
+
 #header{
 	background: #000;
 	border-bottom-style: solid;
@@ -2525,7 +2562,7 @@ ul.buttonbar li:hover{
 }
 
 #loginFormRow{
-margin-top: 2em;
+  margin-top: 2em;
 }
 
 table.dataTable{
@@ -2541,7 +2578,6 @@ table.dataTable{
   border-color: #BFBFBF;
   color: #BFBFBF;
   font-weight:bold;
-
 }
 .dataTable td{
   padding-left: 1.1em;
@@ -2553,14 +2589,50 @@ table.dataTable{
 
 }
 .dataTable a {
-text-decoration: none;
+  text-decoration: none;
 }
 .dataTable a:visited{
- color:#65944A;
+  color:#65944A;
 }
 
 .dataTable .accentColumn{
- background:#F5F5F5;
+  background:#F5F5F5;
+}
+.securityGrant{
+border-style: solid;
+border-width: 1px;
+border-radius:10px;
+width: 17em;
+font-size: .7em;
+padding: .3em;
+}
+.securityGrantReceiver{
+display:inline-block;
+vertical-align: top;
+border-style:solid;
+border-radius:10px;
+border-width:1px;
+padding: .1em;
+ width:17em;
+ height:20em;
+ overflow:auto;
+
+}
+
+#grantedPrivilegesId{
+border-style:solid;
+border-width:1px;
+}
+div.ui-draggable-dragging {
+  -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+  -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+  box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+}
+#grantAssignDiv{
+  vertical-align:top;
+}
+h1.pageTitle{
+font-size: 1.5em;
 }
 
 </style>
@@ -2586,6 +2658,7 @@ function displayMainLayout(showHide){
   document.getElementById('mainContent').style.display=display;
   display = (showHide)?"none":"block";
   document.getElementById('LoginPortal').style.display=display;
+  if(!showHide)showLoginPortal();
 }
 
 $(document).ready( function(){
@@ -2703,18 +2776,11 @@ function retrieveGolfScore(params){
   var successf = function(rslt){
     rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
     bindToForm("golfScoreForm", rslt.rows[0]);
+    toggleSaveMode("golfScoreForm",true);
   }
   serverCall(params,successf,FAILF);
 }
 
-function retrieveGolferNameForGolfScore(golferId_){
-  var params = prepParams(params,"GOLFER","SELECT");
-  params['where_clause'] = "golfer_id =" + golferId_;
-  var successf = function(rslt){
-    $("#golfScoreGolferNameId").html(rslt.rows[0].name);
-  }
-  serverCall(params,successf,FAILF);
-}
 
 
 function deleteGolfScore(golfScoreId_, lastUpdate_){
@@ -2770,7 +2836,7 @@ function populateGolfScore(dataRows){
   for(var ndx=0;ndx< dataRows.length;ndx++){
     htmlAggregator +=buildGolfScoreListTableRow(dataRows[ndx]);
   }
-    $("#golfScoreListTable").html(htmlAggregator);
+  $("#golfScoreListTable").html(htmlAggregator);
 }
 
 function buildGolfScoreListTableRow(data){
@@ -2807,46 +2873,58 @@ $(document).ready(function(){
     $("#golfScoreForm-game_dt" ).datepicker();
     });
 
+//page specific functions
+function retrieveGolferNameForGolfScore(golferId_){
+  var params = prepParams(params,"GOLFER","SELECT");
+  params['where_clause'] = "golfer_id =" + golferId_;
+  var successf = function(rslt){
+    $("#golfScoreGolferNameId").html(rslt.rows[0].name);
+  }
+  serverCall(params,successf,FAILF);
+}
+
+
 //]]>
 
 </script>
 <div id="golfScore" class="contentPane MainLayout"  >
-  <h1 id="golfScoreGolferNameId"></h1>
-	<div class="row">
-	  <span class="sixcol">
-	    <table id="golfScoreListTable"  class='dataTable' >
-	    </table>
-	  </span>
-	  <span class = "sixcol last">
-	    <form id="golfScoreForm" >
-	      <table id="golfScoreFormTable"  class='formTable'>
-		<tr>
-		  <td> Golfer </td>
-		  <td><select name="golfer_id" id="golfScoreForm-golfer_id"></select></td>
-		  <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span> </td>
-		</tr>
-		<tr>
-		  <td> Score </td>
-		  <td><input  type="text" name="golf_score" id="golfScoreForm-golf_score"/></td>
-		  <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
-		</tr>
-		<tr>
-		  <td> Date</td>
-		  <td><input type="text"  name="game_dt" id="golfScoreForm-game_dt"/></td>
-		  <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
-		</tr>
-		<tr><td colspan="3">
-		    <button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button>
-		    <button type="button" id="golfScoreFormAdd" value="Add" onclick="saveGolfScoreForm();" >Add</button>
-		    <button type="button" id="golfScoreFormClear" value="Clear" onclick="clearForm('golfScoreForm');" >Clear</button>
-		</td></tr>
-		</table>
-	      </span>
-	    </div>
-	    <input type="hidden" name="last_update" id="golfScoreForm-last_update">
-	    <input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
-	  </form>
-  </div> <!--end:GolfScore-->
+  <h1 id="golfScoreGolferNameId" class="pageTitle"></h1>
+  <div class="row">
+    <span class="sixcol">
+      <table id="golfScoreListTable"  class='dataTable' >
+      </table>
+    </span>
+    <span class = "sixcol last">
+      <form id="golfScoreForm" >
+	<table id="golfScoreFormTable"  class='formTable'>
+	  <tr>
+	    <td> Golfer </td>
+	    <td><select name="golfer_id" id="golfScoreForm-golfer_id"></select></td>
+	    <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span> </td>
+	  </tr>
+	  <tr>
+	    <td> Score </td>
+	    <td><input  type="text" name="golf_score" id="golfScoreForm-golf_score"/></td>
+	    <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
+	  </tr>
+	  <tr>
+	    <td> Date</td>
+	    <td><input type="text"  name="game_dt" id="golfScoreForm-game_dt"/></td>
+	    <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
+	  </tr>
+	  <tr><td colspan="3">
+	      <button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button>
+	      <button type="button" id="golfScoreFormAdd" value="Add" onclick="saveGolfScoreForm();" >Add</button>
+	      <button type="button" id="golfScoreFormClear" value="Clear" onclick="clearForm('golfScoreForm');" >Clear</button>
+	  </td></tr>
+	</table>
+	<input type="hidden" name="last_update" id="golfScoreForm-last_update">
+	<input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
+      </form>
+
+    </span>
+  </div>
+</div> <!--end:GolfScore-->
 
 
 
@@ -3072,42 +3150,61 @@ function showHelpPane(){
 
 <!--MainLayout MainContentPaneStyle -->
 <div id="launchPane" class=" contentPane" style="text-align:left; ">
-<div id ="launchPaneCenterDiv" >
+  <div id ="launchPaneCenterDiv" >
+    
+    <div class="row">
+      <h1 id="launchPaneTitle" >I want to&hellip;</h1>
+    </div>
+    <div class="row">
+      <span class="twocol largeIconSpan"><a id="launcherShowGolfScore" onclick="showGolfScoreSummary();">
+	  <span class="sprite64Icon kolfIcon"></span><br/>
+	  View Averages</a>
+      </span>
+      <span class="twocol last largeIconSpan"><a id="launcherShowGolfer" onclick="showGolfer();">
+	  <span class="sprite64Icon peopleIcon"></span><br/>
+	  View Golfers</a>
+      </span>
+      <span class="twocol last largeIconSpan"><a id="launcherShowAbout" onclick="showAboutPane();">
+	  <span class="sprite64Icon learnMoreIcon"></span><br/>
+	  Learn More</a>
+      </span>
+      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showHelpPane();">
+	  <span class="sprite64Icon helpIcon"></span><br/>
+	  Get Help</a>
+      </span>
 
-  <div class="row">
-	<h1 id="launchPaneTitle" >I want to&hellip;</h1>
+      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showSecurityGrants();">
+	  <span class="sprite64Icon keyIcon"></span><br/>
+	  Grants</a>
+      </span>
+      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showPane();">
+	  <span class="sprite64Icon keyManIcon"></span><br/>
+	  Profiles</a>
+      </span>
+
+
+
+    </div>
+
   </div>
-<div class="row">
-  <span class="twocol largeIconSpan"><a id="launcherShowGolfScore" onclick="showGolfScoreSummary();">
-	<span class="sprite64Icon kolfIcon"></span><br/>
-	View Averages</a>
-  </span>
-  <span class="twocol last largeIconSpan"><a id="launcherShowGolfer" onclick="showGolfer();">
-	<span class="sprite64Icon peopleIcon"></span><br/>
-	View Golfers</a>
-  </span>
-  <span class="twocol last largeIconSpan"><a id="launcherShowAbout" onclick="showAboutPane();">
-	<span class="sprite64Icon learnMoreIcon"></span><br/>
-	Learn More</a>
-  </span>
-  <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showHelpPane();">
-	<span class="sprite64Icon helpIcon"></span><br/>
-	Get Help</a>
-  </span>
-
-
-</div>
-
-</div>
 </div>
 <script type="text/javascript">
 
-function showLaunchPane(){
-  hideCurrentContentPane();
-  $("#launchPane").fadeIn();
-  currentContentPane = "launchPane";
-  return "launchPane";
-}
+  function showLaunchPane(){
+    hideCurrentContentPane();
+    $("#launchPane").fadeIn();
+    currentContentPane = "launchPane";
+    $(document).keypress(function(e) {
+      alert(e.which);
+      if(e.which == 103) { //g
+        showSecurityGrants();
+      }
+    });
+
+
+    return "launchPane";
+  }
+
 
 </script>
 
@@ -3132,6 +3229,217 @@ function showClientLogViewer(){
   currentContentPane="clientLogViewer";
 }
 </script>
+
+
+
+
+
+
+<script type="text/javascript">
+  //<![CDATA[
+"use strict";
+//Server Calls
+function retrieveSecurityGrantsList(){
+  $("#securityGrantsListTable").html("");
+  var params =prepParams(params,"security_profile" ,"select" );
+  var successf = function (rslt){
+    populateSecurityGrants(rslt.rows)
+  };
+  serverCall(params,successf,FAILF);
+}
+function retrieveSecurityGrants(params){
+  params = prepParams(params,"security_profile","SELECT");
+  var successf = function(rslt){
+    bindToForm("securityGrantsForm", rslt.rows[0]);
+    toggleSaveMode("securityGrantsForm",true);
+  }
+  serverCall(params,successf,FAILF);
+}
+
+
+
+function deleteSecurityGrants(securityProfileId_, lastUpdate_){
+  var params =prepParams(params,"security_profile" ,"delete" );
+  params['security_profile_id'] = securityProfileId_;
+  params['last_update'] = lastUpdate_;
+  var successf = function (rslt){
+    removeSecurityGrantsListTableRow(rslt.security_profile_id);
+    briefNotify("Golf Score Deleted Successfully");
+  };
+  serverCall(params,successf,FAILF);
+}
+
+function saveSecurityGrants(params){
+  params = prepParams(params,"security_profile",insertUpdateChoose);
+  var successf=function(rslt){
+    clearForm('securityGrantsForm');
+    if (rslt.spwfAction == "UPDATE"){
+      replaceSecurityGrantsListTableRow(rslt.rows[0]);
+    }else if (rslt.spwfAction == "INSERT"){
+      addNewSecurityGrantsListTableRow(rslt.rows[0]);
+    }
+    briefNotify("Security Profile Successfully Saved");
+  };
+  serverCall(params,successf,FAILF);
+}
+
+//ServerCall Wrappers
+function editSecurityGrants(securityGrantsId_){
+  if(securityGrantsId_){
+    var params ={"where_clause":"security_profile_id=" +securityGrantsId_};
+    retrieveSecurityGrants(params);
+    retrieveAllGrantedPrivilegesList(securityGrantsId_);
+  }
+}
+
+function saveSecurityGrantsForm(){
+  if(validateSecurityGrantsForm()){
+    var params = bindForm("securityGrantsForm");
+    saveSecurityGrants(params);
+  }
+}
+
+//validation
+function validateSecurityGrantsForm(){
+  var formName="securityGrantsForm";
+  var formValid  = standardValidate(formName);
+  return formValid;
+}
+
+//Top Level HTML Manip
+function populateSecurityGrants(dataRows){
+  var htmlAggregator ="<tr><th>Profile Name</th><th class='accentColumn'>I want to&hellip;</th></tr>";
+  for(var ndx=0;ndx< dataRows.length;ndx++){
+    htmlAggregator +=buildSecurityGrantsListTableRow(dataRows[ndx]);
+  }
+  $("#securityGrantsListTable").html(htmlAggregator);
+}
+
+function buildSecurityGrantsListTableRow(data){
+  var htmlRow ="<tr id='SecurityGrantsListTableTR-" +data.security_profile_id + "'><td>";
+  htmlRow += data.profile_name  +"</td>";
+  htmlRow += "<td class='accentColumn'><a class='alink' onclick='editSecurityGrants(" +data.security_profile_id + ")'>Edit</a> |"
+    htmlRow += "<a class='alink' onclick=\"deleteSecurityGrants(" +data.security_profile_id + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+  return htmlRow;
+}
+
+function replaceSecurityGrantsListTableRow(row){
+  $("table#securityGrantsListTable #SecurityGrantsListTableTR-"+row.security_profile_id).replaceWith(buildSecurityGrantsListTableRow(row));
+}
+function addNewSecurityGrantsListTableRow(row){
+  $("table#securityGrantsListTable TR").first().after(buildSecurityGrantsListTableRow(row));
+}
+function removeSecurityGrantsListTableRow(securityProfileId_){
+  $("table#securityGrantsListTable #SecurityGrantsListTableTR-"+securityProfileId_).replaceWith("");
+}
+
+//Div Access and App Layout Calls
+function showSecurityGrants(){
+  retrieveSecurityGrantsList(); 
+  hideCurrentContentPane();
+  $("#securityGrants").fadeIn();
+  currentContentPane="securityGrants";
+  toggleSaveMode("securityGrantsForm",false);
+  retrieveAllAvailablePrivilegesList();
+}
+
+//After complete Load setup
+$(document).ready(function(){
+
+    $("#availableGrantsId").droppable({accept:".securityGrant", drop:handleSecurityRevoke});
+    $("#grantedPrivilegesId").droppable({accept:".securityGrant", drop:handleSecurityGrant});
+
+        });
+
+//page specific functions
+var allAvailablePrivilegeList;
+function retrieveAllAvailablePrivilegesList(){
+  var params =prepParams(params,"security_privilege" ,"select" );
+  var successf = function (rslt){
+    allAvailablePrivilegeList = deepCopy(rslt.rows);
+    populateAvailableGrantsWithAll()
+  };
+  serverCall(params,successf,FAILF);
+}
+
+function populateAvailableGrantsWithAll(){
+  var newOptions="";
+  for(var ndx=0; ndx < allAvailablePrivilegeList.length;ndx++){
+    newOptions += '<div class="securityGrant" id="securityGrant'+allAvailablePrivilegeList[ndx].security_privilege_id+'Id"><span class="securityGrantName"> '+allAvailablePrivilegeList[ndx].priv_name  +'</span> <span class="securityGrantDescription">' +allAvailablePrivilegeList[ndx].description + '</span></div>';
+  }
+
+  $("#availableGrantsId").html(newOptions);
+  $(".securityGrant").draggable({snap: ".securityGrantReceiver", revert:"invalid", scroll:false, helper:'clone' });
+}
+
+function retrieveAllGrantedPrivilegesList(profileId_){
+  var params =prepParams(params,"security_profile_grant" ,"select" );
+  params["where_clause"] = "security_profile_id=" +profileId_;
+  var successf = function (rslt){
+    //allAvailablePrivilegeList = deepCopy(rslt.rows);
+    //populateAvailableGrantsWithAll()
+  };
+  serverCall(params,successf,FAILF);
+}
+
+function handleSecurityGrant( event, ui ){
+  assignGrantStatus(ui.draggable.attr('id'), "GRANT");
+}
+function handleSecurityRevoke( event, ui ){
+  assignGrantStatus(ui.draggable.attr('id'), "REVOKE");
+}
+
+function assignGrantStatus(grantId_, status_){
+  var fromLocation, toLocation;
+  if (status_ == "GRANT"){fromLocation= "#availableGrantsId"; toLocation="#grantedPrivilegesId";
+  } else{fromLocation= "#grantedPrivilegesId";toLocation="#availableGrantsId"; }
+  fromLocation += " #"+grantId_;
+  //$(ui.helper.prevObject).appendTo(this);
+  $(fromLocation).appendTo(toLocation);
+  $(fromLocation).remove();
+}
+
+
+//]]>
+
+</script>
+<div id="securityGrants" class="contentPane MainLayout"  >
+  <h1 id="securityGrantsGolferNameId" class="pageTitle">Security Grants</h1>
+  <div class="row">
+    <span class="fourcol">
+      <table id="securityGrantsListTable"  class='dataTable' >
+      </table>
+    </span>
+    <span class = "eightcol last">
+      <form id="securityGrantsForm" >
+	<table id="securityGrantsFormTable"  class='formTable'>
+	  <tr>
+	    <td> Profile Name </td>
+	    <td><input  type="text" name="profileName" id="securityGrantsForm-profile_name"/></td>
+	    <td><span class="ValidationMsg" id="securityGrantsFormLabel-profileNameError"></span></td>
+
+	  </tr>
+	  <tr>
+	    <td colspan="3">
+	      <button type="button" id="securityGrantsFormSave" value="Save" onclick="saveSecurityGrantsForm();" >Save</button>
+	      <button type="button" id="securityGrantsFormAdd" value="Add" onclick="saveSecurityGrantsForm();" >Add</button>
+	      <button type="button" id="securityGrantsFormClear" value="Clear" onclick="clearForm('securityGrantsForm');" >Clear</button>
+	    </td>
+	  </tr>
+	</table>
+	<input type="hidden" name="last_update" id="securityGrantsForm-last_update">
+	<input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id">
+
+      </form>
+      <br/>
+      <div id="grantAssignDiv">
+	<div id="availableGrantsId" size="15" class="securityGrantReceiver"></div>
+	<span class="sprite32Icon plusIcon"></span>
+	<span class="sprite32Icon cancelIcon"></span>
+	<div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div>
+      </div>
+    </div>
+  </div> <!--end:SecurityGrants-->
 
 </div><!--End Main Content-->
 <!--Begin LoginPortal-->
@@ -3189,14 +3497,16 @@ function logOutUser(){
 $(document).ready(function(){
 	$("form#loginHolder #user_id").val("golfscore");
 	$("form#loginHolder #password").val("golfscore");
-
+	showLoginPortal();
 });
 
-$(document).keypress(function(e) {
-    if(e.keyCode == 13) {
+function showLoginPortal(){
+  $(document).keypress(function(e) {
+    if(e.keyCode == 13) {//enter
         loginCall();
     }
-});
+  });
+}
 
 //]]>
 </script>

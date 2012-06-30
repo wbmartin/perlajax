@@ -17,6 +17,7 @@ function displayMainLayout(showHide){
   document.getElementById('mainContent').style.display=display;
   display = (showHide)?"none":"block";
   document.getElementById('LoginPortal').style.display=display;
+  if(!showHide)showLoginPortal();
 }
 
 $(document).ready( function(){

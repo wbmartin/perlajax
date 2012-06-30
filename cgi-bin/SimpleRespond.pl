@@ -235,6 +235,61 @@ sub buildResourceActionDef{
 		@paramFields=('golfer_id','last_update');
 		$rad = { rf=>['golfer_dq'], pf=>\@paramFields, proc=>"golfer_dq"};
 	}
+} elsif($resource eq "SECURITY_PROFILE" ){
+	 @allFields = ('security_profile_id', 'profile_name', 'last_update' );
+	if($action eq "INSERT"){
+		@paramFields =@allFields;
+		&removeArrayElement(\@paramFields, 'security_profile_id');
+		&removeArrayElement(\@paramFields, 'last_update');
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_iq"};
+	} elsif($action eq "SELECT"){
+		@paramFields=@stdSelectParamFields;
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_sq"};
+	}elsif($action eq "UPDATE"){
+		@paramFields=@allFields;
+		#splice @paramFields,0,1; #remove client_id, prkey
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_uq"};
+	}elsif($action eq "DELETE"){
+		@paramFields=('security_profile_id','last_update');
+		$rad = { rf=>['security_profile_dq'], pf=>\@paramFields, proc=>"security_profile_dq"};
+	}
+} elsif($resource eq "SECURITY_PRIVILEGE" ){
+	 @allFields = ('security_privilege_id', 'priv_name','description', 'last_update' );
+	if($action eq "INSERT"){
+		@paramFields =@allFields;
+		&removeArrayElement(\@paramFields, 'security_privilege_id');
+		&removeArrayElement(\@paramFields, 'last_update');
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_privilege_iq"};
+	} elsif($action eq "SELECT"){
+		@paramFields=@stdSelectParamFields;
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_privilege_sq"};
+	}elsif($action eq "UPDATE"){
+		@paramFields=@allFields;
+		#splice @paramFields,0,1; #remove client_id, prkey
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_privilege_uq"};
+	}elsif($action eq "DELETE"){
+		@paramFields=('security_privilege_id','last_update');
+		$rad = { rf=>['security_privilege_dq'], pf=>\@paramFields, proc=>"security_privilege_dq"};
+	}
+} elsif($resource eq "SECURITY_PROFILE_GRANT" ){
+	 @allFields = ('security_privilege_id', 'security_profile_id', 'last_update' );
+	if($action eq "INSERT"){
+		@paramFields =@allFields;
+		&removeArrayElement(\@paramFields, 'security_privilege_id');
+		&removeArrayElement(\@paramFields, 'last_update');
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_grant_iq"};
+	} elsif($action eq "SELECT"){
+		@paramFields=@stdSelectParamFields;
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_grant_sq"};
+	}elsif($action eq "UPDATE"){
+		@paramFields=@allFields;
+		#splice @paramFields,0,1; #remove client_id, prkey
+		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_grant_uq"};
+	}elsif($action eq "DELETE"){
+		@paramFields=('security_profile_grant_id','last_update');
+		$rad = { rf=>['security_profile_grant_dq'], pf=>\@paramFields, proc=>"security_profile_grant_dq"};
+	}
+
 
 } else {return;}
   return $rad;

@@ -20,18 +20,11 @@ function retrieve[%ucfirst(divId)%](params){
   var successf = function(rslt){
     rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
     bindToForm("[%divId%]Form", rslt.rows[0]);
+    toggleSaveMode("[%divId%]Form",true);
   }
   serverCall(params,successf,FAILF);
 }
 
-function retrieveGolferNameForGolfScore(golferId_){
-  var params = prepParams(params,"GOLFER","SELECT");
-  params['where_clause'] = "golfer_id =" + golferId_;
-  var successf = function(rslt){
-    $("#[%divId%]GolferNameId").html(rslt.rows[0].name);
-  }
-  serverCall(params,successf,FAILF);
-}
 
 
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
@@ -87,7 +80,7 @@ function populate[%ucfirst(divId)%](dataRows){
   for(var ndx=0;ndx< dataRows.length;ndx++){
     htmlAggregator +=build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
   }
-    $("#[%divId%]ListTable").html(htmlAggregator);
+  $("#[%divId%]ListTable").html(htmlAggregator);
 }
 
 function build[%ucfirst(divId)%]ListTableRow(data){
@@ -124,43 +117,55 @@ $(document).ready(function(){
     $("#[%divId%]Form-game_dt" ).datepicker();
     });
 
+//page specific functions
+function retrieveGolferNameForGolfScore(golferId_){
+  var params = prepParams(params,"GOLFER","SELECT");
+  params['where_clause'] = "golfer_id =" + golferId_;
+  var successf = function(rslt){
+    $("#[%divId%]GolferNameId").html(rslt.rows[0].name);
+  }
+  serverCall(params,successf,FAILF);
+}
+
+
 //]]>
 
 </script>
 <div id="[%divId%]" class="contentPane MainLayout"  >
-  <h1 id="[%divId%]GolferNameId"></h1>
-	<div class="row">
-	  <span class="sixcol">
-	    <table id="[%divId%]ListTable"  class='dataTable' >
-	    </table>
-	  </span>
-	  <span class = "sixcol last">
-	    <form id="[%divId%]Form" >
-	      <table id="[%divId%]FormTable"  class='formTable'>
-		<tr>
-		  <td> Golfer </td>
-		  <td><select name="golfer_id" id="[%divId%]Form-golfer_id"></select></td>
-		  <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span> </td>
-		</tr>
-		<tr>
-		  <td> Score </td>
-		  <td><input  type="text" name="golf_score" id="[%divId%]Form-golf_score"/></td>
-		  <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
-		</tr>
-		<tr>
-		  <td> Date</td>
-		  <td><input type="text"  name="game_dt" id="[%divId%]Form-game_dt"/></td>
-		  <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
-		</tr>
-		<tr><td colspan="3">
-		    <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-		    <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-		    <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
-		</td></tr>
-		</table>
-	      </span>
-	    </div>
-	    <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-	    <input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">
-	  </form>
-  </div> <!--end:[%ucfirst(divId)%]-->
+  <h1 id="[%divId%]GolferNameId" class="pageTitle"></h1>
+  <div class="row">
+    <span class="sixcol">
+      <table id="[%divId%]ListTable"  class='dataTable' >
+      </table>
+    </span>
+    <span class = "sixcol last">
+      <form id="[%divId%]Form" >
+	<table id="[%divId%]FormTable"  class='formTable'>
+	  <tr>
+	    <td> Golfer </td>
+	    <td><select name="golfer_id" id="[%divId%]Form-golfer_id"></select></td>
+	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span> </td>
+	  </tr>
+	  <tr>
+	    <td> Score </td>
+	    <td><input  type="text" name="golf_score" id="[%divId%]Form-golf_score"/></td>
+	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
+	  </tr>
+	  <tr>
+	    <td> Date</td>
+	    <td><input type="text"  name="game_dt" id="[%divId%]Form-game_dt"/></td>
+	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
+	  </tr>
+	  <tr><td colspan="3">
+	      <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+	      <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
+	      <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
+	  </td></tr>
+	</table>
+	<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+	<input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">
+      </form>
+
+    </span>
+  </div>
+</div> <!--end:[%ucfirst(divId)%]-->

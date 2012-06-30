@@ -2,7 +2,10 @@
 --ok
 \i tables/010_CreateTableGolfScore.sql
 drop table if exists golf_score cascade;
-psql:tables/010_CreateTableGolfScore.sql:1: NOTICE:  table "golf_score" does not exist, skipping
+psql:tables/010_CreateTableGolfScore.sql:1: NOTICE:  drop cascades to 3 other objects
+DETAIL:  drop cascades to function golf_score_sq(text,text,text,text,text,integer,integer)
+drop cascades to function golf_score_iq(text,text,text,integer,integer,date)
+drop cascades to function golf_score_uq(text,text,text,integer,timestamp without time zone,integer,integer,date)
 DROP TABLE
 CREATE TABLE golf_score
 (

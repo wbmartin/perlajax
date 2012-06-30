@@ -43,6 +43,17 @@ body{
  background:url(images/consolidatedIcons.png) no-repeat;
  padding: 0 0 0 0;
 }
+
+.sprite32Icon{
+ display:inline-block;
+ height:32px;
+ width:32px;
+ background:url(images/consolidatedIcons.png) no-repeat;
+ padding: 0 0 0 0;
+}
+
+
+
 .kolfIcon{
   background-position:0 0 ;
 }
@@ -55,6 +66,22 @@ body{
 .helpIcon{
   background-position:0px -300px;
 }
+.keyIcon{
+  background-position:0px -400px;
+}
+.keyManIcon{
+  background-position:0px -500px;
+}
+.plusIcon{
+ background-position:0px -268px;
+
+}
+.cancelIcon{
+ background-position:-32px -268px;
+
+}
+
+
 
 input{
   float:left;
@@ -126,6 +153,7 @@ fieldset {
   border-style: outset;
   width: 500px;
   padding:1px;
+  font-size: .75em;
 }
 
 
@@ -166,6 +194,17 @@ input.invalid {
   margin-right: auto;
 }
 /*PixelGreen Extract*/
+/* ----------------------------------------------------
+
+   AUTHOR           :  	Erwin Aligam
+   WEBSITE          :   http://www.styleshout.com/
+   TEMPLATE NAME    : 	PixelGreen
+   TEMPLATE CODE    : 	S-0010
+   VERSION          :   1.3
+   LAST MODIFIED    :   January 19, 2010
+
+------------------------------------------------------- */
+
 #header{
 	background: #000;
 	border-bottom-style: solid;
@@ -273,4 +312,40 @@ table.dataTable{
 
 .dataTable .accentColumn{
   background:#F5F5F5;
+}
+.securityGrant{
+border-style: solid;
+border-width: 1px;
+border-radius:10px;
+width: 17em;
+font-size: .7em;
+padding: .3em;
+}
+.securityGrantReceiver{
+display:inline-block;
+vertical-align: top;
+border-style:solid;
+border-radius:10px;
+border-width:1px;
+padding: .1em;
+ width:17em;
+ height:20em;
+ overflow:auto;
+
+}
+
+#grantedPrivilegesId{
+border-style:solid;
+border-width:1px;
+}
+div.ui-draggable-dragging {
+  -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+  -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+  box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+}
+#grantAssignDiv{
+  vertical-align:top;
+}
+h1.pageTitle{
+font-size: 1.5em;
 }

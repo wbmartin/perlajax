@@ -53,14 +53,16 @@ function logOutUser(){
 $(document).ready(function(){
 	$("form#loginHolder #user_id").val("golfscore");
 	$("form#loginHolder #password").val("golfscore");
-
+	showLoginPortal();
 });
 
-$(document).keypress(function(e) {
-    if(e.keyCode == 13) {
+function showLoginPortal(){
+  $(document).keypress(function(e) {
+    if(e.keyCode == 13) {//enter
         loginCall();
     }
-});
+  });
+}
 
 //]]>
 </script>

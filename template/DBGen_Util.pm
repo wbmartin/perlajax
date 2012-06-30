@@ -2,8 +2,8 @@
 package DBGenUTIL;
 use strict;
 sub getConnection{
-my($dbh_, $username_, $password_) = @_; 
-  ${$dbh_} = DBI->connect('DBI:Pg:dbname=golfscore;host=127.0.0.1',$username_, $password_);
+my($dbh_, $dbname, $username_, $password_) = @_; 
+  ${$dbh_} = DBI->connect("DBI:Pg:dbname=$dbname;host=127.0.0.1",$username_, $password_);
   if (${$dbh_}) {
    print "DB Connected Successfully\n";
 

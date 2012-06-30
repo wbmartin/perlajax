@@ -5,6 +5,6 @@
 \i procs/020_CreateProc_GolferHandicap.sql
 \i procs/030_CreateProc_CRUD_golfer.sql
 \i procs/040_CreateProc_CRUD_golf_score.sql
- 
+
 
 \i procs/999_postprocs.sql
