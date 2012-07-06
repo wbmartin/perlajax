@@ -13,35 +13,33 @@ Main:{
   $uatServerPassword="";#Changed on Server after publish
   $cgi = CGI->new;
   print header('application/json');
-  $params = Vars;
+  $params = Vars;# export form valuesensures that you also get multi-value <select>s as separate values. too.
 
-if (exists $params->{"POSTDATA"}){
-  $keywords = from_json($params->{"POSTDATA"});
-  %{$params} = (%{$params}, %{$keywords});
-  delete $params->{"POSTDATA"};
-}
-#  $params = {user_id =>'simpledemo', password =>'simpledemo', spwfResource=>"security_user", spwfAction=>"authenticate"};
-   if($debug){     
+  if (exists $params->{"POSTDATA"}){#Post data is wrapped in POSTDATA, so extract up to params level and remove the original.
+    $keywords = from_json($params->{"POSTDATA"});
+    %{$params} = (%{$params}, %{$keywords});
+    delete $params->{"POSTDATA"};
+  }
+  if($debug){ #print some debugging info    
 	print STDERR "Script running - Parameters received:\n";
   	while ( my ($key, $value) = each(%{$params}) ) {
           print STDERR "\t$key => $value\n";
     	}
-   }
-  if($codeEnv eq "PROD"){
+  }
+  if($codeEnv eq "PROD"){# set the evironment specific connection data
 	$DBInfo ={dbname=>"concordc_golfscore", user=>"concordc_golfscore", password=>$prodServerPassword};
   }elsif($codeEnv eq "UAT"){
 	$DBInfo ={dbname=>"concordc_golfscoreuat", user=>"concordc_golfscoreuat", password=>$uatServerPassword};
   }else{
  	$DBInfo ={dbname=>"concordc_golfscoredev", user=>"concordc_golfscoredev", password=>"golfscore"}; 
   }
-  #$DBInfo ={dbname=>"firstapp", user=>"postgres", password=>'4vrf5btg'};
 
   &UTL::dbConnect(\$dbh, $DBInfo);
   $sth = &UTL::buildSTH($dbh, $params );
 
-   if(ref($sth))  {
-	print STDERR "Connection Successful2\n" if($debug);
-     $sth->execute();
+   if(ref($sth))  {#if we have a successful connection and statement built, execute it, iterate over result set, package and return
+	print STDERR "Connection Successful\n" if($debug);
+        $sth->execute();
 	if(!$sth->err){
 	  # iterate through resultset
 	  $rowCount=0;
@@ -55,19 +53,19 @@ if (exists $params->{"POSTDATA"}){
 	}else{
 	   $json->{"rowCount"}=0;
 	   $json->{"errorMsg"} =$DBI::errstr;
- 
-
 	}
 	if (uc($params->{'spwfAction'}) eq "DELETE"){
-		while ( my ($key, $value) = each(%$params) ) {
-			if($key ne 'last_update' && $key ne 'user_id' && $key ne 'session_id'){
-        			$json->{$key} = $value;
-			}
-    		}
+  	  while ( my ($key, $value) = each(%$params) ) {
+	    if($key ne 'last_update' && $key ne 'user_id' && $key ne 'session_id'){
+        	$json->{$key} = $value;
+	    }
+    	  }
 	}
-
+	#tag on the original action and resource form the request
 	$json->{"spwfAction"}= uc($params->{'spwfAction'});
 	$json->{"spwfResource"}= uc($params->{'spwfResource'});
+	$json->{"requestId"}=$params->{'requestId'};
+	#any variables the client sent that they wanted returned to the asynch success function
         if(exists $params->{'passThru'}){
 	  @passThrus = split(/;/,$params->{'passThru'});
 	  foreach(@passThrus){
@@ -75,19 +73,14 @@ if (exists $params->{"POSTDATA"}){
 	    $key ="PT_$key";
 	    $json->{$key} = $value;	
 	  }
-
 	}
-	
 	print STDERR "Package Successful\n" if($debug);
-    }else{
+    }else{#if no successful connection or statement build issue, package the error
 	$json->{"errorMsg"} =$sth;
-
     }  
-  	$json->{"requestId"}=$params->{'requestId'};
 	$json_text = to_json($json);
   	print $json_text;
 	print STDERR "JSON Txt: $json_text\n"  if($debug);
-
 $dbh->disconnect()
 }#End Main
 ################################################################
@@ -100,8 +93,9 @@ sub dbConnect{
 			$DBInfo->{user}, 
 			$DBInfo->{password}, 
 			{RaiseError => 0});
-return;
+  return;
 }
+
 sub toCC{
   my($in) = shift;
   my($out)="";
@@ -123,7 +117,6 @@ sub removeArrayElement(){
    }
   }
    return;
-
 }
 
 sub buildSQLColsList{
@@ -154,8 +147,8 @@ $debug=1;
 	$sth->bind_param($ndx++,$params->{$_});
   }
   return $sth;
-
 }
+
 sub buildResourceActionDef{
   my $resource =uc(shift);
   my $action = uc(shift);
@@ -275,7 +268,6 @@ sub buildResourceActionDef{
 	 @allFields = ('security_privilege_id', 'security_profile_id', 'last_update' );
 	if($action eq "INSERT"){
 		@paramFields =@allFields;
-		&removeArrayElement(\@paramFields, 'security_privilege_id');
 		&removeArrayElement(\@paramFields, 'last_update');
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_grant_iq"};
 	} elsif($action eq "SELECT"){
@@ -288,7 +280,11 @@ sub buildResourceActionDef{
 	}elsif($action eq "DELETE"){
 		@paramFields=('security_profile_grant_id','last_update');
 		$rad = { rf=>['security_profile_grant_dq'], pf=>\@paramFields, proc=>"security_profile_grant_dq"};
+	}elsif($action eq "DELETEW"){
+		@paramFields=('where_clause');
+		$rad = { rf=>['security_profile_grant_dqw'], pf=>\@paramFields, proc=>"security_profile_grant_dqw"};
 	}
+
 
 
 } else {return;}

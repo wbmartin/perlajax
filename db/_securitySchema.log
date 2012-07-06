@@ -91,13 +91,17 @@ COMMIT
 begin;
 BEGIN
 drop table if exists security_profile_grant cascade;
+psql:securitySchema/004_CreateSecurityProfileGrant.sql:2: NOTICE:  drop cascades to 3 other objects
+DETAIL:  drop cascades to function security_profile_grant_sq(text,text,text,text,text,integer,integer)
+drop cascades to function security_profile_grant_iq(text,text,text,integer,integer)
+drop cascades to function security_profile_grant_uq(text,text,text,integer,integer,integer,timestamp with time zone)
 DROP TABLE
 CREATE TABLE security_profile_grant
 (
   security_profile_grant_id serial NOT NULL,
   security_privilege_id integer NOT NULL,
   security_profile_id integer NOT NULL,
-  last_update timestamp(3) with time zone,
+  last_update timestamp(3) without time zone,
   updated_by text,
   CONSTRAINT security_profile_grant_pkey PRIMARY KEY (security_profile_grant_id),
   CONSTRAINT fk_security_profile_grant_2 FOREIGN KEY (security_profile_id)
@@ -229,39 +233,12 @@ CREATE OR REPLACE FUNCTION security_profile_sq(alreadyAuth_ text, securityuserid
   RETURNS SETOF security_profile AS
 $BODY$
   Declare
-    whereClause text;
-    orderByClause text;
-    offsetStatement text;
-    limitStatement text;
-  Begin
+   Begin
     if alreadyAuth_ <>'ALREADY_AUTH' then
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PROFILE' );
     end if;
---security_profile_id, profile_name, last_update, updated_by
-
-    whereClause ='';
-    orderByClause='';
-    offsetStatement ='';
-    limitStatement ='';
-    if rowOffset_ >0 then
-	offsetStatement =' offset ' || rowOffset_ ;
-    end if;
-    if rowLimit_ >0 then
-	limitStatement =' limit '||rowLimit_;
-    end if;
-    if whereClause_ <>'' then
-	whereClause = trim(leading whereClause_);
-	whereClause = regexp_replace(whereClause, '^(where|WHERE)','');
-        whereClause = ' where ' || whereClause;
-    end if;
-    if orderByClause_ <> '' then
-	orderByClause = orderByClause_;
-    end if;
-
-    return query execute 'select * from security_profile '
-	|| whereClause || orderByclause || offsetStatement || limitStatement;
-
+    return query execute 'select * from security_profile ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
@@ -378,6 +355,33 @@ CREATE FUNCTION
 --alter function security_profile_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_profile_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Function:  security_profile_dqw(text, text, text)
+-- DROP FUNCTION security_profile_dqw( text,text,text);
+create or replace function security_profile_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+  returns boolean as
+$body$
+  declare
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( userid_,sessionid_) ;
+    	perform isuserauthorized(userid_,'DELETE_SECURITY_PROFILE' );
+    end if;
+	execute  'delete from security_profile ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
+	GET DIAGNOSTICS rcnt = ROW_COUNT;
+	if rwcnt>0 then
+	  return true;
+	else 
+	  raise exception 'Delete Failed for SECURITY_PROFILE- The record may have been changed or deleted before the attempt.';
+	end if;
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+psql:securitySchema/020_CreateProc_CRUD_SecurityProfile.sql:165: ERROR:  type whereclause_ does not exist
+--alter function security_profile_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 \i securitySchema/030_CreateProc_CRUD_SecurityPrivilege.sql 
 -- Function: security_privilege_sq(text, text, text, text, text, integer, integer)
 -- DROP FUNCTION security_privilege_sq(text, text, text, text, text, integer, integer);
@@ -385,39 +389,12 @@ CREATE OR REPLACE FUNCTION security_privilege_sq(alreadyAuth_ text, securityuser
   RETURNS SETOF security_privilege AS
 $BODY$
   Declare
-    whereClause text;
-    orderByClause text;
-    offsetStatement text;
-    limitStatement text;
-  Begin
+   Begin
     if alreadyAuth_ <>'ALREADY_AUTH' then
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PRIVILEGE' );
     end if;
---security_privilege_id, priv_name, description, last_update, updated_by
-
-    whereClause ='';
-    orderByClause='';
-    offsetStatement ='';
-    limitStatement ='';
-    if rowOffset_ >0 then
-	offsetStatement =' offset ' || rowOffset_ ;
-    end if;
-    if rowLimit_ >0 then
-	limitStatement =' limit '||rowLimit_;
-    end if;
-    if whereClause_ <>'' then
-	whereClause = trim(leading whereClause_);
-	whereClause = regexp_replace(whereClause, '^(where|WHERE)','');
-        whereClause = ' where ' || whereClause;
-    end if;
-    if orderByClause_ <> '' then
-	orderByClause = orderByClause_;
-    end if;
-
-    return query execute 'select * from security_privilege '
-	|| whereClause || orderByclause || offsetStatement || limitStatement;
-
+    return query execute 'select * from security_privilege ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
@@ -534,6 +511,33 @@ CREATE FUNCTION
 --alter function security_privilege_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_privilege_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Function:  security_privilege_dqw(text, text, text)
+-- DROP FUNCTION security_privilege_dqw( text,text,text);
+create or replace function security_privilege_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+  returns boolean as
+$body$
+  declare
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( userid_,sessionid_) ;
+    	perform isuserauthorized(userid_,'DELETE_SECURITY_PRIVILEGE' );
+    end if;
+	execute  'delete from security_privilege ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
+	GET DIAGNOSTICS rcnt = ROW_COUNT;
+	if rwcnt>0 then
+	  return true;
+	else 
+	  raise exception 'Delete Failed for SECURITY_PRIVILEGE- The record may have been changed or deleted before the attempt.';
+	end if;
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+psql:securitySchema/030_CreateProc_CRUD_SecurityPrivilege.sql:165: ERROR:  type whereclause_ does not exist
+--alter function security_privilege_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_privilege_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 \i securitySchema/040_CreateProc_CRUD_security_profile_grant.sql
 -- Function: security_profile_grant_sq(text, text, text, text, text, integer, integer)
 -- DROP FUNCTION security_profile_grant_sq(text, text, text, text, text, integer, integer);
@@ -541,39 +545,12 @@ CREATE OR REPLACE FUNCTION security_profile_grant_sq(alreadyAuth_ text, security
   RETURNS SETOF security_profile_grant AS
 $BODY$
   Declare
-    whereClause text;
-    orderByClause text;
-    offsetStatement text;
-    limitStatement text;
-  Begin
+   Begin
     if alreadyAuth_ <>'ALREADY_AUTH' then
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_PROFILE_GRANT' );
     end if;
---security_profile_grant_id, security_privilege_id, security_profile_id, last_update, updated_by
-
-    whereClause ='';
-    orderByClause='';
-    offsetStatement ='';
-    limitStatement ='';
-    if rowOffset_ >0 then
-	offsetStatement =' offset ' || rowOffset_ ;
-    end if;
-    if rowLimit_ >0 then
-	limitStatement =' limit '||rowLimit_;
-    end if;
-    if whereClause_ <>'' then
-	whereClause = trim(leading whereClause_);
-	whereClause = regexp_replace(whereClause, '^(where|WHERE)','');
-        whereClause = ' where ' || whereClause;
-    end if;
-    if orderByClause_ <> '' then
-	orderByClause = orderByClause_;
-    end if;
-
-    return query execute 'select * from security_profile_grant '
-	|| whereClause || orderByclause || offsetStatement || limitStatement;
-
+    return query execute 'select * from security_profile_grant ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
@@ -687,6 +664,33 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 CREATE FUNCTION
+--alter function security_profile_grant_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_grant_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Function:  security_profile_grant_dqw(text, text, text)
+-- DROP FUNCTION security_profile_grant_dqw( text,text,text);
+create or replace function security_profile_grant_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+  returns boolean as
+$body$
+  declare
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( userid_,sessionid_) ;
+    	perform isuserauthorized(userid_,'DELETE_SECURITY_PROFILE_GRANT' );
+    end if;
+	execute  'delete from security_profile_grant ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
+	GET DIAGNOSTICS rcnt = ROW_COUNT;
+	if rwcnt>0 then
+	  return true;
+	else 
+	  raise exception 'Delete Failed for SECURITY_PROFILE_GRANT- The record may have been changed or deleted before the attempt.';
+	end if;
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+psql:securitySchema/040_CreateProc_CRUD_security_profile_grant.sql:165: ERROR:  type whereclause_ does not exist
 --alter function security_profile_grant_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_profile_grant_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

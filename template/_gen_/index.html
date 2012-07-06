@@ -3195,14 +3195,12 @@ function showHelpPane(){
     $("#launchPane").fadeIn();
     currentContentPane = "launchPane";
     $(document).keypress(function(e) {
-      alert(e.which);
+      //alert(e.which);
       if(e.which == 103) { //g
         showSecurityGrants();
       }
     });
-
-
-    return "launchPane";
+   return "launchPane";
   }
 
 
@@ -3383,20 +3381,74 @@ function retrieveAllGrantedPrivilegesList(profileId_){
 }
 
 function handleSecurityGrant( event, ui ){
-  assignGrantStatus(ui.draggable.attr('id'), "GRANT");
+  var profileId = $("#securityGrantsForm-security_profile_id").val();
+  var privId = ui.draggable.attr('id');
+  privId = privId.replace("securityGrant","");
+  privId = privId.replace("Id","");
+  if(!isEmpty(privId) && !isEmpty(profileId)){
+     assignGrantStatus(ui.draggable.attr('id'), "GRANT");
+     grantPrivilege(privId, profileId);
+  }else{
+    briefNotify("Please choose a profile");
+    //assignGrantStatus(privId, "REVOKE");
+  }
+
 }
 function handleSecurityRevoke( event, ui ){
+  var profileId = $("#securityGrantsForm-security_profile_id").val();
+  var privId = ui.draggable.attr('id');
+  privId = privId.replace("securityGrant","");
+  privId = privId.replace("Id","");
+  if(!isEmpty(privId) && !isEmpty(profileId)){
   assignGrantStatus(ui.draggable.attr('id'), "REVOKE");
+    revokePrivilege(privId, profileId);
+  }else{
+    briefNotify("Please choose a profile");
+    //assignGrantStatus(privId, "GRANT");
+
+  }
+
+
 }
 
-function assignGrantStatus(grantId_, status_){
+function assignGrantStatus(grantDivId_, status_){
   var fromLocation, toLocation;
   if (status_ == "GRANT"){fromLocation= "#availableGrantsId"; toLocation="#grantedPrivilegesId";
   } else{fromLocation= "#grantedPrivilegesId";toLocation="#availableGrantsId"; }
-  fromLocation += " #"+grantId_;
+  fromLocation += " #"+grantDivId_;
   //$(ui.helper.prevObject).appendTo(this);
   $(fromLocation).appendTo(toLocation);
   $(fromLocation).remove();
+}
+
+function grantPrivilege(securityPrivilegeId_, securityProfileId_){
+  var params =prepParams(params,"security_profile_grant" ,"insert" );
+  params['security_privilege_id'] = securityPrivilegeId_;
+  params['security_profile_id'] = securityProfileId_;
+  var successf = function (rslt){
+    briefNotify("Privilege Granted");
+  };
+  serverCall(params,successf,FAILF);
+}
+
+function revokePrivilege(securityPrivilegeId_, securityProfileId_){
+  var params =prepParams(params,"security_profile_grant" ,"deletew" );
+   params['where_clause'] = 'security_privilege_id=' + securityPrivilegeId_ + ' and security_profile_id = ' + securityProfileId_ ;
+  var successf = function (rslt){
+    briefNotify("Privilege Revoked");
+  };
+  serverCall(params,successf,FAILF);
+}
+
+function makeAvailableAllPrivileges(){
+  $('#grantedPrivilegesId').children().each(function () {
+      alert($(this).text());
+      var privId = $(this).attr('id');
+      //privId = privId.replace("securityGrant","");
+      //privId = privId.replace("Id","");
+      alert(privId);
+	assignGrantStatus(privId, "REVOKE");
+    });
 }
 
 
@@ -3423,7 +3475,7 @@ function assignGrantStatus(grantId_, status_){
 	    <td colspan="3">
 	      <button type="button" id="securityGrantsFormSave" value="Save" onclick="saveSecurityGrantsForm();" >Save</button>
 	      <button type="button" id="securityGrantsFormAdd" value="Add" onclick="saveSecurityGrantsForm();" >Add</button>
-	      <button type="button" id="securityGrantsFormClear" value="Clear" onclick="clearForm('securityGrantsForm');" >Clear</button>
+	      <button type="button" id="securityGrantsFormClear" value="Clear" onclick="clearForm('securityGrantsForm');makeAvailableAllPrivileges();" >Clear</button>
 	    </td>
 	  </tr>
 	</table>

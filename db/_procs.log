@@ -52,39 +52,12 @@ CREATE OR REPLACE FUNCTION golfer_sq(alreadyAuth_ text, securityuserid_ text, se
   RETURNS SETOF golfer AS
 $BODY$
   Declare
-    whereClause text;
-    orderByClause text;
-    offsetStatement text;
-    limitStatement text;
-  Begin
+   Begin
     if alreadyAuth_ <>'ALREADY_AUTH' then
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_GOLFER' );
     end if;
---golfer_id, last_update, updated_by, name
-
-    whereClause ='';
-    orderByClause='';
-    offsetStatement ='';
-    limitStatement ='';
-    if rowOffset_ >0 then
-	offsetStatement =' offset ' || rowOffset_ ;
-    end if;
-    if rowLimit_ >0 then
-	limitStatement =' limit '||rowLimit_;
-    end if;
-    if whereClause_ <>'' then
-	whereClause = trim(leading whereClause_);
-	whereClause = regexp_replace(whereClause, '^(where|WHERE)','');
-        whereClause = ' where ' || whereClause;
-    end if;
-    if orderByClause_ <> '' then
-	orderByClause = orderByClause_;
-    end if;
-
-    return query execute 'select * from golfer '
-	|| whereClause || orderByclause || offsetStatement || limitStatement;
-
+    return query execute 'select * from golfer ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
@@ -201,6 +174,33 @@ CREATE FUNCTION
 --alter function golfer_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION golfer_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Function:  golfer_dqw(text, text, text)
+-- DROP FUNCTION golfer_dqw( text,text,text);
+create or replace function golfer_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+  returns boolean as
+$body$
+  declare
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( userid_,sessionid_) ;
+    	perform isuserauthorized(userid_,'DELETE_GOLFER' );
+    end if;
+	execute  'delete from golfer ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
+	GET DIAGNOSTICS rcnt = ROW_COUNT;
+	if rwcnt>0 then
+	  return true;
+	else 
+	  raise exception 'Delete Failed for GOLFER- The record may have been changed or deleted before the attempt.';
+	end if;
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+psql:procs/030_CreateProc_CRUD_golfer.sql:165: ERROR:  type whereclause_ does not exist
+--alter function golfer_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golfer_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 \i procs/040_CreateProc_CRUD_golf_score.sql
 -- Function: golf_score_sq(text, text, text, text, text, integer, integer)
 -- DROP FUNCTION golf_score_sq(text, text, text, text, text, integer, integer);
@@ -208,39 +208,12 @@ CREATE OR REPLACE FUNCTION golf_score_sq(alreadyAuth_ text, securityuserid_ text
   RETURNS SETOF golf_score AS
 $BODY$
   Declare
-    whereClause text;
-    orderByClause text;
-    offsetStatement text;
-    limitStatement text;
-  Begin
+   Begin
     if alreadyAuth_ <>'ALREADY_AUTH' then
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_GOLF_SCORE' );
     end if;
---golf_score_id, last_update, updated_by, golf_score, golfer_id, game_dt
-
-    whereClause ='';
-    orderByClause='';
-    offsetStatement ='';
-    limitStatement ='';
-    if rowOffset_ >0 then
-	offsetStatement =' offset ' || rowOffset_ ;
-    end if;
-    if rowLimit_ >0 then
-	limitStatement =' limit '||rowLimit_;
-    end if;
-    if whereClause_ <>'' then
-	whereClause = trim(leading whereClause_);
-	whereClause = regexp_replace(whereClause, '^(where|WHERE)','');
-        whereClause = ' where ' || whereClause;
-    end if;
-    if orderByClause_ <> '' then
-	orderByClause = orderByClause_;
-    end if;
-
-    return query execute 'select * from golf_score '
-	|| whereClause || orderByclause || offsetStatement || limitStatement;
-
+    return query execute 'select * from golf_score ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
@@ -354,6 +327,33 @@ $body$
   language 'plpgsql' volatile
   cost 100;
 CREATE FUNCTION
+--alter function golf_score_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION golf_score_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Function:  golf_score_dqw(text, text, text)
+-- DROP FUNCTION golf_score_dqw( text,text,text);
+create or replace function golf_score_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+  returns boolean as
+$body$
+  declare
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( userid_,sessionid_) ;
+    	perform isuserauthorized(userid_,'DELETE_GOLF_SCORE' );
+    end if;
+	execute  'delete from golf_score ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
+	GET DIAGNOSTICS rcnt = ROW_COUNT;
+	if rwcnt>0 then
+	  return true;
+	else 
+	  raise exception 'Delete Failed for GOLF_SCORE- The record may have been changed or deleted before the attempt.';
+	end if;
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+psql:procs/040_CreateProc_CRUD_golf_score.sql:165: ERROR:  type whereclause_ does not exist
 --alter function golf_score_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION golf_score_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

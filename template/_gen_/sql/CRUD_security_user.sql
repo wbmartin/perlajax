@@ -6,39 +6,12 @@ CREATE OR REPLACE FUNCTION security_user_sq(alreadyAuth_ text, securityuserid_ t
   RETURNS SETOF security_user AS
 $BODY$
   Declare
-    whereClause text;
-    orderByClause text;
-    offsetStatement text;
-    limitStatement text;
-  Begin
+   Begin
     if alreadyAuth_ <>'ALREADY_AUTH' then
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_USER' );
     end if;
---user_id, last_update, updated_by, password_enc, security_profile_id, session_id, session_expire_dt, active_yn
-
-    whereClause ='';
-    orderByClause='';
-    offsetStatement ='';
-    limitStatement ='';
-    if rowOffset_ >0 then
-	offsetStatement =' offset ' || rowOffset_ ;
-    end if;
-    if rowLimit_ >0 then
-	limitStatement =' limit '||rowLimit_;
-    end if;
-    if whereClause_ <>'' then
-	whereClause = trim(leading whereClause_);
-	whereClause = regexp_replace(whereClause, '^(where|WHERE)','');
-        whereClause = ' where ' || whereClause;
-    end if;
-    if orderByClause_ <> '' then
-	orderByClause = orderByClause_;
-    end if;
-
-    return query execute 'select * from security_user '
-	|| whereClause || orderByclause || offsetStatement || limitStatement;
-
+    return query execute 'select * from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
@@ -46,17 +19,12 @@ $BODY$
   ROWS 1000;
 --ALTER FUNCTION security_user_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
 --GRANT EXECUTE ON FUNCTION security_user_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
-
 --select * from security_user_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
-
-
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
 -- Function: security_user_bypk(text, text, text ,text)
-
 -- DROP FUNCTION security_user_pybk(text, text, text,text);
-
 --CREATE OR REPLACE FUNCTION security_user_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
 --,userId_ text)
 --  RETURNS security_user AS
@@ -84,9 +52,7 @@ $BODY$
 
 
 -- Function:  security_user_iq(text, text, text ,text,text,integer,text,timestamp,character)
-
 -- DROP FUNCTION security_user_iq( text, text, text,text,text,integer,text,timestamp,character);
-
 create or replace function security_user_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,userId_ text,passwordEnc_ text,securityProfileId_ integer,sessionId_ text,sessionExpireDt_ timestamp,activeYn_ character)
   returns security_user as
 $body$
@@ -114,9 +80,7 @@ $body$
 
 
 -- Function:  security_user_uq(text, text, text ,text,timestamp,text,integer,text,timestamp,character)
-
 -- DROP FUNCTION security_user_uq(text, text, text ,text,timestamp,text,integer,text,timestamp,character);
-
 
 create or replace function security_user_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , userId_ text, lastUpdate_ timestamp, passwordEnc_ text, securityProfileId_ integer, sessionId_ text, sessionExpireDt_ timestamp, activeYn_ character)
   returns security_user as
@@ -174,5 +138,31 @@ $body$
   cost 100;
 --alter function security_user_dq(text, text, text,text, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_user_dq(text,  text, text,text, timestamp) TO GROUP golfscore;
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
+-- Function:  security_user_dqw(text, text, text)
+-- DROP FUNCTION security_user_dqw( text,text,text);
+create or replace function security_user_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+  returns boolean as
+$body$
+  declare
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( userid_,sessionid_) ;
+    	perform isuserauthorized(userid_,'DELETE_SECURITY_USER' );
+    end if;
+	execute  'delete from security_user ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
+	GET DIAGNOSTICS rcnt = ROW_COUNT;
+	if rwcnt>0 then
+	  return true;
+	else 
+	  raise exception 'Delete Failed for SECURITY_USER- The record may have been changed or deleted before the attempt.';
+	end if;
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+--alter function security_user_dq(text, text, text,text, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_user_dq(text,  text, text,text, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

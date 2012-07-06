@@ -5,7 +5,7 @@ PGHOST=localhost
 
 #For first installs, need to create language plpgsql
 
-
+psql -U$PGUNAME -d$PGDB -h $PGHOST -f 000_AppInit.sql &> _AppInit.log
 psql -U$PGUNAME -d$PGDB -h $PGHOST -f executeSecurity.sql &> _securitySchema.log
 psql -U$PGUNAME -d$PGDB -h $PGHOST -f executeTables.sql &> _tables.log
 psql -U$PGUNAME -d$PGDB -h $PGHOST -f executeViews.sql &> _views.log

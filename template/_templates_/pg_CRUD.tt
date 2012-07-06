@@ -12,38 +12,12 @@ CREATE OR REPLACE FUNCTION [%+tablename+%]_sq(alreadyAuth_ text, securityuserid_
   RETURNS SETOF [%+tablename+%] AS
 $BODY$
   Declare
-    whereClause text;
-    orderByClause text;
-    offsetStatement text;
-    limitStatement text;
-  Begin
+   Begin
     if alreadyAuth_ <>'ALREADY_AUTH' then
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_[%+tablename | upper+%]' );
     end if;
---[%- INCLUDE COMMA_COLUMNS+%]
-    whereClause ='';
-    orderByClause='';
-    offsetStatement ='';
-    limitStatement ='';
-    if rowOffset_ >0 then
-	offsetStatement =' offset ' || rowOffset_ ;
-    end if;
-    if rowLimit_ >0 then
-	limitStatement =' limit '||rowLimit_;
-    end if;
-    if whereClause_ <>'' then
-	whereClause = trim(leading whereClause_);
-	whereClause = regexp_replace(whereClause, '^(where|WHERE)','');
-        whereClause = ' where ' || whereClause;
-    end if;
-    if orderByClause_ <> '' then
-	orderByClause = orderByClause_;
-    end if;
-
-    return query execute 'select * from [%+tablename+%] '
-	|| whereClause || orderByclause || offsetStatement || limitStatement;
-
+    return query execute 'select * from [%+tablename+%] ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
@@ -51,10 +25,7 @@ $BODY$
   ROWS 1000;
 --ALTER FUNCTION [%+tablename+%]_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
 --GRANT EXECUTE ON FUNCTION [%+tablename+%]_sq(text, text, text, text, text, integer, integer) TO GROUP [%+ props.dbgroup -%];
-
 --select * from [%+tablename+%]_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
-
-
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 [%BLOCK BYPK_OMIT_NAMES%]
 [%- FOREACH pk IN tbl.$tablename.prkeys -%]
@@ -75,9 +46,7 @@ $BODY$
 [%-END #BLOCK -%]
 
 -- Function: [%+tablename+%]_bypk(text, text, text [%INCLUDE BYPK_OMIT_NAMES%])
-
 -- DROP FUNCTION [%+tablename+%]_pybk(text, text, text[%INCLUDE BYPK_OMIT_NAMES%]);
-
 --CREATE OR REPLACE FUNCTION [%+tablename+%]_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
 --[%- INCLUDE BYPK_SHOW_NAMES -%])
 --  RETURNS [%+tablename+%] AS
@@ -123,9 +92,7 @@ $BODY$
 
 
 -- Function:  [%+tablename+%]_iq(text, text, text [%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%])
-
 -- DROP FUNCTION [%+tablename+%]_iq( text, text, text[%-INCLUDE IQ_FUNC_OMIT_COLUMN_NAMES-%]);
-
 create or replace function [%+tablename+%]_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text[%-INCLUDE IQ_FUNC_SHOW_COLUMN_NAMES-%])
   returns [%+tablename+%] as
 $body$
@@ -195,9 +162,7 @@ $body$
 
 
 -- Function:  [%+tablename+%]_uq(text, text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%])
-
 -- DROP FUNCTION [%+tablename+%]_uq(text, text, text [%-INCLUDE UQ_FUNC_OMIT_COLUMN_NAMES-%]);
-
 
 create or replace function [%+tablename+%]_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text [%-INCLUDE UQ_FUNC_SHOW_COLUMN_NAMES-%])
   returns [%+tablename+%] as
@@ -278,8 +243,33 @@ $body$
   cost 100;
 --alter function [%+tablename+%]_dq(text, text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION [%+tablename+%]_dq(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) TO GROUP [%+ props.dbgroup -%];
-
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
+-- Function:  [%+tablename+%]_dqw(text, text, text)
+-- DROP FUNCTION [%+tablename+%]_dqw( text,text,text);
+create or replace function [%+tablename+%]_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+  returns boolean as
+$body$
+  declare
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( userid_,sessionid_) ;
+    	perform isuserauthorized(userid_,'DELETE_[%+tablename | upper+%]' );
+    end if;
+	execute  'delete from [%+tablename+%] ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
+	GET DIAGNOSTICS rcnt = ROW_COUNT;
+	if rwcnt>0 then
+	  return true;
+	else 
+	  raise exception 'Delete Failed for [%+tablename | upper+%]- The record may have been changed or deleted before the attempt.';
+	end if;
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+--alter function [%+tablename+%]_dq(text, text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION [%+tablename+%]_dq(text,  text, text[%INCLUDE BYPK_OMIT_NAMES%], timestamp) TO GROUP [%+ props.dbgroup -%];
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 [%- END #Foreach table -%]
 [%- END #filter -%]

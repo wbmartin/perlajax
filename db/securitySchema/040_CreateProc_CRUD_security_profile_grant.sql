@@ -79,10 +79,10 @@ $body$
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function:  security_profile_grant_uq(text, text, text ,integer,integer,integer,timestamp)
--- DROP FUNCTION security_profile_grant_uq(text, text, text ,integer,integer,integer,timestamp);
+-- Function:  security_profile_grant_uq(text, text, text ,integer,integer,integer,timestamp with time zone)
+-- DROP FUNCTION security_profile_grant_uq(text, text, text ,integer,integer,integer,timestamp with time zone);
 
-create or replace function security_profile_grant_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityProfileGrantId_ integer, securityPrivilegeId_ integer, securityProfileId_ integer, lastUpdate_ timestamp)
+create or replace function security_profile_grant_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityProfileGrantId_ integer, securityPrivilegeId_ integer, securityProfileId_ integer, lastUpdate_ timestamp with time zone)
   returns security_profile_grant as
 $body$
   declare
@@ -105,8 +105,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
---alter function security_profile_grant_uq(text,  text, text ,integer,integer,integer,timestamp) owner to postgres;
---GRANT EXECUTE ON FUNCTION security_profile_grant_uq(text, text, text ,integer,integer,integer,timestamp) TO GROUP golfscore;
+--alter function security_profile_grant_uq(text,  text, text ,integer,integer,integer,timestamp with time zone) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_profile_grant_uq(text, text, text ,integer,integer,integer,timestamp with time zone) TO GROUP golfscore;
 
 --select * from security_profile_grant_uq('ALREADY_AUTH', 'test', 'test' ,1 ,1 <last_update> <security_profile_grant_id>, 'text');
 
