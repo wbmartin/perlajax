@@ -18,4 +18,5 @@ CREATE TABLE security_profile_grant
 WITH (
   OIDS=FALSE
 );
+create unique index ndx_security_profile_grant on security_profile_grant (security_privilege_id, security_profile_id);
 commit;

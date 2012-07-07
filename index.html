@@ -282,11 +282,11 @@ function serverCall(params, successCallback, failCallback){
   params['requestId'] =logMsg(resourceActionInfo + " Started");
   var successCallbackMod = function(rslt){
 	logMsg(resourceActionInfo + " Responded", rslt.requestId);
- 	if(validateServerResponse(rslt)){
-		successCallback(rslt);
-	}else{
-		logMsg(resourceActionInfo + " Failed to validate the server response");
+ 	if(!validateServerResponse(rslt)){
+		logMsg(resourceActionInfo + " Failed to validate the server response - " +  rslt['errorMsg']);
+		rslt['serverSideFail'] = true;
 	}	
+	successCallback(rslt);
   }
   $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
 	  success: successCallbackMod, error: failCallback });
@@ -2602,7 +2602,7 @@ table.dataTable{
 border-style: solid;
 border-width: 1px;
 border-radius:10px;
-width: 17em;
+width: 21em;
 font-size: .7em;
 padding: .3em;
 }
@@ -3284,6 +3284,7 @@ function saveSecurityGrants(params){
 //ServerCall Wrappers
 function editSecurityGrants(securityGrantsId_){
   if(securityGrantsId_){
+    makeAvailableAllPrivileges();
     var params ={"where_clause":"security_profile_id=" +securityGrantsId_};
     retrieveSecurityGrants(params);
     retrieveAllGrantedPrivilegesList(securityGrantsId_);
@@ -3355,7 +3356,7 @@ function retrieveAllAvailablePrivilegesList(){
   var params =prepParams(params,"security_privilege" ,"select" );
   var successf = function (rslt){
     allAvailablePrivilegeList = deepCopy(rslt.rows);
-    populateAvailableGrantsWithAll()
+    populateAvailableGrantsWithAll();
   };
   serverCall(params,successf,FAILF);
 }
@@ -3367,18 +3368,27 @@ function populateAvailableGrantsWithAll(){
   }
 
   $("#availableGrantsId").html(newOptions);
-  $(".securityGrant").draggable({snap: ".securityGrantReceiver", revert:"invalid", scroll:false, helper:'clone' });
+  makeDragable(".securityGrant");
+  $("#grantedPrivilegesId").children().remove();
+}
+
+function makeDragable(identifierTodraggable){
+   $(identifierTodraggable).draggable({snap: ".securityGrantReceiver", revert:"invalid", scroll:false, helper:'clone' });
 }
 
 function retrieveAllGrantedPrivilegesList(profileId_){
   var params =prepParams(params,"security_profile_grant" ,"select" );
   params["where_clause"] = "security_profile_id=" +profileId_;
   var successf = function (rslt){
-    //allAvailablePrivilegeList = deepCopy(rslt.rows);
-    //populateAvailableGrantsWithAll()
+    var grants =  rslt.rows;
+    for (var i =0; i< grants.length; i++){
+      assignGrantStatus("securityGrant"+ grants[i].security_privilege_id + "Id", "GRANT");
+    }
+   sortDivChildren("#grantedPrivilegesId");
   };
   serverCall(params,successf,FAILF);
 }
+
 
 function handleSecurityGrant( event, ui ){
   var profileId = $("#securityGrantsForm-security_profile_id").val();
@@ -3419,14 +3429,23 @@ function assignGrantStatus(grantDivId_, status_){
   //$(ui.helper.prevObject).appendTo(this);
   $(fromLocation).appendTo(toLocation);
   $(fromLocation).remove();
+  makeDragable(toLocation + " #"+grantDivId_ );
 }
 
 function grantPrivilege(securityPrivilegeId_, securityProfileId_){
   var params =prepParams(params,"security_profile_grant" ,"insert" );
   params['security_privilege_id'] = securityPrivilegeId_;
   params['security_profile_id'] = securityProfileId_;
+  params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
   var successf = function (rslt){
-    briefNotify("Privilege Granted");
+    if(!rslt['serverSideFail']) {
+         sortDivChildren('#availableGrantsId');
+      briefNotify("Privilege Granted");
+    }
+    else{ 
+      briefNotify('There was a problem granting this privilege');
+      assignGrantStatus(rslt['PT_pendingDiv'],"AVAIL");
+    }
   };
   serverCall(params,successf,FAILF);
 }
@@ -3434,21 +3453,36 @@ function grantPrivilege(securityPrivilegeId_, securityProfileId_){
 function revokePrivilege(securityPrivilegeId_, securityProfileId_){
   var params =prepParams(params,"security_profile_grant" ,"deletew" );
    params['where_clause'] = 'security_privilege_id=' + securityPrivilegeId_ + ' and security_profile_id = ' + securityProfileId_ ;
-  var successf = function (rslt){
-    briefNotify("Privilege Revoked");
+   params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
+   var successf = function (rslt){
+      if(!rslt['serverSideFail']) {
+	 briefNotify("Privilege Revoked");
+         sortDivChildren('#grantedPrivilegesId');
+      }else{ 
+          briefNotify('There was a problem granting this privilege');
+          assignGrantStatus(rslt['PT_pendingDiv'],"GRANT");
+        }
+      
   };
   serverCall(params,successf,FAILF);
 }
 
 function makeAvailableAllPrivileges(){
-  $('#grantedPrivilegesId').children().each(function () {
-      alert($(this).text());
-      var privId = $(this).attr('id');
-      //privId = privId.replace("securityGrant","");
-      //privId = privId.replace("Id","");
-      alert(privId);
-	assignGrantStatus(privId, "REVOKE");
-    });
+  
+  $('#grantedPrivilegesId').children().remove();
+  $('#availableGrantsId').children().remove();
+  populateAvailableGrantsWithAll();
+  sortDivChildren("#availableGrantsId");
+}
+function sortDivChildren(divName_){
+  var children = $(divName_).children().sort(function (a,b){
+        var vA = $(a).attr('id');
+	var vB = $(b).attr('id');
+        return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
+	});
+  $(divName_).children().remove();
+  $(divName_).append(children);
+  makeDragable(divName_ + " .securityGrant");
 }
 
 

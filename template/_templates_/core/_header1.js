@@ -270,11 +270,11 @@ function serverCall(params, successCallback, failCallback){
   params['requestId'] =logMsg(resourceActionInfo + " Started");
   var successCallbackMod = function(rslt){
 	logMsg(resourceActionInfo + " Responded", rslt.requestId);
- 	if(validateServerResponse(rslt)){
-		successCallback(rslt);
-	}else{
-		logMsg(resourceActionInfo + " Failed to validate the server response");
+ 	if(!validateServerResponse(rslt)){
+		logMsg(resourceActionInfo + " Failed to validate the server response - " +  rslt['errorMsg']);
+		rslt['serverSideFail'] = true;
 	}	
+	successCallback(rslt);
   }
   $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
 	  success: successCallbackMod, error: failCallback });
