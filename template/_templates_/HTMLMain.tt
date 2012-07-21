@@ -12,6 +12,7 @@ style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:
 -%]
 [%INCLUDE _golfScoreSummary.html%]
 [%INCLUDE _golfScore.html%]
+[%INCLUDE _quickGolfScore.html%]
 [%INCLUDE _golfer.html%]
 [%INCLUDE _about.html%]
 [%INCLUDE _help.html%]

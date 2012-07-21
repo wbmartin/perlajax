@@ -1,4 +1,4 @@
-[%divId="golfScore"%]
+[%divId="quickGolfScore"%]
 [%spwfResource="golf_score"%]
 [%prkey="golf_score_id"%]
 
@@ -6,10 +6,10 @@
   //<![CDATA[
 "use strict";
 //Server Calls
-function retrieve[%ucfirst(divId)%]List(golferId_){
+function retrieve[%ucfirst(divId)%]List(){
   $("#[%divId%]ListTable").html("");
   var params =prepParams(params,"[%spwfResource%]" ,"select" );
-  params['where_clause'] = "golfer_id =" + golferId_;
+  params['orderby_clause'] =" order by game_dt desc"
   var successf = function (rslt){
     populate[%ucfirst(divId)%](rslt.rows)
   };
@@ -42,12 +42,18 @@ function save[%ucfirst(divId)%](params){
   params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
   var successf=function(rslt){
     clearForm('[%divId%]Form');
-    if (rslt.spwfAction == "UPDATE"){
-      replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
-    }else if (rslt.spwfAction == "INSERT"){
-      addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+    if(!rslt[SERVER_SIDE_FAIL]){
+	if (rslt.spwfAction == "UPDATE"){
+      	  replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+    	}else if (rslt.spwfAction == "INSERT"){
+      	  addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+    	}
+      briefNotify("Golf Score Successfully Saved");
     }
-    briefNotify("Golf Score Successfully Saved");
+    else{
+	briefNotify("Golf Score Saved Failed");
+
+    }
   };
   serverCall(params,successf,FAILF);
 }
@@ -76,7 +82,7 @@ function validate[%ucfirst(divId)%]Form(){
 
 //Top Level HTML Manip
 function populate[%ucfirst(divId)%](dataRows){
-  var htmlAggregator ="<tr> <th>Score</th><th class='accentColumn'>Date</th> <th>I want to&hellip;</th></tr>";
+  var htmlAggregator ="<tr><th>Golfer</th> <th class='accentColumn'>Score</th><th >Date</th> <th class='accentColumn'>I want to&hellip;</th></tr>";
   for(var ndx=0;ndx< dataRows.length;ndx++){
     htmlAggregator +=build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
   }
@@ -84,10 +90,11 @@ function populate[%ucfirst(divId)%](dataRows){
 }
 
 function build[%ucfirst(divId)%]ListTableRow(data){
-  var htmlRow ="<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'><td>";
-  htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</td>";
-  htmlRow += "<td class='accentColumn'>" + pgDate(data.game_dt) + " </td> ";
-  htmlRow += "<td><a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> |"
+  var htmlRow ="<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'>";
+  htmlRow += "<td>"+GOLFER_CACHE[data.golfer_id] + "</td>";
+  htmlRow += "<td class='accentColumn'>" + formatNumber(data.golf_score,0,true,false,true)  +"</td>";
+  htmlRow += "<td >" + pgDate(data.game_dt) + " </td> ";
+  htmlRow += "<td class='accentColumn'><a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> |"
     htmlRow += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
   return htmlRow;
 }
@@ -103,14 +110,12 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
 }
 
 //Div Access and App Layout Calls
-function show[%ucfirst(divId)%](golferId_){
-  retrieve[%ucfirst(divId)%]List(golferId_); 
-  retrieveGolferNameForGolfScore(golferId_);
+function show[%ucfirst(divId)%](){
+  retrieve[%ucfirst(divId)%]List(); 
   hideCurrentContentPane();
   $("#[%divId%]").fadeIn();
   currentContentPane="[%divId%]";
   toggleSaveMode("[%divId%]Form",false);
-  $("#[%divId%]Form-golfer_id").val(golferId_);
 }
 
 //After complete Load setup
@@ -133,7 +138,7 @@ function retrieveGolferNameForGolfScore(golferId_){
 
 </script>
 <div id="[%divId%]" class="contentPane MainLayout"  >
-  <h1 id="[%divId%]GolferNameId" class="pageTitle"></h1>
+  <h1 id="[%divId%]h1" class="pageTitle">Recent Golf Scores</h1>
   <div class="row">
     <span class="sixcol">
       <table id="[%divId%]ListTable"  class='dataTable' >
@@ -141,16 +146,20 @@ function retrieveGolferNameForGolfScore(golferId_){
     </span>
     <span class = "sixcol last">
       <form id="[%divId%]Form" >
-	
 	<table id="[%divId%]FormTable"  class='formTable'>
 	  <tr>
+	    <td> Golfer </td>
+	    <td><select name="golfer_id" id="[%divId%]Form-golfer_id" class="VALIDATErequired"></select></td>
+	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span> </td>
+	  </tr>
+	  <tr>
 	    <td> Score </td>
-	    <td><input  type="text" name="golf_score" id="[%divId%]Form-golf_score"/></td>
+	    <td><input  type="text" name="golf_score" id="[%divId%]Form-golf_score" class="VALIDATEinteger"/></td>
 	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
 	  </tr>
 	  <tr>
 	    <td> Date</td>
-	    <td><input type="text"  name="game_dt" id="[%divId%]Form-game_dt"/></td>
+	    <td><input type="text"  name="game_dt" id="[%divId%]Form-game_dt" class="VALIDATEmmddyyyydate"/></td>
 	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
 	  </tr>
 	  <tr><td colspan="3">
@@ -161,7 +170,6 @@ function retrieveGolferNameForGolfScore(golferId_){
 	</table>
 	<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 	<input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">
-	<input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
       </form>
 
     </span>

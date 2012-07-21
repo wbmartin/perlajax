@@ -1,12 +1,20 @@
 [%divId="helpPane"%]
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
 <div id ="[%divId%]CenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; background-color:white; max-width:300; ">
-<h1 id="helpPaneTitle" >Help&hellip;</h1>
-<ul>
-<li><a id="aboutGolfScore" onclick="showAboutPane();">About</a></li>
-			<li><a id="logViewer" onclick="showClientLogViewer();">Log</a></li>
+  <h1 id="helpPaneTitle" >Help&hellip;</h1>
+  <div class="row">
+      <span class="twocol largeIconSpan"><a id="helpLauncherShowLog" onclick="showClientLogViewer();">
+	  <span class="sprite64Icon logIcon"></span><br/>
+	  View Log</a>
+      </span>
+      <span class="twocol largeIconSpan"><a id="launcherShowAbout" onclick="showAboutPane();">
+	  <span class="sprite64Icon learnMoreIcon"></span><br/>
+	  Learn More</a>
+      </span>
 
-</ul>
+  </div>[%#end row%]
+
+
 
 </div>[%#golfScoreCenterDiv%]
 </div>[%#aboutPane%]

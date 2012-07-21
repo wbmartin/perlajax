@@ -11,20 +11,21 @@
 	  <span class="sprite64Icon kolfIcon"></span><br/>
 	  View Averages</a>
       </span>
-      <span class="twocol last largeIconSpan"><a id="launcherShowGolfer" onclick="showGolfer();">
+      <span class="twocol largeIconSpan"><a id="launcherShowQuickGolfScore" onclick="showQuickGolfScore();">
+	  <span class="sprite64Icon lightningFolder"></span><br/>
+	  Quick Entry</a>
+      </span>
+
+      <span class="twocol  largeIconSpan"><a id="launcherShowGolfer" onclick="showGolfer();">
 	  <span class="sprite64Icon peopleIcon"></span><br/>
 	  View Golfers</a>
       </span>
-      <span class="twocol last largeIconSpan"><a id="launcherShowAbout" onclick="showAboutPane();">
-	  <span class="sprite64Icon learnMoreIcon"></span><br/>
-	  Learn More</a>
-      </span>
-      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showHelpPane();">
+      <span class="twocol largeIconSpan"><a id="launcherShowHelp" onclick="showHelpPane();">
 	  <span class="sprite64Icon helpIcon"></span><br/>
 	  Get Help</a>
       </span>
 
-      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showSecurityGrants();">
+      <span class="twocol largeIconSpan"><a id="launcherShowHelp" onclick="showSecurityGrants();">
 	  <span class="sprite64Icon keyIcon"></span><br/>
 	  Grants</a>
       </span>
@@ -47,10 +48,13 @@
     currentContentPane = "[%divId%]";
     $(document).keypress(function(e) {
       //alert(e.which);
-      if(e.which == 103) { //g
-        showSecurityGrants();
-      }
-    });
+	switch(e.which){
+	 case 103:showSecurityGrants(); break;
+	 case 113:showQuickGolfScore(); break;
+
+
+	}
+	    });
    return "[%divId%]";
   }
 

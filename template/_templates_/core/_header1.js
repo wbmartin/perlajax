@@ -10,6 +10,7 @@ var clientLog=new Array();
 var insertUpdateChoose = "INSERTUPDATE";
 var FAILF = function(){alert("FAIL");}
 var currentContentPane="";
+var SERVER_SIDE_FAIL ='serverSideFail';
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Form Functions
@@ -75,19 +76,35 @@ function toggleSaveMode(formName, saveMode){
 function standardValidate(formName){
   var formValid = true;
   if($("#"+formName).length==0) formValid=false;
-  $.each($("form#"+formName + ".ValidationMsg"),function (ndx,span){
+  $.each($("form#"+formName + " span.ValidationMsg"),function (ndx,span){
 	span.innerHTML="";
   });
-  $.each($("form#"+formName + ".invalid"),function (ndx,field){
+  $.each($("form#"+formName + " .invalid"),function (ndx,field){
 	$("form#"+formName +" #"+field.id).removeClass("invalid");
   });
-  $.each($("form#" +formName + " .required"),function (ndx,field){
+  $.each($("form#" +formName + " .VALIDATErequired"),function (ndx,field){
 	if(field.value == null || field.value==""){
 	 appendValidationMsg(formName,field.id, "Required");
 	 highlightFieldError(formName,field.id,true);
 	 formValid =false;
 	}
   });
+  $.each($("form#" +formName + " .VALIDATEinteger"),function (ndx,field){
+	if(field.value != null && !isInteger(field.value)){
+	 appendValidationMsg(formName,field.id, "Integer Input Required");
+	 highlightFieldError(formName,field.id,true);
+	 formValid =false;
+	}
+  });
+  $.each($("form#" +formName + " .VALIDATEmmddyyyydate"),function (ndx,field){
+	if(field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)){
+	 appendValidationMsg(formName,field.id, "MM/DD/YYYY Required");
+	 highlightFieldError(formName,field.id,true);
+	 formValid =false;
+	}
+  });
+
+
 
 return formValid;
 }
@@ -104,6 +121,14 @@ function isEmpty(val){
   if (typeof(val) == "undefined")return true;
   if (val == null || val =="") return true;
   return false;
+}
+
+function isInteger(value){ 
+  if((parseFloat(value) == parseInt(value)) && !isNaN(value)){
+      return true;
+  } else { 
+      return false;
+  } 
 }
 
 
@@ -272,7 +297,7 @@ function serverCall(params, successCallback, failCallback){
 	logMsg(resourceActionInfo + " Responded", rslt.requestId);
  	if(!validateServerResponse(rslt)){
 		logMsg(resourceActionInfo + " Failed to validate the server response - " +  rslt['errorMsg']);
-		rslt['serverSideFail'] = true;
+		rslt[SERVER_SIDE_FAIL] = true;
 	}	
 	successCallback(rslt);
   }

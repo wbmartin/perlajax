@@ -7,7 +7,7 @@ function onRefreshCache(data){
 	  }
 	}
 
-setSelectOptions("#golfScoreForm select[name=golfer_id]", GOLFER_CACHE);
+setSelectOptions("#quickGolfScoreForm select[name=golfer_id]", GOLFER_CACHE);
 }
 
 
