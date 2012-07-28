@@ -146,7 +146,7 @@ create or replace function security_profile_grant_dqw(alreadyauth_ text,  userid
   returns boolean as
 $body$
   declare
-  rcnt int;  
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
     	perform issessionvalid( userid_,sessionid_) ;
@@ -154,7 +154,7 @@ $body$
     end if;
 	execute  'delete from security_profile_grant ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
 	GET DIAGNOSTICS rcnt = ROW_COUNT;
-	if rcnt>0 then
+	if rwcnt>0 then
 	  return true;
 	else 
 	  raise exception 'Delete Failed for SECURITY_PROFILE_GRANT- The record may have been changed or deleted before the attempt.';

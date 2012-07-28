@@ -1,0 +1,164 @@
+[%divId="securityUser"%]
+[%spwfResource="security_user"%]
+[%prkey="security_user_id"%]
+[%prettyName="User"%]
+
+<script type="text/javascript">
+  //<![CDATA[
+"use strict";
+//Server Calls
+function retrieve[%ucfirst(divId)%]List(){
+  $("#[%divId%]ListTable").html("");
+  var params =prepParams(params,"[%spwfResource%]" ,"select" );
+  var successf = function (rslt){
+    if(rslt[SERVER_SIDE_FAIL]){
+      briefNotify("There was a problem retrieving the [%prettyName%] Listing");
+    }else{
+      populate[%ucfirst(divId)%](rslt.rows)
+    }
+  };
+  serverCall(params,successf,FAILF);
+}
+function retrieve[%ucfirst(divId)%](params){
+  params = prepParams(params,"[%spwfResource%]","SELECT");
+  var successf = function(rslt){
+    bindToForm("[%divId%]Form", rslt.rows[0]);
+    toggleSaveMode("[%divId%]Form",true);
+  }
+  serverCall(params,successf,FAILF);
+}
+
+
+
+function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
+  var params =prepParams(params,"[%spwfResource%]" ,"delete" );
+  params['[%prkey%]'] = [%toCC(prkey)%]_;
+  params['last_update'] = lastUpdate_;
+  var successf = function (rslt){
+    remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
+    briefNotify("[%prettyName%] Deleted Successfully");
+  };
+  serverCall(params,successf,FAILF);
+}
+
+function save[%ucfirst(divId)%](params){
+  params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
+  var successf=function(rslt){
+    clearForm('[%divId%]Form');
+    if (rslt.spwfAction == "UPDATE"){
+      replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+    }else if (rslt.spwfAction == "INSERT"){
+      addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+    }
+    briefNotify("[%prettyName%] Successfully Saved");
+  };
+  serverCall(params,successf,FAILF);
+}
+
+//ServerCall Wrappers
+function edit[%ucfirst(divId)%]([%divId%]Id_){
+  if([%divId%]Id_){
+    makeAvailableAllPrivileges();
+    var params ={"where_clause":"[%prkey%]=" +[%divId%]Id_};
+    retrieve[%ucfirst(divId)%](params);
+  }
+}
+
+function save[%ucfirst(divId)%]Form(){
+  if(validate[%ucfirst(divId)%]Form()){
+    var params = bindForm("[%divId%]Form");
+    save[%ucfirst(divId)%](params);
+  }
+}
+
+//validation
+function validate[%ucfirst(divId)%]Form(){
+  var formName="[%divId%]Form";
+  var formValid  = standardValidate(formName);
+  return formValid;
+}
+
+//Top Level HTML Manip
+function populate[%ucfirst(divId)%](dataRows){
+  var htmlAggregator ="<tr><th>User Id</th> <th class='accentColumn'>I want to&hellip;</th></tr>";
+  if (dataRows !=null)
+  for(var ndx=0;ndx< dataRows.length;ndx++){
+    htmlAggregator +=build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
+  }
+  $("#[%divId%]ListTable").html(htmlAggregator);
+}
+
+function build[%ucfirst(divId)%]ListTableRow(data){
+  var htmlRow ="<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'>";
+  htmlRow += "<td>" + data.user_id+ "</td> ";
+  htmlRow += "<td class='accentColumn'><a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> |"
+    htmlRow += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+  return htmlRow;
+}
+
+function replace[%ucfirst(divId)%]ListTableRow(row){
+  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.[%prkey%]).replaceWith(build[%ucfirst(divId)%]ListTableRow(row));
+}
+function addNew[%ucfirst(divId)%]ListTableRow(row){
+  $("table#[%divId%]ListTable TR").first().after(build[%ucfirst(divId)%]ListTableRow(row));
+}
+function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
+  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+[%toCC(prkey)%]_).replaceWith("");
+}
+
+//Div Access and App Layout Calls
+function show[%ucfirst(divId)%](){
+  retrieve[%ucfirst(divId)%]List(); 
+  hideCurrentContentPane();
+  $("#[%divId%]").fadeIn();
+  currentContentPane="[%divId%]";
+  toggleSaveMode("[%divId%]Form",false);
+}
+
+//After complete Load setup
+$(document).ready(function(){
+
+    });
+
+//page specific functions
+
+//]]>
+
+</script>
+<div id="[%divId%]" class="contentPane MainLayout"  >
+  <h1 id="[%divId%]HeaderId" class="pageTitle">Users</h1>
+  <div class="row">
+    <span class="fourcol">
+      <table id="[%divId%]ListTable"  class='dataTable' >
+      </table>
+    </span>
+    <span class = "eightcol last">
+      <form id="[%divId%]Form" >
+	<table id="[%divId%]FormTable"  class='formTable'>
+	  <tr>[%dbColumnName = 'user_id'%]
+	    <td> User Id </td>
+	    <td><input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/></td>
+	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span></td>
+
+	  </tr>
+	  <tr>
+	    <td colspan="3">
+	      <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >
+		Save
+	      </button>
+	      <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >
+		Add
+	      </button>
+	      <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >
+		Clear
+	      </button>
+	    </td>
+	  </tr>
+	</table>
+	<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+	<input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
+
+      </form>
+      <br/>
+    </div>
+  </div> <!--end:[%ucfirst(divId)%]-->

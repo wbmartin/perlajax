@@ -40,7 +40,7 @@ DROP TABLE  if exists SECURITY_USER cascade;
 psql:securitySchema/002_CreateSecurityUser.sql:2: NOTICE:  drop cascades to function initsession(text,text,text,text)
 DROP TABLE
 CREATE TABLE security_user
-(
+( security_user_id serial,
   user_id text NOT NULL,
   last_update timestamp(3) without time zone,
   updated_by text,
@@ -49,7 +49,7 @@ CREATE TABLE security_user
   session_id text,
   session_expire_dt timestamp(3) without time zone,
   active_yn character(1),
-  CONSTRAINT security_user_pkey PRIMARY KEY (user_id),
+  CONSTRAINT security_user_pkey PRIMARY KEY (security_user_id),
   CONSTRAINT fk_security_user_2 FOREIGN KEY (security_profile_id)
       REFERENCES security_profile (security_profile_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -57,6 +57,7 @@ CREATE TABLE security_user
 WITH (
   OIDS=FALSE
 );
+psql:securitySchema/002_CreateSecurityUser.sql:20: NOTICE:  CREATE TABLE will create implicit sequence "security_user_security_user_id_seq" for serial column "security_user.security_user_id"
 psql:securitySchema/002_CreateSecurityUser.sql:20: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_user_pkey" for table "security_user"
 CREATE TABLE
 commit;
@@ -117,6 +118,8 @@ WITH (
 psql:securitySchema/004_CreateSecurityProfileGrant.sql:20: NOTICE:  CREATE TABLE will create implicit sequence "security_profile_grant_security_profile_grant_id_seq" for serial column "security_profile_grant.security_profile_grant_id"
 psql:securitySchema/004_CreateSecurityProfileGrant.sql:20: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_profile_grant_pkey" for table "security_profile_grant"
 CREATE TABLE
+create unique index ndx_security_profile_grant on security_profile_grant (security_privilege_id, security_profile_id);
+CREATE INDEX
 commit;
 COMMIT
 \i securitySchema/005_CreateVw_ProfileGrant.sql
@@ -357,11 +360,11 @@ CREATE FUNCTION
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  security_profile_dqw(text, text, text)
 -- DROP FUNCTION security_profile_dqw( text,text,text);
-create or replace function security_profile_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+create or replace function security_profile_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  text)
   returns boolean as
 $body$
   declare
-  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  rcnt int;  
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
     	perform issessionvalid( userid_,sessionid_) ;
@@ -369,7 +372,7 @@ $body$
     end if;
 	execute  'delete from security_profile ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
 	GET DIAGNOSTICS rcnt = ROW_COUNT;
-	if rwcnt>0 then
+	if rcnt>0 then
 	  return true;
 	else 
 	  raise exception 'Delete Failed for SECURITY_PROFILE- The record may have been changed or deleted before the attempt.';
@@ -378,7 +381,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-psql:securitySchema/020_CreateProc_CRUD_SecurityProfile.sql:165: ERROR:  type whereclause_ does not exist
+CREATE FUNCTION
 --alter function security_profile_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_profile_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -513,11 +516,11 @@ CREATE FUNCTION
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  security_privilege_dqw(text, text, text)
 -- DROP FUNCTION security_privilege_dqw( text,text,text);
-create or replace function security_privilege_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+create or replace function security_privilege_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_ text )
   returns boolean as
 $body$
   declare
-  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  rcnt int;  
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
     	perform issessionvalid( userid_,sessionid_) ;
@@ -525,7 +528,7 @@ $body$
     end if;
 	execute  'delete from security_privilege ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
 	GET DIAGNOSTICS rcnt = ROW_COUNT;
-	if rwcnt>0 then
+	if rcnt>0 then
 	  return true;
 	else 
 	  raise exception 'Delete Failed for SECURITY_PRIVILEGE- The record may have been changed or deleted before the attempt.';
@@ -534,7 +537,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-psql:securitySchema/030_CreateProc_CRUD_SecurityPrivilege.sql:165: ERROR:  type whereclause_ does not exist
+CREATE FUNCTION
 --alter function security_privilege_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_privilege_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -669,11 +672,11 @@ CREATE FUNCTION
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  security_profile_grant_dqw(text, text, text)
 -- DROP FUNCTION security_profile_grant_dqw( text,text,text);
-create or replace function security_profile_grant_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+create or replace function security_profile_grant_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_ text )
   returns boolean as
 $body$
   declare
-  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  rcnt int;  
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
     	perform issessionvalid( userid_,sessionid_) ;
@@ -681,7 +684,7 @@ $body$
     end if;
 	execute  'delete from security_profile_grant ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
 	GET DIAGNOSTICS rcnt = ROW_COUNT;
-	if rwcnt>0 then
+	if rcnt>0 then
 	  return true;
 	else 
 	  raise exception 'Delete Failed for SECURITY_PROFILE_GRANT- The record may have been changed or deleted before the attempt.';
@@ -690,7 +693,165 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-psql:securitySchema/040_CreateProc_CRUD_security_profile_grant.sql:165: ERROR:  type whereclause_ does not exist
+psql:securitySchema/040_CreateProc_CRUD_security_profile_grant.sql:165: ERROR:  must be owner of function security_profile_grant_dqw
 --alter function security_profile_grant_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_profile_grant_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+\i securitySchema/050_CreateProc_CRUD_security_user.sql
+-- Function: security_user_sq(text, text, text, text, text, integer, integer)
+-- DROP FUNCTION security_user_sq(text, text, text, text, text, integer, integer);
+CREATE OR REPLACE FUNCTION security_user_sq(alreadyAuth_ text, securityuserid_ text, sessionid_ text, whereClause_ text, orderByClause_ text, rowLimit_ integer, rowOffset_ integer)
+  RETURNS SETOF security_user AS
+$BODY$
+  Declare
+   Begin
+    if alreadyAuth_ <>'ALREADY_AUTH' then
+    	perform isSessionValid( securityuserId_,sessionId_) ;
+    	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_USER' );
+    end if;
+    return query execute 'select security_user_id, user_id, last_update, updated_by, '' password_enc, security_profile_id, session_id, session_expire_dt, active_yn from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
+  End;
+$BODY$
+  LANGUAGE 'plpgsql' VOLATILE
+  COST 100
+  ROWS 1000;
+CREATE FUNCTION
+--ALTER FUNCTION security_user_sq(text,  text, text, text, text, integer, integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION security_user_sq(text, text, text, text, text, integer, integer) TO GROUP golfscore;
+--select * from security_user_sq('ALREADY_AUTH',  'test', 'test', '','',-1,-1);
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Function: security_user_bypk(text, text, text ,integer)
+-- DROP FUNCTION security_user_pybk(text, text, text,integer);
+--CREATE OR REPLACE FUNCTION security_user_bypk(alreadyAuth_ text,  securityuserid_ text, sessionid_ text 
+--,securityUserId_ integer)
+--  RETURNS security_user AS
+--$BODY$
+--  Declare
+--    result security_user;
+--  Begin
+--    if alreadyAuth_ <>'ALREADY_AUTH' then
+--    	perform isSessionValid( securityuserId_,sessionId_) ;
+--    	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_USER' );
+--    end if;
+--security_user_id, user_id, last_update, updated_by, password_enc, security_profile_id, session_id, session_expire_dt, active_yn
+--     select * into result from security_user where security_user_id=securityUserId_;
+--     return result;
+--  End;
+--$BODY$
+--  LANGUAGE 'plpgsql' VOLATILE
+--  COST 100;
+--ALTER FUNCTION security_user_bypk(text,  text, text,integer) OWNER TO postgres;
+--GRANT EXECUTE ON FUNCTION security_user_bypk(text,  text, text,integer) TO GROUP golfscore;
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Function:  security_user_iq(text, text, text ,text,text,integer,text,timestamp,character)
+-- DROP FUNCTION security_user_iq( text, text, text,text,text,integer,text,timestamp,character);
+create or replace function security_user_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,userId_ text,passwordEnc_ text,securityProfileId_ integer,sessionId_ text,sessionExpireDt_ timestamp,activeYn_ character)
+  returns security_user as
+$body$
+  declare
+    newrow security_user;
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( securityuserid_,sessionid_) ;
+    	perform isuserauthorized( securityuserid_,'INSERT_SECURITY_USER' );
+    end if;
+
+
+    insert into security_user( user_id,last_update,updated_by,password_enc,security_profile_id,session_id,session_expire_dt,active_yn)  values ( userId_, now(), securityuserid_,md5(passwordEnc_),securityProfileId_,sessionId_,sessionExpireDt_,activeYn_) 
+	returning * into newrow;
+      return newrow;
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+psql:securitySchema/050_CreateProc_CRUD_security_user.sql:74: ERROR:  parameter name "sessionid_" used more than once
+--alter function security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character) TO GROUP golfscore;
+--select * from security_user_iq('ALREADY_AUTH', 'test', 'test' , 'text', 'text', 'text' ,1, 'text', 'text', 'text' );
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Function:  security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character)
+-- DROP FUNCTION security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character);
+create or replace function security_user_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityUserId_ integer, userId_ text, lastUpdate_ timestamp, securityProfileId_ integer, sessionId_ text, sessionExpireDt_ timestamp, activeYn_ character)
+  returns security_user as
+$body$
+  declare
+    updatedrow security_user;
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( securityuserid_,sessionid_) ;
+    	perform isuserauthorized( securityuserid_, 'UPDATE_SECURITY_USER' );
+    end if;
+	update security_user set user_id= userId_ ,  last_update = now() , updated_by = securityuserid_,  security_profile_id= securityProfileId_ ,  session_id= sessionId_ ,  session_expire_dt= sessionExpireDt_ ,  active_yn= activeYn_ 	where security_user_id=securityUserId_   and   last_update = lastUpdate_
+	returning * into updatedrow;
+
+	if found then
+	  return updatedrow;
+	else 
+	  raise exception 'Update Failed for SECURITY_USER- The record may have been changed or deleted before the attempt.';
+	end if;
+
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+psql:securitySchema/050_CreateProc_CRUD_security_user.sql:107: ERROR:  parameter name "securityuserid_" used more than once
+--alter function security_user_uq(text,  text, text ,integer,text,timestamp,text,integer,text,timestamp,character) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character) TO GROUP golfscore;
+--select * from security_user_uq('ALREADY_AUTH', 'test', 'test', 'text', 'text' <last_update>, 'text' ,1, 'text', 'text', 'text' <security_user_id>);
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Function:  security_user_dq(text, text ,integer, timestamp)
+-- DROP FUNCTION security_user_dq( text,  text ,integer, timestamp);
+create or replace function security_user_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,securityUserId_ integer, lastUpdate_ timestamp  )
+  returns boolean as
+$body$
+  declare
+    
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( userid_,sessionid_) ;
+    	perform isuserauthorized(userid_,'DELETE_SECURITY_USER' );
+    end if;
+	delete from security_user where security_user_id=securityUserId_  and last_update = lastUpdate_;
+
+	if found then
+	  return true;
+	else 
+	  raise exception 'Delete Failed for SECURITY_USER- The record may have been changed or deleted before the attempt.';
+	end if;
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+CREATE FUNCTION
+--alter function security_user_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_user_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Function:  security_user_dqw(text, text, text)
+-- DROP FUNCTION security_user_dqw( text,text,text);
+create or replace function security_user_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  text)
+  returns boolean as
+$body$
+  declare
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid( userid_,sessionid_) ;
+    	perform isuserauthorized(userid_,'DELETE_SECURITY_USER' );
+    end if;
+	execute  'delete from security_user ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
+	GET DIAGNOSTICS rcnt = ROW_COUNT;
+	if rwcnt>0 then
+	  return true;
+	else 
+	  raise exception 'Delete Failed for SECURITY_USER- The record may have been changed or deleted before the attempt.';
+	end if;
+  end;
+$body$
+  language 'plpgsql' volatile
+  cost 100;
+psql:securitySchema/050_CreateProc_CRUD_security_user.sql:165: ERROR:  syntax error at or near "GET"
+LINE 5:   GET DIAGNOSTICS integer_var = ROW_COUNT;  
+          ^
+--alter function security_user_dq(text, text, text,integer, timestamp) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_user_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

@@ -1,175 +1,72 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-<title> Simple2 Demo</title>
-<script type="text/javascript" src="./jquery-1.7.1.js"></script>
-<script type="text/javascript"> 
-//<![CDATA[
-var urlTarget = "cgi-bin/SimpleRespond.pl"
-//"http://localhost/cgi-bin2/SimpleRespond.pl";
-
-//alert ("2");
-var params= new Array();;
-params['spwfresource'] = "security_user";
-params['spwfaction'] = "authenticate";
-var startTime=new Date();
-$(document).load(urlTarget, params, function(responseText){ 
-		var stopTime=new Date(); 
-            alert("Response:\n" + responseText + "Delivered in "+(stopTime.getTime()-startTime.getTime())/1000);  
-        });     
-//alert ("ok");
-//]]
-</script>
-<style type="text/css">
-/*
-Fixed Header/Footer: http://www.noobcube.com/tutorials/html-css/fixed-header-footer-layout-a-beginners-guide-/
-JSON EXAMPLE: http://stackoverflow.com/questions/435442/how-can-i-send-a-json-response-from-a-perl-cgi-program
-
-*/
-body {
-	font: 62.5% Arial, Helvetica, sans-serif;
-	color: #597347;
-	margin: 0;
-	padding: 0;
-}
-
-h1, h2 {
-	color: #87ac6d;
-	font-family: Tahoma, Arial, Geneva, sans-serif;
-	margin: 20px 0 10px;
-}
-
-h1 {
-	font-size: 2.5em;
-}
-
-p {
-	margin: 10px 0;
-	padding: 0;
-}
-
-blockquote {
-	font-style: italic;	
-}
-
-#header-wrap {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;	
-}
-
-#header-container {
-	height: 90px;
-/*	background: url(../images/header-bg.png) repeat-x left bottom;
-*/
-}
-
-#header {
-	width: 940px;
-	margin: 0 auto;
-	position: relative;
-}
-
-#header h1 {
-	color: #beffbf;
-	text-align: right;
-	width: 290px;
-	margin: 0;
-	position: absolute;
-	left: 0;
-	top: 20px;
-}
-
-#header h1 em{
-	color: #90b874;
-	font-size: small;
-	display: block;
-}
-
-#header ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	position: absolute;
-	top: 35px;
-	right: 0;
-}
-
-#header ul li {
-	float: left;
-	margin-right: 5px;
-}
-
-#header ul li a{
-	color: #90b874;
+  <head>
+    <title> Simple2 Demo</title>
+    <style>
+      label{
+	font-weight:bold;
+	display:block;
+	margin-bottom: -1em;
+      }
+      select, input{
+	display:inline-block;
+	border: 1px solid #999;
+	width: 30em;
+	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+      }
+      .formLayout    {
+	display: inline-block;
+	background: -webkit-gradient(linear, bottom, left 175px, from(#CCCCCC), to(#EEEEEE));
+	background: -moz-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+	margin:auto;
+	position:relative;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 1em;
+	font-style: italic;
+	line-height: 2em;
 	font-weight: bold;
-	font-size: 1.4em;
-	margin-right: 5px;
+	color: #74A846;
 	text-decoration: none;
-}
-
-#header ul li a:hover {
-	color: #beffbf;	
-}
-
-#container {
-	width: 940px;
-	margin: 0 auto;
-	font-size: 1.4em;
-	overflow: auto;
-	padding: 90px 0 40px;
-}
-
-#content {
-	float: left;
-	width: 625px;
-}
-
-#sidebar {
-	float: right;
-	width: 275px;
-	margin-top: 10px;
-}
-
-#footer-wrap {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;	
-}
-
-#footer-container {
-	height: 40px;
-/*	background: url(../images/footer-bg.png) repeat-x left bottom;
-*/
-}
-
-#footer {
-	width: 940px;
-	margin: 0 auto;
-	position: relative;
-}
-
-</style>
-</head>
-<body >
-<h1>test</h1>
-<div id="header-wrap">
-	<div id="header-container"> header
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	padding:1em;
+	border: 1px solid #999;
+	border: inset 1px solid #333;
+	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+      }
+      .ValidationMsg{
+	display:inline-block;
+	width:15em;
+	padding:0;
+	margin:0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="formLayout">
+      <h1>Title</h1>
+      <form>
+	<div class="formFieldGroup">
+	  <label>User Id </label>
+	  <input  type="text" name="1" id="1"/>
+	  <span class="ValidationMsg" id="1Error">erro </span>
 	</div>
-</div>
-<div id="container">
-	<div id="content"> <p> test </p>
+	<div class="formFieldGroup">
+	  <label>blah blah blah blah blah </label>
+	  <input  type="text" name="2" id="2"/>
+	  <span class="ValidationMsg" id="2Error"> error</span>
 	</div>
-</div>
-<div id="footer-wrap">
-	<div id="footer-container">
-		<div id="footer">
-			Footer Content
-		</div>
+	<div class="formFieldGroup">
+	  <label>blah blah blah blah blah </label>
+	  <select name="2" id="2"/><option>1</option></select>
+	  <span class="ValidationMsg" id="2Error"> error</span>
 	</div>
-</div>
-
-</body>
+      </form>
+    </div>
+  </body>
 </html>

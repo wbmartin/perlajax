@@ -11,7 +11,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_USER' );
     end if;
-    return query execute 'select * from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
+    return query execute 'select security_user_id, user_id, last_update, updated_by, '' password_enc, security_profile_id, session_id, session_expire_dt, active_yn from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
@@ -142,11 +142,11 @@ $body$
 
 -- Function:  security_user_dqw(text, text, text)
 -- DROP FUNCTION security_user_dqw( text,text,text);
-create or replace function security_user_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_ text )
+create or replace function security_user_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
   returns boolean as
 $body$
   declare
-  rcnt int;  
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
     	perform issessionvalid( userid_,sessionid_) ;
@@ -154,7 +154,7 @@ $body$
     end if;
 	execute  'delete from security_user ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
 	GET DIAGNOSTICS rcnt = ROW_COUNT;
-	if rcnt>0 then
+	if rwcnt>0 then
 	  return true;
 	else 
 	  raise exception 'Delete Failed for SECURITY_USER- The record may have been changed or deleted before the attempt.';

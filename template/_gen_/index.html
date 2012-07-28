@@ -3393,7 +3393,7 @@ function showHelpPane(){
 	  <span class="sprite64Icon keyIcon"></span><br/>
 	  Grants</a>
       </span>
-      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showPane();">
+      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showSecurityUser();">
 	  <span class="sprite64Icon keyManIcon"></span><br/>
 	  Profiles</a>
       </span>
@@ -3427,7 +3427,7 @@ function showHelpPane(){
 
 
 
-<div id="clientLogViewer" class="MainLayout ">
+<div id="clientLogViewer" class="MainLayout">
 <ul id ="clientLogView">
 </ul>
 </div> 
@@ -3745,6 +3745,171 @@ function sortDivChildren(divName_){
       </div>
     </div>
   </div> <!--end:SecurityGrants-->
+
+
+
+
+
+
+<script type="text/javascript">
+  //<![CDATA[
+"use strict";
+//Server Calls
+function retrieveSecurityUserList(){
+  $("#securityUserListTable").html("");
+  var params =prepParams(params,"security_user" ,"select" );
+  var successf = function (rslt){
+    if(rslt[SERVER_SIDE_FAIL]){
+      briefNotify("There was a problem retrieving the User Listing");
+    }else{
+      populateSecurityUser(rslt.rows)
+    }
+  };
+  serverCall(params,successf,FAILF);
+}
+function retrieveSecurityUser(params){
+  params = prepParams(params,"security_user","SELECT");
+  var successf = function(rslt){
+    bindToForm("securityUserForm", rslt.rows[0]);
+    toggleSaveMode("securityUserForm",true);
+  }
+  serverCall(params,successf,FAILF);
+}
+
+
+
+function deleteSecurityUser(securityUserId_, lastUpdate_){
+  var params =prepParams(params,"security_user" ,"delete" );
+  params['security_user_id'] = securityUserId_;
+  params['last_update'] = lastUpdate_;
+  var successf = function (rslt){
+    removeSecurityUserListTableRow(rslt.security_user_id);
+    briefNotify("User Deleted Successfully");
+  };
+  serverCall(params,successf,FAILF);
+}
+
+function saveSecurityUser(params){
+  params = prepParams(params,"security_user",insertUpdateChoose);
+  var successf=function(rslt){
+    clearForm('securityUserForm');
+    if (rslt.spwfAction == "UPDATE"){
+      replaceSecurityUserListTableRow(rslt.rows[0]);
+    }else if (rslt.spwfAction == "INSERT"){
+      addNewSecurityUserListTableRow(rslt.rows[0]);
+    }
+    briefNotify("User Successfully Saved");
+  };
+  serverCall(params,successf,FAILF);
+}
+
+//ServerCall Wrappers
+function editSecurityUser(securityUserId_){
+  if(securityUserId_){
+    makeAvailableAllPrivileges();
+    var params ={"where_clause":"security_user_id=" +securityUserId_};
+    retrieveSecurityUser(params);
+  }
+}
+
+function saveSecurityUserForm(){
+  if(validateSecurityUserForm()){
+    var params = bindForm("securityUserForm");
+    saveSecurityUser(params);
+  }
+}
+
+//validation
+function validateSecurityUserForm(){
+  var formName="securityUserForm";
+  var formValid  = standardValidate(formName);
+  return formValid;
+}
+
+//Top Level HTML Manip
+function populateSecurityUser(dataRows){
+  var htmlAggregator ="<tr><th>User Id</th> <th class='accentColumn'>I want to&hellip;</th></tr>";
+  if (dataRows !=null)
+  for(var ndx=0;ndx< dataRows.length;ndx++){
+    htmlAggregator +=buildSecurityUserListTableRow(dataRows[ndx]);
+  }
+  $("#securityUserListTable").html(htmlAggregator);
+}
+
+function buildSecurityUserListTableRow(data){
+  var htmlRow ="<tr id='SecurityUserListTableTR-" +data.security_user_id + "'>";
+  htmlRow += "<td>" + data.user_id+ "</td> ";
+  htmlRow += "<td class='accentColumn'><a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>Edit</a> |"
+    htmlRow += "<a class='alink' onclick=\"deleteSecurityUser(" +data.security_user_id + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+  return htmlRow;
+}
+
+function replaceSecurityUserListTableRow(row){
+  $("table#securityUserListTable #SecurityUserListTableTR-"+row.security_user_id).replaceWith(buildSecurityUserListTableRow(row));
+}
+function addNewSecurityUserListTableRow(row){
+  $("table#securityUserListTable TR").first().after(buildSecurityUserListTableRow(row));
+}
+function removeSecurityUserListTableRow(securityUserId_){
+  $("table#securityUserListTable #SecurityUserListTableTR-"+securityUserId_).replaceWith("");
+}
+
+//Div Access and App Layout Calls
+function showSecurityUser(){
+  retrieveSecurityUserList(); 
+  hideCurrentContentPane();
+  $("#securityUser").fadeIn();
+  currentContentPane="securityUser";
+  toggleSaveMode("securityUserForm",false);
+}
+
+//After complete Load setup
+$(document).ready(function(){
+
+    });
+
+//page specific functions
+
+//]]>
+
+</script>
+<div id="securityUser" class="contentPane MainLayout"  >
+  <h1 id="securityUserHeaderId" class="pageTitle">Users</h1>
+  <div class="row">
+    <span class="fourcol">
+      <table id="securityUserListTable"  class='dataTable' >
+      </table>
+    </span>
+    <span class = "eightcol last">
+      <form id="securityUserForm" >
+	<table id="securityUserFormTable"  class='formTable'>
+	  <tr>
+	    <td> User Id </td>
+	    <td><input  type="text" name="userId" id="securityUserForm-user_id"/></td>
+	    <td><span class="ValidationMsg" id="securityUserFormLabel-userIdError"></span></td>
+
+	  </tr>
+	  <tr>
+	    <td colspan="3">
+	      <button type="button" id="securityUserFormSave" value="Save" onclick="saveSecurityUserForm();" >
+		Save
+	      </button>
+	      <button type="button" id="securityUserFormAdd" value="Add" onclick="saveSecurityUserForm();" >
+		Add
+	      </button>
+	      <button type="button" id="securityUserFormClear" value="Clear" onclick="clearForm('securityUserForm');" >
+		Clear
+	      </button>
+	    </td>
+	  </tr>
+	</table>
+	<input type="hidden" name="last_update" id="securityUserForm-last_update">
+	<input type="hidden" name="security_user_id" id="securityUserForm-security_user_id">
+
+      </form>
+      <br/>
+    </div>
+  </div> <!--end:SecurityUser-->
 
 </div><!--End Main Content-->
 <!--Begin LoginPortal-->

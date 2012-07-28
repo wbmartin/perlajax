@@ -142,11 +142,11 @@ $body$
 
 -- Function:  security_privilege_dqw(text, text, text)
 -- DROP FUNCTION security_privilege_dqw( text,text,text);
-create or replace function security_privilege_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  )
+create or replace function security_privilege_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_ text )
   returns boolean as
 $body$
   declare
-  GET DIAGNOSTICS integer_var = ROW_COUNT;  
+  rcnt int;  
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
     	perform issessionvalid( userid_,sessionid_) ;
@@ -154,7 +154,7 @@ $body$
     end if;
 	execute  'delete from security_privilege ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
 	GET DIAGNOSTICS rcnt = ROW_COUNT;
-	if rwcnt>0 then
+	if rcnt>0 then
 	  return true;
 	else 
 	  raise exception 'Delete Failed for SECURITY_PRIVILEGE- The record may have been changed or deleted before the attempt.';

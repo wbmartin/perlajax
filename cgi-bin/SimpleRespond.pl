@@ -136,7 +136,7 @@ sub buildSTH{
 $debug=1;
   # Load the Resource/Action Hashref and standard field names
   $raDef=&buildResourceActionDef($params->{spwfResource}, $params->{spwfAction});
-  if(!$raDef){ return "ResourceAction Not Defined:" .$params->{spwfResource} . "-". $params->{spwfAction} ;}
+  if(!$raDef){ return "ResourceAction Not Defined:" .$params->{spwfResource} . "-". $params->{spwfAction}. "." ;}
   @spFields = (@stdFieldNames,@{$raDef->{pf}});
   $sql = "SELECT " . &buildSQLColsList($raDef->{rf})  ." from $raDef->{proc}('CHECK_AUTH'," . ("?," x $#spFields) . "?) ;" ;
   print STDERR "SQL: $sql\n" if($debug);
@@ -154,10 +154,30 @@ sub buildResourceActionDef{
   my $action = uc(shift);
   my ($rad, @stdSelectParamFields,@allFields,@paramFields);
   @stdSelectParamFields= ('where_clause','orderby_clause', 'rowlimit','startrow');
+  print STDERR "searching for $resource $action\n" if($debug);
   if ($resource eq "SECURITY_USER" ){
+	@allFields = ('security_user_id', 'user_id','password_enc', 'security_profile_id', 'session_id', 'session_expire_dt', 'active_yn', 'last_update' );
 	if($action eq "AUTHENTICATE") {
 		$rad ={  rf=>[ 'user_id', 'session_id'], pf=>['password'], proc=>"initsession" };
+	} elsif($action eq "INSERT"){
+		@paramFields =@allFields;
+		&removeArrayElement(\@paramFields, 'last_update');
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_user_iq"};
+	}elsif($action eq "SELECT"){
+		@paramFields=@stdSelectParamFields;
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_user_sq"};
+	}elsif($action eq "UPDATE"){
+		@paramFields=@allFields;
+		&removeArrayElement(\@paramFields, 'last_update');
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_user_uq"};
+	}elsif($action eq "DELETE"){
+		@paramFields=('security_user_id','last_update');
+		$rad = { rf=>['security_user_dq'], pf=>\@paramFields, proc=>"security_user_dq"};
+	}elsif($action eq "DELETEW"){
+		@paramFields=('where_clause');
+		$rad = { rf=>['security_user_dqw'], pf=>\@paramFields, proc=>"security_user_dqw"};
 	}
+
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   } elsif($resource eq "LEDGER_ACCOUNT" ){
 	@paramFields = @allFields =( 'ledger_account_id', 'last_update', 'name', 'account_type', 
@@ -198,17 +218,16 @@ sub buildResourceActionDef{
 		@paramFields =@allFields;
 		&removeArrayElement(\@paramFields, 'golf_score_id');
 		&removeArrayElement(\@paramFields, 'last_update');
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_iq"};
-	} elsif($action eq "SELECT"){
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_iq"};
+	}elsif($action eq "SELECT"){
 		@paramFields=@stdSelectParamFields;
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_sq"};
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_sq"};
 	}elsif($action eq "UPDATE"){
 		@paramFields=@allFields;
-		#splice @paramFields,0,1; #remove client_id, prkey
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_uq"};
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golf_score_uq"};
 	}elsif($action eq "DELETE"){
 		@paramFields = ('golf_score_id', 'last_update');
-		  $rad = { rf=>['golf_score_dq'], pf=>\@paramFields, proc=>"golf_score_dq"};
+		$rad = { rf=>['golf_score_dq'], pf=>\@paramFields, proc=>"golf_score_dq"};
 	}
 } elsif($resource eq "GOLFER" ){
 	 @allFields = ('golfer_id', 'last_update', 'name');
@@ -216,14 +235,13 @@ sub buildResourceActionDef{
 		@paramFields =@allFields;
 		&removeArrayElement(\@paramFields, 'golfer_id');
 		&removeArrayElement(\@paramFields, 'last_update');
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_iq"};
-	} elsif($action eq "SELECT"){
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_iq"};
+	}elsif($action eq "SELECT"){
 		@paramFields=@stdSelectParamFields;
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_sq"};
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_sq"};
 	}elsif($action eq "UPDATE"){
 		@paramFields=@allFields;
-		#splice @paramFields,0,1; #remove client_id, prkey
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_uq"};
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"golfer_uq"};
 	}elsif($action eq "DELETE"){
 		@paramFields=('golfer_id','last_update');
 		$rad = { rf=>['golfer_dq'], pf=>\@paramFields, proc=>"golfer_dq"};
@@ -234,14 +252,13 @@ sub buildResourceActionDef{
 		@paramFields =@allFields;
 		&removeArrayElement(\@paramFields, 'security_profile_id');
 		&removeArrayElement(\@paramFields, 'last_update');
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_iq"};
-	} elsif($action eq "SELECT"){
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_iq"};
+	}elsif($action eq "SELECT"){
 		@paramFields=@stdSelectParamFields;
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_sq"};
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_sq"};
 	}elsif($action eq "UPDATE"){
 		@paramFields=@allFields;
-		#splice @paramFields,0,1; #remove client_id, prkey
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_uq"};
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_uq"};
 	}elsif($action eq "DELETE"){
 		@paramFields=('security_profile_id','last_update');
 		$rad = { rf=>['security_profile_dq'], pf=>\@paramFields, proc=>"security_profile_dq"};
@@ -252,14 +269,13 @@ sub buildResourceActionDef{
 		@paramFields =@allFields;
 		&removeArrayElement(\@paramFields, 'security_privilege_id');
 		&removeArrayElement(\@paramFields, 'last_update');
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_privilege_iq"};
-	} elsif($action eq "SELECT"){
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_privilege_iq"};
+	}elsif($action eq "SELECT"){
 		@paramFields=@stdSelectParamFields;
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_privilege_sq"};
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_privilege_sq"};
 	}elsif($action eq "UPDATE"){
 		@paramFields=@allFields;
-		#splice @paramFields,0,1; #remove client_id, prkey
-		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_privilege_uq"};
+		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_privilege_uq"};
 	}elsif($action eq "DELETE"){
 		@paramFields=('security_privilege_id','last_update');
 		$rad = { rf=>['security_privilege_dq'], pf=>\@paramFields, proc=>"security_privilege_dq"};
@@ -270,12 +286,11 @@ sub buildResourceActionDef{
 		@paramFields =@allFields;
 		&removeArrayElement(\@paramFields, 'last_update');
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_grant_iq"};
-	} elsif($action eq "SELECT"){
+	}elsif($action eq "SELECT"){
 		@paramFields=@stdSelectParamFields;
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_grant_sq"};
 	}elsif($action eq "UPDATE"){
 		@paramFields=@allFields;
-		#splice @paramFields,0,1; #remove client_id, prkey
 		  $rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_profile_grant_uq"};
 	}elsif($action eq "DELETE"){
 		@paramFields=('security_profile_grant_id','last_update');
@@ -286,8 +301,7 @@ sub buildResourceActionDef{
 	}
 
 
-
-} else {return;}
+} else {print STDERR "Not Found: $resource $action" if $debug; return;}
   return $rad;
 }
 

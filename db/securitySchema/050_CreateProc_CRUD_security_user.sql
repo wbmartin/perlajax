@@ -11,7 +11,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_USER' );
     end if;
-    return query execute 'select * from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
+    return query execute 'select security_user_id, user_id, last_update, updated_by, ''''::text password_enc, security_profile_id, session_id, session_expire_dt, active_yn from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
@@ -65,7 +65,7 @@ $body$
     end if;
 
 
-    insert into security_user( user_id,last_update,updated_by,password_enc,security_profile_id,session_id,session_expire_dt,active_yn)  values ( userId_, now(), securityuserid_,passwordEnc_,securityProfileId_,sessionId_,sessionExpireDt_,activeYn_) 
+    insert into security_user( user_id,last_update,updated_by,password_enc,security_profile_id,session_id,session_expire_dt,active_yn)  values ( userId_, now(), securityuserid_,md5(passwordEnc_),securityProfileId_,sessionId_,sessionExpireDt_,activeYn_) 
 	returning * into newrow;
       return newrow;
   end;
@@ -82,7 +82,7 @@ $body$
 -- Function:  security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character)
 -- DROP FUNCTION security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character);
 
-create or replace function security_user_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityUserId_ integer, userId_ text, lastUpdate_ timestamp, passwordEnc_ text, securityProfileId_ integer, sessionId_ text, sessionExpireDt_ timestamp, activeYn_ character)
+create or replace function security_user_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityUserId_ integer, userId_ text, lastUpdate_ timestamp, securityProfileId_ integer, sessionId_ text, sessionExpireDt_ timestamp, activeYn_ character)
   returns security_user as
 $body$
   declare
@@ -92,7 +92,7 @@ $body$
     	perform issessionvalid( securityuserid_,sessionid_) ;
     	perform isuserauthorized( securityuserid_, 'UPDATE_SECURITY_USER' );
     end if;
-	update security_user set user_id= userId_ ,  last_update = now() , updated_by = securityuserid_,  password_enc= passwordEnc_ ,  security_profile_id= securityProfileId_ ,  session_id= sessionId_ ,  session_expire_dt= sessionExpireDt_ ,  active_yn= activeYn_ 	where security_user_id=securityUserId_   and   last_update = lastUpdate_
+	update security_user set user_id= userId_ ,  last_update = now() , updated_by = securityuserid_,  security_profile_id= securityProfileId_ ,  session_id= sessionId_ ,  session_expire_dt= sessionExpireDt_ ,  active_yn= activeYn_ 	where security_user_id=securityUserId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then
@@ -142,11 +142,11 @@ $body$
 
 -- Function:  security_user_dqw(text, text, text)
 -- DROP FUNCTION security_user_dqw( text,text,text);
-create or replace function security_user_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_ text )
+create or replace function security_user_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_  text)
   returns boolean as
 $body$
   declare
-  rcnt int;  
+  GET DIAGNOSTICS integer_var = ROW_COUNT;  
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
     	perform issessionvalid( userid_,sessionid_) ;
@@ -154,7 +154,7 @@ $body$
     end if;
 	execute  'delete from security_user ' ||  buildSQLClauses(whereClause_,'',0,0)  ;
 	GET DIAGNOSTICS rcnt = ROW_COUNT;
-	if rcnt>0 then
+	if rwcnt>0 then
 	  return true;
 	else 
 	  raise exception 'Delete Failed for SECURITY_USER- The record may have been changed or deleted before the attempt.';
