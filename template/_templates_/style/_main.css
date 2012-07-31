@@ -23,10 +23,6 @@ body{
   font-weight:normal;
   text-align:left;
 }
-[%# Form Layout%]
-.error{
-  color: red;
-}
 
 .largeIconSpan{
   display:inline-block; 
@@ -37,19 +33,19 @@ body{
 }
 
 .sprite64Icon{
- display:inline-block;
- height:64px;
- width:64px;
- background:url(images/consolidatedIcons.png) no-repeat;
- padding: 0 0 0 0;
+  display:inline-block;
+  height:64px;
+  width:64px;
+  background:url(images/consolidatedIcons.png) no-repeat;
+  padding: 0 0 0 0;
 }
 
 .sprite32Icon{
- display:inline-block;
- height:32px;
- width:32px;
- background:url(images/consolidatedIcons.png) no-repeat;
- padding: 0 0 0 0;
+  display:inline-block;
+  height:32px;
+  width:32px;
+  background:url(images/consolidatedIcons.png) no-repeat;
+  padding: 0 0 0 0;
 }
 
 
@@ -73,11 +69,11 @@ body{
   background-position:0px -500px;
 }
 .plusIcon{
- background-position:0px -268px;
+  background-position:0px -268px;
 
 }
 .cancelIcon{
- background-position:-32px -268px;
+  background-position:-32px -268px;
 
 }
 .logIcon{
@@ -87,19 +83,37 @@ body{
   background-position:0px -650px;
 }
 
+/*
+Form Layout styles
+ */
+  .formLayout_Standard label{
+    font-weight:bold;
+    display:block;
+    margin-bottom: -0.5em;
 
+  }
+  .formLayout_Standard select, input{
+    display:inline-block;
+    border: 1px solid #999;
+    width: 30em;
+    -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  }
 
-input{
-  float:left;
-  padding:4px 2px;
-  border:solid 1px ;
-  width:200px;
-  margin:2px 0 20px 10px;
+  input{
+  /*  float:left;
+    padding:4px 2px;
+    */
+    border:solid 1px ;
+    width:200px;
+    /*margin:2px 0 20px 10px;
+     */
 }
-select{
-  width:200px;
-  margin:2px 0 20px 10px;
+.error{
+  color: red;
 }
+
 
 .formLayout .labelColumn{
   text-align:right;
@@ -107,7 +121,7 @@ select{
   padding:7px 25px 20px 50px;
 }
 table.formLayout{
-   background-color:white;
+  background-color:white;
 }
 .prettyFormHolder{
   border-width: 2px;
@@ -118,240 +132,297 @@ table.formLayout{
   display:inline-block;
   padding: 15px;
 }
-.formLayout button{
-  clear:both;
-  background-color:#666666;
-  width:125px;
-  height:31px;
-  text-align:center;
-  line-height:31px;
-  color:#FFFFFF;
-  font-weight:bold;
-}
-.formLayout .formHeader{
+.formLayout_Standard    {
+  background: -webkit-gradient(linear, bottom, left 175px, from(#CCCCCC), to(#EEEEEE));
+  background: -moz-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+  margin:auto;
+  position:relative;
+  font-family: Tahoma, Geneva, sans-serif;
+  font-size: 1em;
+  font-style: italic;
+  line-height: 2em;
   font-weight: bold;
-  font-size: 1.5em;
-}
-fieldset {
-  border-width:0px;
-  border-style:transparent;
-}
-
-.formLayout .errorColumn{
-  width:50px;
-}
-.formHeaderTD{
-  padding:15px;
-}
-
-.vcenter {
-  position:absolute; 
-  top:0; bottom:0; left:0; right:0;
-  margin:auto; 
-  height:240px; width:70%;
-}
-#statusMsg{
-  display:block;
-  position: relative;
-  top: 5px;
-  left: 5px;
-  border-width: 1px;
-  border-style: outset;
-  width: 500px;
-  padding:1px;
-  font-size: .75em;
-}
-
-
-.formTable{
-  border-style:none;
-}
-.formTable td{
-  border-style:none;
-}
-
-#briefNotice {
-   position:absolute;
-   bottom:0;
-   width:100%;
-   height:75px; 
-   padding-bottom:15px;  
-}
-#briefNoticeMsg{
-  display:inline-block;
-  padding:15px;
-  width:200px;
-  background: #FFF url(./images/gradientbg.jpg) repeat-x;
-  color:#74A846;
-  border-width:1px;
-  border-style:solid;
-  border-radius:15px;
-}
-
-input.invalid { 
-  border: solid 1px red; 
-}
-.ValidationMsg{
-  color:red;
-}
-.centerblock{
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-/*PixelGreen Extract*/
-/* ----------------------------------------------------
-
-   AUTHOR           :  	Erwin Aligam
-   WEBSITE          :   http://www.styleshout.com/
-   TEMPLATE NAME    : 	PixelGreen
-   TEMPLATE CODE    : 	S-0010
-   VERSION          :   1.3
-   LAST MODIFIED    :   January 19, 2010
-
-------------------------------------------------------- */
-
-#header{
-	background: #000;
-	border-bottom-style: solid;
-	border-width:medium;
-	border-color:#65944A
-}
-#header .primary{
-  color: #65944A;
-}
-#header .secondary{
-  color:#BFBFBF;
-}
-#header a{
-  text-decoration:none;
-}
-
-ul.buttonbar{
-	display:inline;
-	font: bolder 1.1em 'Trebuchet MS', sans-serif;
-	list-style: none;
-	margin: 0; padding: 0;
-	color:white;	
-}
-ul.buttonbar li{
-  display: inline;
-  background: #1C1C1C;
-  padding: .2em;
-  font: 0.7em;
-}
-ul.buttonbar li:hover{
-  background: #65944A;
-}
-#topMenuBar{
-  margin-top: 2em;
-  display:none; /*Initially hidden*/
-}
-
-
-.logoBlock{
-  margin-top:.5em;
-}
-.logoBlock h1 {
-  display:inline-block;
-  font-size: 3.5em;
-}
-.logoBlock h2 {
-  font-size: .75em;
-  margin-left: 2.5em;
-  color: #BFBFBF;
-  margin-top: -.5em
-  
-}
-.center {
-  margin-left:auto;
-  margin-right:auto;
-}
-
-#LoginPortal{
-  background: #FFF url(./images/gradientbg.jpg) repeat-x;
-}
-#LoginPortal img{
-  display:block;
-  margin-top:2em;
-}
-
-.contentPane{
-  padding-top:2em;
-  padding-bottom:2em;
-
-}
-
-#loginFormRow{
-  margin-top: 2em;
-}
-
-table.dataTable{
-  border-style:none;
-  border-spacing:0;
-}
-.dataTable th{
-  border-top-style:double;
-  border-bottom-style:double;
-  border-width: 3px;
-  padding-left: 1.1em;
-  padding-right: 1.1em;
-  border-color: #BFBFBF;
-  color: #BFBFBF;
-  font-weight:bold;
-}
-.dataTable td{
-  padding-left: 1.1em;
-  padding-right: 1.1em;
-  border-color: #BFBFBF;
-  border-width: 1px;
-  border-bottom-style:solid;
-  color:#65944A;
-
-}
-.dataTable a {
+  color: #74A846;
   text-decoration: none;
-}
-.dataTable a:visited{
-  color:#65944A;
-}
-
-.dataTable .accentColumn{
-  background:#F5F5F5;
-}
-.securityGrant{
-border-style: solid;
-border-width: 1px;
-border-radius:10px;
-width: 21em;
-font-size: .7em;
-padding: .3em;
-}
-.securityGrantReceiver{
-display:inline-block;
-vertical-align: top;
-border-style:solid;
-border-radius:10px;
-border-width:1px;
-padding: .1em;
- width:17em;
- height:20em;
- overflow:auto;
-
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  padding:1em;
+  border: 1px solid #999;
+  border: inset 1px solid #333;
+  -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 }
 
-#grantedPrivilegesId{
-border-style:solid;
-border-width:1px;
+.formLayout_Standard button {
+  width:100px;
+  right:20px;
+  bottom:20px;
+  background:#74A846;
+  color:#fff;
+  font-family: Tahoma, Geneva, sans-serif;
+  height:30px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  border: 1px solid #999;
 }
-div.ui-draggable-dragging {
-  -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
-  -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
-  box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+.formLayout_Standard button:hover {
+  background:#fff;
+  color:#74A846;
 }
-#grantAssignDiv{
-  vertical-align:top;
+.formButtons{
+  display:block;
 }
-h1.pageTitle{
-font-size: 1.5em;
+/*
+.formLayout button{
+clear:both;
+background-color:#666666;
+width:125px;
+height:31px;
+text-align:center;
+line-height:31px;
+color:#FFFFFF;
+font-weight:bold;
 }
+ */
+  .formLayout .formHeader{
+    font-weight: bold;
+    font-size: 1.5em;
+  }
+  fieldset {
+    border-width:0px;
+    border-style:transparent;
+  }
+
+  .formLayout .errorColumn{
+    width:50px;
+  }
+  .formHeaderTD{
+    padding:15px;
+  }
+
+  .vcenter {
+    position:absolute; 
+    top:0; bottom:0; left:0; right:0;
+    margin:auto; 
+    height:240px; width:70%;
+  }
+  #statusMsg{
+    display:block;
+    position: relative;
+    top: 5px;
+    left: 5px;
+    border-width: 1px;
+    border-style: outset;
+    width: 500px;
+    padding:1px;
+    font-size: .75em;
+  }
+
+
+  .formTable{
+    border-style:none;
+  }
+  .formTable td{
+    border-style:none;
+  }
+
+
+  input.invalid { 
+    border: solid 1px red; 
+  }
+
+  .formLayout_Standard .ValidationMsg{
+    display:inline-block;
+    width:15em;
+    padding:0;
+    margin:0;
+    color:red;
+  }
+
+
+  .ValidationMsg{
+    color:red;
+  }
+
+
+  #briefNotice {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:75px; 
+    padding-bottom:15px;  
+  }
+  #briefNoticeMsg{
+    display:inline-block;
+    padding:15px;
+    width:200px;
+    background: #FFF url(./images/gradientbg.jpg) repeat-x;
+    color:#74A846;
+    border-width:1px;
+    border-style:solid;
+    border-radius:15px;
+  }
+  .centerblock{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  /*PixelGreen Extract*/
+  /* ----------------------------------------------------
+
+  AUTHOR           :  	Erwin Aligam
+  WEBSITE          :   http://www.styleshout.com/
+  TEMPLATE NAME    : 	PixelGreen
+  TEMPLATE CODE    : 	S-0010
+  VERSION          :   1.3
+  LAST MODIFIED    :   January 19, 2010
+
+  ------------------------------------------------------- */
+
+  #header{
+    background: #000;
+    border-bottom-style: solid;
+    border-width:medium;
+    border-color:#65944A
+  }
+  #header .primary{
+    color: #65944A;
+  }
+  #header .secondary{
+    color:#BFBFBF;
+  }
+  #header a{
+    text-decoration:none;
+  }
+
+  ul.buttonbar{
+    display:inline;
+    font: bolder 1.1em 'Trebuchet MS', sans-serif;
+    list-style: none;
+    margin: 0; padding: 0;
+    color:white;	
+  }
+  ul.buttonbar li{
+    display: inline;
+    background: #1C1C1C;
+    padding: .2em;
+    font: 0.7em;
+  }
+  ul.buttonbar li:hover{
+    background: #65944A;
+  }
+  #topMenuBar{
+    margin-top: 2em;
+    display:none; /*Initially hidden*/
+  }
+
+
+  .logoBlock{
+    margin-top:.5em;
+  }
+  .logoBlock h1 {
+    display:inline-block;
+    font-size: 3.5em;
+  }
+  .logoBlock h2 {
+    font-size: .75em;
+    margin-left: 2.5em;
+    color: #BFBFBF;
+    margin-top: -.5em
+
+  }
+  .center {
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  #LoginPortal{
+    background: #FFF url(./images/gradientbg.jpg) repeat-x;
+  }
+  #LoginPortal img{
+    display:block;
+    margin-top:2em;
+  }
+
+  .contentPane{
+    padding-top:2em;
+    padding-bottom:2em;
+
+  }
+
+  #loginFormRow{
+    margin-top: 2em;
+  }
+
+  table.dataTable{
+    border-style:none;
+    border-spacing:0;
+  }
+  .dataTable th{
+    border-top-style:double;
+    border-bottom-style:double;
+    border-width: 3px;
+    padding-left: 1.1em;
+    padding-right: 1.1em;
+    border-color: #BFBFBF;
+    color: #BFBFBF;
+    font-weight:bold;
+  }
+  .dataTable td{
+    padding-left: 1.1em;
+    padding-right: 1.1em;
+    border-color: #BFBFBF;
+    border-width: 1px;
+    border-bottom-style:solid;
+    color:#65944A;
+
+  }
+  .dataTable a {
+    text-decoration: none;
+  }
+  .dataTable a:visited{
+    color:#65944A;
+  }
+
+  .dataTable .accentColumn{
+    background:#F5F5F5;
+  }
+  .securityGrant{
+    border-style: solid;
+    border-width: 1px;
+    border-radius:10px;
+    width: 21em;
+    font-size: .7em;
+    padding: .3em;
+  }
+  .securityGrantReceiver{
+    display:inline-block;
+    vertical-align: top;
+    border-style:solid;
+    border-radius:10px;
+    border-width:1px;
+    padding: .1em;
+    width:17em;
+    height:20em;
+    overflow:auto;
+
+  }
+
+  #grantedPrivilegesId{
+    border-style:solid;
+    border-width:1px;
+  }
+  div.ui-draggable-dragging {
+    -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+    -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+    box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+  }
+  #grantAssignDiv{
+    vertical-align:top;
+  }
+  h1.pageTitle{
+    font-size: 1.5em;
+  }

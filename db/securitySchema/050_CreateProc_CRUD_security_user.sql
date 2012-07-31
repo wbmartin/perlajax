@@ -53,7 +53,7 @@ $BODY$
 
 -- Function:  security_user_iq(text, text, text ,text,text,integer,text,timestamp,character)
 -- DROP FUNCTION security_user_iq( text, text, text,text,text,integer,text,timestamp,character);
-create or replace function security_user_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,userId_ text,passwordEnc_ text,securityProfileId_ integer,sessionId_ text,sessionExpireDt_ timestamp,activeYn_ character)
+create or replace function security_user_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,userId_ text,passwordEnc_ text,securityProfileId_ integer,activeYn_ character)
   returns security_user as
 $body$
   declare
@@ -65,7 +65,7 @@ $body$
     end if;
 
 
-    insert into security_user( user_id,last_update,updated_by,password_enc,security_profile_id,session_id,session_expire_dt,active_yn)  values ( userId_, now(), securityuserid_,md5(passwordEnc_),securityProfileId_,sessionId_,sessionExpireDt_,activeYn_) 
+    insert into security_user( user_id,last_update,updated_by,password_enc,security_profile_id,session_expire_dt,active_yn)  values ( userId_, now(), securityuserid_,md5(passwordEnc_),securityProfileId_,activeYn_) 
 	returning * into newrow;
       return newrow;
   end;
@@ -82,17 +82,17 @@ $body$
 -- Function:  security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character)
 -- DROP FUNCTION security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character);
 
-create or replace function security_user_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityUserId_ integer, userId_ text, lastUpdate_ timestamp, securityProfileId_ integer, sessionId_ text, sessionExpireDt_ timestamp, activeYn_ character)
+create or replace function security_user_uq(alreadyauth_ text,  actinguserid_ text, sessionid_ text , securityUserId_ integer, userId_ text, lastUpdate_ timestamp, securityProfileId_ integer,  activeYn_ character)
   returns security_user as
 $body$
   declare
     updatedrow security_user;
   begin
     if alreadyauth_ <>'ALREADY_AUTH' then	
-    	perform issessionvalid( securityuserid_,sessionid_) ;
-    	perform isuserauthorized( securityuserid_, 'UPDATE_SECURITY_USER' );
+    	perform issessionvalid( actinguserid_,sessionid_) ;
+    	perform isuserauthorized( actinguserid_, 'UPDATE_SECURITY_USER' );
     end if;
-	update security_user set user_id= userId_ ,  last_update = now() , updated_by = securityuserid_,  security_profile_id= securityProfileId_ ,  session_id= sessionId_ ,  session_expire_dt= sessionExpireDt_ ,  active_yn= activeYn_ 	where security_user_id=securityUserId_   and   last_update = lastUpdate_
+	update security_user set user_id= userId_ ,  last_update = now() , updated_by = actinguserid_,  security_profile_id= securityProfileId_ ,    active_yn= activeYn_ 	where security_user_id=securityUserId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then

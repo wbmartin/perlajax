@@ -3,12 +3,12 @@
   <head>
     <title> Simple2 Demo</title>
     <style>
-      label{
+      .formLayout_Standard label{
 	font-weight:bold;
 	display:block;
 	margin-bottom: -1em;
       }
-      select, input{
+      .formLayout_Standard select, input{
 	display:inline-block;
 	border: 1px solid #999;
 	width: 30em;
@@ -16,7 +16,7 @@
 	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
       }
-      .formLayout    {
+      .formLayout_Standard    {
 	display: inline-block;
 	background: -webkit-gradient(linear, bottom, left 175px, from(#CCCCCC), to(#EEEEEE));
 	background: -moz-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
@@ -39,7 +39,7 @@
 	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
       }
-      .ValidationMsg{
+      .formLayout_Standard .ValidationMsg{
 	display:inline-block;
 	width:15em;
 	padding:0;
@@ -48,7 +48,7 @@
     </style>
   </head>
   <body>
-    <div class="formLayout">
+    <div class="formLayout_Standard">
       <h1>Title</h1>
       <form>
 	<div class="formFieldGroup">

@@ -156,7 +156,7 @@ sub buildResourceActionDef{
   @stdSelectParamFields= ('where_clause','orderby_clause', 'rowlimit','startrow');
   print STDERR "searching for $resource $action\n" if($debug);
   if ($resource eq "SECURITY_USER" ){
-	@allFields = ('security_user_id', 'user_id','password_enc', 'security_profile_id', 'session_id', 'session_expire_dt', 'active_yn', 'last_update' );
+	@allFields = ('security_user_id', 'user_id','password_enc', 'last_update', 'security_profile_id', 'session_id', 'session_expire_dt' , 'active_yn');
 	if($action eq "AUTHENTICATE") {
 		$rad ={  rf=>[ 'user_id', 'session_id'], pf=>['password'], proc=>"initsession" };
 	} elsif($action eq "INSERT"){
@@ -168,7 +168,9 @@ sub buildResourceActionDef{
 		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_user_sq"};
 	}elsif($action eq "UPDATE"){
 		@paramFields=@allFields;
-		&removeArrayElement(\@paramFields, 'last_update');
+		&removeArrayElement(\@paramFields, 'password_enc');
+		&removeArrayElement(\@paramFields, 'session_id');
+		&removeArrayElement(\@paramFields, 'session_expire_dt');
 		$rad = { rf=>\@allFields, pf=>\@paramFields, proc=>"security_user_uq"};
 	}elsif($action eq "DELETE"){
 		@paramFields=('security_user_id','last_update');

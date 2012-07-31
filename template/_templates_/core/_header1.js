@@ -298,7 +298,9 @@ function serverCall(params, successCallback, failCallback){
  	if(!validateServerResponse(rslt)){
 		logMsg(resourceActionInfo + " Failed to validate the server response - " +  rslt['errorMsg']);
 		rslt[SERVER_SIDE_FAIL] = true;
-	}	
+	}else{
+		rslt[SERVER_SIDE_FAIL] = false;
+	}	  
 	successCallback(rslt);
   }
   $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 

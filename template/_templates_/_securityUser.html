@@ -22,8 +22,17 @@ function retrieve[%ucfirst(divId)%]List(){
 function retrieve[%ucfirst(divId)%](params){
   params = prepParams(params,"[%spwfResource%]","SELECT");
   var successf = function(rslt){
-    bindToForm("[%divId%]Form", rslt.rows[0]);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      bindToForm("[%divId%]Form", rslt.rows[0]);
+      if(rslt.rows[0].active_yn =="Y"){
+	document.getElementById('[%divId%]Form-active_yn').checked=true;
+      }else{
+	document.getElementById('[%divId%]Form-active_yn').checked=false;
+      }
     toggleSaveMode("[%divId%]Form",true);
+    }else{
+      briefNotify("There was a problem retrieving the [%prettyName%].");
+    }
   }
   serverCall(params,successf,FAILF);
 }
@@ -58,7 +67,6 @@ function save[%ucfirst(divId)%](params){
 //ServerCall Wrappers
 function edit[%ucfirst(divId)%]([%divId%]Id_){
   if([%divId%]Id_){
-    makeAvailableAllPrivileges();
     var params ={"where_clause":"[%prkey%]=" +[%divId%]Id_};
     retrieve[%ucfirst(divId)%](params);
   }
@@ -67,6 +75,11 @@ function edit[%ucfirst(divId)%]([%divId%]Id_){
 function save[%ucfirst(divId)%]Form(){
   if(validate[%ucfirst(divId)%]Form()){
     var params = bindForm("[%divId%]Form");
+    if (document.getElementById('[%divId%]Form-active_yn').checked){
+	params['active_yn']='Y';
+    }else{
+	params['active_yn']='N';
+    }
     save[%ucfirst(divId)%](params);
   }
 }
@@ -82,9 +95,9 @@ function validate[%ucfirst(divId)%]Form(){
 function populate[%ucfirst(divId)%](dataRows){
   var htmlAggregator ="<tr><th>User Id</th> <th class='accentColumn'>I want to&hellip;</th></tr>";
   if (dataRows !=null)
-  for(var ndx=0;ndx< dataRows.length;ndx++){
-    htmlAggregator +=build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
-  }
+    for(var ndx=0;ndx< dataRows.length;ndx++){
+      htmlAggregator +=build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
+    }
   $("#[%divId%]ListTable").html(htmlAggregator);
 }
 
@@ -133,32 +146,46 @@ $(document).ready(function(){
       </table>
     </span>
     <span class = "eightcol last">
-      <form id="[%divId%]Form" >
-	<table id="[%divId%]FormTable"  class='formTable'>
-	  <tr>[%dbColumnName = 'user_id'%]
-	    <td> User Id </td>
-	    <td><input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/></td>
-	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span></td>
+      <div class="formLayout_Standard">
 
-	  </tr>
-	  <tr>
-	    <td colspan="3">
-	      <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >
-		Save
-	      </button>
-	      <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >
-		Add
-	      </button>
-	      <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >
-		Clear
-	      </button>
-	    </td>
-	  </tr>
-	</table>
-	<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-	<input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
+	<form id="[%divId%]Form" >
+	  [%dbColumnName = 'user_id'%]
+	  <div class="formFieldGroup">
+	    <label>  User Id </label>
+	    <input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
+	  [%dbColumnName = 'security_profile_id'%]
+	  <div class="formFieldGroup">
+	    <label>  Security Profile </label>
+	    <select name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></select>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
+	[%dbColumnName = 'active_yn'%]
+	  <div class="formFieldGroup">
+	    <label style="display:inline-block" for ="[%divId%]Form-[%dbColumnName%]">  Active </label>
+	    <input style="width:25px;" type="checkbox" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
 
-      </form>
-      <br/>
-    </div>
-  </div> <!--end:[%ucfirst(divId)%]-->
+
+	  <div class="formButtons">
+	    <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >
+	      Save
+	    </button>
+	    <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >
+	      Add
+	    </button>
+	    <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >
+	      Clear
+	    </button>
+	  </div>
+	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+	  <input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
+
+	</form>
+      </div>
+    </span>
+    <br/>
+  </div>
+</div> <!--end:[%ucfirst(divId)%]-->

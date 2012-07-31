@@ -37,7 +37,9 @@ COMMIT
 begin;
 BEGIN
 DROP TABLE  if exists SECURITY_USER cascade;
-psql:securitySchema/002_CreateSecurityUser.sql:2: NOTICE:  drop cascades to function initsession(text,text,text,text)
+psql:securitySchema/002_CreateSecurityUser.sql:2: NOTICE:  drop cascades to 2 other objects
+DETAIL:  drop cascades to function initsession(text,text,text,text)
+drop cascades to function security_user_sq(text,text,text,text,text,integer,integer)
 DROP TABLE
 CREATE TABLE security_user
 ( security_user_id serial,
@@ -709,7 +711,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_USER' );
     end if;
-    return query execute 'select security_user_id, user_id, last_update, updated_by, '' password_enc, security_profile_id, session_id, session_expire_dt, active_yn from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
+    return query execute 'select security_user_id, user_id, last_update, updated_by, ''''::text password_enc, security_profile_id, session_id, session_expire_dt, active_yn from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE

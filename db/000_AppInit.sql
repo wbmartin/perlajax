@@ -29,7 +29,7 @@ $BODY$
 	orderByClause = orderByClause_;
     end if;
 	aggregateClause = whereClause || orderByclause || offsetStatement || limitStatement;
-	aggregateClause = regexp_replace(aggregateClause, ';|/\*|\*/|dblink|pg_|\-\-|user|\&|\\g', '', 'g');
+	aggregateClause = regexp_replace(aggregateClause, ';|/\*|\*/|dblink|pg_|\-\-|[[:space:]]user|user[[:space:]]|\&|\\g', '', 'gi');
 	--; /* */ dblink pg_ -- user & \g
     return aggregateClause;
 
