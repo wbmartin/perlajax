@@ -24,12 +24,14 @@ function retrieve[%ucfirst(divId)%](params){
   var successf = function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
       bindToForm("[%divId%]Form", rslt.rows[0]);
+      document.getElementById("[%divId%]Form-edit_user_id").value=rslt.rows[0].user_id;
       if(rslt.rows[0].active_yn =="Y"){
 	document.getElementById('[%divId%]Form-active_yn').checked=true;
       }else{
 	document.getElementById('[%divId%]Form-active_yn').checked=false;
       }
-    toggleSaveMode("[%divId%]Form",true);
+      toggleSaveMode("[%divId%]Form",true);
+      showPasswordFields(false);
     }else{
       briefNotify("There was a problem retrieving the [%prettyName%].");
     }
@@ -54,6 +56,7 @@ function save[%ucfirst(divId)%](params){
   params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
   var successf=function(rslt){
     clearForm('[%divId%]Form');
+    showPasswordFields(true);
     if (rslt.spwfAction == "UPDATE"){
       replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
     }else if (rslt.spwfAction == "INSERT"){
@@ -88,6 +91,11 @@ function save[%ucfirst(divId)%]Form(){
 function validate[%ucfirst(divId)%]Form(){
   var formName="[%divId%]Form";
   var formValid  = standardValidate(formName);
+  if(document.getElementById('[%divId%]Form-password_enc').value != document.getElementById('[%divId%]Form-password_validate').value){
+        alert("Please ensure the passwords match to continue");
+	formValid = false;
+  }
+  
   return formValid;
 }
 
@@ -126,6 +134,7 @@ function show[%ucfirst(divId)%](){
   $("#[%divId%]").fadeIn();
   currentContentPane="[%divId%]";
   toggleSaveMode("[%divId%]Form",false);
+  showPasswordFields(true);
 }
 
 //After complete Load setup
@@ -134,6 +143,16 @@ $(document).ready(function(){
     });
 
 //page specific functions
+
+function showPasswordFields(show){
+ if (show){
+   $("#[%divId%]Form-password_encDivId").fadeIn();
+   $("#[%divId%]Form-password_validateDivId").fadeIn();
+ }else{
+   $("#[%divId%]Form-password_encDivId").fadeOut();
+   $("#[%divId%]Form-password_validateDivId").fadeOut();
+ }
+}
 
 //]]>
 
@@ -149,24 +168,47 @@ $(document).ready(function(){
       <div class="formLayout_Standard">
 
 	<form id="[%divId%]Form" >
-	  [%dbColumnName = 'user_id'%]
+	  [%dbColumnName = 'edit_user_id'%]
 	  <div class="formFieldGroup">
 	    <label>  User Id </label>
 	    <input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 	  </div>
+	  [%dbColumnName = 'email_addr'%]
+	  <div class="formFieldGroup"id="[%divId%]Form-[%dbColumnName%]DivId">
+	    <label>  E-mail </label>
+	    <input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
+    	  [%dbColumnName = 'password_enc'%]
+	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+	    <label  for ="[%divId%]Form-[%dbColumnName%]">  Password </label>
+	    <input type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
+	  [%dbColumnName = 'password_validate'%]
+	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+	    <label for ="[%divId%]Form-[%dbColumnName%]">  Confirm Password </label>
+	    <input  type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
+
+
 	  [%dbColumnName = 'security_profile_id'%]
-	  <div class="formFieldGroup">
+	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 	    <label>  Security Profile </label>
 	    <select name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></select>
 	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 	  </div>
 	[%dbColumnName = 'active_yn'%]
-	  <div class="formFieldGroup">
+	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 	    <label style="display:inline-block" for ="[%divId%]Form-[%dbColumnName%]">  Active </label>
 	    <input style="width:25px;" type="checkbox" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
 	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 	  </div>
+
+
+
 
 
 	  <div class="formButtons">
@@ -176,7 +218,7 @@ $(document).ready(function(){
 	    <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >
 	      Add
 	    </button>
-	    <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >
+	    <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');showPasswordFields(true);" >
 	      Clear
 	    </button>
 	  </div>

@@ -70,7 +70,9 @@ function clearForm(formName){
   $.each($("form#"+formName+" :input"), 
 	function(key, field){
 	  fieldId = field.id.replace(formName+"-","");
-	  if(field.type != 'button')  field.value = "";
+	  if (field.type == 'checkbox'){
+	    field.checked=false;
+	  }else if(field.type != 'button')  field.value = "";
 	}
   );
   toggleSaveMode(formName, false);
@@ -3006,27 +3008,34 @@ function retrieveGolferNameForGolfScore(golferId_){
     </span>
     <span class = "sixcol last">
       <form id="golfScoreForm" >
-	
-	<table id="golfScoreFormTable"  class='formTable'>
-	  <tr>
-	    <td> Score </td>
-	    <td><input  type="text" name="golf_score" id="golfScoreForm-golf_score"/></td>
-	    <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
-	  </tr>
-	  <tr>
-	    <td> Date</td>
-	    <td><input type="text"  name="game_dt" id="golfScoreForm-game_dt"/></td>
-	    <td><span class="ValidationMsg" id="golfScoreFormLabel-nameError"></span></td>
-	  </tr>
-	  <tr><td colspan="3">
-	      <button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button>
-	      <button type="button" id="golfScoreFormAdd" value="Add" onclick="saveGolfScoreForm();" >Add</button>
-	      <button type="button" id="golfScoreFormClear" value="Clear" onclick="clearForm('golfScoreForm');" >Clear</button>
-	  </td></tr>
-	</table>
-	<input type="hidden" name="last_update" id="golfScoreForm-last_update">
-	<input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
-	<input type="hidden" name="golfer_id" id="golfScoreForm-golfer_id">
+	<div class="formLayout_Standard">
+	  
+	  <div class="formFieldGroup" id="golfScoreForm-golf_scoreDivId">
+	    <label for ="golfScoreForm-golf_score" id="golfScoreFormLabel-golf_score">Score</label>
+	    <input  type="text" class="VALIDATEinteger" name="golfScore" id="golfScoreForm-golf_score"/>
+	    <span class="ValidationMsg" id="golfScoreFormLabel-golfScoreError"></span>
+	  </div>
+	  
+	  <div class="formFieldGroup" id="golfScoreForm-game_dtDivId">
+	    <label for ="golfScoreForm-game_dt" id="golfScoreFormLabel-game_dt">Score</label>
+	    <input  type="text" class="VALIDATEmmddyyyydate" name="gameDt" id="golfScoreForm-game_dt"/>
+	    <span class="ValidationMsg" id="golfScoreFormLabel-gameDtError"></span>
+	  </div>
+
+
+
+
+	  <div class="formButtons">
+
+	    <button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button>
+	    <button type="button" id="golfScoreFormAdd" value="Add" onclick="saveGolfScoreForm();" >Add</button>
+	    <button type="button" id="golfScoreFormClear" value="Clear" onclick="clearForm('golfScoreForm');" >Clear</button>
+	  </div>
+
+	  <input type="hidden" name="last_update" id="golfScoreForm-last_update">
+	  <input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
+	  <input type="hidden" name="golfer_id" id="golfScoreForm-golfer_id">
+	</div>
       </form>
 
     </span>
@@ -3045,9 +3054,9 @@ function retrieveQuickGolfScoreList(){
   $("#quickGolfScoreListTable").html("");
   var params =prepParams(params,"golf_score" ,"select" );
   params['orderby_clause'] =" order by game_dt desc"
-  var successf = function (rslt){
-    populateQuickGolfScore(rslt.rows)
-  };
+    var successf = function (rslt){
+      populateQuickGolfScore(rslt.rows)
+    };
   serverCall(params,successf,FAILF);
 }
 function retrieveQuickGolfScore(params){
@@ -3078,15 +3087,15 @@ function saveQuickGolfScore(params){
   var successf=function(rslt){
     clearForm('quickGolfScoreForm');
     if(!rslt[SERVER_SIDE_FAIL]){
-	if (rslt.spwfAction == "UPDATE"){
-      	  replaceQuickGolfScoreListTableRow(rslt.rows[0]);
-    	}else if (rslt.spwfAction == "INSERT"){
-      	  addNewQuickGolfScoreListTableRow(rslt.rows[0]);
-    	}
+      if (rslt.spwfAction == "UPDATE"){
+	replaceQuickGolfScoreListTableRow(rslt.rows[0]);
+      }else if (rslt.spwfAction == "INSERT"){
+	addNewQuickGolfScoreListTableRow(rslt.rows[0]);
+      }
       briefNotify("Golf Score Successfully Saved");
     }
     else{
-	briefNotify("Golf Score Saved Failed");
+      briefNotify("Golf Score Saved Failed");
 
     }
   };
@@ -3181,42 +3190,49 @@ function retrieveGolferNameForGolfScore(golferId_){
     </span>
     <span class = "sixcol last">
       <form id="quickGolfScoreForm" >
-	<table id="quickGolfScoreFormTable"  class='formTable'>
-	  <tr>
-	    <td> Golfer </td>
-	    <td><select name="golfer_id" id="quickGolfScoreForm-golfer_id" class="VALIDATErequired"></select></td>
-	    <td><span class="ValidationMsg" id="quickGolfScoreFormLabel-nameError"></span> </td>
-	  </tr>
-	  <tr>
-	    <td> Score </td>
-	    <td><input  type="text" name="golf_score" id="quickGolfScoreForm-golf_score" class="VALIDATEinteger"/></td>
-	    <td><span class="ValidationMsg" id="quickGolfScoreFormLabel-nameError"></span></td>
-	  </tr>
-	  <tr>
-	    <td> Date</td>
-	    <td><input type="text"  name="game_dt" id="quickGolfScoreForm-game_dt" class="VALIDATEmmddyyyydate"/></td>
-	    <td><span class="ValidationMsg" id="quickGolfScoreFormLabel-nameError"></span></td>
-	  </tr>
-	  <tr><td colspan="3">
+	<div class="formLayout_Standard">
+	  
+	  <div class="formFieldGroup" id="quickGolfScoreForm-golfer_idDivId">
+	    <label for ="quickGolfScoreForm-golfer_id" id="quickGolfScoreFormLabel-golfer_id">Name</label>
+	    <select style="width:15em"name="golfer_id" id="quickGolfScoreForm-golfer_id" class="VALIDATErequired"></select>
+	      <span class="ValidationMsg" id="quickGolfScoreFormLabel-golferIdError"></span>
+	    </div>
+	    
+	    <div class="formFieldGroup" id="quickGolfScoreForm-golf_scoreDivId">
+	      <label for ="quickGolfScoreForm-golf_score" id="quickGolfScoreFormLabel-golf_score">Score</label>
+	      <input  type="text" class="VALIDATEinteger" name="golfScore" id="quickGolfScoreForm-golf_score"/>
+	      <span class="ValidationMsg" id="quickGolfScoreFormLabel-golfScoreError"></span>
+	    </div>
+	    
+	    <div class="formFieldGroup" id="quickGolfScoreForm-game_dtDivId">
+	      <label for ="quickGolfScoreForm-game_dt" id="quickGolfScoreFormLabel-name">Date</label>
+	      <input type="text"  name="gameDt" id="quickGolfScoreForm-game_dt" class="VALIDATEmmddyyyydate"/>
+	      <span class="ValidationMsg" id="quickGolfScoreFormLabel-gameDtError"></span>
+	    </div>
+
+
+
+	    <div class="formButtons">
+
 	      <button type="button" id="quickGolfScoreFormSave" value="Save" onclick="saveQuickGolfScoreForm();" >Save</button>
 	      <button type="button" id="quickGolfScoreFormAdd" value="Add" onclick="saveQuickGolfScoreForm();" >Add</button>
 	      <button type="button" id="quickGolfScoreFormClear" value="Clear" onclick="clearForm('quickGolfScoreForm');" >Clear</button>
-	  </td></tr>
-	</table>
-	<input type="hidden" name="last_update" id="quickGolfScoreForm-last_update">
-	<input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id">
-      </form>
+	    </div>
+	    <input type="hidden" name="last_update" id="quickGolfScoreForm-last_update">
+	    <input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id">
+	  </div>
+	</form>
 
-    </span>
-  </div>
-</div> <!--end:QuickGolfScore-->
+      </span>
+    </div>
+  </div> <!--end:QuickGolfScore-->
 
 
 
 
 
 <script type="text/javascript">
-//<![CDATA[
+  //<![CDATA[
 "use strict";
 //----------------------------------------------------
 //server calls
@@ -3347,26 +3363,31 @@ $(document).ready(function(){
 <div id="golfer" class="MainLayout contentPane" >
   <form id="golferForm" >
     <div class="row">
-      <span class="sixcol">
+      <span class="fourcol">
 	<table id="golferListTable" class='dataTable'></table> 
       </span>
-      <span class="sixcol last">	  
-	<table id="golferFormTable" class='formTable'>
-	  <tr><td class="labelColumn"><label for="golferForm-name" id="golferFormLabel-name" > Name</label></td><td><input name="name" id="golferForm-name" class="required"></td><td><span class="ValidationMsg" id="golferFormLabel-nameError"></span></td>
-	  </tr>
-	  <tr><td colspan="2">
-	      <button type="button" id="golferFormSave" value="Save" onclick="saveGolferForm();" >Save</button>
-	      <button type="button" id="golferFormAdd" value="Save" onclick="saveGolferForm();" >Add</button>
-	      <button type="button" id="golferFormClear" value="Clear" onclick="clearForm('golferForm');" >Clear</button>
-	    </td>
-	  </tr>
-	</table>
+      <span class="eightcol last">
+	<div class="formLayout_Standard">
+	  
+	  <div class="formFieldGroup" id="golferForm-nameDivId">
+	    <label for ="golferForm-name" id="golferFormLabel-name">Name</label>
+	    <input  type="text" class="" name="name" id="golferForm-name"/>
+	    <span class="ValidationMsg" id="golferFormLabel-nameError"></span>
+	  </div>
+
+	  <div class="formButtons">
+
+	    <button type="button" id="golferFormSave" value="Save" onclick="saveGolferForm();" >Save</button>
+	    <button type="button" id="golferFormAdd" value="Save" onclick="saveGolferForm();" >Add</button>
+	    <button type="button" id="golferFormClear" value="Clear" onclick="clearForm('golferForm');" >Clear</button>
+	  </div>
+	</div>
       </span>
-    </div >	  
-    <input type="hidden" name="last_update" id="golferForm-last_update">
-    <input type="hidden" name="golfer_id" id="golferForm-golfer_id">
-  </form>
-</div> 
+      </div >	  
+      <input type="hidden" name="last_update" id="golferForm-last_update">
+      <input type="hidden" name="golfer_id" id="golferForm-golfer_id">
+    </form>
+  </div> 
 
 
 <div id="aboutPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
@@ -3646,7 +3667,7 @@ $(document).ready(function(){
     $("#availableGrantsId").droppable({accept:".securityGrant", drop:handleSecurityRevokeDrop});
     $("#grantedPrivilegesId").droppable({accept:".securityGrant", drop:handleSecurityGrantDrop});
 
-        });
+    });
 
 //page specific functions
 var allAvailablePrivilegeList;
@@ -3673,8 +3694,8 @@ function populateAvailableGrantsWithAll(){
 function makeDragable(identifierTodraggable_){
   $(identifierTodraggable_).draggable({snap: ".securityGrantReceiver", revert:"invalid", scroll:false, helper:'clone' });
   if($(identifierTodraggable_).parent().attr('id') === "availableGrantsId"){
-        $(identifierTodraggable_).dblclick(function(){
-	   attemptSecurityGrantRevoke("GRANT",$(this).attr('id') );
+    $(identifierTodraggable_).dblclick(function(){
+	attemptSecurityGrantRevoke("GRANT",$(this).attr('id') );
 	});
   }
 }
@@ -3687,7 +3708,7 @@ function retrieveAllGrantedPrivilegesList(profileId_){
     for (var i =0; i< grants.length; i++){
       assignGrantStatus("securityGrant"+ grants[i].security_privilege_id + "Id", "GRANT");
     }
-   sortDivChildren("#grantedPrivilegesId");
+    sortDivChildren("#grantedPrivilegesId");
   };
   serverCall(params,successf,FAILF);
 }
@@ -3695,11 +3716,11 @@ function retrieveAllGrantedPrivilegesList(profileId_){
 
 function handleSecurityGrantDrop( event, ui ){
   if(ui.draggable.parent().attr('id') !="grantedPrivilegesId")
-   attemptSecurityGrantRevoke("GRANT", ui.draggable.attr('id'));
+    attemptSecurityGrantRevoke("GRANT", ui.draggable.attr('id'));
 }
 function handleSecurityRevokeDrop( event, ui ){
   if(ui.draggable.parent().attr('id') !="availableGrantsId")
-   attemptSecurityGrantRevoke("REVOKE", ui.draggable.attr('id'));
+    attemptSecurityGrantRevoke("REVOKE", ui.draggable.attr('id'));
 }
 
 function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
@@ -3708,11 +3729,11 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
   privId = privId.replace("Id","");
   if(!isEmpty(profileId)){
     if (grantOrRevoke_ === "GRANT"){//grant requeseted
-       assignGrantStatus(divId_, "GRANT");
-       grantPrivilege(privId, profileId);
+      assignGrantStatus(divId_, "GRANT");
+      grantPrivilege(privId, profileId);
     }else{//default to revoke
-	assignGrantStatus(divId_, "REVOKE");
-  	revokePrivilege(privId, profileId);
+      assignGrantStatus(divId_, "REVOKE");
+      revokePrivilege(privId, profileId);
     }
   }else{// div is auto removed if not assignGrantsStatus above called
     briefNotify("Please choose a profile");
@@ -3738,7 +3759,7 @@ function grantPrivilege(securityPrivilegeId_, securityProfileId_){
   var successf = function (rslt){
     if(!rslt['serverSideFail']) {
       briefNotify("Privilege Granted");
-         sortDivChildren('#grantedPrivilegesId');
+      sortDivChildren('#grantedPrivilegesId');
     }
     else{ 
       briefNotify('There was a problem granting this privilege');
@@ -3750,23 +3771,23 @@ function grantPrivilege(securityPrivilegeId_, securityProfileId_){
 
 function revokePrivilege(securityPrivilegeId_, securityProfileId_){
   var params =prepParams(params,"security_profile_grant" ,"deletew" );
-   params['where_clause'] = 'security_privilege_id=' + securityPrivilegeId_ + ' and security_profile_id = ' + securityProfileId_ ;
-   params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
-   var successf = function (rslt){
-      if(!rslt['serverSideFail']) {
-	 briefNotify("Privilege Revoked");
-         sortDivChildren('#availableGrantsId');
-      }else{ 
-          briefNotify('There was a problem granting this privilege');
-          assignGrantStatus(rslt['PT_pendingDiv'],"GRANT");
-        }
-      
+  params['where_clause'] = 'security_privilege_id=' + securityPrivilegeId_ + ' and security_profile_id = ' + securityProfileId_ ;
+  params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
+  var successf = function (rslt){
+    if(!rslt['serverSideFail']) {
+      briefNotify("Privilege Revoked");
+      sortDivChildren('#availableGrantsId');
+    }else{ 
+      briefNotify('There was a problem granting this privilege');
+      assignGrantStatus(rslt['PT_pendingDiv'],"GRANT");
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
 
 function makeAvailableAllPrivileges(){
-  
+
   $('#grantedPrivilegesId').children().remove();
   $('#availableGrantsId').children().remove();
   populateAvailableGrantsWithAll();
@@ -3774,10 +3795,10 @@ function makeAvailableAllPrivileges(){
 }
 function sortDivChildren(divName_){
   var children = $(divName_).children().sort(function (a,b){
-        var vA = $(a).attr('id');
-	var vB = $(b).attr('id');
-        return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
-	});
+      var vA = $(a).attr('id');
+      var vB = $(b).attr('id');
+      return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
+      });
   $(divName_).children().remove();
   $(divName_).append(children);
   makeDragable(divName_ + " .securityGrant");
@@ -3795,32 +3816,34 @@ function sortDivChildren(divName_){
       </table>
     </span>
     <span class = "eightcol last">
-      <form id="securityGrantsForm" >
-	<table id="securityGrantsFormTable"  class='formTable'>
-	  <tr>
-	    <td> Profile Name </td>
-	    <td><input  type="text" name="profileName" id="securityGrantsForm-profile_name"/></td>
-	    <td><span class="ValidationMsg" id="securityGrantsFormLabel-profileNameError"></span></td>
+      <div class="formLayout_Standard">
+	<form id="securityGrantsForm" >
 
-	  </tr>
-	  <tr>
-	    <td colspan="3">
-	      <button type="button" id="securityGrantsFormSave" value="Save" onclick="saveSecurityGrantsForm();" >Save</button>
-	      <button type="button" id="securityGrantsFormAdd" value="Add" onclick="saveSecurityGrantsForm();" >Add</button>
-	      <button type="button" id="securityGrantsFormClear" value="Clear" onclick="clearForm('securityGrantsForm');makeAvailableAllPrivileges();" >Clear</button>
-	    </td>
-	  </tr>
-	</table>
-	<input type="hidden" name="last_update" id="securityGrantsForm-last_update">
-	<input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id">
+	  
+	  <div class="formFieldGroup" id="securityGrantsForm-profile_nameDivId">
+	    <label for ="securityGrantsForm-profile_name" id="securityGrantsFormLabel-profile_name">Profile Name</label>
+	    <input  type="text" class="VALIDATEinteger" name="profileName" id="securityGrantsForm-profile_name"/>
+	    <span class="ValidationMsg" id="securityGrantsFormLabel-profileNameError"></span>
+	  </div>
+	  <div class="formButtons">
 
-      </form>
-      <br/>
-      <div id="grantAssignDiv">
-	<div id="availableGrantsId" size="15" class="securityGrantReceiver"></div>
-	<span class="sprite32Icon plusIcon"></span>
-	<span class="sprite32Icon cancelIcon"></span>
-	<div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div>
+	    <button type="button" id="securityGrantsFormSave" value="Save" onclick="saveSecurityGrantsForm();" >
+	      Save</button>
+	    <button type="button" id="securityGrantsFormAdd" value="Add" onclick="saveSecurityGrantsForm();" >
+	      Add</button>
+	    <button type="button" id="securityGrantsFormClear" value="Clear" 
+	      onclick="clearForm('securityGrantsForm');makeAvailableAllPrivileges();" >Clear</button>
+	  </div>
+	  <input type="hidden" name="last_update" id="securityGrantsForm-last_update">
+	  <input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id">
+	</form>
+	</div>
+	<br/>
+	<div id="grantAssignDiv">
+	  <div id="availableGrantsId" size="15" class="securityGrantReceiver"></div>
+	  <span class="sprite32Icon plusIcon"></span>
+	  <span class="sprite32Icon cancelIcon"></span>
+	  <div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div>
       </div>
     </div>
   </div> <!--end:SecurityGrants-->
@@ -3851,12 +3874,14 @@ function retrieveSecurityUser(params){
   var successf = function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
       bindToForm("securityUserForm", rslt.rows[0]);
+      document.getElementById("securityUserForm-edit_user_id").value=rslt.rows[0].user_id;
       if(rslt.rows[0].active_yn =="Y"){
 	document.getElementById('securityUserForm-active_yn').checked=true;
       }else{
 	document.getElementById('securityUserForm-active_yn').checked=false;
       }
-    toggleSaveMode("securityUserForm",true);
+      toggleSaveMode("securityUserForm",true);
+      showPasswordFields(false);
     }else{
       briefNotify("There was a problem retrieving the User.");
     }
@@ -3881,6 +3906,7 @@ function saveSecurityUser(params){
   params = prepParams(params,"security_user",insertUpdateChoose);
   var successf=function(rslt){
     clearForm('securityUserForm');
+    showPasswordFields(true);
     if (rslt.spwfAction == "UPDATE"){
       replaceSecurityUserListTableRow(rslt.rows[0]);
     }else if (rslt.spwfAction == "INSERT"){
@@ -3915,6 +3941,11 @@ function saveSecurityUserForm(){
 function validateSecurityUserForm(){
   var formName="securityUserForm";
   var formValid  = standardValidate(formName);
+  if(document.getElementById('securityUserForm-password_enc').value != document.getElementById('securityUserForm-password_validate').value){
+        alert("Please ensure the passwords match to continue");
+	formValid = false;
+  }
+  
   return formValid;
 }
 
@@ -3953,6 +3984,7 @@ function showSecurityUser(){
   $("#securityUser").fadeIn();
   currentContentPane="securityUser";
   toggleSaveMode("securityUserForm",false);
+  showPasswordFields(true);
 }
 
 //After complete Load setup
@@ -3961,6 +3993,16 @@ $(document).ready(function(){
     });
 
 //page specific functions
+
+function showPasswordFields(show){
+ if (show){
+   $("#securityUserForm-password_encDivId").fadeIn();
+   $("#securityUserForm-password_validateDivId").fadeIn();
+ }else{
+   $("#securityUserForm-password_encDivId").fadeOut();
+   $("#securityUserForm-password_validateDivId").fadeOut();
+ }
+}
 
 //]]>
 
@@ -3979,21 +4021,44 @@ $(document).ready(function(){
 	  
 	  <div class="formFieldGroup">
 	    <label>  User Id </label>
-	    <input  type="text" name="userId" id="securityUserForm-user_id"/>
-	    <span class="ValidationMsg" id="securityUserFormLabel-userIdError"></span>
+	    <input  type="text" name="editUserId" id="securityUserForm-edit_user_id"/>
+	    <span class="ValidationMsg" id="securityUserFormLabel-editUserIdError"></span>
 	  </div>
 	  
-	  <div class="formFieldGroup">
+	  <div class="formFieldGroup"id="securityUserForm-email_addrDivId">
+	    <label>  E-mail </label>
+	    <input  type="text" name="emailAddr" id="securityUserForm-email_addr"/>
+	    <span class="ValidationMsg" id="securityUserFormLabel-emailAddrError"></span>
+	  </div>
+    	  
+	  <div class="formFieldGroup" id="securityUserForm-password_encDivId">
+	    <label  for ="securityUserForm-password_enc">  Password </label>
+	    <input type="password" name="passwordEnc" id="securityUserForm-password_enc"></input>
+	    <span class="ValidationMsg" id="securityUserFormLabel-passwordEncError"></span>
+	  </div>
+	  
+	  <div class="formFieldGroup" id="securityUserForm-password_validateDivId">
+	    <label for ="securityUserForm-password_validate">  Confirm Password </label>
+	    <input  type="password" name="passwordValidate" id="securityUserForm-password_validate"></input>
+	    <span class="ValidationMsg" id="securityUserFormLabel-passwordValidateError"></span>
+	  </div>
+
+
+	  
+	  <div class="formFieldGroup" id="securityUserForm-security_profile_idDivId">
 	    <label>  Security Profile </label>
 	    <select name="securityProfileId" id="securityUserForm-security_profile_id"></select>
 	    <span class="ValidationMsg" id="securityUserFormLabel-securityProfileIdError"></span>
 	  </div>
 	
-	  <div class="formFieldGroup">
+	  <div class="formFieldGroup" id="securityUserForm-active_ynDivId">
 	    <label style="display:inline-block" for ="securityUserForm-active_yn">  Active </label>
 	    <input style="width:25px;" type="checkbox" name="activeYn" id="securityUserForm-active_yn"></input>
 	    <span class="ValidationMsg" id="securityUserFormLabel-activeYnError"></span>
 	  </div>
+
+
+
 
 
 	  <div class="formButtons">
@@ -4003,7 +4068,7 @@ $(document).ready(function(){
 	    <button type="button" id="securityUserFormAdd" value="Add" onclick="saveSecurityUserForm();" >
 	      Add
 	    </button>
-	    <button type="button" id="securityUserFormClear" value="Clear" onclick="clearForm('securityUserForm');" >
+	    <button type="button" id="securityUserFormClear" value="Clear" onclick="clearForm('securityUserForm');showPasswordFields(true);" >
 	      Clear
 	    </button>
 	  </div>

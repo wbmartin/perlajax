@@ -58,7 +58,9 @@ function clearForm(formName){
   $.each($("form#"+formName+" :input"), 
 	function(key, field){
 	  fieldId = field.id.replace(formName+"-","");
-	  if(field.type != 'button')  field.value = "";
+	  if (field.type == 'checkbox'){
+	    field.checked=false;
+	  }else if(field.type != 'button')  field.value = "";
 	}
   );
   toggleSaveMode(formName, false);

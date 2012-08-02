@@ -141,27 +141,34 @@ function retrieveGolferNameForGolfScore(golferId_){
     </span>
     <span class = "sixcol last">
       <form id="[%divId%]Form" >
-	
-	<table id="[%divId%]FormTable"  class='formTable'>
-	  <tr>
-	    <td> Score </td>
-	    <td><input  type="text" name="golf_score" id="[%divId%]Form-golf_score"/></td>
-	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
-	  </tr>
-	  <tr>
-	    <td> Date</td>
-	    <td><input type="text"  name="game_dt" id="[%divId%]Form-game_dt"/></td>
-	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
-	  </tr>
-	  <tr><td colspan="3">
-	      <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-	      <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-	      <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
-	  </td></tr>
-	</table>
-	<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-	<input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">
-	<input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
+	<div class="formLayout_Standard">
+	  [%dbColumnName = 'golf_score'%]
+	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Score</label>
+	    <input  type="text" class="VALIDATEinteger" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
+	  [%dbColumnName = 'game_dt'%]
+	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Score</label>
+	    <input  type="text" class="VALIDATEmmddyyyydate" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
+
+
+
+
+	  <div class="formButtons">
+
+	    <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+	    <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
+	    <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
+	  </div>
+
+	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+	  <input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">
+	  <input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
+	</div>
       </form>
 
     </span>

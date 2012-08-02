@@ -118,7 +118,7 @@ $(document).ready(function(){
     $("#availableGrantsId").droppable({accept:".securityGrant", drop:handleSecurityRevokeDrop});
     $("#grantedPrivilegesId").droppable({accept:".securityGrant", drop:handleSecurityGrantDrop});
 
-        });
+    });
 
 //page specific functions
 var allAvailablePrivilegeList;
@@ -145,8 +145,8 @@ function populateAvailableGrantsWithAll(){
 function makeDragable(identifierTodraggable_){
   $(identifierTodraggable_).draggable({snap: ".securityGrantReceiver", revert:"invalid", scroll:false, helper:'clone' });
   if($(identifierTodraggable_).parent().attr('id') === "availableGrantsId"){
-        $(identifierTodraggable_).dblclick(function(){
-	   attemptSecurityGrantRevoke("GRANT",$(this).attr('id') );
+    $(identifierTodraggable_).dblclick(function(){
+	attemptSecurityGrantRevoke("GRANT",$(this).attr('id') );
 	});
   }
 }
@@ -159,7 +159,7 @@ function retrieveAllGrantedPrivilegesList(profileId_){
     for (var i =0; i< grants.length; i++){
       assignGrantStatus("securityGrant"+ grants[i].security_privilege_id + "Id", "GRANT");
     }
-   sortDivChildren("#grantedPrivilegesId");
+    sortDivChildren("#grantedPrivilegesId");
   };
   serverCall(params,successf,FAILF);
 }
@@ -167,11 +167,11 @@ function retrieveAllGrantedPrivilegesList(profileId_){
 
 function handleSecurityGrantDrop( event, ui ){
   if(ui.draggable.parent().attr('id') !="grantedPrivilegesId")
-   attemptSecurityGrantRevoke("GRANT", ui.draggable.attr('id'));
+    attemptSecurityGrantRevoke("GRANT", ui.draggable.attr('id'));
 }
 function handleSecurityRevokeDrop( event, ui ){
   if(ui.draggable.parent().attr('id') !="availableGrantsId")
-   attemptSecurityGrantRevoke("REVOKE", ui.draggable.attr('id'));
+    attemptSecurityGrantRevoke("REVOKE", ui.draggable.attr('id'));
 }
 
 function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
@@ -180,11 +180,11 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
   privId = privId.replace("Id","");
   if(!isEmpty(profileId)){
     if (grantOrRevoke_ === "GRANT"){//grant requeseted
-       assignGrantStatus(divId_, "GRANT");
-       grantPrivilege(privId, profileId);
+      assignGrantStatus(divId_, "GRANT");
+      grantPrivilege(privId, profileId);
     }else{//default to revoke
-	assignGrantStatus(divId_, "REVOKE");
-  	revokePrivilege(privId, profileId);
+      assignGrantStatus(divId_, "REVOKE");
+      revokePrivilege(privId, profileId);
     }
   }else{// div is auto removed if not assignGrantsStatus above called
     briefNotify("Please choose a profile");
@@ -210,7 +210,7 @@ function grantPrivilege(securityPrivilegeId_, securityProfileId_){
   var successf = function (rslt){
     if(!rslt['serverSideFail']) {
       briefNotify("Privilege Granted");
-         sortDivChildren('#grantedPrivilegesId');
+      sortDivChildren('#grantedPrivilegesId');
     }
     else{ 
       briefNotify('There was a problem granting this privilege');
@@ -222,23 +222,23 @@ function grantPrivilege(securityPrivilegeId_, securityProfileId_){
 
 function revokePrivilege(securityPrivilegeId_, securityProfileId_){
   var params =prepParams(params,"security_profile_grant" ,"deletew" );
-   params['where_clause'] = 'security_privilege_id=' + securityPrivilegeId_ + ' and security_profile_id = ' + securityProfileId_ ;
-   params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
-   var successf = function (rslt){
-      if(!rslt['serverSideFail']) {
-	 briefNotify("Privilege Revoked");
-         sortDivChildren('#availableGrantsId');
-      }else{ 
-          briefNotify('There was a problem granting this privilege');
-          assignGrantStatus(rslt['PT_pendingDiv'],"GRANT");
-        }
-      
+  params['where_clause'] = 'security_privilege_id=' + securityPrivilegeId_ + ' and security_profile_id = ' + securityProfileId_ ;
+  params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
+  var successf = function (rslt){
+    if(!rslt['serverSideFail']) {
+      briefNotify("Privilege Revoked");
+      sortDivChildren('#availableGrantsId');
+    }else{ 
+      briefNotify('There was a problem granting this privilege');
+      assignGrantStatus(rslt['PT_pendingDiv'],"GRANT");
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
 
 function makeAvailableAllPrivileges(){
-  
+
   $('#grantedPrivilegesId').children().remove();
   $('#availableGrantsId').children().remove();
   populateAvailableGrantsWithAll();
@@ -246,10 +246,10 @@ function makeAvailableAllPrivileges(){
 }
 function sortDivChildren(divName_){
   var children = $(divName_).children().sort(function (a,b){
-        var vA = $(a).attr('id');
-	var vB = $(b).attr('id');
-        return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
-	});
+      var vA = $(a).attr('id');
+      var vB = $(b).attr('id');
+      return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
+      });
   $(divName_).children().remove();
   $(divName_).append(children);
   makeDragable(divName_ + " .securityGrant");
@@ -267,32 +267,34 @@ function sortDivChildren(divName_){
       </table>
     </span>
     <span class = "eightcol last">
-      <form id="[%divId%]Form" >
-	<table id="[%divId%]FormTable"  class='formTable'>
-	  <tr>
-	    <td> Profile Name </td>
-	    <td><input  type="text" name="profileName" id="[%divId%]Form-profile_name"/></td>
-	    <td><span class="ValidationMsg" id="[%divId%]FormLabel-profileNameError"></span></td>
+      <div class="formLayout_Standard">
+	<form id="[%divId%]Form" >
 
-	  </tr>
-	  <tr>
-	    <td colspan="3">
-	      <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-	      <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-	      <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');makeAvailableAllPrivileges();" >Clear</button>
-	    </td>
-	  </tr>
-	</table>
-	<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-	<input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
+	  [%dbColumnName = 'profile_name'%]
+	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Profile Name</label>
+	    <input  type="text" class="VALIDATEinteger" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
+	  <div class="formButtons">
 
-      </form>
-      <br/>
-      <div id="grantAssignDiv">
-	<div id="availableGrantsId" size="15" class="securityGrantReceiver"></div>
-	<span class="sprite32Icon plusIcon"></span>
-	<span class="sprite32Icon cancelIcon"></span>
-	<div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div>
+	    <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >
+	      Save</button>
+	    <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >
+	      Add</button>
+	    <button type="button" id="[%divId%]FormClear" value="Clear" 
+	      onclick="clearForm('[%divId%]Form');makeAvailableAllPrivileges();" >Clear</button>
+	  </div>
+	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+	  <input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
+	</form>
+	</div>
+	<br/>
+	<div id="grantAssignDiv">
+	  <div id="availableGrantsId" size="15" class="securityGrantReceiver"></div>
+	  <span class="sprite32Icon plusIcon"></span>
+	  <span class="sprite32Icon cancelIcon"></span>
+	  <div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div>
       </div>
     </div>
   </div> <!--end:[%ucfirst(divId)%]-->

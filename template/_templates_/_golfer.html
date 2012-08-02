@@ -3,7 +3,7 @@
 [%prkey="golfer_id"%]
 
 <script type="text/javascript">
-//<![CDATA[
+  //<![CDATA[
 "use strict";
 //----------------------------------------------------
 //server calls
@@ -134,23 +134,28 @@ $(document).ready(function(){
 <div id="[%divId%]" class="MainLayout contentPane" >
   <form id="[%divId%]Form" >
     <div class="row">
-      <span class="sixcol">
+      <span class="fourcol">
 	<table id="[%divId%]ListTable" class='dataTable'></table> 
       </span>
-      <span class="sixcol last">	  
-	<table id="[%divId%]FormTable" class='formTable'>
-	  <tr><td class="labelColumn"><label for="[%divId%]Form-name" id="[%divId%]FormLabel-name" > Name</label></td><td><input name="name" id="[%divId%]Form-name" class="required"></td><td><span class="ValidationMsg" id="[%divId%]FormLabel-nameError"></span></td>
-	  </tr>
-	  <tr><td colspan="2">
-	      <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-	      <button type="button" id="[%divId%]FormAdd" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-	      <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
-	    </td>
-	  </tr>
-	</table>
+      <span class="eightcol last">
+	<div class="formLayout_Standard">
+	  [%dbColumnName = 'name'%]
+	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-name">Name</label>
+	    <input  type="text" class="" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
+
+	  <div class="formButtons">
+
+	    <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+	    <button type="button" id="[%divId%]FormAdd" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
+	    <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
+	  </div>
+	</div>
       </span>
-    </div [%# row%]>	  
-    <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-    <input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
-  </form>
-</div> [%# end golfScoreSummary%]
+      </div [%# row%]>	  
+      <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+      <input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
+    </form>
+  </div> [%# end golfScoreSummary%]
