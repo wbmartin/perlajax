@@ -20,6 +20,7 @@ style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:
 [%INCLUDE core/_clientLog.html%]
 [%INCLUDE _securityGrants.html%]
 [%INCLUDE _securityUser.html%]
+[%INCLUDE _changePasswordDialog.html%]
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 </div><!--End Main Content-->
 [%INCLUDE _LoginPortal.html%]

@@ -63,6 +63,9 @@ INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, 
 	VALUES (25,'UPDATE_SECURITY_PRIVILEGE', now(), 'Allows users to update records in security_privilege');
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
 	VALUES (26 ,'DELETE_SECURITY_PRIVILEGE', now(), 'Allows users to delete records from security_privilege');
+INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
+	VALUES (27 ,'CHANGE_OTHERS_PWD', now(), 'Admin-Allows users to change other users passwords');
+
 
 
 

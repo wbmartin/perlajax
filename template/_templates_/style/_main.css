@@ -79,8 +79,11 @@ body{
 .logIcon{
   background-position:0px -575px;
 }
-.lightningFolder{
+.lightningFolderIcon{
   background-position:0px -650px;
+}
+.lockIcon{
+  background-position:0px -725px;
 }
 
 /*

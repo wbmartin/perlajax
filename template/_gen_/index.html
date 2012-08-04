@@ -370,41 +370,41 @@ function validateServerResponse(responseTxt){
 var GOLFER_CACHE;
 var SECURITY_PROFILE_CACHE;
 function onRefreshCache(data){
-	GOLFER_CACHE={};
-	SECURITY_PROFILE_CACHE = {};
-	for(var i=0;i< data.length; i++){
-	   if(data[i].tp === "golfer"){
-		GOLFER_CACHE[data[i].val] = data[i].lbl; 
-	  }else if(data[i].tp === "securityProfile"){
-		SECURITY_PROFILE_CACHE[data[i].val] = data[i].lbl; 
-	  }
-	}
+  GOLFER_CACHE={};
+  SECURITY_PROFILE_CACHE = {};
+  for(var i=0;i< data.length; i++){
+    if(data[i].tp === "golfer"){
+      GOLFER_CACHE[data[i].val] = data[i].lbl; 
+    }else if(data[i].tp === "securityProfile"){
+      SECURITY_PROFILE_CACHE[data[i].val] = data[i].lbl; 
+    }
+  }
 
-setSelectOptions("#quickGolfScoreForm select[name=golfer_id]", GOLFER_CACHE);
-setSelectOptions("#securityUserForm select[name=securityProfileId]", SECURITY_PROFILE_CACHE);
+  setSelectOptions("#quickGolfScoreForm select[name=golfer_id]", GOLFER_CACHE);
+  setSelectOptions("#securityUserForm select[name=securityProfileId]", SECURITY_PROFILE_CACHE);
 }
 
 
 
 function retrieveCache(){
- var params =prepParams(params,"cross_table_cache","select" );
+  var params =prepParams(params,"cross_table_cache","select" );
   var successf = function (rslt){
-	onRefreshCache(rslt.rows);
+    onRefreshCache(rslt.rows);
   };
   serverCall(params,successf,FAILF);
 }
 
 function getLbl4Val(val, type){
   var lbl;
-	if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
-	}else if( type==""){
-	}else{
-		return "INVALID CACHE REQUESTED";
-	}
-	if (isEmpty(lbl) ){
-	  lbl ="--";
-	}
-	return lbl;
+  if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
+  }else if( type==""){
+  }else{
+    return "INVALID CACHE REQUESTED";
+  }
+  if (isEmpty(lbl) ){
+    lbl ="--";
+  }
+  return lbl;
 
 }
 
@@ -2398,8 +2398,11 @@ body{
 .logIcon{
   background-position:0px -575px;
 }
-.lightningFolder{
+.lightningFolderIcon{
   background-position:0px -650px;
+}
+.lockIcon{
+  background-position:0px -725px;
 }
 
 /*
@@ -2788,7 +2791,6 @@ $(document).ready( function(){
 		<div class="center" style="width:25em;"> 
 		  <ul class="buttonbar" style = "">
 			<li><a id="SummaryPage" onclick="showLaunchPane();">Home</a></li>
-			<li><a id="GolfersPage" onclick="showGolfer();">Golfers</a></li>
 			<li><a id="aboutGolfScore" onclick="showHelpPane();">Help</a></li>
 			<li><a id="logoutButtonId" onclick="logOutUser();">Logout</a></li>			
 		  </ul>
@@ -3475,7 +3477,7 @@ function showHelpPane(){
 	  View Averages</a>
       </span>
       <span class="twocol largeIconSpan"><a id="launcherShowQuickGolfScore" onclick="showQuickGolfScore();">
-	  <span class="sprite64Icon lightningFolder"></span><br/>
+	  <span class="sprite64Icon lightningFolderIcon"></span><br/>
 	  Quick Entry</a>
       </span>
 
@@ -3496,11 +3498,11 @@ function showHelpPane(){
 	  <span class="sprite64Icon keyManIcon"></span><br/>
 	  Profiles</a>
       </span>
-
-
-
+      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showChangePasswordDialog();">
+	  <span class="sprite64Icon lockIcon"></span><br/>
+	  Change Password</a>
+      </span>
     </div>
-
   </div>
 </div>
 <script type="text/javascript">
@@ -4081,6 +4083,109 @@ function showPasswordFields(show){
     <br/>
   </div>
 </div> <!--end:SecurityUser-->
+
+
+
+
+
+<script type="text/javascript">
+  //<![CDATA[
+"use strict";
+//----------------------------------------------------
+//server calls
+function submitChangePasswordDialog(params){
+  params = prepParams(params,"SECURITY_CHANGE_PASSWORD",'CHANGE');
+
+  var successf=function(rslt){
+    if (rslt.rows[0].change_password == "1"){
+      briefNotify("Password Changed Successfully");
+    }else{
+      briefNotify("Password Change Fail");
+    }
+
+  };
+  serverCall(params,successf,FAILF);
+}
+
+
+
+//-----------------------
+//Server Call Wrappers
+
+function submitChangePasswordDialogForm(){
+  if(validateChangePasswordDialogForm()){
+    var params = bindForm("changePasswordDialogForm");
+    clearForm("changePasswordDialogForm");
+    submitChangePasswordDialog(params);
+    $( "#changePasswordDialog" ).dialog( "close" );
+  }else{
+    briefNotify("Please Correct Form Validation Errors To Continue");
+  }
+}
+
+//validation
+function validateChangePasswordDialogForm(){
+  var formName="changePasswordDialogForm";
+  var formValid  = standardValidate(formName);
+  if($("#changePasswordDialogForm-new_password").val() !=$("#changePasswordDialogForm-confirm_password").val() ){
+    appendValidationMsg(formName,"changePasswordDialogForm-confirm_password", "Passwords do not match");
+    highlightFieldError(formName,"changePasswordDialogForm-confirm_password",true);
+    formValid =false;
+
+  }
+
+  return formValid;
+}
+
+//----------------------------------------------------
+//html building functions
+
+
+//-------------------------------------------------
+//Div Access and App Layout Calls
+function showChangePasswordDialog(userId_){
+  var params={};
+  if(userId_ == null){
+    userId_ =$("form#loginHolder #user_id").val() ;
+  }
+  $("#changePasswordDialogForm-user_to_update").val(userId_);
+  $( "#changePasswordDialog" ).dialog( "destroy" );
+
+  $( "#changePasswordDialog" ).dialog({
+resizable: false, height:400, width:600, modal: true,
+buttons: {
+"Submit": function() { submitChangePasswordDialogForm(); },
+Cancel: function() { $( this ).dialog( "close" ); }
+}
+});
+
+
+}
+
+$(document).ready(function(){
+    });
+//]]>
+</script>
+
+<div id="changePasswordDialog" title="Changing Password..."  style="display:none;">
+  <form id="changePasswordDialogForm" >
+    <div class="formLayout_Standard" style="border:none;box-shadow:none;">
+      
+      <div class="formFieldGroup">
+	<label>  New Password</label>
+	<input  type="password" name="newPassword" id="changePasswordDialogForm-new_password" class="VALIDATERequired"/>
+	<span class="ValidationMsg" id="changePasswordDialogFormLabel-newPasswordError"></span>
+      </div>
+      
+      <div class="formFieldGroup">
+	<label>  Confirm Password</label>
+	<input  type="password" name="confirmPassword" id="changePasswordDialogForm-confirm_password" class="VALIDATERequired"/>
+	<span class="ValidationMsg" id="changePasswordDialogFormLabel-confirmPasswordError"></span>
+      </div>
+      <input  type="hidden" name="userId" id="changePasswordDialogForm-user_to_update"/>
+    </div>
+  </form>
+</div> 
 
 </div><!--End Main Content-->
 <!--Begin LoginPortal-->

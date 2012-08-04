@@ -177,12 +177,12 @@ sub buildResourceActionDef{
 	}
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  } elsif($resource eq "LEDGER_ACCOUNT" ){
-	@paramFields = @allFields =( 'ledger_account_id', 'last_update', 'name', 'account_type', 
-					'ledger_commodity_id', 'parent_account_id', 'code', 'description') ;
-	if($action eq "SELECT"){
-		$rad= { rf=>\@allFields, pf=>\@stdSelectParamFields, proc=>"ledger_account_sq" };
-	}
+#  } elsif($resource eq "LEDGER_ACCOUNT" ){
+#	@paramFields = @allFields =( 'ledger_account_id', 'last_update', 'name', 'account_type', 
+#					'ledger_commodity_id', 'parent_account_id', 'code', 'description') ;
+#	if($action eq "SELECT"){
+#		$rad= { rf=>\@allFields, pf=>\@stdSelectParamFields, proc=>"ledger_account_sq" };
+#	}
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   } elsif($resource eq "SYS_CODE" ){
 	@paramFields = @allFields = ('sys_code_id', 'code_type', 'key', 'value', 'last_update', 'notes');
@@ -296,6 +296,12 @@ sub buildResourceActionDef{
 	}elsif($action eq "DELETEW"){
 		@paramFields=('where_clause');
 		$rad = { rf=>['security_profile_grant_dqw'], pf=>\@paramFields, proc=>"security_profile_grant_dqw"};
+	}
+} elsif($resource eq "SECURITY_CHANGE_PASSWORD" ){
+	 @allFields = ('user_to_update', 'new_pasword'  );
+	if($action eq "CHANGE"){
+		@paramFields =@allFields;
+		  $rad = { rf=>['change_password'], pf=>\@paramFields, proc=>"change_password"};
 	}
 
 
