@@ -12,7 +12,7 @@ function retrieve[%ucfirst(divId)%]List(){
   var params =prepParams(params,"[%spwfResource%]" ,"select" );
   var successf = function (rslt){
     if(rslt[SERVER_SIDE_FAIL]){
-      briefNotify("There was a problem retrieving the [%prettyName%] Listing");
+      briefNotify("There was a problem retrieving the [%prettyName%] Listing","ERROR");
     }else{
       populate[%ucfirst(divId)%](rslt.rows)
     }
@@ -33,7 +33,7 @@ function retrieve[%ucfirst(divId)%](params){
       toggleSaveMode("[%divId%]Form",true);
       showPasswordFields(false);
     }else{
-      briefNotify("There was a problem retrieving the [%prettyName%].");
+      briefNotify("There was a problem retrieving the [%prettyName%].","ERROR");
     }
   }
   serverCall(params,successf,FAILF);
@@ -47,7 +47,7 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
     remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-    briefNotify("[%prettyName%] Deleted Successfully");
+    briefNotify("[%prettyName%] Deleted Successfully","INFO");
   };
   serverCall(params,successf,FAILF);
 }
@@ -62,7 +62,7 @@ function save[%ucfirst(divId)%](params){
     }else if (rslt.spwfAction == "INSERT"){
       addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
     }
-    briefNotify("[%prettyName%] Successfully Saved");
+    briefNotify("[%prettyName%] Successfully Saved","INFO");
   };
   serverCall(params,successf,FAILF);
 }
@@ -153,6 +153,9 @@ function showPasswordFields(show){
    $("#[%divId%]Form-password_validateDivId").fadeOut();
  }
 }
+function initiateChangePassword(){
+showChangePasswordDialog($("#[%divId%]Form-edit_user_id").val());
+}
 
 //]]>
 
@@ -221,6 +224,9 @@ function showPasswordFields(show){
 	    <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');showPasswordFields(true);" >
 	      Clear
 	    </button>
+	    <button  style="width:150px;" type="button" id="[%divId%]FormClear" value="Change Password" onclick="initiateChangePassword();" >
+	      Change Password
+      	    </button>
 	  </div>
 	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 	  <input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">

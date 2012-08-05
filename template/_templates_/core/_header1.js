@@ -267,7 +267,19 @@ window.onbeforeunload = function () {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Log Msg Functions
-function briefNotify(msg){
+function briefNotify(msg,type){
+  var color;
+  if (type== null || type=="INFO"){
+    color="green";
+  }else if (type=="WARNING"){
+    color="yellow";
+  }else if (type=="ERROR"){
+    color="red";
+  }else{
+    color="black";
+  }
+  $("#briefNoticeMsg").css("border-color",color);
+  $("#briefNoticeMsg").css("color",color);
   $("#briefNoticeMsg").html(msg);
   $('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
   statusMsg(msg);

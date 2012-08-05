@@ -16,7 +16,7 @@ function save[%ucfirst(divId)%](params){
     }else if (rslt.spwfAction == "INSERT"){
       addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
     }
-    briefNotify("Golfer Saved Successfully");
+    briefNotify("Golfer Saved Successfully","INFO");
     toggleSaveMode("[%divId%]Form", true);
 
   };
@@ -46,7 +46,7 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
     remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-    briefNotify("Golfer Deleted Successfully");
+    briefNotify("Golfer Deleted Successfully","INFO");
   };
   serverCall(params,successf,FAILF);
 }
@@ -66,7 +66,7 @@ function save[%ucfirst(divId)%]Form(){
     var params = bindForm("[%divId%]Form");
     save[%ucfirst(divId)%](params);
   }else{
-    briefNotify("Please Correct Form Validation Errors To Continue");
+    briefNotify("Please Correct Form Validation Errors To Continue","WARNING");
   }
 }
 

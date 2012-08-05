@@ -279,7 +279,19 @@ window.onbeforeunload = function () {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Log Msg Functions
-function briefNotify(msg){
+function briefNotify(msg,type){
+  var color;
+  if (type== null || type=="INFO"){
+    color="green";
+  }else if (type=="WARNING"){
+    color="yellow";
+  }else if (type=="ERROR"){
+    color="red";
+  }else{
+    color="black";
+  }
+  $("#briefNoticeMsg").css("border-color",color);
+  $("#briefNoticeMsg").css("color",color);
   $("#briefNoticeMsg").html(msg);
   $('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
   statusMsg(msg);
@@ -2902,7 +2914,7 @@ function deleteGolfScore(golfScoreId_, lastUpdate_){
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
     removeGolfScoreListTableRow(rslt.golf_score_id);
-    briefNotify("Golf Score Deleted Successfully");
+    briefNotify("Golf Score Deleted Successfully","INFO");
   };
   serverCall(params,successf,FAILF);
 }
@@ -2916,7 +2928,7 @@ function saveGolfScore(params){
     }else if (rslt.spwfAction == "INSERT"){
       addNewGolfScoreListTableRow(rslt.rows[0]);
     }
-    briefNotify("Golf Score Successfully Saved");
+    briefNotify("Golf Score Successfully Saved","INFO");
   };
   serverCall(params,successf,FAILF);
 }
@@ -3079,7 +3091,7 @@ function deleteQuickGolfScore(golfScoreId_, lastUpdate_){
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
     removeQuickGolfScoreListTableRow(rslt.golf_score_id);
-    briefNotify("Golf Score Deleted Successfully");
+    briefNotify("Golf Score Deleted Successfully","INFO");
   };
   serverCall(params,successf,FAILF);
 }
@@ -3094,10 +3106,10 @@ function saveQuickGolfScore(params){
       }else if (rslt.spwfAction == "INSERT"){
 	addNewQuickGolfScoreListTableRow(rslt.rows[0]);
       }
-      briefNotify("Golf Score Successfully Saved");
+      briefNotify("Golf Score Successfully Saved","INFO");
     }
     else{
-      briefNotify("Golf Score Saved Failed");
+      briefNotify("Golf Score Saved Failed","ERROR");
 
     }
   };
@@ -3247,7 +3259,7 @@ function saveGolfer(params){
     }else if (rslt.spwfAction == "INSERT"){
       addNewRowGolferListTable(rslt.rows[0]);
     }
-    briefNotify("Golfer Saved Successfully");
+    briefNotify("Golfer Saved Successfully","INFO");
     toggleSaveMode("golferForm", true);
 
   };
@@ -3277,7 +3289,7 @@ function deleteGolfer(golferId_, lastUpdate_){
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
     removeGolferListTableRow(rslt.golfer_id);
-    briefNotify("Golfer Deleted Successfully");
+    briefNotify("Golfer Deleted Successfully","INFO");
   };
   serverCall(params,successf,FAILF);
 }
@@ -3297,7 +3309,7 @@ function saveGolferForm(){
     var params = bindForm("golferForm");
     saveGolfer(params);
   }else{
-    briefNotify("Please Correct Form Validation Errors To Continue");
+    briefNotify("Please Correct Form Validation Errors To Continue","WARNING");
   }
 }
 
@@ -3583,7 +3595,7 @@ function deleteSecurityGrants(securityProfileId_, lastUpdate_){
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
     removeSecurityGrantsListTableRow(rslt.security_profile_id);
-    briefNotify("Golf Score Deleted Successfully");
+    briefNotify("Golf Score Deleted Successfully","INFO");
   };
   serverCall(params,successf,FAILF);
 }
@@ -3864,7 +3876,7 @@ function retrieveSecurityUserList(){
   var params =prepParams(params,"security_user" ,"select" );
   var successf = function (rslt){
     if(rslt[SERVER_SIDE_FAIL]){
-      briefNotify("There was a problem retrieving the User Listing");
+      briefNotify("There was a problem retrieving the User Listing","ERROR");
     }else{
       populateSecurityUser(rslt.rows)
     }
@@ -3885,7 +3897,7 @@ function retrieveSecurityUser(params){
       toggleSaveMode("securityUserForm",true);
       showPasswordFields(false);
     }else{
-      briefNotify("There was a problem retrieving the User.");
+      briefNotify("There was a problem retrieving the User.","ERROR");
     }
   }
   serverCall(params,successf,FAILF);
@@ -3899,7 +3911,7 @@ function deleteSecurityUser(securityUserId_, lastUpdate_){
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
     removeSecurityUserListTableRow(rslt.security_user_id);
-    briefNotify("User Deleted Successfully");
+    briefNotify("User Deleted Successfully","INFO");
   };
   serverCall(params,successf,FAILF);
 }
@@ -3914,7 +3926,7 @@ function saveSecurityUser(params){
     }else if (rslt.spwfAction == "INSERT"){
       addNewSecurityUserListTableRow(rslt.rows[0]);
     }
-    briefNotify("User Successfully Saved");
+    briefNotify("User Successfully Saved","INFO");
   };
   serverCall(params,successf,FAILF);
 }
@@ -4005,6 +4017,9 @@ function showPasswordFields(show){
    $("#securityUserForm-password_validateDivId").fadeOut();
  }
 }
+function initiateChangePassword(){
+showChangePasswordDialog($("#securityUserForm-edit_user_id").val());
+}
 
 //]]>
 
@@ -4073,6 +4088,9 @@ function showPasswordFields(show){
 	    <button type="button" id="securityUserFormClear" value="Clear" onclick="clearForm('securityUserForm');showPasswordFields(true);" >
 	      Clear
 	    </button>
+	    <button  style="width:150px;" type="button" id="securityUserFormClear" value="Change Password" onclick="initiateChangePassword();" >
+	      Change Password
+      	    </button>
 	  </div>
 	  <input type="hidden" name="last_update" id="securityUserForm-last_update">
 	  <input type="hidden" name="security_user_id" id="securityUserForm-security_user_id">
@@ -4086,8 +4104,6 @@ function showPasswordFields(show){
 
 
 
-
-
 <script type="text/javascript">
   //<![CDATA[
 "use strict";
@@ -4095,19 +4111,21 @@ function showPasswordFields(show){
 //server calls
 function submitChangePasswordDialog(params){
   params = prepParams(params,"SECURITY_CHANGE_PASSWORD",'CHANGE');
-
   var successf=function(rslt){
-    if (rslt.rows[0].change_password == "1"){
-      briefNotify("Password Changed Successfully");
-    }else{
-      briefNotify("Password Change Fail");
-    }
+    if(!rslt[SERVER_SIDE_FAIL]){
 
+      if (rslt.rows[0].change_password == "1"){
+	briefNotify("Password Changed Successfully","INFO");
+      }else{
+	briefNotify("Password Change Fail","ERROR");
+      }
+    }else{
+      briefNotify("Password Change Failed","ERROR");
+
+    }
   };
   serverCall(params,successf,FAILF);
 }
-
-
 
 //-----------------------
 //Server Call Wrappers
@@ -4119,7 +4137,7 @@ function submitChangePasswordDialogForm(){
     submitChangePasswordDialog(params);
     $( "#changePasswordDialog" ).dialog( "close" );
   }else{
-    briefNotify("Please Correct Form Validation Errors To Continue");
+    briefNotify("Please Correct Form Validation Errors To Continue","WARNING");
   }
 }
 
@@ -4131,9 +4149,7 @@ function validateChangePasswordDialogForm(){
     appendValidationMsg(formName,"changePasswordDialogForm-confirm_password", "Passwords do not match");
     highlightFieldError(formName,"changePasswordDialogForm-confirm_password",true);
     formValid =false;
-
   }
-
   return formValid;
 }
 
@@ -4155,7 +4171,8 @@ function showChangePasswordDialog(userId_){
 resizable: false, height:400, width:600, modal: true,
 buttons: {
 "Submit": function() { submitChangePasswordDialogForm(); },
-Cancel: function() { $( this ).dialog( "close" ); }
+Cancel: function() { $( this ).dialog( "close" );clearForm("changePasswordDialogForm");
+}
 }
 });
 

@@ -32,7 +32,7 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
     remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-    briefNotify("Golf Score Deleted Successfully");
+    briefNotify("Golf Score Deleted Successfully","INFO");
   };
   serverCall(params,successf,FAILF);
 }
