@@ -2329,12 +2329,17 @@ width: 91.35%;
 }
 
 /*_main.css */
+
+
+
+
+
+
 .MainContentPaneStyle{
   width:100%;
   height:100%;
   display:none;
   overflow:auto;
-  /*background-color:green;*/
   padding: .4em ;
 }
 .MainLayout{
@@ -2353,6 +2358,10 @@ body{
   font-size:.8em;
   font-weight:normal;
   text-align:left;
+  margin-top:0;
+  margin-bottom:0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .largeIconSpan{
@@ -2428,7 +2437,7 @@ Form Layout styles
   }
   .formLayout_Standard select, input{
     display:inline-block;
-    border: 1px solid #999;
+    border: 1px solid #BFBFBF;
     width: 30em;
     -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
@@ -2436,35 +2445,19 @@ Form Layout styles
   }
 
   input{
-  /*  float:left;
-    padding:4px 2px;
-    */
     border:solid 1px ;
     width:200px;
-    /*margin:2px 0 20px 10px;
-     */
 }
 .error{
   color: red;
 }
 
-
-.formLayout .labelColumn{
-  text-align:right;
-  font-weight:bold;
-  padding:7px 25px 20px 50px;
+.formLayout_Standard hr{
+margin:0;
 }
-table.formLayout{
-  background-color:white;
-}
-.prettyFormHolder{
-  border-width: 2px;
-  border-style: solid;
-  border-color:green;
-  border-radius:25px;
-  background-color:white;
-  display:inline-block;
-  padding: 15px;
+.formLayout_Standard .small{
+margin-top: -.35em;
+margin-bottom: -.35em;
 }
 .formLayout_Standard    {
   background: -webkit-gradient(linear, bottom, left 175px, from(#CCCCCC), to(#EEEEEE));
@@ -2476,13 +2469,13 @@ table.formLayout{
   font-style: italic;
   line-height: 2em;
   font-weight: bold;
-  color: #74A846;
+  color: #246B24;
   text-decoration: none;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
   padding:1em;
-  border: 1px solid #999;
+  border: 1px solid #BFBFBF;
   border: inset 1px solid #333;
   -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
@@ -2493,50 +2486,28 @@ table.formLayout{
   width:100px;
   right:20px;
   bottom:20px;
-  background:#74A846;
+  background:#246B24;
   color:#fff;
   font-family: Tahoma, Geneva, sans-serif;
   height:30px;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
-  border: 1px solid #999;
+  border: 1px solid #BFBFBF;
 }
 .formLayout_Standard button:hover {
   background:#fff;
-  color:#74A846;
+  color:#246B24;
 }
 .formButtons{
   display:block;
 }
-/*
-.formLayout button{
-clear:both;
-background-color:#666666;
-width:125px;
-height:31px;
-text-align:center;
-line-height:31px;
-color:#FFFFFF;
-font-weight:bold;
-}
- */
-  .formLayout .formHeader{
+  .formLayout_Standard h1{
     font-weight: bold;
     font-size: 1.5em;
   }
-  fieldset {
-    border-width:0px;
-    border-style:transparent;
-  }
-
-  .formLayout .errorColumn{
-    width:50px;
-  }
-  .formHeaderTD{
-    padding:15px;
-  }
-
+  
+   
   .vcenter {
     position:absolute; 
     top:0; bottom:0; left:0; right:0;
@@ -2556,13 +2527,6 @@ font-weight:bold;
   }
 
 
-  .formTable{
-    border-style:none;
-  }
-  .formTable td{
-    border-style:none;
-  }
-
 
   input.invalid { 
     border: solid 1px red; 
@@ -2579,6 +2543,7 @@ font-weight:bold;
 
   .ValidationMsg{
     color:red;
+    font-size: .75em;
   }
 
 
@@ -2594,7 +2559,7 @@ font-weight:bold;
     padding:15px;
     width:200px;
     background: #FFF url(./images/gradientbg.jpg) repeat-x;
-    color:#74A846;
+    color:#246B24;
     border-width:1px;
     border-style:solid;
     border-radius:15px;
@@ -2620,10 +2585,10 @@ font-weight:bold;
     background: #000;
     border-bottom-style: solid;
     border-width:medium;
-    border-color:#65944A
+    border-color:#246B24
   }
   #header .primary{
-    color: #65944A;
+    color: #246B24;
   }
   #header .secondary{
     color:#BFBFBF;
@@ -2646,7 +2611,7 @@ font-weight:bold;
     font: 0.7em;
   }
   ul.buttonbar li:hover{
-    background: #65944A;
+    background: #246B24;
   }
   #topMenuBar{
     margin-top: 2em;
@@ -2711,14 +2676,14 @@ font-weight:bold;
     border-color: #BFBFBF;
     border-width: 1px;
     border-bottom-style:solid;
-    color:#65944A;
+    color:#246B24;
 
   }
   .dataTable a {
     text-decoration: none;
   }
   .dataTable a:visited{
-    color:#65944A;
+    color:#246B24;
   }
 
   .dataTable .accentColumn{
@@ -4288,27 +4253,27 @@ $(document).ready(function(){
 
 
 <script type="text/javascript">
-//<![CDATA[
+  //<![CDATA[
 function loginCall(){
   var params = bindForm("LoginPortalForm");
   
-  params['spwfResource'] = "security_user";
+    params['spwfResource'] = "security_user";
   params['spwfAction'] = "authenticate";
   var successf = function (rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
-	   var r = rslt.rows[0];
-	   if(r.session_id ==""){
-		alert("Sorry, I Couldn't validate those Credentials");
-		$("#password").val("");
-	   }else{
-		statusMsg("Successfully Authenticated User: " + r.user_id );
-		usrSessionId = r.session_id;
-		usrLoginId = r.user_id;
-		onSuccessfulLogin();
-	   }
-	   }else{
-	briefNotify("There was a problem communicating with the Server.","ERROR")
+      var r = rslt.rows[0];
+      if(r.session_id ==""){
+	alert("Sorry, I Couldn't validate those Credentials");
+	$("#password").val("");
+      }else{
+	statusMsg("Successfully Authenticated User: " + r.user_id );
+	usrSessionId = r.session_id;
+	usrLoginId = r.user_id;
+	onSuccessfulLogin();
       }
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
 
   };
   if (validateLoginPortalForm())serverCall(params,successf,FAILF);
@@ -4321,19 +4286,19 @@ function validateLoginPortalForm (){
 }
 
 function onSuccessfulLogin(){
-	$("#password").val("");
-	displayMainLayout(true);
-	$("#topMenuBar").show();
-	registerAction();
-	timeoutIfNoAction();
-	showLaunchPane();
-	retrieveCache();
+  $("#password").val("");
+  displayMainLayout(true);
+  $("#topMenuBar").show();
+  registerAction();
+  timeoutIfNoAction();
+  showLaunchPane();
+  retrieveCache();
 }
 function logOutUser(){
   usrSessionId="";
   usrLoginId="";
-  $("form#LoginPortalForm #user_id").val("");
-  $("form#LoginPortalForm #password").val("");
+  $("#LoginPortalForm-user_id").val("");
+  $("#LoginPortalForm-password").val("");
   displayMainLayout(false);
   $("#topMenuBar").hide();
   hideMainContent();
@@ -4342,58 +4307,56 @@ function logOutUser(){
 
 
 $(document).ready(function(){
-	$("form#LoginPortalForm #user_id").val("golfscore");
-	$("form#LoginPortalForm #password").val("golfscore");
-	showLoginPortal();
-});
+    $("#LoginPortalForm-user_id").val("golfscore");
+    $("#LoginPortalForm-password").val("golfscore");
+    showLoginPortal();
+    });
 
 function showLoginPortal(){
   $(document).keypress(function(e) {
-    if(e.keyCode == 13) {//enter
-        loginCall();
-    }
-  });
+      if(e.keyCode == 13) {//enter
+      loginCall();
+      }
+      });
 }
 
 //]]>
 </script>
 <div id="LoginPortal"  class="contentPane container">
   <div class="row ">
-	<img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash">
+    <img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash">
   </div>
   <div  id="loginFormRow" class="row ">
-    <form id="LoginPortalForm"  >  
-      <fieldset > 
-       <div class="center" style="width:25em;"> 
-   	<div class="prettyFormHolder "  > 
-   	  <table class="formLayout" >
-    	    <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
-		<span class="small" >Please enter your login credentials</span><hr/></td>
-	    </tr>
-    	    <tr>
-    	      <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
-              <td><input type="text"  name="user_id" id="user_id" size="30" class="fieldbox VALIDATErequired"  /> </td> <td>
-			<span class="ValidationMsg" id="user_idError"></span></td>
-     	    </tr>
-	    <tr>
-    		<td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
-    		<td><input type="password" name="password" id="password" size="30" class="fieldbox VALIDATErequired"  />  
-		</td>  
-		<td><span class="ValidationError" id="passwordError"></span></td>
-     	    </tr>
-	    <tr>
-    		<td colspan="3" align="center" style="padding: 15px; ">
-		  <button type="button"  id="cmdlogin" class="custombutton "  onclick="loginCall()" > Login </button>  
-    		</td>
-	    </tr>
-        </table>
-</div>
-</div>  
-</fieldset>  
-</form>  
-</div>
-</div> <!--loginportal--> 
-<!--End LoginPortal-->
+    <div class="center" style="width:30em;"> 
+      <form id="LoginPortalForm" >
+	<div class="formLayout_Standard" style="width:30em;">
+	    <h1>Login</h1>
+	    <span class="small" >Please enter your login credentials</span><hr/>
+
+	    
+	    
+	    
+	    <div class="formFieldGroup" id="LoginPortalForm-user_idDivId">
+	      <label for ="LoginPortalForm-user_id" style="display:inline-block;width:7em;" id="LoginPortalFormLabel-user_id">User ID</label>
+	      <input type="text" style="width:15em"name="user_id" id="LoginPortalForm-user_id" class="VALIDATErequired">	    
+	      <span class="ValidationMsg" style="width:0em" id="LoginPortalFormLabel-userIdError"></span>
+	    </div>
+	    
+	    <div class="formFieldGroup" id="LoginPortalForm-passwordDivId">
+	      <label for ="LoginPortalForm-password" style="display:inline-block;width:7em;" id="LoginPortalFormLabel-password">Password</label>
+	      <input type="password" style="width:15em"name="password" id="LoginPortalForm-password" class="VALIDATErequired">	    
+	      <span class="ValidationMsg" style="width:0em" id="LoginPortalFormLabel-passwordError"></span>
+	    </div>
+
+	    <div class="formButtons">
+
+	      <button type="button"  id="cmdlogin" class="custombutton "  onclick="loginCall()" > Login </button>  
+	    </div>
+	  </div>  
+      </form>  
+    </div>
+  </div> <!--loginportal--> 
+  <!--End LoginPortal-->
 
 <div id="customMsgBox" style="position: absolute;height:100%;width:100%; top:0; left:0;background-color:gray;opacity:0.5;z-index:1000;display:none;">
 <!--

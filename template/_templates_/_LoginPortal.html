@@ -3,27 +3,27 @@
 [%spwfResource="security_user"%]
 
 <script type="text/javascript">
-//<![CDATA[
+  //<![CDATA[
 function loginCall(){
   var params = bindForm("[%divId%]Form");
   [%#prepParams will not work here %]
-  params['spwfResource'] = "security_user";
+    params['spwfResource'] = "security_user";
   params['spwfAction'] = "authenticate";
   var successf = function (rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
-	   var r = rslt.rows[0];
-	   if(r.session_id ==""){
-		alert("Sorry, I Couldn't validate those Credentials");
-		$("#password").val("");
-	   }else{
-		statusMsg("Successfully Authenticated User: " + r.user_id );
-		usrSessionId = r.session_id;
-		usrLoginId = r.user_id;
-		onSuccessfulLogin();
-	   }
-	   }else{
-	briefNotify("There was a problem communicating with the Server.","ERROR")
+      var r = rslt.rows[0];
+      if(r.session_id ==""){
+	alert("Sorry, I Couldn't validate those Credentials");
+	$("#password").val("");
+      }else{
+	statusMsg("Successfully Authenticated User: " + r.user_id );
+	usrSessionId = r.session_id;
+	usrLoginId = r.user_id;
+	onSuccessfulLogin();
       }
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
 
   };
   if (validate[%divId%]Form())serverCall(params,successf,FAILF);
@@ -36,19 +36,19 @@ function validate[%divId%]Form (){
 }
 
 function onSuccessfulLogin(){
-	$("#password").val("");
-	displayMainLayout(true);
-	$("#topMenuBar").show();
-	registerAction();
-	timeoutIfNoAction();
-	showLaunchPane();
-	retrieveCache();
+  $("#password").val("");
+  displayMainLayout(true);
+  $("#topMenuBar").show();
+  registerAction();
+  timeoutIfNoAction();
+  showLaunchPane();
+  retrieveCache();
 }
 function logOutUser(){
   usrSessionId="";
   usrLoginId="";
-  $("form#[%divId%]Form #user_id").val("");
-  $("form#[%divId%]Form #password").val("");
+  $("#[%divId%]Form-user_id").val("");
+  $("#[%divId%]Form-password").val("");
   displayMainLayout(false);
   $("#topMenuBar").hide();
   hideMainContent();
@@ -57,55 +57,53 @@ function logOutUser(){
 
 
 $(document).ready(function(){
-	$("form#[%divId%]Form #user_id").val("golfscore");
-	$("form#[%divId%]Form #password").val("golfscore");
-	showLoginPortal();
-});
+    $("#[%divId%]Form-user_id").val("golfscore");
+    $("#[%divId%]Form-password").val("golfscore");
+    showLoginPortal();
+    });
 
 function showLoginPortal(){
   $(document).keypress(function(e) {
-    if(e.keyCode == 13) {//enter
-        loginCall();
-    }
-  });
+      if(e.keyCode == 13) {//enter
+      loginCall();
+      }
+      });
 }
 
 //]]>
 </script>
 <div id="[%divId%]"  class="contentPane container">
   <div class="row ">
-	<img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash">
+    <img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash">
   </div>
   <div  id="loginFormRow" class="row ">
-    <form id="[%divId%]Form"  >  
-      <fieldset > 
-       <div class="center" style="width:25em;"> 
-   	<div class="prettyFormHolder "  > 
-   	  <table class="formLayout" >
-    	    <tr><td colspan="3" class="formHeaderTD"><span class="formHeader">Login</span> <br/>
-		<span class="small" >Please enter your login credentials</span><hr/></td>
-	    </tr>
-    	    <tr>
-    	      <td class="labelColumn" style="" ><label for="user_id" id="user_id_label" >User ID</label> </td> 
-              <td><input type="text"  name="user_id" id="user_id" size="30" class="fieldbox VALIDATErequired"  /> </td> <td>
-			<span class="ValidationMsg" id="user_idError"></span></td>
-     	    </tr>
-	    <tr>
-    		<td class="labelColumn"><label for="password" id="password_label">Password</label>  </td>
-    		<td><input type="password" name="password" id="password" size="30" class="fieldbox VALIDATErequired"  />  
-		</td>  
-		<td><span class="ValidationError" id="passwordError"></span></td>
-     	    </tr>
-	    <tr>
-    		<td colspan="3" align="center" style="padding: 15px; ">
-		  <button type="button"  id="cmdlogin" class="custombutton "  onclick="loginCall()" > Login </button>  
-    		</td>
-	    </tr>
-        </table>
-</div>
-</div[%#prettyFormHolder%]>  
-</fieldset>  
-</form>  
-</div>
-</div> <!--loginportal--> 
-<!--End LoginPortal-->
+    <div class="center" style="width:30em;"> 
+      <form id="[%divId%]Form" >
+	<div class="formLayout_Standard" style="width:30em;">
+	    <h1>Login</h1>
+	    <span class="small" >Please enter your login credentials</span><hr/>
+
+	    [%dbColumnName = 'user_id'%]
+	    [%labelWidth='7em'%]
+	    [%validationMsgWidth='0em'%]
+	    <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+	      <label for ="[%divId%]Form-[%dbColumnName%]" style="display:inline-block;width:[%labelWidth%];" id="[%divId%]FormLabel-[%dbColumnName%]">User ID</label>
+	      <input type="text" style="width:15em"name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATErequired">	    
+	      <span class="ValidationMsg" style="width:[%validationMsgWidth%]" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	    </div>
+	    [%dbColumnName = 'password'%]
+	    <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+	      <label for ="[%divId%]Form-[%dbColumnName%]" style="display:inline-block;width:[%labelWidth%];" id="[%divId%]FormLabel-[%dbColumnName%]">Password</label>
+	      <input type="password" style="width:15em"name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATErequired">	    
+	      <span class="ValidationMsg" style="width:[%validationMsgWidth%]" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	    </div>
+
+	    <div class="formButtons">
+
+	      <button type="button"  id="cmdlogin" class="custombutton "  onclick="loginCall()" > Login </button>  
+	    </div>
+	  </div>  
+      </form>  
+    </div>
+  </div> <!--loginportal--> 
+  <!--End LoginPortal-->

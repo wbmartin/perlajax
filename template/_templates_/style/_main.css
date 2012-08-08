@@ -1,13 +1,18 @@
+[%primaryColor="#246B24"%]
+[%grayColor="#666666"%]
+[%standardBackgroundColor="#FFF"%]
+[%lightGrayColor="#BFBFBF"%]
+[%lighterGrayColor="#BFBFBF"%]
+[%accentColumnColor="#F5F5F5"%]
 .MainContentPaneStyle{
   width:100%;
   height:100%;
   display:none;
   overflow:auto;
-  /*background-color:green;*/
   padding: .4em ;
 }
 .MainLayout{
-  background: #FFF url(./images/gradientbg.jpg) repeat-x;
+  background: [%standardBackgroundColor%] url(./images/gradientbg.jpg) repeat-x;
   display:none;/*Initially Hidden*/
 }
 
@@ -17,11 +22,15 @@ body{
 
 }
 .small{
-  color:#666666;
+  color:[%grayColor%];
   display:block;
   font-size:.8em;
   font-weight:normal;
   text-align:left;
+  margin-top:0;
+  margin-bottom:0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .largeIconSpan{
@@ -97,7 +106,7 @@ Form Layout styles
   }
   .formLayout_Standard select, input{
     display:inline-block;
-    border: 1px solid #999;
+    border: 1px solid [%lightGrayColor%];
     width: 30em;
     -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
@@ -105,35 +114,19 @@ Form Layout styles
   }
 
   input{
-  /*  float:left;
-    padding:4px 2px;
-    */
     border:solid 1px ;
     width:200px;
-    /*margin:2px 0 20px 10px;
-     */
 }
 .error{
   color: red;
 }
 
-
-.formLayout .labelColumn{
-  text-align:right;
-  font-weight:bold;
-  padding:7px 25px 20px 50px;
+.formLayout_Standard hr{
+margin:0;
 }
-table.formLayout{
-  background-color:white;
-}
-.prettyFormHolder{
-  border-width: 2px;
-  border-style: solid;
-  border-color:green;
-  border-radius:25px;
-  background-color:white;
-  display:inline-block;
-  padding: 15px;
+.formLayout_Standard .small{
+margin-top: -.35em;
+margin-bottom: -.35em;
 }
 .formLayout_Standard    {
   background: -webkit-gradient(linear, bottom, left 175px, from(#CCCCCC), to(#EEEEEE));
@@ -145,13 +138,13 @@ table.formLayout{
   font-style: italic;
   line-height: 2em;
   font-weight: bold;
-  color: #74A846;
+  color: [%primaryColor%];
   text-decoration: none;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
   padding:1em;
-  border: 1px solid #999;
+  border: 1px solid [%lightGrayColor%];
   border: inset 1px solid #333;
   -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
@@ -162,50 +155,28 @@ table.formLayout{
   width:100px;
   right:20px;
   bottom:20px;
-  background:#74A846;
+  background:[%primaryColor%];
   color:#fff;
   font-family: Tahoma, Geneva, sans-serif;
   height:30px;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
-  border: 1px solid #999;
+  border: 1px solid [%lightGrayColor%];
 }
 .formLayout_Standard button:hover {
   background:#fff;
-  color:#74A846;
+  color:[%primaryColor%];
 }
 .formButtons{
   display:block;
 }
-/*
-.formLayout button{
-clear:both;
-background-color:#666666;
-width:125px;
-height:31px;
-text-align:center;
-line-height:31px;
-color:#FFFFFF;
-font-weight:bold;
-}
- */
-  .formLayout .formHeader{
+  .formLayout_Standard h1{
     font-weight: bold;
     font-size: 1.5em;
   }
-  fieldset {
-    border-width:0px;
-    border-style:transparent;
-  }
-
-  .formLayout .errorColumn{
-    width:50px;
-  }
-  .formHeaderTD{
-    padding:15px;
-  }
-
+  
+   
   .vcenter {
     position:absolute; 
     top:0; bottom:0; left:0; right:0;
@@ -225,13 +196,6 @@ font-weight:bold;
   }
 
 
-  .formTable{
-    border-style:none;
-  }
-  .formTable td{
-    border-style:none;
-  }
-
 
   input.invalid { 
     border: solid 1px red; 
@@ -248,6 +212,7 @@ font-weight:bold;
 
   .ValidationMsg{
     color:red;
+    font-size: .75em;
   }
 
 
@@ -262,8 +227,8 @@ font-weight:bold;
     display:inline-block;
     padding:15px;
     width:200px;
-    background: #FFF url(./images/gradientbg.jpg) repeat-x;
-    color:#74A846;
+    background: [%standardBackgroundColor%] url(./images/gradientbg.jpg) repeat-x;
+    color:[%primaryColor%];
     border-width:1px;
     border-style:solid;
     border-radius:15px;
@@ -289,13 +254,13 @@ font-weight:bold;
     background: #000;
     border-bottom-style: solid;
     border-width:medium;
-    border-color:#65944A
+    border-color:[%primaryColor%]
   }
   #header .primary{
-    color: #65944A;
+    color: [%primaryColor%];
   }
   #header .secondary{
-    color:#BFBFBF;
+    color:[%lighterGrayColor%];
   }
   #header a{
     text-decoration:none;
@@ -315,7 +280,7 @@ font-weight:bold;
     font: 0.7em;
   }
   ul.buttonbar li:hover{
-    background: #65944A;
+    background: [%primaryColor%];
   }
   #topMenuBar{
     margin-top: 2em;
@@ -333,7 +298,7 @@ font-weight:bold;
   .logoBlock h2 {
     font-size: .75em;
     margin-left: 2.5em;
-    color: #BFBFBF;
+    color: [%lighterGrayColor%];
     margin-top: -.5em
 
   }
@@ -343,7 +308,7 @@ font-weight:bold;
   }
 
   #LoginPortal{
-    background: #FFF url(./images/gradientbg.jpg) repeat-x;
+    background: [%standardBackgroundColor%] url(./images/gradientbg.jpg) repeat-x;
   }
   #LoginPortal img{
     display:block;
@@ -370,28 +335,28 @@ font-weight:bold;
     border-width: 3px;
     padding-left: 1.1em;
     padding-right: 1.1em;
-    border-color: #BFBFBF;
-    color: #BFBFBF;
+    border-color: [%lighterGrayColor%];
+    color: [%lighterGrayColor%];
     font-weight:bold;
   }
   .dataTable td{
     padding-left: 1.1em;
     padding-right: 1.1em;
-    border-color: #BFBFBF;
+    border-color: [%lighterGrayColor%];
     border-width: 1px;
     border-bottom-style:solid;
-    color:#65944A;
+    color:[%primaryColor%];
 
   }
   .dataTable a {
     text-decoration: none;
   }
   .dataTable a:visited{
-    color:#65944A;
+    color:[%primaryColor%];
   }
 
   .dataTable .accentColumn{
-    background:#F5F5F5;
+    background:[%accentColumnColor%];
   }
   .securityGrant{
     border-style: solid;
