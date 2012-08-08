@@ -23,7 +23,7 @@ Main:{
   if($debug){ #print some debugging info    
 	print STDERR "Script running - Parameters received:\n";
   	while ( my ($key, $value) = each(%{$params}) ) {
-          print STDERR "\t$key => $value\n";
+          print STDERR "\t$key => $value\n" if ($key ne "password");
     	}
   }
   if($codeEnv eq "PROD"){# set the evironment specific connection data
@@ -143,7 +143,7 @@ $debug=1;
   $sth = $dbh->prepare($sql);
   $ndx=1;
   foreach(@spFields){
-	print STDERR "\tBinding Params $ndx $_ $params->{$_}\n " if ($debug);
+	print STDERR "\tBinding Params $ndx $_ $params->{$_}\n " if ($debug && $_ ne "password");
 	$sth->bind_param($ndx++,$params->{$_});
   }
   return $sth;

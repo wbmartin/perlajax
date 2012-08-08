@@ -18,9 +18,14 @@ function retrieve[%ucfirst(divId)%]List(golferId_){
 function retrieve[%ucfirst(divId)%](params){
   params = prepParams(params,"[%spwfResource%]","SELECT");
   var successf = function(rslt){
-    rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-    bindToForm("[%divId%]Form", rslt.rows[0]);
-    toggleSaveMode("[%divId%]Form",true);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+      bindToForm("[%divId%]Form", rslt.rows[0]);
+      toggleSaveMode("[%divId%]Form",true);
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   }
   serverCall(params,successf,FAILF);
 }
@@ -32,8 +37,13 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
   params['[%prkey%]'] = [%toCC(prkey)%]_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-    remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-    briefNotify("Golf Score Deleted Successfully","INFO");
+    if(!rslt[SERVER_SIDE_FAIL]){
+      remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
+      briefNotify("Golf Score Deleted Successfully","INFO");a
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -41,13 +51,18 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
 function save[%ucfirst(divId)%](params){
   params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
   var successf=function(rslt){
-    clearForm('[%divId%]Form');
-    if (rslt.spwfAction == "UPDATE"){
-      replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
-    }else if (rslt.spwfAction == "INSERT"){
-      addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      clearForm('[%divId%]Form');
+      if (rslt.spwfAction == "UPDATE"){
+	replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+      }else if (rslt.spwfAction == "INSERT"){
+	addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+      }
+      briefNotify("Golf Score Successfully Saved","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
     }
-    briefNotify("Golf Score Successfully Saved","INFO");
+
   };
   serverCall(params,successf,FAILF);
 }

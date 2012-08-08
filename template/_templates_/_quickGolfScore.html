@@ -11,16 +11,25 @@ function retrieve[%ucfirst(divId)%]List(){
   var params =prepParams(params,"[%spwfResource%]" ,"select" );
   params['orderby_clause'] =" order by game_dt desc"
     var successf = function (rslt){
-      populate[%ucfirst(divId)%](rslt.rows)
+      if(!rslt[SERVER_SIDE_FAIL]){
+	populate[%ucfirst(divId)%](rslt.rows)
+      }else{
+	briefNotify("There was a problem communicating with the Server.","ERROR")
+      }
     };
   serverCall(params,successf,FAILF);
 }
 function retrieve[%ucfirst(divId)%](params){
   params = prepParams(params,"[%spwfResource%]","SELECT");
   var successf = function(rslt){
-    rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-    bindToForm("[%divId%]Form", rslt.rows[0]);
-    toggleSaveMode("[%divId%]Form",true);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+      bindToForm("[%divId%]Form", rslt.rows[0]);
+      toggleSaveMode("[%divId%]Form",true);
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   }
   serverCall(params,successf,FAILF);
 }
@@ -32,8 +41,13 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
   params['[%prkey%]'] = [%toCC(prkey)%]_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-    remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-    briefNotify("Golf Score Deleted Successfully","INFO");
+    if(!rslt[SERVER_SIDE_FAIL]){
+      remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
+      briefNotify("Golf Score Deleted Successfully","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -151,34 +165,34 @@ function retrieveGolferNameForGolfScore(golferId_){
 	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Name</label>
 	    <select style="width:15em"name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATErequired"></select>
-	      <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	    </div>
-	    [%dbColumnName = 'golf_score'%]
-	    <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
-	      <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Score</label>
-	      <input  type="text" class="VALIDATEinteger" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
-	      <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	    </div>
-	    [%dbColumnName = 'game_dt'%]
-	    <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
-	      <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-name">Date</label>
-	      <input type="text"  name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATEmmddyyyydate"/>
-	      <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	    </div>
-
-
-
-	    <div class="formButtons">
-
-	      <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-	      <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-	      <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
-	    </div>
-	    <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-	    <input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 	  </div>
-	</form>
+	  [%dbColumnName = 'golf_score'%]
+	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Score</label>
+	    <input  type="text" class="VALIDATEinteger" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
+	  [%dbColumnName = 'game_dt'%]
+	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-name">Date</label>
+	    <input type="text"  name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATEmmddyyyydate"/>
+	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+	  </div>
 
-      </span>
-    </div>
-  </div> <!--end:[%ucfirst(divId)%]-->
+
+
+	  <div class="formButtons">
+
+	    <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+	    <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
+	    <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
+	  </div>
+	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+	  <input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">
+	</div>
+      </form>
+
+    </span>
+  </div>
+</div> <!--end:[%ucfirst(divId)%]-->

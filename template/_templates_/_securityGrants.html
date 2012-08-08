@@ -11,15 +11,25 @@ function retrieve[%ucfirst(divId)%]List(){
   $("#[%divId%]ListTable").html("");
   var params =prepParams(params,"[%spwfResource%]" ,"select" );
   var successf = function (rslt){
-    populate[%ucfirst(divId)%](rslt.rows)
+    if(!rslt[SERVER_SIDE_FAIL]){
+      populate[%ucfirst(divId)%](rslt.rows);
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
 function retrieve[%ucfirst(divId)%](params){
   params = prepParams(params,"[%spwfResource%]","SELECT");
   var successf = function(rslt){
-    bindToForm("[%divId%]Form", rslt.rows[0]);
-    toggleSaveMode("[%divId%]Form",true);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      bindToForm("[%divId%]Form", rslt.rows[0]);
+      toggleSaveMode("[%divId%]Form",true);
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   }
   serverCall(params,successf,FAILF);
 }
@@ -31,8 +41,13 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
   params['[%prkey%]'] = [%toCC(prkey)%]_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-    remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-    briefNotify("Golf Score Deleted Successfully","INFO");
+    if(!rslt[SERVER_SIDE_FAIL]){
+      remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
+      briefNotify("Golf Score Deleted Successfully","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -40,13 +55,18 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
 function save[%ucfirst(divId)%](params){
   params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
   var successf=function(rslt){
-    clearForm('[%divId%]Form');
-    if (rslt.spwfAction == "UPDATE"){
-      replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
-    }else if (rslt.spwfAction == "INSERT"){
-      addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      clearForm('[%divId%]Form');
+      if (rslt.spwfAction == "UPDATE"){
+	replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+      }else if (rslt.spwfAction == "INSERT"){
+	addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+      }
+      briefNotify("[%prettyName%] Successfully Saved");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
     }
-    briefNotify("[%prettyName%] Successfully Saved");
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -288,13 +308,13 @@ function sortDivChildren(divName_){
 	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 	  <input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
 	</form>
-	</div>
-	<br/>
-	<div id="grantAssignDiv">
-	  <div id="availableGrantsId" size="15" class="securityGrantReceiver"></div>
-	  <span class="sprite32Icon plusIcon"></span>
-	  <span class="sprite32Icon cancelIcon"></span>
-	  <div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div>
+      </div>
+      <br/>
+      <div id="grantAssignDiv">
+	<div id="availableGrantsId" size="15" class="securityGrantReceiver"></div>
+	<span class="sprite32Icon plusIcon"></span>
+	<span class="sprite32Icon cancelIcon"></span>
+	<div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div>
       </div>
     </div>
   </div> <!--end:[%ucfirst(divId)%]-->

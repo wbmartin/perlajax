@@ -10,14 +10,18 @@
 function save[%ucfirst(divId)%](params){
   params = prepParams(params,"golfer",insertUpdateChoose);
   var successf=function(rslt){
-    bindToForm("[%divId%]Form", rslt.rows[0]);
-    if (rslt.spwfAction == "UPDATE"){
-      replaceRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
-    }else if (rslt.spwfAction == "INSERT"){
-      addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      bindToForm("[%divId%]Form", rslt.rows[0]);
+      if (rslt.spwfAction == "UPDATE"){
+	replaceRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
+      }else if (rslt.spwfAction == "INSERT"){
+	addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
+      }
+      briefNotify("Golfer Saved Successfully","INFO");
+      toggleSaveMode("[%divId%]Form", true);
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
     }
-    briefNotify("Golfer Saved Successfully","INFO");
-    toggleSaveMode("[%divId%]Form", true);
 
   };
   serverCall(params,successf,FAILF);
@@ -30,13 +34,18 @@ function retrieve[%ucfirst(divId)%](params,selectedKey_){
     params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
   }
   var successf = function(rslt){
-    if(rslt.rowCount==1){
-      bindToForm("[%divId%]Form", rslt.rows[0]);
-      toggleSaveMode("[%divId%]Form",true);
-    }else{
-      populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      if(rslt.rowCount==1){
+	bindToForm("[%divId%]Form", rslt.rows[0]);
+	toggleSaveMode("[%divId%]Form",true);
+      }else{
+	populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
 
+      }
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
     }
+
   }
   serverCall(params,successf,FAILF);
 }
@@ -45,8 +54,13 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
   params['[%prkey%]'] = [%toCC(prkey)%]_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-    remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-    briefNotify("Golfer Deleted Successfully","INFO");
+    if(!rslt[SERVER_SIDE_FAIL]){
+      remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
+      briefNotify("Golfer Deleted Successfully","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }

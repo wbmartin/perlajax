@@ -1,13 +1,16 @@
 <!--Begin LoginPortal-->
+[%divId="LoginPortal"%]
+[%spwfResource="security_user"%]
 
 <script type="text/javascript">
 //<![CDATA[
 function loginCall(){
-  var params = bindForm("loginHolder");
+  var params = bindForm("[%divId%]Form");
   [%#prepParams will not work here %]
   params['spwfResource'] = "security_user";
   params['spwfAction'] = "authenticate";
   var successf = function (rslt){
+    if(!rslt[SERVER_SIDE_FAIL]){
 	   var r = rslt.rows[0];
 	   if(r.session_id ==""){
 		alert("Sorry, I Couldn't validate those Credentials");
@@ -18,14 +21,17 @@ function loginCall(){
 		usrLoginId = r.user_id;
 		onSuccessfulLogin();
 	   }
+	   }else{
+	briefNotify("There was a problem communicating with the Server.","ERROR")
+      }
+
   };
-  if (validateLoginHolder())serverCall(params,successf,FAILF);
+  if (validate[%divId%]Form())serverCall(params,successf,FAILF);
 }
 
 
-function validateLoginHolder (){
-  var formName="loginHolder ";
-  var formValid  = standardValidate("loginHolder");
+function validate[%divId%]Form (){
+  var formValid  = standardValidate("[%divId%]Form");
   return formValid;
 }
 
@@ -41,8 +47,8 @@ function onSuccessfulLogin(){
 function logOutUser(){
   usrSessionId="";
   usrLoginId="";
-  $("form#loginHolder #user_id").val("");
-  $("form#loginHolder #password").val("");
+  $("form#[%divId%]Form #user_id").val("");
+  $("form#[%divId%]Form #password").val("");
   displayMainLayout(false);
   $("#topMenuBar").hide();
   hideMainContent();
@@ -51,8 +57,8 @@ function logOutUser(){
 
 
 $(document).ready(function(){
-	$("form#loginHolder #user_id").val("golfscore");
-	$("form#loginHolder #password").val("golfscore");
+	$("form#[%divId%]Form #user_id").val("golfscore");
+	$("form#[%divId%]Form #password").val("golfscore");
 	showLoginPortal();
 });
 
@@ -66,12 +72,12 @@ function showLoginPortal(){
 
 //]]>
 </script>
-<div id="LoginPortal"  class="contentPane container">
+<div id="[%divId%]"  class="contentPane container">
   <div class="row ">
 	<img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash">
   </div>
   <div  id="loginFormRow" class="row ">
-    <form id="loginHolder"  >  
+    <form id="[%divId%]Form"  >  
       <fieldset > 
        <div class="center" style="width:25em;"> 
    	<div class="prettyFormHolder "  > 

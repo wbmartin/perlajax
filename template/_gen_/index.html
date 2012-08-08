@@ -2816,11 +2816,6 @@ $(document).ready( function(){
 	<span id="statusMsg" ></span>
   </div>
 </div>
-<!--
-<div id='leftnav' class="MainLayout" style='position:fixed; top:25px; left:0; width:200px; margin:0px ; padding: 5px;background-color:green;overflow:auto;'> 
-</div>
-
--->
 <div id="briefNotice" style="display:none;">
 <table style="width:100%">
   <tr>  <td style="width:33%" >&nbsp;</td>
@@ -2836,47 +2831,52 @@ $(document).ready( function(){
 
 <script type="text/javascript">
 
-var golfScoreSummaryList = new Array();
-function retrieveGolfScoreSummary(){
-$("#golfScoreSummaryTable").html("");
- var params =prepParams(params,"golf_score_summary" ,"select" );
-  var successf = function (rslt){
+  var golfScoreSummaryList = new Array();
+  function retrieveGolfScoreSummary(){
+    $("#golfScoreSummaryTable").html("");
+    var params =prepParams(params,"golf_score_summary" ,"select" );
+    var successf = function (rslt){
+      if(!rslt[SERVER_SIDE_FAIL]){
 	golfScoreSummaryList=rslt.rows;
 	displayGolfScoreSummaryList(golfScoreSummaryList);
-  };
-  var failf = function(){alert("failed");}
-  serverCall(params,successf,failf);
+      }else{
+	briefNotify("There was a problem communicating with the Server.","ERROR")
+      }
 
-}
+    };
+    var failf = function(){alert("failed");}
+    serverCall(params,successf,failf);
+
+  }
 function displayGolfScoreSummaryList(golfScoreSummaryList_){
   var newrowsHTML = "<tr> <th>Golfer</th><th class='accentColumn'>Last 10 Avg</th><th>Period</th><th class='accentColumn'>I want to&hellip;</th></tr>";
   var gs = {};
   for(var ndx=0; ndx<golfScoreSummaryList_.length; ndx++){
-	newrowsHTML +=buildGolfScoreSummaryRow(golfScoreSummaryList_[ndx]);
+    newrowsHTML +=buildGolfScoreSummaryRow(golfScoreSummaryList_[ndx]);
   }
   $("#golfScoreSummaryTable").html(newrowsHTML);
 }
 
 function buildGolfScoreSummaryRow(gs){
-var newrow ="<tr><td>" + gs.golfer_name+"</td>";
-	newrow +="<td class='accentColumn'>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
-	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-	newrow +="<td class ='accentColumn'><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a> | ";
-	newrow +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a></td>";
-	newrow +="</tr>";
-return newrow;
+  var newrow ="<tr><td>" + gs.golfer_name+"</td>";
+  newrow +="<td class='accentColumn'>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
+  newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
+  newrow +="<td class ='accentColumn'><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a> | ";
+  newrow +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a></td>";
+  newrow +="</tr>";
+  return newrow;
 
 }
 
 function showGolfScoreSummary(){
-	retrieveGolfScoreSummary();
-	standardShowContentPane("golfScoreSummary");
+  retrieveGolfScoreSummary();
+  standardShowContentPane("golfScoreSummary");
 }
 </script>
 <div id="golfScoreSummary" class="MainLayout MainContentPaneStyle contentPane"  >
 
-<table id="golfScoreSummaryTable"  class='dataTable' >
-</table>
+  <table id="golfScoreSummaryTable"  class='dataTable' >
+  </table>
 </div> 
 
 
@@ -2899,9 +2899,14 @@ function retrieveGolfScoreList(golferId_){
 function retrieveGolfScore(params){
   params = prepParams(params,"golf_score","SELECT");
   var successf = function(rslt){
-    rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-    bindToForm("golfScoreForm", rslt.rows[0]);
-    toggleSaveMode("golfScoreForm",true);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+      bindToForm("golfScoreForm", rslt.rows[0]);
+      toggleSaveMode("golfScoreForm",true);
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   }
   serverCall(params,successf,FAILF);
 }
@@ -2913,8 +2918,13 @@ function deleteGolfScore(golfScoreId_, lastUpdate_){
   params['golf_score_id'] = golfScoreId_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-    removeGolfScoreListTableRow(rslt.golf_score_id);
-    briefNotify("Golf Score Deleted Successfully","INFO");
+    if(!rslt[SERVER_SIDE_FAIL]){
+      removeGolfScoreListTableRow(rslt.golf_score_id);
+      briefNotify("Golf Score Deleted Successfully","INFO");a
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -2922,13 +2932,18 @@ function deleteGolfScore(golfScoreId_, lastUpdate_){
 function saveGolfScore(params){
   params = prepParams(params,"golf_score",insertUpdateChoose);
   var successf=function(rslt){
-    clearForm('golfScoreForm');
-    if (rslt.spwfAction == "UPDATE"){
-      replaceGolfScoreListTableRow(rslt.rows[0]);
-    }else if (rslt.spwfAction == "INSERT"){
-      addNewGolfScoreListTableRow(rslt.rows[0]);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      clearForm('golfScoreForm');
+      if (rslt.spwfAction == "UPDATE"){
+	replaceGolfScoreListTableRow(rslt.rows[0]);
+      }else if (rslt.spwfAction == "INSERT"){
+	addNewGolfScoreListTableRow(rslt.rows[0]);
+      }
+      briefNotify("Golf Score Successfully Saved","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
     }
-    briefNotify("Golf Score Successfully Saved","INFO");
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -3069,16 +3084,25 @@ function retrieveQuickGolfScoreList(){
   var params =prepParams(params,"golf_score" ,"select" );
   params['orderby_clause'] =" order by game_dt desc"
     var successf = function (rslt){
-      populateQuickGolfScore(rslt.rows)
+      if(!rslt[SERVER_SIDE_FAIL]){
+	populateQuickGolfScore(rslt.rows)
+      }else{
+	briefNotify("There was a problem communicating with the Server.","ERROR")
+      }
     };
   serverCall(params,successf,FAILF);
 }
 function retrieveQuickGolfScore(params){
   params = prepParams(params,"golf_score","SELECT");
   var successf = function(rslt){
-    rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-    bindToForm("quickGolfScoreForm", rslt.rows[0]);
-    toggleSaveMode("quickGolfScoreForm",true);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+      bindToForm("quickGolfScoreForm", rslt.rows[0]);
+      toggleSaveMode("quickGolfScoreForm",true);
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   }
   serverCall(params,successf,FAILF);
 }
@@ -3090,8 +3114,13 @@ function deleteQuickGolfScore(golfScoreId_, lastUpdate_){
   params['golf_score_id'] = golfScoreId_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-    removeQuickGolfScoreListTableRow(rslt.golf_score_id);
-    briefNotify("Golf Score Deleted Successfully","INFO");
+    if(!rslt[SERVER_SIDE_FAIL]){
+      removeQuickGolfScoreListTableRow(rslt.golf_score_id);
+      briefNotify("Golf Score Deleted Successfully","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -3209,37 +3238,37 @@ function retrieveGolferNameForGolfScore(golferId_){
 	  <div class="formFieldGroup" id="quickGolfScoreForm-golfer_idDivId">
 	    <label for ="quickGolfScoreForm-golfer_id" id="quickGolfScoreFormLabel-golfer_id">Name</label>
 	    <select style="width:15em"name="golfer_id" id="quickGolfScoreForm-golfer_id" class="VALIDATErequired"></select>
-	      <span class="ValidationMsg" id="quickGolfScoreFormLabel-golferIdError"></span>
-	    </div>
-	    
-	    <div class="formFieldGroup" id="quickGolfScoreForm-golf_scoreDivId">
-	      <label for ="quickGolfScoreForm-golf_score" id="quickGolfScoreFormLabel-golf_score">Score</label>
-	      <input  type="text" class="VALIDATEinteger" name="golfScore" id="quickGolfScoreForm-golf_score"/>
-	      <span class="ValidationMsg" id="quickGolfScoreFormLabel-golfScoreError"></span>
-	    </div>
-	    
-	    <div class="formFieldGroup" id="quickGolfScoreForm-game_dtDivId">
-	      <label for ="quickGolfScoreForm-game_dt" id="quickGolfScoreFormLabel-name">Date</label>
-	      <input type="text"  name="gameDt" id="quickGolfScoreForm-game_dt" class="VALIDATEmmddyyyydate"/>
-	      <span class="ValidationMsg" id="quickGolfScoreFormLabel-gameDtError"></span>
-	    </div>
-
-
-
-	    <div class="formButtons">
-
-	      <button type="button" id="quickGolfScoreFormSave" value="Save" onclick="saveQuickGolfScoreForm();" >Save</button>
-	      <button type="button" id="quickGolfScoreFormAdd" value="Add" onclick="saveQuickGolfScoreForm();" >Add</button>
-	      <button type="button" id="quickGolfScoreFormClear" value="Clear" onclick="clearForm('quickGolfScoreForm');" >Clear</button>
-	    </div>
-	    <input type="hidden" name="last_update" id="quickGolfScoreForm-last_update">
-	    <input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id">
+	    <span class="ValidationMsg" id="quickGolfScoreFormLabel-golferIdError"></span>
 	  </div>
-	</form>
+	  
+	  <div class="formFieldGroup" id="quickGolfScoreForm-golf_scoreDivId">
+	    <label for ="quickGolfScoreForm-golf_score" id="quickGolfScoreFormLabel-golf_score">Score</label>
+	    <input  type="text" class="VALIDATEinteger" name="golfScore" id="quickGolfScoreForm-golf_score"/>
+	    <span class="ValidationMsg" id="quickGolfScoreFormLabel-golfScoreError"></span>
+	  </div>
+	  
+	  <div class="formFieldGroup" id="quickGolfScoreForm-game_dtDivId">
+	    <label for ="quickGolfScoreForm-game_dt" id="quickGolfScoreFormLabel-name">Date</label>
+	    <input type="text"  name="gameDt" id="quickGolfScoreForm-game_dt" class="VALIDATEmmddyyyydate"/>
+	    <span class="ValidationMsg" id="quickGolfScoreFormLabel-gameDtError"></span>
+	  </div>
 
-      </span>
-    </div>
-  </div> <!--end:QuickGolfScore-->
+
+
+	  <div class="formButtons">
+
+	    <button type="button" id="quickGolfScoreFormSave" value="Save" onclick="saveQuickGolfScoreForm();" >Save</button>
+	    <button type="button" id="quickGolfScoreFormAdd" value="Add" onclick="saveQuickGolfScoreForm();" >Add</button>
+	    <button type="button" id="quickGolfScoreFormClear" value="Clear" onclick="clearForm('quickGolfScoreForm');" >Clear</button>
+	  </div>
+	  <input type="hidden" name="last_update" id="quickGolfScoreForm-last_update">
+	  <input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id">
+	</div>
+      </form>
+
+    </span>
+  </div>
+</div> <!--end:QuickGolfScore-->
 
 
 
@@ -3253,14 +3282,18 @@ function retrieveGolferNameForGolfScore(golferId_){
 function saveGolfer(params){
   params = prepParams(params,"golfer",insertUpdateChoose);
   var successf=function(rslt){
-    bindToForm("golferForm", rslt.rows[0]);
-    if (rslt.spwfAction == "UPDATE"){
-      replaceRowGolferListTable(rslt.rows[0]);
-    }else if (rslt.spwfAction == "INSERT"){
-      addNewRowGolferListTable(rslt.rows[0]);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      bindToForm("golferForm", rslt.rows[0]);
+      if (rslt.spwfAction == "UPDATE"){
+	replaceRowGolferListTable(rslt.rows[0]);
+      }else if (rslt.spwfAction == "INSERT"){
+	addNewRowGolferListTable(rslt.rows[0]);
+      }
+      briefNotify("Golfer Saved Successfully","INFO");
+      toggleSaveMode("golferForm", true);
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
     }
-    briefNotify("Golfer Saved Successfully","INFO");
-    toggleSaveMode("golferForm", true);
 
   };
   serverCall(params,successf,FAILF);
@@ -3273,13 +3306,18 @@ function retrieveGolfer(params,selectedKey_){
     params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
   }
   var successf = function(rslt){
-    if(rslt.rowCount==1){
-      bindToForm("golferForm", rslt.rows[0]);
-      toggleSaveMode("golferForm",true);
-    }else{
-      populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      if(rslt.rowCount==1){
+	bindToForm("golferForm", rslt.rows[0]);
+	toggleSaveMode("golferForm",true);
+      }else{
+	populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
 
+      }
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
     }
+
   }
   serverCall(params,successf,FAILF);
 }
@@ -3288,8 +3326,13 @@ function deleteGolfer(golferId_, lastUpdate_){
   params['golfer_id'] = golferId_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-    removeGolferListTableRow(rslt.golfer_id);
-    briefNotify("Golfer Deleted Successfully","INFO");
+    if(!rslt[SERVER_SIDE_FAIL]){
+      removeGolferListTableRow(rslt.golfer_id);
+      briefNotify("Golfer Deleted Successfully","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -3574,15 +3617,25 @@ function retrieveSecurityGrantsList(){
   $("#securityGrantsListTable").html("");
   var params =prepParams(params,"security_profile" ,"select" );
   var successf = function (rslt){
-    populateSecurityGrants(rslt.rows)
+    if(!rslt[SERVER_SIDE_FAIL]){
+      populateSecurityGrants(rslt.rows);
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
 function retrieveSecurityGrants(params){
   params = prepParams(params,"security_profile","SELECT");
   var successf = function(rslt){
-    bindToForm("securityGrantsForm", rslt.rows[0]);
-    toggleSaveMode("securityGrantsForm",true);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      bindToForm("securityGrantsForm", rslt.rows[0]);
+      toggleSaveMode("securityGrantsForm",true);
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   }
   serverCall(params,successf,FAILF);
 }
@@ -3594,8 +3647,13 @@ function deleteSecurityGrants(securityProfileId_, lastUpdate_){
   params['security_profile_id'] = securityProfileId_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-    removeSecurityGrantsListTableRow(rslt.security_profile_id);
-    briefNotify("Golf Score Deleted Successfully","INFO");
+    if(!rslt[SERVER_SIDE_FAIL]){
+      removeSecurityGrantsListTableRow(rslt.security_profile_id);
+      briefNotify("Golf Score Deleted Successfully","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -3603,13 +3661,18 @@ function deleteSecurityGrants(securityProfileId_, lastUpdate_){
 function saveSecurityGrants(params){
   params = prepParams(params,"security_profile",insertUpdateChoose);
   var successf=function(rslt){
-    clearForm('securityGrantsForm');
-    if (rslt.spwfAction == "UPDATE"){
-      replaceSecurityGrantsListTableRow(rslt.rows[0]);
-    }else if (rslt.spwfAction == "INSERT"){
-      addNewSecurityGrantsListTableRow(rslt.rows[0]);
+    if(!rslt[SERVER_SIDE_FAIL]){
+      clearForm('securityGrantsForm');
+      if (rslt.spwfAction == "UPDATE"){
+	replaceSecurityGrantsListTableRow(rslt.rows[0]);
+      }else if (rslt.spwfAction == "INSERT"){
+	addNewSecurityGrantsListTableRow(rslt.rows[0]);
+      }
+      briefNotify("Security Profile Successfully Saved");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
     }
-    briefNotify("Security Profile Successfully Saved");
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -3851,13 +3914,13 @@ function sortDivChildren(divName_){
 	  <input type="hidden" name="last_update" id="securityGrantsForm-last_update">
 	  <input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id">
 	</form>
-	</div>
-	<br/>
-	<div id="grantAssignDiv">
-	  <div id="availableGrantsId" size="15" class="securityGrantReceiver"></div>
-	  <span class="sprite32Icon plusIcon"></span>
-	  <span class="sprite32Icon cancelIcon"></span>
-	  <div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div>
+      </div>
+      <br/>
+      <div id="grantAssignDiv">
+	<div id="availableGrantsId" size="15" class="securityGrantReceiver"></div>
+	<span class="sprite32Icon plusIcon"></span>
+	<span class="sprite32Icon cancelIcon"></span>
+	<div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div>
       </div>
     </div>
   </div> <!--end:SecurityGrants-->
@@ -3878,10 +3941,11 @@ function retrieveSecurityUserList(){
     if(rslt[SERVER_SIDE_FAIL]){
       briefNotify("There was a problem retrieving the User Listing","ERROR");
     }else{
-      populateSecurityUser(rslt.rows)
+      populateSecurityUser(rslt.rows);
     }
-  };
-  serverCall(params,successf,FAILF);
+  
+};
+serverCall(params,successf,FAILF);
 }
 function retrieveSecurityUser(params){
   params = prepParams(params,"security_user","SELECT");
@@ -3910,8 +3974,13 @@ function deleteSecurityUser(securityUserId_, lastUpdate_){
   params['security_user_id'] = securityUserId_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-    removeSecurityUserListTableRow(rslt.security_user_id);
-    briefNotify("User Deleted Successfully","INFO");
+    if(!rslt[SERVER_SIDE_FAIL]){
+      removeSecurityUserListTableRow(rslt.security_user_id);
+      briefNotify("User Deleted Successfully","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -3919,14 +3988,20 @@ function deleteSecurityUser(securityUserId_, lastUpdate_){
 function saveSecurityUser(params){
   params = prepParams(params,"security_user",insertUpdateChoose);
   var successf=function(rslt){
-    clearForm('securityUserForm');
-    showPasswordFields(true);
-    if (rslt.spwfAction == "UPDATE"){
-      replaceSecurityUserListTableRow(rslt.rows[0]);
-    }else if (rslt.spwfAction == "INSERT"){
-      addNewSecurityUserListTableRow(rslt.rows[0]);
+    if(!rslt[SERVER_SIDE_FAIL]){
+
+      clearForm('securityUserForm');
+      showPasswordFields(true);
+      if (rslt.spwfAction == "UPDATE"){
+	replaceSecurityUserListTableRow(rslt.rows[0]);
+      }else if (rslt.spwfAction == "INSERT"){
+	addNewSecurityUserListTableRow(rslt.rows[0]);
+      }
+      briefNotify("User Successfully Saved","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
     }
-    briefNotify("User Successfully Saved","INFO");
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -3943,9 +4018,9 @@ function saveSecurityUserForm(){
   if(validateSecurityUserForm()){
     var params = bindForm("securityUserForm");
     if (document.getElementById('securityUserForm-active_yn').checked){
-	params['active_yn']='Y';
+      params['active_yn']='Y';
     }else{
-	params['active_yn']='N';
+      params['active_yn']='N';
     }
     saveSecurityUser(params);
   }
@@ -3956,10 +4031,10 @@ function validateSecurityUserForm(){
   var formName="securityUserForm";
   var formValid  = standardValidate(formName);
   if(document.getElementById('securityUserForm-password_enc').value != document.getElementById('securityUserForm-password_validate').value){
-        alert("Please ensure the passwords match to continue");
-	formValid = false;
+    alert("Please ensure the passwords match to continue");
+    formValid = false;
   }
-  
+
   return formValid;
 }
 
@@ -4009,16 +4084,16 @@ $(document).ready(function(){
 //page specific functions
 
 function showPasswordFields(show){
- if (show){
-   $("#securityUserForm-password_encDivId").fadeIn();
-   $("#securityUserForm-password_validateDivId").fadeIn();
- }else{
-   $("#securityUserForm-password_encDivId").fadeOut();
-   $("#securityUserForm-password_validateDivId").fadeOut();
- }
+  if (show){
+    $("#securityUserForm-password_encDivId").fadeIn();
+    $("#securityUserForm-password_validateDivId").fadeIn();
+  }else{
+    $("#securityUserForm-password_encDivId").fadeOut();
+    $("#securityUserForm-password_validateDivId").fadeOut();
+  }
 }
 function initiateChangePassword(){
-showChangePasswordDialog($("#securityUserForm-edit_user_id").val());
+  showChangePasswordDialog($("#securityUserForm-edit_user_id").val());
 }
 
 //]]>
@@ -4047,7 +4122,7 @@ showChangePasswordDialog($("#securityUserForm-edit_user_id").val());
 	    <input  type="text" name="emailAddr" id="securityUserForm-email_addr"/>
 	    <span class="ValidationMsg" id="securityUserFormLabel-emailAddrError"></span>
 	  </div>
-    	  
+	  
 	  <div class="formFieldGroup" id="securityUserForm-password_encDivId">
 	    <label  for ="securityUserForm-password_enc">  Password </label>
 	    <input type="password" name="passwordEnc" id="securityUserForm-password_enc"></input>
@@ -4067,7 +4142,7 @@ showChangePasswordDialog($("#securityUserForm-edit_user_id").val());
 	    <select name="securityProfileId" id="securityUserForm-security_profile_id"></select>
 	    <span class="ValidationMsg" id="securityUserFormLabel-securityProfileIdError"></span>
 	  </div>
-	
+	  
 	  <div class="formFieldGroup" id="securityUserForm-active_ynDivId">
 	    <label style="display:inline-block" for ="securityUserForm-active_yn">  Active </label>
 	    <input style="width:25px;" type="checkbox" name="activeYn" id="securityUserForm-active_yn"></input>
@@ -4090,7 +4165,7 @@ showChangePasswordDialog($("#securityUserForm-edit_user_id").val());
 	    </button>
 	    <button  style="width:150px;" type="button" id="securityUserFormClear" value="Change Password" onclick="initiateChangePassword();" >
 	      Change Password
-      	    </button>
+	    </button>
 	  </div>
 	  <input type="hidden" name="last_update" id="securityUserForm-last_update">
 	  <input type="hidden" name="security_user_id" id="securityUserForm-security_user_id">
@@ -4167,12 +4242,15 @@ function showChangePasswordDialog(userId_){
   $("#changePasswordDialogForm-user_to_update").val(userId_);
   $( "#changePasswordDialog" ).dialog( "destroy" );
 
-  $( "#changePasswordDialog" ).dialog({
-resizable: false, height:400, width:600, modal: true,
+  $( "#changePasswordDialog" ).dialog(
+{
+resizable: false, 
+height:400, 
+width:600, 
+modal: true,
 buttons: {
 "Submit": function() { submitChangePasswordDialogForm(); },
-Cancel: function() { $( this ).dialog( "close" );clearForm("changePasswordDialogForm");
-}
+Cancel: function() { $( this ).dialog( "close" );clearForm("changePasswordDialogForm"); }
 }
 });
 
@@ -4207,14 +4285,17 @@ $(document).ready(function(){
 </div><!--End Main Content-->
 <!--Begin LoginPortal-->
 
+
+
 <script type="text/javascript">
 //<![CDATA[
 function loginCall(){
-  var params = bindForm("loginHolder");
+  var params = bindForm("LoginPortalForm");
   
   params['spwfResource'] = "security_user";
   params['spwfAction'] = "authenticate";
   var successf = function (rslt){
+    if(!rslt[SERVER_SIDE_FAIL]){
 	   var r = rslt.rows[0];
 	   if(r.session_id ==""){
 		alert("Sorry, I Couldn't validate those Credentials");
@@ -4225,14 +4306,17 @@ function loginCall(){
 		usrLoginId = r.user_id;
 		onSuccessfulLogin();
 	   }
+	   }else{
+	briefNotify("There was a problem communicating with the Server.","ERROR")
+      }
+
   };
-  if (validateLoginHolder())serverCall(params,successf,FAILF);
+  if (validateLoginPortalForm())serverCall(params,successf,FAILF);
 }
 
 
-function validateLoginHolder (){
-  var formName="loginHolder ";
-  var formValid  = standardValidate("loginHolder");
+function validateLoginPortalForm (){
+  var formValid  = standardValidate("LoginPortalForm");
   return formValid;
 }
 
@@ -4248,8 +4332,8 @@ function onSuccessfulLogin(){
 function logOutUser(){
   usrSessionId="";
   usrLoginId="";
-  $("form#loginHolder #user_id").val("");
-  $("form#loginHolder #password").val("");
+  $("form#LoginPortalForm #user_id").val("");
+  $("form#LoginPortalForm #password").val("");
   displayMainLayout(false);
   $("#topMenuBar").hide();
   hideMainContent();
@@ -4258,8 +4342,8 @@ function logOutUser(){
 
 
 $(document).ready(function(){
-	$("form#loginHolder #user_id").val("golfscore");
-	$("form#loginHolder #password").val("golfscore");
+	$("form#LoginPortalForm #user_id").val("golfscore");
+	$("form#LoginPortalForm #password").val("golfscore");
 	showLoginPortal();
 });
 
@@ -4278,7 +4362,7 @@ function showLoginPortal(){
 	<img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash">
   </div>
   <div  id="loginFormRow" class="row ">
-    <form id="loginHolder"  >  
+    <form id="LoginPortalForm"  >  
       <fieldset > 
        <div class="center" style="width:25em;"> 
    	<div class="prettyFormHolder "  > 

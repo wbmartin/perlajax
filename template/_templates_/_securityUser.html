@@ -14,10 +14,11 @@ function retrieve[%ucfirst(divId)%]List(){
     if(rslt[SERVER_SIDE_FAIL]){
       briefNotify("There was a problem retrieving the [%prettyName%] Listing","ERROR");
     }else{
-      populate[%ucfirst(divId)%](rslt.rows)
+      populate[%ucfirst(divId)%](rslt.rows);
     }
-  };
-  serverCall(params,successf,FAILF);
+  
+};
+serverCall(params,successf,FAILF);
 }
 function retrieve[%ucfirst(divId)%](params){
   params = prepParams(params,"[%spwfResource%]","SELECT");
@@ -46,8 +47,13 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
   params['[%prkey%]'] = [%toCC(prkey)%]_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
-    remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-    briefNotify("[%prettyName%] Deleted Successfully","INFO");
+    if(!rslt[SERVER_SIDE_FAIL]){
+      remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
+      briefNotify("[%prettyName%] Deleted Successfully","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
+    }
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -55,14 +61,20 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
 function save[%ucfirst(divId)%](params){
   params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
   var successf=function(rslt){
-    clearForm('[%divId%]Form');
-    showPasswordFields(true);
-    if (rslt.spwfAction == "UPDATE"){
-      replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
-    }else if (rslt.spwfAction == "INSERT"){
-      addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+    if(!rslt[SERVER_SIDE_FAIL]){
+
+      clearForm('[%divId%]Form');
+      showPasswordFields(true);
+      if (rslt.spwfAction == "UPDATE"){
+	replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+      }else if (rslt.spwfAction == "INSERT"){
+	addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+      }
+      briefNotify("[%prettyName%] Successfully Saved","INFO");
+    }else{
+      briefNotify("There was a problem communicating with the Server.","ERROR")
     }
-    briefNotify("[%prettyName%] Successfully Saved","INFO");
+
   };
   serverCall(params,successf,FAILF);
 }
@@ -79,9 +91,9 @@ function save[%ucfirst(divId)%]Form(){
   if(validate[%ucfirst(divId)%]Form()){
     var params = bindForm("[%divId%]Form");
     if (document.getElementById('[%divId%]Form-active_yn').checked){
-	params['active_yn']='Y';
+      params['active_yn']='Y';
     }else{
-	params['active_yn']='N';
+      params['active_yn']='N';
     }
     save[%ucfirst(divId)%](params);
   }
@@ -92,10 +104,10 @@ function validate[%ucfirst(divId)%]Form(){
   var formName="[%divId%]Form";
   var formValid  = standardValidate(formName);
   if(document.getElementById('[%divId%]Form-password_enc').value != document.getElementById('[%divId%]Form-password_validate').value){
-        alert("Please ensure the passwords match to continue");
-	formValid = false;
+    alert("Please ensure the passwords match to continue");
+    formValid = false;
   }
-  
+
   return formValid;
 }
 
@@ -145,16 +157,16 @@ $(document).ready(function(){
 //page specific functions
 
 function showPasswordFields(show){
- if (show){
-   $("#[%divId%]Form-password_encDivId").fadeIn();
-   $("#[%divId%]Form-password_validateDivId").fadeIn();
- }else{
-   $("#[%divId%]Form-password_encDivId").fadeOut();
-   $("#[%divId%]Form-password_validateDivId").fadeOut();
- }
+  if (show){
+    $("#[%divId%]Form-password_encDivId").fadeIn();
+    $("#[%divId%]Form-password_validateDivId").fadeIn();
+  }else{
+    $("#[%divId%]Form-password_encDivId").fadeOut();
+    $("#[%divId%]Form-password_validateDivId").fadeOut();
+  }
 }
 function initiateChangePassword(){
-showChangePasswordDialog($("#[%divId%]Form-edit_user_id").val());
+  showChangePasswordDialog($("#[%divId%]Form-edit_user_id").val());
 }
 
 //]]>
@@ -183,7 +195,7 @@ showChangePasswordDialog($("#[%divId%]Form-edit_user_id").val());
 	    <input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 	  </div>
-    	  [%dbColumnName = 'password_enc'%]
+	  [%dbColumnName = 'password_enc'%]
 	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 	    <label  for ="[%divId%]Form-[%dbColumnName%]">  Password </label>
 	    <input type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
@@ -203,7 +215,7 @@ showChangePasswordDialog($("#[%divId%]Form-edit_user_id").val());
 	    <select name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></select>
 	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 	  </div>
-	[%dbColumnName = 'active_yn'%]
+	  [%dbColumnName = 'active_yn'%]
 	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 	    <label style="display:inline-block" for ="[%divId%]Form-[%dbColumnName%]">  Active </label>
 	    <input style="width:25px;" type="checkbox" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
@@ -226,7 +238,7 @@ showChangePasswordDialog($("#[%divId%]Form-edit_user_id").val());
 	    </button>
 	    <button  style="width:150px;" type="button" id="[%divId%]FormClear" value="Change Password" onclick="initiateChangePassword();" >
 	      Change Password
-      	    </button>
+	    </button>
 	  </div>
 	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 	  <input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
