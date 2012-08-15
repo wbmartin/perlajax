@@ -69,8 +69,11 @@ function clearForm(formName){
 function toggleSaveMode(formName, saveMode){
   var buttonToShow = (saveMode)?"Save":"Add";
   var buttonToHide = (!saveMode)?"Save":"Add";
-  $("form#"+formName+" #" +formName +buttonToShow).show();
-  $("form#"+formName+" #" +formName +buttonToHide).hide();
+  $("form#"+formName+" #" +formName +buttonToHide).addClass("LogicDisabled");
+  $("form#"+formName+" #" +formName +buttonToShow).removeClass("LogicDisabled");
+
+
+
 }
 
 
@@ -364,4 +367,14 @@ function validateServerResponse(responseTxt){
   return true;
 }
 
-
+function isUserAuthorized(request){
+	var result= false;
+	request = request.toUpperCase();
+	for (var i=0;i<SECURITY_GRANT.length;i++){
+		 if(SECURITY_GRANT[i] == request){
+			result=true;
+			break;
+		 }
+	}
+ return result;
+}

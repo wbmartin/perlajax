@@ -2,174 +2,230 @@
 [%spwfResource="golfer"%]
 [%prkey="golfer_id"%]
 
+[%UPDATE_GRANT=  "UPDATE_" _ divId FILTER upper%]
+[%INSERT_GRANT=  "INSERT_" _ divId  FILTER upper%]
+[%SELECT_GRANT=  "SELECT_" _ divId  FILTER upper%]
+[%DELETE_GRANT=  "DELETE_" _ divId  FILTER upper%]
+
 <script type="text/javascript">
-  //<![CDATA[
+	//<![CDATA[
 "use strict";
 //----------------------------------------------------
 //server calls
 function save[%ucfirst(divId)%](params){
-  params = prepParams(params,"golfer",insertUpdateChoose);
-  var successf=function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      bindToForm("[%divId%]Form", rslt.rows[0]);
-      if (rslt.spwfAction == "UPDATE"){
-	replaceRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
-      }else if (rslt.spwfAction == "INSERT"){
-	addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
-      }
-      briefNotify("Golfer Saved Successfully","INFO");
-      toggleSaveMode("[%divId%]Form", true);
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%INSERT_GRANT%]")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+	params = prepParams(params,"golfer",insertUpdateChoose);
+	var successf=function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			bindToForm("[%divId%]Form", rslt.rows[0]);
+			if (rslt.spwfAction == "UPDATE"){
+				replaceRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
+			}else if (rslt.spwfAction == "INSERT"){
+				addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
+			}
+			briefNotify("Golfer Saved Successfully","INFO");
+			toggleSaveMode("[%divId%]Form", true);
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 
 function retrieve[%ucfirst(divId)%](params,selectedKey_){
-  params = prepParams(params,"golfer","SELECT");
-  if(selectedKey_){
-    params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
-  }
-  var successf = function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      if(rslt.rowCount==1){
-	bindToForm("[%divId%]Form", rslt.rows[0]);
-	toggleSaveMode("[%divId%]Form",true);
-      }else{
-	populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
+  if(!isUserAuthorized("[%SELECT_GRANT%]")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
 
-      }
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	params = prepParams(params,"golfer","SELECT");
+	if(selectedKey_){
+		params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
+	}
+	var successf = function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			if(rslt.rowCount==1){
+				bindToForm("[%divId%]Form", rslt.rows[0]);
+				toggleSaveMode("[%divId%]Form",true);
+			}else{
+				populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
 
-  }
-  serverCall(params,successf,FAILF);
+			}
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
+
+	}
+	serverCall(params,successf,FAILF);
 }
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
-  var params =prepParams(params,"[%spwfResource%]" ,"delete" );
-  params['[%prkey%]'] = [%toCC(prkey)%]_;
-  params['last_update'] = lastUpdate_;
-  var successf = function (rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-      briefNotify("Golfer Deleted Successfully","INFO");
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	if(!isUserAuthorized("[%DELETE_GRANT%]")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
 
-  };
-  serverCall(params,successf,FAILF);
+	var params =prepParams(params,"[%spwfResource%]" ,"delete" );
+	params['[%prkey%]'] = [%toCC(prkey)%]_;
+	params['last_update'] = lastUpdate_;
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
+			briefNotify("Golfer Deleted Successfully","INFO");
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
+
+	};
+	serverCall(params,successf,FAILF);
 }
 
 
 //-----------------------
 //Server Call Wrappers
 function edit[%ucfirst(divId)%](rowId_){
-  if(rowId_){
-    var params ={"where_clause":"golfer_id=" +rowId_};
-    retrieve[%ucfirst(divId)%](params);
-  }
+  if(!isUserAuthorized("[%UPDATE_GRANT%]") ||!isUserAuthorized("[%SELECT_GRANT%]") ){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+	if(rowId_){
+		var params ={"where_clause":"golfer_id=" +rowId_};
+		retrieve[%ucfirst(divId)%](params);
+	}
 }
 
 function save[%ucfirst(divId)%]Form(){
-  if(validate[%ucfirst(divId)%]Form()){
-    var params = bindForm("[%divId%]Form");
-    save[%ucfirst(divId)%](params);
-  }else{
-    briefNotify("Please Correct Form Validation Errors To Continue","WARNING");
-  }
+  if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%INSERT_GRANT%]") ){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
+	if(validate[%ucfirst(divId)%]Form()){
+		var params = bindForm("[%divId%]Form");
+		save[%ucfirst(divId)%](params);
+	}else{
+		briefNotify("Please Correct Form Validation Errors To Continue","WARNING");
+	}
 }
 
 //validation
 function validate[%ucfirst(divId)%]Form(){
-  var formName="[%divId%]Form";
-  var formValid  = standardValidate(formName);
-  return formValid;
+	var formName="[%divId%]Form";
+	var formValid  = standardValidate(formName);
+	return formValid;
 }
 
 //----------------------------------------------------
 //html building functions
 function populate[%ucfirst(divId)%]ListTable(rslt,selectedKey_) {
-  var newHTML="<tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr>";
-  for (var i=0;i<rslt.length;i++){
-    newHTML +=buildRow[%ucfirst(divId)%]ListTable(rslt[i]);
-    if (rslt[i].[%prkey%] == selectedKey_){
-      bindToForm("[%divId%]Form", rslt[i]);
-      toggleSaveMode("[%divId%]Form",true);
-    }   
-  }
-  $("#[%divId%]ListTable").html(newHTML);
+	var newHTML="<tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr>";
+	for (var i=0;i<rslt.length;i++){
+		newHTML +=buildRow[%ucfirst(divId)%]ListTable(rslt[i]);
+		if (rslt[i].[%prkey%] == selectedKey_){
+			bindToForm("[%divId%]Form", rslt[i]);
+			toggleSaveMode("[%divId%]Form",true);
+		}   
+	}
+	$("#[%divId%]ListTable").html(newHTML);
 }
 
 function buildRow[%ucfirst(divId)%]ListTable(row){
-  var newRow= "<tr id='[%ucfirst(divId)%]ListTableTR-" +row.golfer_id + "'><td >";
-  newRow += row.name + "</td><td class='accentColumn'>";
-  newRow +="<a href='#' onclick='edit[%ucfirst(divId)%]("+ row.golfer_id + ")'>Edit</a> | "
-    newRow +="<a href='#' onclick=\"delete[%ucfirst(divId)%]("+ row.golfer_id + ",'" + row.last_update + "')\">Delete</a>"
-    newRow +="</td></tr>";
-  return newRow;
+	var newRow= "<tr id='[%ucfirst(divId)%]ListTableTR-" +row.golfer_id + "'>";
+	newRow += "<td >" +row.name + "</td>";
+	newRow +="<td class='accentColumn'>";
+	  if(isUserAuthorized("[%UPDATE_GRANT%]") ){
+ 		  newRow +="<a href='#' class='edit[%ucfirst(divId)%]Link' onclick='edit[%ucfirst(divId)%](";
+		  newRow +=row.golfer_id + ")'>Edit</a>  &nbsp; ";
+	  }
+	  if(isUserAuthorized("[%DELETE_GRANT%]")){
+		  newRow +="<a href='#' class='delete[%ucfirst(divId)%]Link' onclick=\"delete[%ucfirst(divId)%](";
+		  newRow +=row.golfer_id + ",'" + row.last_update + "')\">Delete</a>";
+	  }
+	newRow +="</td>";
+	newRow +="</tr>";
+	return newRow;
 }
 
 function replaceRow[%ucfirst(divId)%]ListTable(row){
-  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.golfer_id  ).replaceWith(buildRow[%ucfirst(divId)%]ListTable(row));
+	$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.golfer_id  ).replaceWith(buildRow[%ucfirst(divId)%]ListTable(row));
 }
 function addNewRow[%ucfirst(divId)%]ListTable(row){
-  $("table#[%divId%]ListTable TR").first().after(buildRow[%ucfirst(divId)%]ListTable(row));
+	$("table#[%divId%]ListTable TR").first().after(buildRow[%ucfirst(divId)%]ListTable(row));
 }
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
-  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+[%toCC(prkey)%]_).replaceWith("");
+	$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+[%toCC(prkey)%]_).replaceWith("");
+}
+
+function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
+	if(!isUserAuthorized("UPDATE_GOLFER")){
+		$("#[%divId%]FormSave").addClass ("SecurityDisabled");
+	}else{
+	  $("#[%divId%]FormSave").removeClass("SecurityDisabled");
+	}
+
+	if(!isUserAuthorized("INSERT_GOLFER")){
+		$("#[%divId%]FormAdd").addClass ("SecurityDisabled");
+	}else{
+	  $("#[%divId%]FormAdd").removeClass("SecurityDisabled");
+	}
+	if(!isUserAuthorized("INSERT_GOLFER") && !isUserAuthorized("UPDATE_GOLFER") ){
+		$("#[%divId%]EntryDivId").addClass ("SecurityDisabled");
+	}else{
+	  $("#[%divId%]EntryDivId").removeClass("SecurityDisabled");
+	}
 }
 
 
 //-------------------------------------------------
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](golferId_){
-  var params={};
-  hideCurrentContentPane();
-  $("#[%divId%]").fadeIn();
-  currentContentPane = "[%divId%]";
-  if(golferId_){
-  }else{
-    toggleSaveMode("[%divId%]Form", false);
-    clearForm("[%divId%]Form");
-  }
-  retrieve[%ucfirst(divId)%](params,golferId_);
+	var params={};
+	hideCurrentContentPane();
+	$("#[%divId%]").fadeIn();
+	currentContentPane = "[%divId%]";
+	if(golferId_){
+	}else{
+		toggleSaveMode("[%divId%]Form", false);
+		clearForm("[%divId%]Form");
+	}
+	retrieve[%ucfirst(divId)%](params,golferId_);
+	impose[%ucfirst(divId)%]SecurityUIRestrictions();
 }
 
 $(document).ready(function(){
-    });
+		});
 //]]>
 </script>
 
 <div id="[%divId%]" class="MainLayout contentPane" >
-  <form id="[%divId%]Form" >
-    <div class="row">
-      <span class="fourcol">
-	<table id="[%divId%]ListTable" class='dataTable'></table> 
-      </span>
-      <span class="eightcol last">
-	<div class="formLayout_Standard">
-	  [%dbColumnName = 'name'%]
-	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
-	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-name">Name</label>
-	    <input  type="text" class="" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
-	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	  </div>
+	<form id="[%divId%]Form" >
+		<div class="row">
+			<span class="fourcol">
+				<table id="[%divId%]ListTable" class='dataTable'></table> 
+			</span>
+			<span class="eightcol last">
+				<div id="[%divId%]EntryDivId" class="formLayout_Standard">
+					[%dbColumnName = 'name'%]
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-name">Name</label>
+						<input  type="text" class="VALIDATERequired" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
 
-	  <div class="formButtons">
+					<div class="formButtons">
 
-	    <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-	    <button type="button" id="[%divId%]FormAdd" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-	    <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
-	  </div>
-	</div>
-      </span>
-      </div [%# row%]>	  
-      <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-      <input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
-    </form>
-  </div> [%# end golfScoreSummary%]
+						<button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+						<button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
+						<button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
+					</div>
+				</div>
+			</span>
+			</div [%# row%]>	  
+			<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+			<input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
+		</form>
+	</div> [%# end golfScoreSummary%]

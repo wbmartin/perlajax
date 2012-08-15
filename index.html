@@ -81,8 +81,11 @@ function clearForm(formName){
 function toggleSaveMode(formName, saveMode){
   var buttonToShow = (saveMode)?"Save":"Add";
   var buttonToHide = (!saveMode)?"Save":"Add";
-  $("form#"+formName+" #" +formName +buttonToShow).show();
-  $("form#"+formName+" #" +formName +buttonToHide).hide();
+  $("form#"+formName+" #" +formName +buttonToHide).addClass("LogicDisabled");
+  $("form#"+formName+" #" +formName +buttonToShow).removeClass("LogicDisabled");
+
+
+
 }
 
 
@@ -376,24 +379,40 @@ function validateServerResponse(responseTxt){
   return true;
 }
 
-
+function isUserAuthorized(request){
+	var result= false;
+	request = request.toUpperCase();
+	for (var i=0;i<SECURITY_GRANT.length;i++){
+		 if(SECURITY_GRANT[i] == request){
+			result=true;
+			break;
+		 }
+	}
+ return result;
+}
 
 //cache.js
 var GOLFER_CACHE;
 var SECURITY_PROFILE_CACHE;
+var SECURITY_GRANT;
 function onRefreshCache(data){
   GOLFER_CACHE={};
   SECURITY_PROFILE_CACHE = {};
+  SECURITY_GRANT = new Array();
   for(var i=0;i< data.length; i++){
     if(data[i].tp === "golfer"){
       GOLFER_CACHE[data[i].val] = data[i].lbl; 
     }else if(data[i].tp === "securityProfile"){
       SECURITY_PROFILE_CACHE[data[i].val] = data[i].lbl; 
-    }
+    }else if(data[i].tp === "securityGrant"){
+      SECURITY_GRANT.push(data[i].lbl); 
+    } 
   }
 
   setSelectOptions("#quickGolfScoreForm select[name=golfer_id]", GOLFER_CACHE);
   setSelectOptions("#securityUserForm select[name=securityProfileId]", SECURITY_PROFILE_CACHE);
+
+	imposeGolferSecurityUIRestrictions();
 }
 
 
@@ -406,20 +425,18 @@ function retrieveCache(){
   serverCall(params,successf,FAILF);
 }
 
-function getLbl4Val(val, type){
-  var lbl;
-  if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
-  }else if( type==""){
-  }else{
-    return "INVALID CACHE REQUESTED";
-  }
-  if (isEmpty(lbl) ){
-    lbl ="--";
-  }
-  return lbl;
-
-}
-
+//function getLbl4Val(val, type){
+//  var lbl;
+//  if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
+//  }else if( type==""){
+//  }else{
+//    return "INVALID CACHE REQUESTED";
+//  }
+//  if (isEmpty(lbl) ){
+//    lbl ="--";
+//  }
+//  return lbl;
+//}
 
 
 
@@ -2725,6 +2742,14 @@ margin-bottom: -.35em;
   h1.pageTitle{
     font-size: 1.5em;
   }
+.SecurityDisabled{
+display:none;
+}
+
+.LogicDisabled{
+display:none;
+
+}
 
 </style>
 </head>
@@ -3239,177 +3264,233 @@ function retrieveGolferNameForGolfScore(golferId_){
 
 
 
+
+
+
+
+
 <script type="text/javascript">
-  //<![CDATA[
+	//<![CDATA[
 "use strict";
 //----------------------------------------------------
 //server calls
 function saveGolfer(params){
-  params = prepParams(params,"golfer",insertUpdateChoose);
-  var successf=function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      bindToForm("golferForm", rslt.rows[0]);
-      if (rslt.spwfAction == "UPDATE"){
-	replaceRowGolferListTable(rslt.rows[0]);
-      }else if (rslt.spwfAction == "INSERT"){
-	addNewRowGolferListTable(rslt.rows[0]);
-      }
-      briefNotify("Golfer Saved Successfully","INFO");
-      toggleSaveMode("golferForm", true);
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	if(!isUserAuthorized("UPDATE_GOLFER") && !isUserAuthorized("INSERT_GOLFER")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+	params = prepParams(params,"golfer",insertUpdateChoose);
+	var successf=function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			bindToForm("golferForm", rslt.rows[0]);
+			if (rslt.spwfAction == "UPDATE"){
+				replaceRowGolferListTable(rslt.rows[0]);
+			}else if (rslt.spwfAction == "INSERT"){
+				addNewRowGolferListTable(rslt.rows[0]);
+			}
+			briefNotify("Golfer Saved Successfully","INFO");
+			toggleSaveMode("golferForm", true);
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 
 function retrieveGolfer(params,selectedKey_){
-  params = prepParams(params,"golfer","SELECT");
-  if(selectedKey_){
-    params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
-  }
-  var successf = function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      if(rslt.rowCount==1){
-	bindToForm("golferForm", rslt.rows[0]);
-	toggleSaveMode("golferForm",true);
-      }else{
-	populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
+  if(!isUserAuthorized("SELECT_GOLFER")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
 
-      }
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	params = prepParams(params,"golfer","SELECT");
+	if(selectedKey_){
+		params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
+	}
+	var successf = function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			if(rslt.rowCount==1){
+				bindToForm("golferForm", rslt.rows[0]);
+				toggleSaveMode("golferForm",true);
+			}else{
+				populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
 
-  }
-  serverCall(params,successf,FAILF);
+			}
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
+
+	}
+	serverCall(params,successf,FAILF);
 }
 function deleteGolfer(golferId_, lastUpdate_){
-  var params =prepParams(params,"golfer" ,"delete" );
-  params['golfer_id'] = golferId_;
-  params['last_update'] = lastUpdate_;
-  var successf = function (rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      removeGolferListTableRow(rslt.golfer_id);
-      briefNotify("Golfer Deleted Successfully","INFO");
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	if(!isUserAuthorized("DELETE_GOLFER")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
 
-  };
-  serverCall(params,successf,FAILF);
+	var params =prepParams(params,"golfer" ,"delete" );
+	params['golfer_id'] = golferId_;
+	params['last_update'] = lastUpdate_;
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			removeGolferListTableRow(rslt.golfer_id);
+			briefNotify("Golfer Deleted Successfully","INFO");
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
+
+	};
+	serverCall(params,successf,FAILF);
 }
 
 
 //-----------------------
 //Server Call Wrappers
 function editGolfer(rowId_){
-  if(rowId_){
-    var params ={"where_clause":"golfer_id=" +rowId_};
-    retrieveGolfer(params);
-  }
+  if(!isUserAuthorized("UPDATE_GOLFER") ||!isUserAuthorized("SELECT_GOLFER") ){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+	if(rowId_){
+		var params ={"where_clause":"golfer_id=" +rowId_};
+		retrieveGolfer(params);
+	}
 }
 
 function saveGolferForm(){
-  if(validateGolferForm()){
-    var params = bindForm("golferForm");
-    saveGolfer(params);
-  }else{
-    briefNotify("Please Correct Form Validation Errors To Continue","WARNING");
-  }
+  if(!isUserAuthorized("UPDATE_GOLFER") && !isUserAuthorized("INSERT_GOLFER") ){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
+	if(validateGolferForm()){
+		var params = bindForm("golferForm");
+		saveGolfer(params);
+	}else{
+		briefNotify("Please Correct Form Validation Errors To Continue","WARNING");
+	}
 }
 
 //validation
 function validateGolferForm(){
-  var formName="golferForm";
-  var formValid  = standardValidate(formName);
-  return formValid;
+	var formName="golferForm";
+	var formValid  = standardValidate(formName);
+	return formValid;
 }
 
 //----------------------------------------------------
 //html building functions
 function populateGolferListTable(rslt,selectedKey_) {
-  var newHTML="<tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr>";
-  for (var i=0;i<rslt.length;i++){
-    newHTML +=buildRowGolferListTable(rslt[i]);
-    if (rslt[i].golfer_id == selectedKey_){
-      bindToForm("golferForm", rslt[i]);
-      toggleSaveMode("golferForm",true);
-    }   
-  }
-  $("#golferListTable").html(newHTML);
+	var newHTML="<tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr>";
+	for (var i=0;i<rslt.length;i++){
+		newHTML +=buildRowGolferListTable(rslt[i]);
+		if (rslt[i].golfer_id == selectedKey_){
+			bindToForm("golferForm", rslt[i]);
+			toggleSaveMode("golferForm",true);
+		}   
+	}
+	$("#golferListTable").html(newHTML);
 }
 
 function buildRowGolferListTable(row){
-  var newRow= "<tr id='GolferListTableTR-" +row.golfer_id + "'><td >";
-  newRow += row.name + "</td><td class='accentColumn'>";
-  newRow +="<a href='#' onclick='editGolfer("+ row.golfer_id + ")'>Edit</a> | "
-    newRow +="<a href='#' onclick=\"deleteGolfer("+ row.golfer_id + ",'" + row.last_update + "')\">Delete</a>"
-    newRow +="</td></tr>";
-  return newRow;
+	var newRow= "<tr id='GolferListTableTR-" +row.golfer_id + "'>";
+	newRow += "<td >" +row.name + "</td>";
+	newRow +="<td class='accentColumn'>";
+	  if(isUserAuthorized("UPDATE_GOLFER") ){
+ 		  newRow +="<a href='#' class='editGolferLink' onclick='editGolfer(";
+		  newRow +=row.golfer_id + ")'>Edit</a>  &nbsp; ";
+	  }
+	  if(isUserAuthorized("DELETE_GOLFER")){
+		  newRow +="<a href='#' class='deleteGolferLink' onclick=\"deleteGolfer(";
+		  newRow +=row.golfer_id + ",'" + row.last_update + "')\">Delete</a>";
+	  }
+	newRow +="</td>";
+	newRow +="</tr>";
+	return newRow;
 }
 
 function replaceRowGolferListTable(row){
-  $("table#golferListTable #GolferListTableTR-"+row.golfer_id  ).replaceWith(buildRowGolferListTable(row));
+	$("table#golferListTable #GolferListTableTR-"+row.golfer_id  ).replaceWith(buildRowGolferListTable(row));
 }
 function addNewRowGolferListTable(row){
-  $("table#golferListTable TR").first().after(buildRowGolferListTable(row));
+	$("table#golferListTable TR").first().after(buildRowGolferListTable(row));
 }
 function removeGolferListTableRow(golferId_){
-  $("table#golferListTable #GolferListTableTR-"+golferId_).replaceWith("");
+	$("table#golferListTable #GolferListTableTR-"+golferId_).replaceWith("");
+}
+
+function imposeGolferSecurityUIRestrictions(){
+	if(!isUserAuthorized("UPDATE_GOLFER")){
+		$("#golferFormSave").addClass ("SecurityDisabled");
+	}else{
+	  $("#golferFormSave").removeClass("SecurityDisabled");
+	}
+
+	if(!isUserAuthorized("INSERT_GOLFER")){
+		$("#golferFormAdd").addClass ("SecurityDisabled");
+	}else{
+	  $("#golferFormAdd").removeClass("SecurityDisabled");
+	}
+	if(!isUserAuthorized("INSERT_GOLFER") && !isUserAuthorized("UPDATE_GOLFER") ){
+		$("#golferEntryDivId").addClass ("SecurityDisabled");
+	}else{
+	  $("#golferEntryDivId").removeClass("SecurityDisabled");
+	}
 }
 
 
 //-------------------------------------------------
 //Div Access and App Layout Calls
 function showGolfer(golferId_){
-  var params={};
-  hideCurrentContentPane();
-  $("#golfer").fadeIn();
-  currentContentPane = "golfer";
-  if(golferId_){
-  }else{
-    toggleSaveMode("golferForm", false);
-    clearForm("golferForm");
-  }
-  retrieveGolfer(params,golferId_);
+	var params={};
+	hideCurrentContentPane();
+	$("#golfer").fadeIn();
+	currentContentPane = "golfer";
+	if(golferId_){
+	}else{
+		toggleSaveMode("golferForm", false);
+		clearForm("golferForm");
+	}
+	retrieveGolfer(params,golferId_);
+	imposeGolferSecurityUIRestrictions();
 }
 
 $(document).ready(function(){
-    });
+		});
 //]]>
 </script>
 
 <div id="golfer" class="MainLayout contentPane" >
-  <form id="golferForm" >
-    <div class="row">
-      <span class="fourcol">
-	<table id="golferListTable" class='dataTable'></table> 
-      </span>
-      <span class="eightcol last">
-	<div class="formLayout_Standard">
-	  
-	  <div class="formFieldGroup" id="golferForm-nameDivId">
-	    <label for ="golferForm-name" id="golferFormLabel-name">Name</label>
-	    <input  type="text" class="" name="name" id="golferForm-name"/>
-	    <span class="ValidationMsg" id="golferFormLabel-nameError"></span>
-	  </div>
+	<form id="golferForm" >
+		<div class="row">
+			<span class="fourcol">
+				<table id="golferListTable" class='dataTable'></table> 
+			</span>
+			<span class="eightcol last">
+				<div id="golferEntryDivId" class="formLayout_Standard">
+					
+					<div class="formFieldGroup" id="golferForm-nameDivId">
+						<label for ="golferForm-name" id="golferFormLabel-name">Name</label>
+						<input  type="text" class="VALIDATERequired" name="name" id="golferForm-name"/>
+						<span class="ValidationMsg" id="golferFormLabel-nameError"></span>
+					</div>
 
-	  <div class="formButtons">
+					<div class="formButtons">
 
-	    <button type="button" id="golferFormSave" value="Save" onclick="saveGolferForm();" >Save</button>
-	    <button type="button" id="golferFormAdd" value="Save" onclick="saveGolferForm();" >Add</button>
-	    <button type="button" id="golferFormClear" value="Clear" onclick="clearForm('golferForm');" >Clear</button>
-	  </div>
-	</div>
-      </span>
-      </div >	  
-      <input type="hidden" name="last_update" id="golferForm-last_update">
-      <input type="hidden" name="golfer_id" id="golferForm-golfer_id">
-    </form>
-  </div> 
+						<button type="button" id="golferFormSave" value="Save" onclick="saveGolferForm();" >Save</button>
+						<button type="button" id="golferFormAdd" value="Add" onclick="saveGolferForm();" >Add</button>
+						<button type="button" id="golferFormClear" value="Clear" onclick="clearForm('golferForm');" >Clear</button>
+					</div>
+				</div>
+			</span>
+			</div >	  
+			<input type="hidden" name="last_update" id="golferForm-last_update">
+			<input type="hidden" name="golfer_id" id="golferForm-golfer_id">
+		</form>
+	</div> 
 
 
 <div id="aboutPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">

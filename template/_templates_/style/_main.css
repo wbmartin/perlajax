@@ -394,3 +394,11 @@ margin-bottom: -.35em;
   h1.pageTitle{
     font-size: 1.5em;
   }
+.SecurityDisabled{
+display:none;
+}
+
+.LogicDisabled{
+display:none;
+
+}
