@@ -19,6 +19,9 @@ function onRefreshCache(data){
   setSelectOptions("#securityUserForm select[name=securityProfileId]", SECURITY_PROFILE_CACHE);
 
 	imposeGolferSecurityUIRestrictions();
+	imposeGolfScoreSecurityUIRestrictions();
+	imposeLauncherSecurityUIRestrictions();
+	imposeGolfScoreSummarySecurityUIRestrictions();
 }
 
 

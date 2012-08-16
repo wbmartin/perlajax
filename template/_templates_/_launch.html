@@ -29,7 +29,7 @@
 	  <span class="sprite64Icon keyIcon"></span><br/>
 	  Grants</a>
       </span>
-      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showSecurityUser();">
+      <span class="twocol last largeIconSpan" id="launcherShowSecurityUserSpanId"><a id="launcherShowSecurityUserId" onclick="showSecurityUser();">
 	  <span class="sprite64Icon keyManIcon"></span><br/>
 	  Profiles</a>
       </span>
@@ -57,7 +57,18 @@
 	}
 	    });
    return "[%divId%]";
-  }
+	}
+function imposeLauncherSecurityUIRestrictions(){
+	var divIdToSecure;
+	divIdToSecure ="#launcherShowSecurityUserSpanId";
+	if(!isUserAuthorized("SELECT_SECURITY_USER")){
+		$(divIdToSecure).addClass ("SecurityDisabled");
+	}else{
+	  $(divIdToSecure).removeClass("SecurityDisabled");
+	}
+
+}
+
 
 
 </script>

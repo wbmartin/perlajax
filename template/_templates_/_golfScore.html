@@ -2,11 +2,21 @@
 [%spwfResource="golf_score"%]
 [%prkey="golf_score_id"%]
 
+[%UPDATE_GRANT=  "UPDATE_" _ spwfResource FILTER upper%]
+[%INSERT_GRANT=  "INSERT_" _ spwfResource  FILTER upper%]
+[%SELECT_GRANT=  "SELECT_" _ spwfResource  FILTER upper%]
+[%DELETE_GRANT=  "DELETE_" _ spwfResource  FILTER upper%]
+
 <script type="text/javascript">
   //<![CDATA[
 "use strict";
 //Server Calls
 function retrieve[%ucfirst(divId)%]List(golferId_){
+	if(!isUserAuthorized("[%SELECT_GRANT%]") ){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   $("#[%divId%]ListTable").html("");
   var params =prepParams(params,"[%spwfResource%]" ,"select" );
   params['where_clause'] = "golfer_id =" + golferId_;
@@ -16,7 +26,12 @@ function retrieve[%ucfirst(divId)%]List(golferId_){
   serverCall(params,successf,FAILF);
 }
 function retrieve[%ucfirst(divId)%](params){
-  params = prepParams(params,"[%spwfResource%]","SELECT");
+	if(!isUserAuthorized("[%SELECT_GRANT%]")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
+	params = prepParams(params,"[%spwfResource%]","SELECT");
   var successf = function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
       rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
@@ -33,7 +48,12 @@ function retrieve[%ucfirst(divId)%](params){
 
 
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
-  var params =prepParams(params,"[%spwfResource%]" ,"delete" );
+	if(!isUserAuthorized("[%DELETE_GRANT%]") ){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
+	var params =prepParams(params,"[%spwfResource%]" ,"delete" );
   params['[%prkey%]'] = [%toCC(prkey)%]_;
   params['last_update'] = lastUpdate_;
   var successf = function (rslt){
@@ -49,6 +69,11 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
 }
 
 function save[%ucfirst(divId)%](params){
+	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%INSERT_GRANT%]")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
   var successf=function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
@@ -69,6 +94,11 @@ function save[%ucfirst(divId)%](params){
 
 //ServerCall Wrappers
 function edit[%ucfirst(divId)%]([%divId%]Id_){
+	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%SELECT_GRANT%]")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   if([%divId%]Id_){
     var params ={"where_clause":"[%prkey%]=" +[%divId%]Id_};
     retrieve[%ucfirst(divId)%](params);
@@ -76,6 +106,12 @@ function edit[%ucfirst(divId)%]([%divId%]Id_){
 }
 
 function save[%ucfirst(divId)%]Form(){
+
+	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%INSERT_GRANT%]")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   if(validate[%ucfirst(divId)%]Form()){
     var params = bindForm("[%divId%]Form");
     save[%ucfirst(divId)%](params);
@@ -99,11 +135,20 @@ function populate[%ucfirst(divId)%](dataRows){
 }
 
 function build[%ucfirst(divId)%]ListTableRow(data){
-  var htmlRow ="<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'><td>";
-  htmlRow += formatNumber(data.golf_score,0,true,false,true)  +"</td>";
+  var htmlRow ="<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'>";
+	htmlRow += "<td>" + formatNumber(data.golf_score,0,true,false,true)  +"</td>";
   htmlRow += "<td class='accentColumn'>" + pgDate(data.game_dt) + " </td> ";
-  htmlRow += "<td><a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> |"
-    htmlRow += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+	htmlRow += "<td>";
+	if(isUserAuthorized("[%UPDATE_GRANT%]")){
+		htmlRow += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
+		htmlRow += "&nbsp; &nbsp;";
+	}
+	if(isUserAuthorized("[%DELETE_GRANT%]")){
+		htmlRow += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>  ";
+		htmlRow +="&nbsp; &nbsp;"
+	}
+	htmlRow += "</td>";
+ 	htmlRow += "</tr>";
   return htmlRow;
 }
 
@@ -143,6 +188,25 @@ function retrieveGolferNameForGolfScore(golferId_){
   serverCall(params,successf,FAILF);
 }
 
+function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
+	if(!isUserAuthorized("[%UPDATE_GRANT%]")){
+		$("#[%divId%]FormSave").addClass ("SecurityDisabled");
+	}else{
+	  $("#[%divId%]FormSave").removeClass("SecurityDisabled");
+	}
+
+	if(!isUserAuthorized("[%INSERT_GRANT%]")){
+		$("#[%divId%]FormAdd").addClass ("SecurityDisabled");
+	}else{
+	  $("#[%divId%]FormAdd").removeClass("SecurityDisabled");
+	}
+	if(!isUserAuthorized("[%INSERT_GRANT%]") && !isUserAuthorized("[%UPDATE_GRANT%]") ){
+		$("#[%divId%]EntryDivId").addClass ("SecurityDisabled");
+	}else{
+	  $("#[%divId%]EntryDivId").removeClass("SecurityDisabled");
+	}
+}
+
 
 //]]>
 
@@ -165,7 +229,7 @@ function retrieveGolferNameForGolfScore(golferId_){
 	  </div>
 	  [%dbColumnName = 'game_dt'%]
 	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
-	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Score</label>
+	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Game Date</label>
 	    <input  type="text" class="VALIDATEmmddyyyydate" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 	  </div>

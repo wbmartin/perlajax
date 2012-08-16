@@ -1,7 +1,7 @@
 [%divId="golfer"%]
 [%spwfResource="golfer"%]
 [%prkey="golfer_id"%]
-
+ 
 [%UPDATE_GRANT=  "UPDATE_" _ divId FILTER upper%]
 [%INSERT_GRANT=  "INSERT_" _ divId  FILTER upper%]
 [%SELECT_GRANT=  "SELECT_" _ divId  FILTER upper%]
@@ -139,7 +139,8 @@ function buildRow[%ucfirst(divId)%]ListTable(row){
 	newRow +="<td class='accentColumn'>";
 	  if(isUserAuthorized("[%UPDATE_GRANT%]") ){
  		  newRow +="<a href='#' class='edit[%ucfirst(divId)%]Link' onclick='edit[%ucfirst(divId)%](";
-		  newRow +=row.golfer_id + ")'>Edit</a>  &nbsp; ";
+			newRow +=row.golfer_id + ")'>Edit</a>";
+			newRow +=" &nbsp; &nbsp; ";
 	  }
 	  if(isUserAuthorized("[%DELETE_GRANT%]")){
 		  newRow +="<a href='#' class='delete[%ucfirst(divId)%]Link' onclick=\"delete[%ucfirst(divId)%](";
@@ -159,20 +160,20 @@ function addNewRow[%ucfirst(divId)%]ListTable(row){
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
 	$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+[%toCC(prkey)%]_).replaceWith("");
 }
-
+ 
 function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
-	if(!isUserAuthorized("UPDATE_GOLFER")){
+	if(!isUserAuthorized("[%UPDATE_GRANT%]")){
 		$("#[%divId%]FormSave").addClass ("SecurityDisabled");
 	}else{
 	  $("#[%divId%]FormSave").removeClass("SecurityDisabled");
 	}
 
-	if(!isUserAuthorized("INSERT_GOLFER")){
+	if(!isUserAuthorized("[%INSERT_GRANT%]")){
 		$("#[%divId%]FormAdd").addClass ("SecurityDisabled");
 	}else{
 	  $("#[%divId%]FormAdd").removeClass("SecurityDisabled");
 	}
-	if(!isUserAuthorized("INSERT_GOLFER") && !isUserAuthorized("UPDATE_GOLFER") ){
+	if(!isUserAuthorized("[%INSERT_GRANT%]") && !isUserAuthorized("[%UPDATE_GRANT%]") ){
 		$("#[%divId%]EntryDivId").addClass ("SecurityDisabled");
 	}else{
 	  $("#[%divId%]EntryDivId").removeClass("SecurityDisabled");

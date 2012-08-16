@@ -72,6 +72,8 @@ INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, 
 
 
 
+
+
 ---------------------------------
 delete from security_profile_grant where security_profile_id =1;
 insert into security_profile_grant (security_profile_id, security_privilege_id, last_update, updated_by)

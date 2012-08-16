@@ -1,51 +1,74 @@
 [%divId="golfScoreSummary"%]
-[%spwfAction="golf_score_summary"%]
+[%spwfResource="golf_score_summary"%]
+
+[%UPDATE_GRANT=  "UPDATE_" _ spwfResource FILTER upper%]
+[%INSERT_GRANT=  "INSERT_" _ spwfResource  FILTER upper%]
+[%SELECT_GRANT=  "SELECT_GOLFER_HANDICAP"  FILTER upper%]
+[%DELETE_GRANT=  "DELETE_" _ spwfResource  FILTER upper%]
+
 <script type="text/javascript">
 
-  var golfScoreSummaryList = new Array();
-  function retrieveGolfScoreSummary(){
-    $("#[%divId%]Table").html("");
-    var params =prepParams(params,"[%spwfAction%]" ,"select" );
-    var successf = function (rslt){
-      if(!rslt[SERVER_SIDE_FAIL]){
-	golfScoreSummaryList=rslt.rows;
-	displayGolfScoreSummaryList(golfScoreSummaryList);
-      }else{
-	briefNotify("There was a problem communicating with the Server.","ERROR")
-      }
+	var golfScoreSummaryList = new Array();
+	function retrieveGolfScoreSummary(){
+		if(!isUserAuthorized("[%SELECT_GRANT%]") ){
+			briefNotify("Access Violation","ERROR");
+			return false;
+		}
 
-    };
-    var failf = function(){alert("failed");}
-    serverCall(params,successf,failf);
+		$("#[%divId%]Table").html("");
+		var params =prepParams(params,"[%spwfResource%]" ,"select" );
+		var successf = function (rslt){
+			if(!rslt[SERVER_SIDE_FAIL]){
+				golfScoreSummaryList=rslt.rows;
+				displayGolfScoreSummaryList(golfScoreSummaryList);
+			}else{
+				briefNotify("There was a problem communicating with the Server.","ERROR")
+			}
 
-  }
+		};
+		var failf = function(){alert("failed");}
+		serverCall(params,successf,failf);
+
+	}
 function display[%ucfirst(divId)%]List([%divId%]List_){
-  var newrowsHTML = "<tr> <th>Golfer</th><th class='accentColumn'>Last 10 Avg</th><th>Period</th><th class='accentColumn'>I want to&hellip;</th></tr>";
-  var gs = {};
-  for(var ndx=0; ndx<[%divId%]List_.length; ndx++){
-    newrowsHTML +=build[%ucfirst(divId)%]Row(golfScoreSummaryList_[ndx]);
-  }
-  $("#[%divId%]Table").html(newrowsHTML);
+	var newrowsHTML = "<tr> <th>Golfer</th><th class='accentColumn'>Last 10 Avg</th><th>Period</th><th class='accentColumn'>I want to&hellip;</th></tr>";
+	var gs = {};
+	for(var ndx=0; ndx<[%divId%]List_.length; ndx++){
+		newrowsHTML +=build[%ucfirst(divId)%]Row(golfScoreSummaryList_[ndx]);
+	}
+	$("#[%divId%]Table").html(newrowsHTML);
 }
 
 function build[%ucfirst(divId)%]Row(gs){
-  var newrow ="<tr><td>" + gs.golfer_name+"</td>";
-  newrow +="<td class='accentColumn'>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
-  newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-  newrow +="<td class ='accentColumn'><a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a> | ";
-  newrow +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a></td>";
-  newrow +="</tr>";
-  return newrow;
+	var newrow ="<tr><td>" + gs.golfer_name+"</td>";
+	newrow +="<td class='accentColumn'>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
+	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
+	newrow +="<td class ='accentColumn'>";
+	if(isUserAuthorized("SELECT_GOLF_SCORE")){
+		newrow +="<a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a>  ";
+	  newrow +="&nbsp; &nbsp;"
+	}
+	if(isUserAuthorized("SELECT_GOLFER")){
+		newrow +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a>";
+	}
+	newrow +="</td>";
+	newrow +="</tr>";
+	return newrow;
 
 }
 
 function show[%ucfirst(divId)%](){
-  retrieve[%ucfirst(divId)%]();
-  standardShowContentPane("[%divId%]");
+	retrieve[%ucfirst(divId)%]();
+	standardShowContentPane("[%divId%]");
 }
+
+function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
+
+}
+
 </script>
 <div id="[%divId%]" class="MainLayout MainContentPaneStyle contentPane"  >
 
-  <table id="[%divId%]Table"  class='dataTable' >
-  </table>
+	<table id="[%divId%]Table"  class='dataTable' >
+	</table>
 </div> [%# end golfScoreSummary%]
