@@ -391,6 +391,24 @@ function isUserAuthorized(request){
  return result;
 }
 
+function securityshow(divIdToSecure){
+  $(divIdToSecure).removeClass("SecurityDisabled");
+}
+	
+function securityHide(divIdToSecure){
+  $(divIdToSecure).addClass ("SecurityDisabled");
+}
+
+function securityLockForm(formName){
+  if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form", "ERROR");
+  $.each($("form#"+formName + " input"),function (ndx,field){
+	  $("form#"+formName +" #"+field.id).attr('disabled', 'disabled');
+  });
+	$.each($("form#"+formName + " select"),function (ndx,field){
+	  $("form#"+formName +" #"+field.id).attr('disabled', 'disabled');
+  });
+}
+
 //cache.js
 var GOLFER_CACHE;
 var SECURITY_PROFILE_CACHE;
@@ -416,6 +434,8 @@ function onRefreshCache(data){
 	imposeGolfScoreSecurityUIRestrictions();
 	imposeLauncherSecurityUIRestrictions();
 	imposeGolfScoreSummarySecurityUIRestrictions();
+	imposeSecurityUserSecurityUIRestrictions();
+	imposeSecurityGrantsSecurityUIRestrictions();
 }
 
 
@@ -2905,41 +2925,41 @@ function imposeGolfScoreSummarySecurityUIRestrictions(){
 
 
 <script type="text/javascript">
-  //<![CDATA[
+	//<![CDATA[
 "use strict";
 //Server Calls
 function retrieveGolfScoreList(golferId_){
 	if(!isUserAuthorized("SELECT_GOLF_SCORE") ){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
-  $("#golfScoreListTable").html("");
-  var params =prepParams(params,"golf_score" ,"select" );
-  params['where_clause'] = "golfer_id =" + golferId_;
-  var successf = function (rslt){
-    populateGolfScore(rslt.rows)
-  };
-  serverCall(params,successf,FAILF);
+	$("#golfScoreListTable").html("");
+	var params =prepParams(params,"golf_score" ,"select" );
+	params['where_clause'] = "golfer_id =" + golferId_;
+	var successf = function (rslt){
+		populateGolfScore(rslt.rows)
+	};
+	serverCall(params,successf,FAILF);
 }
 function retrieveGolfScore(params){
 	if(!isUserAuthorized("SELECT_GOLF_SCORE")){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
 	params = prepParams(params,"golf_score","SELECT");
-  var successf = function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-      bindToForm("golfScoreForm", rslt.rows[0]);
-      toggleSaveMode("golfScoreForm",true);
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	var successf = function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+			bindToForm("golfScoreForm", rslt.rows[0]);
+			toggleSaveMode("golfScoreForm",true);
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  }
-  serverCall(params,successf,FAILF);
+	}
+	serverCall(params,successf,FAILF);
 }
 
 
@@ -2947,94 +2967,94 @@ function retrieveGolfScore(params){
 function deleteGolfScore(golfScoreId_, lastUpdate_){
 	if(!isUserAuthorized("DELETE_GOLF_SCORE") ){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
 	var params =prepParams(params,"golf_score" ,"delete" );
-  params['golf_score_id'] = golfScoreId_;
-  params['last_update'] = lastUpdate_;
-  var successf = function (rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      removeGolfScoreListTableRow(rslt.golf_score_id);
-      briefNotify("Golf Score Deleted Successfully","INFO");a
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	params['golf_score_id'] = golfScoreId_;
+	params['last_update'] = lastUpdate_;
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			removeGolfScoreListTableRow(rslt.golf_score_id);
+			briefNotify("Golf Score Deleted Successfully","INFO");a
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 function saveGolfScore(params){
 	if(!isUserAuthorized("UPDATE_GOLF_SCORE") && !isUserAuthorized("INSERT_GOLF_SCORE")){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
-  params = prepParams(params,"golf_score",insertUpdateChoose);
-  var successf=function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      clearForm('golfScoreForm');
-      if (rslt.spwfAction == "UPDATE"){
-	replaceGolfScoreListTableRow(rslt.rows[0]);
-      }else if (rslt.spwfAction == "INSERT"){
-	addNewGolfScoreListTableRow(rslt.rows[0]);
-      }
-      briefNotify("Golf Score Successfully Saved","INFO");
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	params = prepParams(params,"golf_score",insertUpdateChoose);
+	var successf=function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			clearForm('golfScoreForm');
+			if (rslt.spwfAction == "UPDATE"){
+				replaceGolfScoreListTableRow(rslt.rows[0]);
+			}else if (rslt.spwfAction == "INSERT"){
+				addNewGolfScoreListTableRow(rslt.rows[0]);
+			}
+			briefNotify("Golf Score Successfully Saved","INFO");
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 //ServerCall Wrappers
 function editGolfScore(golfScoreId_){
 	if(!isUserAuthorized("UPDATE_GOLF_SCORE") && !isUserAuthorized("SELECT_GOLF_SCORE")){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
-  if(golfScoreId_){
-    var params ={"where_clause":"golf_score_id=" +golfScoreId_};
-    retrieveGolfScore(params);
-  }
+	if(golfScoreId_){
+		var params ={"where_clause":"golf_score_id=" +golfScoreId_};
+		retrieveGolfScore(params);
+	}
 }
 
 function saveGolfScoreForm(){
 
 	if(!isUserAuthorized("UPDATE_GOLF_SCORE") && !isUserAuthorized("INSERT_GOLF_SCORE")){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
-  if(validateGolfScoreForm()){
-    var params = bindForm("golfScoreForm");
-    saveGolfScore(params);
-  }
+	if(validateGolfScoreForm()){
+		var params = bindForm("golfScoreForm");
+		saveGolfScore(params);
+	}
 }
 
 //validation
 function validateGolfScoreForm(){
-  var formName="golfScoreForm";
-  var formValid  = standardValidate(formName);
-  return formValid;
+	var formName="golfScoreForm";
+	var formValid  = standardValidate(formName);
+	return formValid;
 }
 
 //Top Level HTML Manip
 function populateGolfScore(dataRows){
-  var htmlAggregator ="<tr> <th>Score</th><th class='accentColumn'>Date</th> <th>I want to&hellip;</th></tr>";
-  for(var ndx=0;ndx< dataRows.length;ndx++){
-    htmlAggregator +=buildGolfScoreListTableRow(dataRows[ndx]);
-  }
-  $("#golfScoreListTable").html(htmlAggregator);
+	var htmlAggregator ="<tr> <th>Score</th><th class='accentColumn'>Date</th> <th>I want to&hellip;</th></tr>";
+	for(var ndx=0;ndx< dataRows.length;ndx++){
+		htmlAggregator +=buildGolfScoreListTableRow(dataRows[ndx]);
+	}
+	$("#golfScoreListTable").html(htmlAggregator);
 }
 
 function buildGolfScoreListTableRow(data){
-  var htmlRow ="<tr id='GolfScoreListTableTR-" +data.golf_score_id + "'>";
+	var htmlRow ="<tr id='GolfScoreListTableTR-" +data.golf_score_id + "'>";
 	htmlRow += "<td>" + formatNumber(data.golf_score,0,true,false,true)  +"</td>";
-  htmlRow += "<td class='accentColumn'>" + pgDate(data.game_dt) + " </td> ";
+	htmlRow += "<td class='accentColumn'>" + pgDate(data.game_dt) + " </td> ";
 	htmlRow += "<td>";
 	if(isUserAuthorized("UPDATE_GOLF_SCORE")){
 		htmlRow += "<a class='alink' onclick='editGolfScore(" +data.golf_score_id + ")'>Edit</a> ";
@@ -3045,63 +3065,71 @@ function buildGolfScoreListTableRow(data){
 		htmlRow +="&nbsp; &nbsp;"
 	}
 	htmlRow += "</td>";
- 	htmlRow += "</tr>";
-  return htmlRow;
+	htmlRow += "</tr>";
+	return htmlRow;
 }
 
 function replaceGolfScoreListTableRow(row){
-  $("table#golfScoreListTable #GolfScoreListTableTR-"+row.golf_score_id).replaceWith(buildGolfScoreListTableRow(row));
+	$("table#golfScoreListTable #GolfScoreListTableTR-"+row.golf_score_id).replaceWith(buildGolfScoreListTableRow(row));
 }
 function addNewGolfScoreListTableRow(row){
-  $("table#golfScoreListTable TR").first().after(buildGolfScoreListTableRow(row));
+	$("table#golfScoreListTable TR").first().after(buildGolfScoreListTableRow(row));
 }
 function removeGolfScoreListTableRow(golfScoreId_){
-  $("table#golfScoreListTable #GolfScoreListTableTR-"+golfScoreId_).replaceWith("");
+	$("table#golfScoreListTable #GolfScoreListTableTR-"+golfScoreId_).replaceWith("");
 }
 
 //Div Access and App Layout Calls
 function showGolfScore(golferId_){
-  retrieveGolfScoreList(golferId_); 
-  retrieveGolferNameForGolfScore(golferId_);
-  hideCurrentContentPane();
-  $("#golfScore").fadeIn();
-  currentContentPane="golfScore";
-  toggleSaveMode("golfScoreForm",false);
-  $("#golfScoreForm-golfer_id").val(golferId_);
+	if(!isUserAuthorized("SELECT_GOLF_SCORE") ){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
+	retrieveGolfScoreList(golferId_); 
+	retrieveGolferNameForGolfScore(golferId_);
+	hideCurrentContentPane();
+	$("#golfScore").fadeIn();
+	currentContentPane="golfScore";
+	toggleSaveMode("golfScoreForm",false);
+	$("#golfScoreForm-golfer_id").val(golferId_);
 }
 
 //After complete Load setup
 $(document).ready(function(){
-    $("#golfScoreForm-game_dt" ).datepicker();
-    });
+		$("#golfScoreForm-game_dt" ).datepicker();
+		});
 
 //page specific functions
 function retrieveGolferNameForGolfScore(golferId_){
-  var params = prepParams(params,"GOLFER","SELECT");
-  params['where_clause'] = "golfer_id =" + golferId_;
-  var successf = function(rslt){
-    $("#golfScoreGolferNameId").html(rslt.rows[0].name);
-  }
-  serverCall(params,successf,FAILF);
+	if(!isUserAuthorized("SELECT_GOLFER") ){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
+	var params = prepParams(params,"GOLFER","SELECT");
+	params['where_clause'] = "golfer_id =" + golferId_;
+	var successf = function(rslt){
+		$("#golfScoreGolferNameId").html(rslt.rows[0].name);
+	}
+	serverCall(params,successf,FAILF);
 }
 
 function imposeGolfScoreSecurityUIRestrictions(){
-	if(!isUserAuthorized("UPDATE_GOLF_SCORE")){
-		$("#golfScoreFormSave").addClass ("SecurityDisabled");
-	}else{
-	  $("#golfScoreFormSave").removeClass("SecurityDisabled");
+	var divIdToSecure;
+	divIdToSecure ="#golfScoreFormSave";
+	(isUserAuthorized("UPDATE_GOLF_SCORE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#golfScoreFormAdd";
+	(isUserAuthorized("INSERT_GOLF_SCORE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#golfScoreEntryDivId";
+	(isUserAuthorized("UPDATE_GOLF_SCORE") ||isUserAuthorized("INSERT_GOLF_SCORE") )? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	if(isUserAuthorized("SELECT_GOLF_SCORE") && !isUserAuthorized("UPDATE_GOLF_SCORE")){
+	  securityLockForm("golfScoreForm");
 	}
 
-	if(!isUserAuthorized("INSERT_GOLF_SCORE")){
-		$("#golfScoreFormAdd").addClass ("SecurityDisabled");
-	}else{
-	  $("#golfScoreFormAdd").removeClass("SecurityDisabled");
-	}
-	if(!isUserAuthorized("INSERT_GOLF_SCORE") && !isUserAuthorized("UPDATE_GOLF_SCORE") ){
-		$("#golfScoreEntryDivId").addClass ("SecurityDisabled");
-	}else{
-	  $("#golfScoreEntryDivId").removeClass("SecurityDisabled");
-	}
+
 }
 
 
@@ -3109,47 +3137,53 @@ function imposeGolfScoreSecurityUIRestrictions(){
 
 </script>
 <div id="golfScore" class="contentPane MainLayout"  >
-  <h1 id="golfScoreGolferNameId" class="pageTitle"></h1>
-  <div class="row">
-    <span class="sixcol">
-      <table id="golfScoreListTable"  class='dataTable' >
-      </table>
-    </span>
-    <span class = "sixcol last">
-      <form id="golfScoreForm" >
-	<div class="formLayout_Standard">
-	  
-	  <div class="formFieldGroup" id="golfScoreForm-golf_scoreDivId">
-	    <label for ="golfScoreForm-golf_score" id="golfScoreFormLabel-golf_score">Score</label>
-	    <input  type="text" class="VALIDATEinteger" name="golfScore" id="golfScoreForm-golf_score"/>
-	    <span class="ValidationMsg" id="golfScoreFormLabel-golfScoreError"></span>
-	  </div>
-	  
-	  <div class="formFieldGroup" id="golfScoreForm-game_dtDivId">
-	    <label for ="golfScoreForm-game_dt" id="golfScoreFormLabel-game_dt">Game Date</label>
-	    <input  type="text" class="VALIDATEmmddyyyydate" name="gameDt" id="golfScoreForm-game_dt"/>
-	    <span class="ValidationMsg" id="golfScoreFormLabel-gameDtError"></span>
-	  </div>
+	<h1 id="golfScoreGolferNameId" class="pageTitle"></h1>
+	<div class="row">
+		<span class="sixcol">
+			<table id="golfScoreListTable"  class='dataTable' >
+			</table>
+		</span>
+		<span class = "sixcol last">
+			<form id="golfScoreForm" >
+				<div class="formLayout_Standard">
+					
+					<div class="formFieldGroup" id="golfScoreForm-golf_scoreDivId">
+						<label for ="golfScoreForm-golf_score" id="golfScoreFormLabel-golf_score">Score</label>
+						<input  type="text" class="VALIDATEinteger" name="golfScore" id="golfScoreForm-golf_score"/>
+						<span class="ValidationMsg" id="golfScoreFormLabel-golfScoreError"></span>
+					</div>
+					
+					<div class="formFieldGroup" id="golfScoreForm-game_dtDivId">
+						<label for ="golfScoreForm-game_dt" id="golfScoreFormLabel-game_dt">Game Date</label>
+						<input  type="text" class="VALIDATEmmddyyyydate" name="gameDt" id="golfScoreForm-game_dt"/>
+						<span class="ValidationMsg" id="golfScoreFormLabel-gameDtError"></span>
+					</div>
 
 
 
 
-	  <div class="formButtons">
+					<div class="formButtons">
 
-	    <button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button>
-	    <button type="button" id="golfScoreFormAdd" value="Add" onclick="saveGolfScoreForm();" >Add</button>
-	    <button type="button" id="golfScoreFormClear" value="Clear" onclick="clearForm('golfScoreForm');" >Clear</button>
-	  </div>
+						<button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button>
+						<button type="button" id="golfScoreFormAdd" value="Add" onclick="saveGolfScoreForm();" >Add</button>
+						<button type="button" id="golfScoreFormClear" value="Clear" onclick="clearForm('golfScoreForm');" >Clear</button>
+					</div>
 
-	  <input type="hidden" name="last_update" id="golfScoreForm-last_update">
-	  <input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
-	  <input type="hidden" name="golfer_id" id="golfScoreForm-golfer_id">
+					<input type="hidden" name="last_update" id="golfScoreForm-last_update">
+					<input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
+					<input type="hidden" name="golfer_id" id="golfScoreForm-golfer_id">
+				</div>
+			</form>
+
+		</span>
 	</div>
-      </form>
-
-    </span>
-  </div>
 </div> <!--end:GolfScore-->
+
+
+
+
+
+
 
 
 
@@ -3160,6 +3194,11 @@ function imposeGolfScoreSecurityUIRestrictions(){
 "use strict";
 //Server Calls
 function retrieveQuickGolfScoreList(){
+	if(!isUserAuthorized("SELECT_GOLF_SCORE") ){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   $("#quickGolfScoreListTable").html("");
   var params =prepParams(params,"golf_score" ,"select" );
   params['orderby_clause'] =" order by game_dt desc"
@@ -3173,6 +3212,11 @@ function retrieveQuickGolfScoreList(){
   serverCall(params,successf,FAILF);
 }
 function retrieveQuickGolfScore(params){
+	if(!isUserAuthorized("SELECT_GOLF_SCORE") ){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   params = prepParams(params,"golf_score","SELECT");
   var successf = function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
@@ -3190,6 +3234,11 @@ function retrieveQuickGolfScore(params){
 
 
 function deleteQuickGolfScore(golfScoreId_, lastUpdate_){
+	if(!isUserAuthorized("DELETE_GOLF_SCORE") ){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   var params =prepParams(params,"golf_score" ,"delete" );
   params['golf_score_id'] = golfScoreId_;
   params['last_update'] = lastUpdate_;
@@ -3206,6 +3255,11 @@ function deleteQuickGolfScore(golfScoreId_, lastUpdate_){
 }
 
 function saveQuickGolfScore(params){
+	if(!isUserAuthorized("UPDATE_GOLF_SCORE") && !isUserAuthorized("INSERT_GOLF_SCORE")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   params = prepParams(params,"golf_score",insertUpdateChoose);
   var successf=function(rslt){
     clearForm('quickGolfScoreForm');
@@ -3227,6 +3281,11 @@ function saveQuickGolfScore(params){
 
 //ServerCall Wrappers
 function editQuickGolfScore(quickGolfScoreId_){
+	if(!isUserAuthorized("UPDATE_GOLF_SCORE") && !isUserAuthorized("SELECT_GOLF_SCORE")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   if(quickGolfScoreId_){
     var params ={"where_clause":"golf_score_id=" +quickGolfScoreId_};
     retrieveQuickGolfScore(params);
@@ -3234,6 +3293,11 @@ function editQuickGolfScore(quickGolfScoreId_){
 }
 
 function saveQuickGolfScoreForm(){
+	if(!isUserAuthorized("UPDATE_GOLF_SCORE") && !isUserAuthorized("SELECT_GOLF_SCORE")){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   if(validateQuickGolfScoreForm()){
     var params = bindForm("quickGolfScoreForm");
     saveQuickGolfScore(params);
@@ -3261,8 +3325,21 @@ function buildQuickGolfScoreListTableRow(data){
   htmlRow += "<td>"+GOLFER_CACHE[data.golfer_id] + "</td>";
   htmlRow += "<td class='accentColumn'>" + formatNumber(data.golf_score,0,true,false,true)  +"</td>";
   htmlRow += "<td >" + pgDate(data.game_dt) + " </td> ";
-  htmlRow += "<td class='accentColumn'><a class='alink' onclick='editQuickGolfScore(" +data.golf_score_id + ")'>Edit</a> |"
-    htmlRow += "<a class='alink' onclick=\"deleteQuickGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+	htmlRow += "<td class='accentColumn'>";
+	if(isUserAuthorized("UPDATE_GOLF_SCORE")){
+	  htmlRow += "	<a class='alink' onclick='editQuickGolfScore(" +data.golf_score_id + ")'>Edit</a> ";
+	  htmlRow += " &nbsp; &nbsp ";
+	}else if(isUserAuthorized("SELECT_GOLF_SCORE")){
+    htmlRow += "<a class='alink' onclick='editQuickGolfScore(" +data.golf_score_id + ")'>View</a> ";
+	  htmlRow += " &nbsp; &nbsp;";
+
+	}
+
+	if(isUserAuthorized("DELETE_GOLF_SCORE")){
+		htmlRow += "<a class='alink' onclick=\"deleteQuickGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  ";
+	}
+	htmlRow += "</td>";
+ 	htmlRow += "</tr>";
   return htmlRow;
 }
 
@@ -3292,12 +3369,33 @@ $(document).ready(function(){
 
 //page specific functions
 function retrieveGolferNameForGolfScore(golferId_){
+	if(!isUserAuthorized("SELECT_GOLF_SCORE") ){
+		briefNotify("Access Violation","ERROR");
+	  return false;
+	}
+
   var params = prepParams(params,"GOLFER","SELECT");
   params['where_clause'] = "golfer_id =" + golferId_;
   var successf = function(rslt){
     $("#quickGolfScoreGolferNameId").html(rslt.rows[0].name);
   }
   serverCall(params,successf,FAILF);
+}
+function imposeQuickGolfScoreSecurityUIRestrictions(){
+	var divIdToSecure;
+	divIdToSecure ="#quickGolfScoreFormSave";
+  (isUserAuthorized("UPDATE_GOLF_SCORE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#quickGolfScoreFormAdd";
+  (isUserAuthorized("INSERT_GOLF_SCORE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#quickGolfScoreEntryDivId";
+	(isUserAuthorized("UPDATE_GOLF_SCORE") ||isUserAuthorized("INSERT_GOLF_SCORE") )? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	if(isUserAuthorized("SELECT_GOLF_SCORE") && !isUserAuthorized("UPDATE_GOLF_SCORE")){
+	  securityLockForm("quickGolfScoreForm");
+	}
+
 }
 
 
@@ -3313,7 +3411,7 @@ function retrieveGolferNameForGolfScore(golferId_){
     </span>
     <span class = "sixcol last">
       <form id="quickGolfScoreForm" >
-	<div class="formLayout_Standard">
+	<div class="formLayout_Standard" id="quickGolfScoreEntryDivId">
 	  
 	  <div class="formFieldGroup" id="quickGolfScoreForm-golfer_idDivId">
 	    <label for ="quickGolfScoreForm-golfer_id" id="quickGolfScoreFormLabel-golfer_id">Name</label>
@@ -3440,7 +3538,7 @@ function deleteGolfer(golferId_, lastUpdate_){
 //-----------------------
 //Server Call Wrappers
 function editGolfer(rowId_){
-  if(!isUserAuthorized("UPDATE_GOLFER") ||!isUserAuthorized("SELECT_GOLFER") ){
+  if(!isUserAuthorized("UPDATE_GOLFER") && !isUserAuthorized("SELECT_GOLFER") ){
 		briefNotify("Access Violation","ERROR");
 	  return false;
 	}
@@ -3485,22 +3583,27 @@ function populateGolferListTable(rslt,selectedKey_) {
 	$("#golferListTable").html(newHTML);
 }
 
-function buildRowGolferListTable(row){
-	var newRow= "<tr id='GolferListTableTR-" +row.golfer_id + "'>";
-	newRow += "<td >" +row.name + "</td>";
-	newRow +="<td class='accentColumn'>";
+function buildRowGolferListTable(data){
+	var htmlRow= "<tr id='GolferListTableTR-" +data.golfer_id + "'>";
+	htmlRow += "<td >" +data.name + "</td>";
+	htmlRow +="<td class='accentColumn'>";
 	  if(isUserAuthorized("UPDATE_GOLFER") ){
- 		  newRow +="<a href='#' class='editGolferLink' onclick='editGolfer(";
-			newRow +=row.golfer_id + ")'>Edit</a>";
-			newRow +=" &nbsp; &nbsp; ";
-	  }
+ 		  htmlRow +="<a href='#' class='editGolferLink' onclick='editGolfer(";
+			htmlRow +=data.golfer_id + ")'>Edit</a>";
+			htmlRow +=" &nbsp; &nbsp; ";
+	  }else if(isUserAuthorized("SELECT_GOLFER")){
+    htmlRow += "<a class='alink' onclick='editGolfer(" +data.golfer_id + ")'>View</a> ";
+	  htmlRow += " &nbsp; &nbsp;";
+
+	}
+
 	  if(isUserAuthorized("DELETE_GOLFER")){
-		  newRow +="<a href='#' class='deleteGolferLink' onclick=\"deleteGolfer(";
-		  newRow +=row.golfer_id + ",'" + row.last_update + "')\">Delete</a>";
+		  htmlRow +="<a href='#' class='deleteGolferLink' onclick=\"deleteGolfer(";
+		  htmlRow +=data.golfer_id + ",'" + data.last_update + "')\">Delete</a>";
 	  }
-	newRow +="</td>";
-	newRow +="</tr>";
-	return newRow;
+	htmlRow +="</td>";
+	htmlRow +="</tr>";
+	return htmlRow;
 }
 
 function replaceRowGolferListTable(row){
@@ -3514,22 +3617,21 @@ function removeGolferListTableRow(golferId_){
 }
  
 function imposeGolferSecurityUIRestrictions(){
-	if(!isUserAuthorized("UPDATE_GOLFER")){
-		$("#golferFormSave").addClass ("SecurityDisabled");
-	}else{
-	  $("#golferFormSave").removeClass("SecurityDisabled");
+
+		var divIdToSecure;
+	divIdToSecure ="#golferFormSave";
+  (isUserAuthorized("UPDATE_GOLFER"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#golferFormAdd";
+  (isUserAuthorized("INSERT_GOLFER"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#golferEntryDivId";
+  (isUserAuthorized("UPDATE_GOLFER") ||isUserAuthorized("INSERT_GOLFER") )? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	if(isUserAuthorized("SELECT_GOLFER") && !isUserAuthorized("UPDATE_GOLFER")){
+	  securityLockForm("golferForm");
 	}
 
-	if(!isUserAuthorized("INSERT_GOLFER")){
-		$("#golferFormAdd").addClass ("SecurityDisabled");
-	}else{
-	  $("#golferFormAdd").removeClass("SecurityDisabled");
-	}
-	if(!isUserAuthorized("INSERT_GOLFER") && !isUserAuthorized("UPDATE_GOLFER") ){
-		$("#golferEntryDivId").addClass ("SecurityDisabled");
-	}else{
-	  $("#golferEntryDivId").removeClass("SecurityDisabled");
-	}
+
 }
 
 
@@ -3664,35 +3766,35 @@ function showHelpPane(){
       <h1 id="launchPaneTitle" >I want to&hellip;</h1>
     </div>
     <div class="row">
-      <span class="twocol largeIconSpan"><a id="launcherShowGolfScore" onclick="showGolfScoreSummary();">
+      <span class="twocol largeIconSpan" id="launcherShowViewAveragesSpanId"><a id="launcherShowGolfScore" onclick="showGolfScoreSummary();">
 	  <span class="sprite64Icon kolfIcon"></span><br/>
 	  View Averages</a>
       </span>
-      <span class="twocol largeIconSpan"><a id="launcherShowQuickGolfScore" onclick="showQuickGolfScore();">
+      <span class="twocol largeIconSpan" id="launcherShowQuickEntrySpanId"><a id="launcherShowQuickGolfScore" onclick="showQuickGolfScore();">
 	  <span class="sprite64Icon lightningFolderIcon"></span><br/>
 	  Quick Entry</a>
       </span>
 
-      <span class="twocol  largeIconSpan"><a id="launcherShowGolfer" onclick="showGolfer();">
+      <span class="twocol  largeIconSpan" id="launcherShowGolfersSpanId"><a id="launcherShowGolfer" onclick="showGolfer();">
 	  <span class="sprite64Icon peopleIcon"></span><br/>
 	  View Golfers</a>
       </span>
-      <span class="twocol largeIconSpan"><a id="launcherShowHelp" onclick="showHelpPane();">
+      <span class="twocol largeIconSpan" id="launcherShowGetHelpSpanId"><a id="launcherShowHelp" onclick="showHelpPane();">
 	  <span class="sprite64Icon helpIcon"></span><br/>
 	  Get Help</a>
       </span>
 
-      <span class="twocol largeIconSpan"><a id="launcherShowHelp" onclick="showSecurityGrants();">
+      <span class="twocol largeIconSpan" id="launcherShowGrantsSpanId"><a id="launcherShowHelp" onclick="showSecurityGrants();">
 	  <span class="sprite64Icon keyIcon"></span><br/>
-	  Grants</a>
+	  Access Groups</a>
       </span>
       <span class="twocol last largeIconSpan" id="launcherShowSecurityUserSpanId"><a id="launcherShowSecurityUserId" onclick="showSecurityUser();">
 	  <span class="sprite64Icon keyManIcon"></span><br/>
-	  Profiles</a>
+	  Application Users</a>
       </span>
-      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showChangePasswordDialog();">
+      <span class="twocol last largeIconSpan" id="launcherShowChangeOwnPasswordSpanId"><a id="launcherShowHelp" onclick="showChangePasswordDialog();">
 	  <span class="sprite64Icon lockIcon"></span><br/>
-	  Change Password</a>
+	  Change My Password</a>
       </span>
     </div>
   </div>
@@ -3718,15 +3820,18 @@ function showHelpPane(){
 function imposeLauncherSecurityUIRestrictions(){
 	var divIdToSecure;
 	divIdToSecure ="#launcherShowSecurityUserSpanId";
-	if(!isUserAuthorized("SELECT_SECURITY_USER")){
-		$(divIdToSecure).addClass ("SecurityDisabled");
-	}else{
-	  $(divIdToSecure).removeClass("SecurityDisabled");
-	}
+  (isUserAuthorized("SELECT_SECURITY_USER"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	
+	divIdToSecure ="#launcherShowViewAveragesSpanId";
+  (isUserAuthorized("SELECT_GOLFER_HANDICAP"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	
+	divIdToSecure ="#launcherShowQuickEntrySpanId";
+  (isUserAuthorized("INSERT_GOLF_SCORE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	
+	divIdToSecure ="#launcherShowGrantsSpanId";
+  (isUserAuthorized("SELECT_SECURITY_PROFILE")  )? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 }
-
-
 
 </script>
 
@@ -3757,11 +3862,22 @@ function showClientLogViewer(){
 
 
 
+
+
+
+
+
+
 <script type="text/javascript">
   //<![CDATA[
 "use strict";
 //Server Calls
 function retrieveSecurityGrantsList(){
+	if(!isUserAuthorized("SELECT_SECURITY_PROFILE") ){
+		briefNotify("Access Violation retrieveSecurityGrantsList" ,"ERROR");
+	  return false;
+	}
+
   $("#securityGrantsListTable").html("");
   var params =prepParams(params,"security_profile" ,"select" );
   var successf = function (rslt){
@@ -3775,6 +3891,11 @@ function retrieveSecurityGrantsList(){
   serverCall(params,successf,FAILF);
 }
 function retrieveSecurityGrants(params){
+	if(!isUserAuthorized("SELECT_SECURITY_PROFILE") ){
+		briefNotify("Access Violation - retrieveSecurityGrants","ERROR");
+	  return false;
+	}
+
   params = prepParams(params,"security_profile","SELECT");
   var successf = function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
@@ -3791,6 +3912,11 @@ function retrieveSecurityGrants(params){
 
 
 function deleteSecurityGrants(securityProfileId_, lastUpdate_){
+	if(!isUserAuthorized("DELETE_SECURITY_PROFILE") ){
+		briefNotify("Access Violation -  deleteSecurityGrants ","ERROR");
+	  return false;
+	}
+
   var params =prepParams(params,"security_profile" ,"delete" );
   params['security_profile_id'] = securityProfileId_;
   params['last_update'] = lastUpdate_;
@@ -3807,6 +3933,11 @@ function deleteSecurityGrants(securityProfileId_, lastUpdate_){
 }
 
 function saveSecurityGrants(params){
+	if(!isUserAuthorized("UPDATE_SECURITY_PROFILE") && !isUserAuthorized("INSERT_SECURITY_PROFILE")){
+		briefNotify("Access Violation - saveSecurityGrants ","ERROR");
+	  return false;
+	}
+
   params = prepParams(params,"security_profile",insertUpdateChoose);
   var successf=function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
@@ -3827,15 +3958,27 @@ function saveSecurityGrants(params){
 
 //ServerCall Wrappers
 function editSecurityGrants(securityGrantsId_){
-  if(securityGrantsId_){
-    makeAvailableAllPrivileges();
-    var params ={"where_clause":"security_profile_id=" +securityGrantsId_};
-    retrieveSecurityGrants(params);
-    retrieveAllGrantedPrivilegesList(securityGrantsId_);
-  }
+	if(!isUserAuthorized("UPDATE_SECURITY_PROFILE") && !isUserAuthorized("INSERT_SECURITY_PROFILE")){
+		briefNotify("Access Violation - editSecurityGrants","ERROR");
+	  return false;
+	}
+	 $("#grantAssignDiv").removeClass("LogicDisabled");
+    if(securityGrantsId_){
+      makeAvailableAllPrivileges();
+      var params ={"where_clause":"security_profile_id=" +securityGrantsId_};
+			retrieveSecurityGrants(params);
+			if(isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT")){
+				retrieveAllGrantedPrivilegesList(securityGrantsId_);
+			}
+	  }
 }
 
 function saveSecurityGrantsForm(){
+	if(!isUserAuthorized("UPDATE_SECURITY_PROFILE") && !isUserAuthorized("INSERT_SECURITY_PROFILE")){
+		briefNotify("Access Violation  - saveSecurityGrantsForm","ERROR");
+	  return false;
+	}
+
   if(validateSecurityGrantsForm()){
     var params = bindForm("securityGrantsForm");
     saveSecurityGrants(params);
@@ -3861,8 +4004,16 @@ function populateSecurityGrants(dataRows){
 function buildSecurityGrantsListTableRow(data){
   var htmlRow ="<tr id='SecurityGrantsListTableTR-" +data.security_profile_id + "'><td>";
   htmlRow += data.profile_name  +"</td>";
-  htmlRow += "<td class='accentColumn'><a class='alink' onclick='editSecurityGrants(" +data.security_profile_id + ")'>Edit</a> |"
-    htmlRow += "<a class='alink' onclick=\"deleteSecurityGrants(" +data.security_profile_id + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+	htmlRow += "<td class='accentColumn'>";
+	if(isUserAuthorized("UPDATE_SECURITY_PROFILE") ){
+		htmlRow += "<a class='alink' onclick='editSecurityGrants(" +data.security_profile_id + ")'>Edit</a> ";
+		htmlRow+= " &nbsp; &nbsp; ";
+	}
+  if(isUserAuthorized("DELETE_SECURITY_PROFILE")){
+		htmlRow += "<a class='alink' onclick=\"deleteSecurityGrants(" +data.security_profile_id + ",'"+data.last_update +"')\">Delete</a>";
+	}
+		htmlRow += "	</td>";
+ 	htmlRow += "	</tr>";
   return htmlRow;
 }
 
@@ -3878,12 +4029,24 @@ function removeSecurityGrantsListTableRow(securityProfileId_){
 
 //Div Access and App Layout Calls
 function showSecurityGrants(){
+	if(!isUserAuthorized("SELECT_SECURITY_PROFILE") ){
+		briefNotify("Access Violation - showSecurityGrants","ERROR");
+		return false;
+	}
+
   retrieveSecurityGrantsList(); 
   hideCurrentContentPane();
   $("#securityGrants").fadeIn();
   currentContentPane="securityGrants";
-  toggleSaveMode("securityGrantsForm",false);
-  retrieveAllAvailablePrivilegesList();
+	toggleSaveMode("securityGrantsForm",false);
+	if(isUserAuthorized("SELECT_SECURITY_PRIVILEGE") ){
+		if($("#securityGrantsForm-security_profile_id").val() ==""){
+			retrieveAllAvailablePrivilegesList();
+		}
+	}
+	if ($("#securityGrantsForm-security_profile_id").val() ==""){
+	  $("#grantAssignDiv").addClass("LogicDisabled");
+	}
 }
 
 //After complete Load setup
@@ -3897,6 +4060,11 @@ $(document).ready(function(){
 //page specific functions
 var allAvailablePrivilegeList;
 function retrieveAllAvailablePrivilegesList(){
+	if(!isUserAuthorized("SELECT_SECURITY_PRIVILEGE") ){
+		briefNotify("Access Violation - retrieveAllAvailablePrivilegesList","ERROR");
+		return false;
+	}
+
   var params =prepParams(params,"security_privilege" ,"select" );
   var successf = function (rslt){
     allAvailablePrivilegeList = deepCopy(rslt.rows);
@@ -3917,6 +4085,11 @@ function populateAvailableGrantsWithAll(){
 }
 
 function makeDragable(identifierTodraggable_){
+	if(!isUserAuthorized("UPDATE_SECURITY_PRIVILEGE") || !isUserAuthorized("INSERT_SECURITY_PRIVILEGE")){
+		briefNotify("Access Violation - makeDragable","ERROR");
+		return false;
+	}
+
   $(identifierTodraggable_).draggable({snap: ".securityGrantReceiver", revert:"invalid", scroll:false, helper:'clone' });
   if($(identifierTodraggable_).parent().attr('id') === "availableGrantsId"){
     $(identifierTodraggable_).dblclick(function(){
@@ -3926,6 +4099,11 @@ function makeDragable(identifierTodraggable_){
 }
 
 function retrieveAllGrantedPrivilegesList(profileId_){
+	if(!isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT") ){
+		briefNotify("Access Violation  - retrieveAllGrantedPrivilegesList" ,"ERROR");
+	  return false;
+	}
+
   var params =prepParams(params,"security_profile_grant" ,"select" );
   params["where_clause"] = "security_profile_id=" +profileId_;
   var successf = function (rslt){
@@ -3949,6 +4127,12 @@ function handleSecurityRevokeDrop( event, ui ){
 }
 
 function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
+	if(!isUserAuthorized("UPDATE_SECURITY_PROFILE_GRANT") ){
+		briefNotify("Access Violation - attemptSecurityGrantRevoke ","ERROR");
+		return false;
+	}
+
+	
   var profileId = $("#securityGrantsForm-security_profile_id").val();
   var privId = divId_.replace("securityGrant","");
   privId = privId.replace("Id","");
@@ -3967,6 +4151,11 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
 }
 
 function assignGrantStatus(grantDivId_, status_){
+  if(!isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT") ){
+		briefNotify("Access Violation - assignGrantStatus","ERROR");
+		return false;
+	}
+
   var fromLocation, toLocation;
   if (status_ == "GRANT"){fromLocation= "#availableGrantsId"; toLocation="#grantedPrivilegesId";
   } else{fromLocation= "#grantedPrivilegesId";toLocation="#availableGrantsId"; }
@@ -3977,6 +4166,11 @@ function assignGrantStatus(grantDivId_, status_){
 }
 
 function grantPrivilege(securityPrivilegeId_, securityProfileId_){
+	if(!isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT") ){
+		briefNotify("Access Violation -grantPrivilege ","ERROR");
+		return false;
+	}
+
   var params =prepParams(params,"security_profile_grant" ,"insert" );
   params['security_privilege_id'] = securityPrivilegeId_;
   params['security_profile_id'] = securityProfileId_;
@@ -3995,6 +4189,11 @@ function grantPrivilege(securityPrivilegeId_, securityProfileId_){
 }
 
 function revokePrivilege(securityPrivilegeId_, securityProfileId_){
+	if(!isUserAuthorized("DELETE_SECURITY_PROFILE") ){
+		briefNotify("Access Violation  - revokePrivilege" ,"ERROR");
+		return false;
+	}
+
   var params =prepParams(params,"security_profile_grant" ,"deletew" );
   params['where_clause'] = 'security_privilege_id=' + securityPrivilegeId_ + ' and security_profile_id = ' + securityProfileId_ ;
   params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
@@ -4016,7 +4215,9 @@ function makeAvailableAllPrivileges(){
   $('#grantedPrivilegesId').children().remove();
   $('#availableGrantsId').children().remove();
   populateAvailableGrantsWithAll();
-  sortDivChildren("#availableGrantsId");
+	sortDivChildren("#availableGrantsId");
+	
+
 }
 function sortDivChildren(divName_){
   var children = $(divName_).children().sort(function (a,b){
@@ -4029,6 +4230,33 @@ function sortDivChildren(divName_){
   makeDragable(divName_ + " .securityGrant");
 }
 
+function imposeSecurityGrantsSecurityUIRestrictions(){
+var divIdToSecure;
+	divIdToSecure ="#grantAssignDiv";
+  (isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#securityGrantsFormSave";
+  (isUserAuthorized("UPDATE_SECURITY_PROFILE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#securityGrantsFormAdd";
+  (isUserAuthorized("INSERT_SECURITY_PROFILE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#securityGrantsEntryDivId";
+	(isUserAuthorized("UPDATE_SECURITY_PROFILE") ||isUserAuthorized("INSERT_SECURITY_PROFILE") )? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	if(isUserAuthorized("SELECT_SECURITY_PROFILE") && !isUserAuthorized("UPDATE_SECURITY_PROFILE")){
+	  securityLockForm("securityGrantsForm");
+	}
+
+
+
+
+}
+function clearsecurityGrantsForm(){
+	clearForm('securityGrantsForm');
+	makeAvailableAllPrivileges();
+	$('#grantAssignDiv').addClass('LogicDisabled');
+}
 
 //]]>
 
@@ -4047,7 +4275,7 @@ function sortDivChildren(divName_){
 	  
 	  <div class="formFieldGroup" id="securityGrantsForm-profile_nameDivId">
 	    <label for ="securityGrantsForm-profile_name" id="securityGrantsFormLabel-profile_name">Profile Name</label>
-	    <input  type="text" class="VALIDATEinteger" name="profileName" id="securityGrantsForm-profile_name"/>
+	    <input  type="text" class="VALIDATErequired" name="profileName" id="securityGrantsForm-profile_name"/>
 	    <span class="ValidationMsg" id="securityGrantsFormLabel-profileNameError"></span>
 	  </div>
 	  <div class="formButtons">
@@ -4057,7 +4285,7 @@ function sortDivChildren(divName_){
 	    <button type="button" id="securityGrantsFormAdd" value="Add" onclick="saveSecurityGrantsForm();" >
 	      Add</button>
 	    <button type="button" id="securityGrantsFormClear" value="Clear" 
-	      onclick="clearForm('securityGrantsForm');makeAvailableAllPrivileges();" >Clear</button>
+	      onclick="clearsecurityGrantsForm();" >Clear</button>
 	  </div>
 	  <input type="hidden" name="last_update" id="securityGrantsForm-last_update">
 	  <input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id">
@@ -4078,11 +4306,22 @@ function sortDivChildren(divName_){
 
 
 
+
+
+
+
+
+
 <script type="text/javascript">
   //<![CDATA[
 "use strict";
 //Server Calls
 function retrieveSecurityUserList(){
+	if(!isUserAuthorized("SELECT_SECURITY_USER") ){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
   $("#securityUserListTable").html("");
   var params =prepParams(params,"security_user" ,"select" );
   var successf = function (rslt){
@@ -4096,6 +4335,11 @@ function retrieveSecurityUserList(){
 serverCall(params,successf,FAILF);
 }
 function retrieveSecurityUser(params){
+	if(!isUserAuthorized("SELECT_SECURITY_USER") ){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
   params = prepParams(params,"security_user","SELECT");
   var successf = function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
@@ -4118,6 +4362,11 @@ function retrieveSecurityUser(params){
 
 
 function deleteSecurityUser(securityUserId_, lastUpdate_){
+	if(!isUserAuthorized("DELETE_SECURITY_USER") ){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
   var params =prepParams(params,"security_user" ,"delete" );
   params['security_user_id'] = securityUserId_;
   params['last_update'] = lastUpdate_;
@@ -4134,6 +4383,11 @@ function deleteSecurityUser(securityUserId_, lastUpdate_){
 }
 
 function saveSecurityUser(params){
+	if(!isUserAuthorized("UPDATE_SECURITY_USER") && !isUserAuthorized("INSERT_SECURITY_USER")){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
   params = prepParams(params,"security_user",insertUpdateChoose);
   var successf=function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
@@ -4156,6 +4410,11 @@ function saveSecurityUser(params){
 
 //ServerCall Wrappers
 function editSecurityUser(securityUserId_){
+	if(!isUserAuthorized("UPDATE_SECURITY_USER") && !isUserAuthorized("INSERT_SECURITY_USER")){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
   if(securityUserId_){
     var params ={"where_clause":"security_user_id=" +securityUserId_};
     retrieveSecurityUser(params);
@@ -4163,6 +4422,11 @@ function editSecurityUser(securityUserId_){
 }
 
 function saveSecurityUserForm(){
+	if(!isUserAuthorized("UPDATE_SECURITY_USER") && !isUserAuthorized("INSERT_SECURITY_USER")){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
   if(validateSecurityUserForm()){
     var params = bindForm("securityUserForm");
     if (document.getElementById('securityUserForm-active_yn').checked){
@@ -4198,9 +4462,21 @@ function populateSecurityUser(dataRows){
 
 function buildSecurityUserListTableRow(data){
   var htmlRow ="<tr id='SecurityUserListTableTR-" +data.security_user_id + "'>";
-  htmlRow += "<td>" + data.user_id+ "</td> ";
-  htmlRow += "<td class='accentColumn'><a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>Edit</a> |"
-    htmlRow += "<a class='alink' onclick=\"deleteSecurityUser(" +data.security_user_id + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+	htmlRow += "<td>" + data.user_id+ "</td> ";
+	htmlRow += "<td class='accentColumn'>";
+	if(isUserAuthorized("UPDATE_SECURITY_USER")){
+	  htmlRow += "<a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>Edit</a> ";
+	  htmlRow += " &nbsp; &nbsp;";
+	}else if(isUserAuthorized("SELECT_SECURITY_USER")){
+    htmlRow += "<a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>View</a> ";
+	  htmlRow += " &nbsp; &nbsp;";
+
+	}
+	if(isUserAuthorized("DELETE_SECURITY_USER")){
+		htmlRow += "<a class='alink' onclick=\"deleteSecurityUser(" +data.security_user_id + ",'"+data.last_update +"')\">Delete</a>";
+	}
+		htmlRow += "	</td>";
+		 htmlRow += "	</tr>";
   return htmlRow;
 }
 
@@ -4216,6 +4492,11 @@ function removeSecurityUserListTableRow(securityUserId_){
 
 //Div Access and App Layout Calls
 function showSecurityUser(){
+	if(!isUserAuthorized("SELECT_SECURITY_USER") ){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
   retrieveSecurityUserList(); 
   hideCurrentContentPane();
   $("#securityUser").fadeIn();
@@ -4243,6 +4524,27 @@ function showPasswordFields(show){
 function initiateChangePassword(){
   showChangePasswordDialog($("#securityUserForm-edit_user_id").val());
 }
+
+function imposeSecurityUserSecurityUIRestrictions(){
+	var divIdToSecure;
+	divIdToSecure ="#securityUserFormSave";
+	(isUserAuthorized("UPDATE_SECURITY_USER"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#securityUserFormAdd";
+	(isUserAuthorized("INSERT_SECURITY_USER"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#securityUserEntryDivId";
+	(isUserAuthorized("UPDATE_SECURITY_USER") ||isUserAuthorized("INSERT_SECURITY_USER") )? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	if(isUserAuthorized("SELECT_SECURITY_USER") && !isUserAuthorized("UPDATE_SECURITY_USER")){
+	  securityLockForm("securityUserForm");
+	}
+
+
+
+
+}
+
 
 //]]>
 

@@ -29,7 +29,7 @@ INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, d
 	VALUES (10, 'SELECT_CROSS_TABLE_CACHE', now(), 'Required for all users to populate options'); 
 
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
-	VALUES (11, 'SELECT_SECURITY_PROFILE_GRANT', now(), 'Allows users to select security_profile_grant'); 
+	VALUES (11, 'SELECT_SECURITY_PROFILE_GRANT', now(), 'Allows users to view permissions assigned to a profile '); 
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)   
 	VALUES (12,'INSERT_SECURITY_PROFILE_GRANT', now(), 'Allows users to add records to security_profile_grant');
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)   

@@ -378,3 +378,21 @@ function isUserAuthorized(request){
 	}
  return result;
 }
+
+function securityshow(divIdToSecure){
+  $(divIdToSecure).removeClass("SecurityDisabled");
+}
+	
+function securityHide(divIdToSecure){
+  $(divIdToSecure).addClass ("SecurityDisabled");
+}
+
+function securityLockForm(formName){
+  if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form", "ERROR");
+  $.each($("form#"+formName + " input"),function (ndx,field){
+	  $("form#"+formName +" #"+field.id).attr('disabled', 'disabled');
+  });
+	$.each($("form#"+formName + " select"),function (ndx,field){
+	  $("form#"+formName +" #"+field.id).attr('disabled', 'disabled');
+  });
+}

@@ -22,6 +22,8 @@ function onRefreshCache(data){
 	imposeGolfScoreSecurityUIRestrictions();
 	imposeLauncherSecurityUIRestrictions();
 	imposeGolfScoreSummarySecurityUIRestrictions();
+	imposeSecurityUserSecurityUIRestrictions();
+	imposeSecurityGrantsSecurityUIRestrictions();
 }
 
 

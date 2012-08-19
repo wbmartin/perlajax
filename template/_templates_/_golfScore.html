@@ -8,41 +8,41 @@
 [%DELETE_GRANT=  "DELETE_" _ spwfResource  FILTER upper%]
 
 <script type="text/javascript">
-  //<![CDATA[
+	//<![CDATA[
 "use strict";
 //Server Calls
 function retrieve[%ucfirst(divId)%]List(golferId_){
 	if(!isUserAuthorized("[%SELECT_GRANT%]") ){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
-  $("#[%divId%]ListTable").html("");
-  var params =prepParams(params,"[%spwfResource%]" ,"select" );
-  params['where_clause'] = "golfer_id =" + golferId_;
-  var successf = function (rslt){
-    populate[%ucfirst(divId)%](rslt.rows)
-  };
-  serverCall(params,successf,FAILF);
+	$("#[%divId%]ListTable").html("");
+	var params =prepParams(params,"[%spwfResource%]" ,"select" );
+	params['where_clause'] = "golfer_id =" + golferId_;
+	var successf = function (rslt){
+		populate[%ucfirst(divId)%](rslt.rows)
+	};
+	serverCall(params,successf,FAILF);
 }
 function retrieve[%ucfirst(divId)%](params){
 	if(!isUserAuthorized("[%SELECT_GRANT%]")){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
 	params = prepParams(params,"[%spwfResource%]","SELECT");
-  var successf = function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-      bindToForm("[%divId%]Form", rslt.rows[0]);
-      toggleSaveMode("[%divId%]Form",true);
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	var successf = function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+			bindToForm("[%divId%]Form", rslt.rows[0]);
+			toggleSaveMode("[%divId%]Form",true);
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  }
-  serverCall(params,successf,FAILF);
+	}
+	serverCall(params,successf,FAILF);
 }
 
 
@@ -50,94 +50,94 @@ function retrieve[%ucfirst(divId)%](params){
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
 	if(!isUserAuthorized("[%DELETE_GRANT%]") ){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
 	var params =prepParams(params,"[%spwfResource%]" ,"delete" );
-  params['[%prkey%]'] = [%toCC(prkey)%]_;
-  params['last_update'] = lastUpdate_;
-  var successf = function (rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-      briefNotify("Golf Score Deleted Successfully","INFO");a
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	params['[%prkey%]'] = [%toCC(prkey)%]_;
+	params['last_update'] = lastUpdate_;
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
+			briefNotify("Golf Score Deleted Successfully","INFO");a
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 function save[%ucfirst(divId)%](params){
 	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%INSERT_GRANT%]")){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
-  params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
-  var successf=function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      clearForm('[%divId%]Form');
-      if (rslt.spwfAction == "UPDATE"){
-	replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
-      }else if (rslt.spwfAction == "INSERT"){
-	addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
-      }
-      briefNotify("Golf Score Successfully Saved","INFO");
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
+	var successf=function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			clearForm('[%divId%]Form');
+			if (rslt.spwfAction == "UPDATE"){
+				replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+			}else if (rslt.spwfAction == "INSERT"){
+				addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+			}
+			briefNotify("Golf Score Successfully Saved","INFO");
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 //ServerCall Wrappers
 function edit[%ucfirst(divId)%]([%divId%]Id_){
 	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%SELECT_GRANT%]")){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
-  if([%divId%]Id_){
-    var params ={"where_clause":"[%prkey%]=" +[%divId%]Id_};
-    retrieve[%ucfirst(divId)%](params);
-  }
+	if([%divId%]Id_){
+		var params ={"where_clause":"[%prkey%]=" +[%divId%]Id_};
+		retrieve[%ucfirst(divId)%](params);
+	}
 }
 
 function save[%ucfirst(divId)%]Form(){
 
 	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%INSERT_GRANT%]")){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 
-  if(validate[%ucfirst(divId)%]Form()){
-    var params = bindForm("[%divId%]Form");
-    save[%ucfirst(divId)%](params);
-  }
+	if(validate[%ucfirst(divId)%]Form()){
+		var params = bindForm("[%divId%]Form");
+		save[%ucfirst(divId)%](params);
+	}
 }
 
 //validation
 function validate[%ucfirst(divId)%]Form(){
-  var formName="[%divId%]Form";
-  var formValid  = standardValidate(formName);
-  return formValid;
+	var formName="[%divId%]Form";
+	var formValid  = standardValidate(formName);
+	return formValid;
 }
 
 //Top Level HTML Manip
 function populate[%ucfirst(divId)%](dataRows){
-  var htmlAggregator ="<tr> <th>Score</th><th class='accentColumn'>Date</th> <th>I want to&hellip;</th></tr>";
-  for(var ndx=0;ndx< dataRows.length;ndx++){
-    htmlAggregator +=build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
-  }
-  $("#[%divId%]ListTable").html(htmlAggregator);
+	var htmlAggregator ="<tr> <th>Score</th><th class='accentColumn'>Date</th> <th>I want to&hellip;</th></tr>";
+	for(var ndx=0;ndx< dataRows.length;ndx++){
+		htmlAggregator +=build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
+	}
+	$("#[%divId%]ListTable").html(htmlAggregator);
 }
 
 function build[%ucfirst(divId)%]ListTableRow(data){
-  var htmlRow ="<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'>";
+	var htmlRow ="<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'>";
 	htmlRow += "<td>" + formatNumber(data.golf_score,0,true,false,true)  +"</td>";
-  htmlRow += "<td class='accentColumn'>" + pgDate(data.game_dt) + " </td> ";
+	htmlRow += "<td class='accentColumn'>" + pgDate(data.game_dt) + " </td> ";
 	htmlRow += "<td>";
 	if(isUserAuthorized("[%UPDATE_GRANT%]")){
 		htmlRow += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
@@ -148,63 +148,71 @@ function build[%ucfirst(divId)%]ListTableRow(data){
 		htmlRow +="&nbsp; &nbsp;"
 	}
 	htmlRow += "</td>";
- 	htmlRow += "</tr>";
-  return htmlRow;
+	htmlRow += "</tr>";
+	return htmlRow;
 }
 
 function replace[%ucfirst(divId)%]ListTableRow(row){
-  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.[%prkey%]).replaceWith(build[%ucfirst(divId)%]ListTableRow(row));
+	$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.[%prkey%]).replaceWith(build[%ucfirst(divId)%]ListTableRow(row));
 }
 function addNew[%ucfirst(divId)%]ListTableRow(row){
-  $("table#[%divId%]ListTable TR").first().after(build[%ucfirst(divId)%]ListTableRow(row));
+	$("table#[%divId%]ListTable TR").first().after(build[%ucfirst(divId)%]ListTableRow(row));
 }
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
-  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+[%toCC(prkey)%]_).replaceWith("");
+	$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+[%toCC(prkey)%]_).replaceWith("");
 }
 
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](golferId_){
-  retrieve[%ucfirst(divId)%]List(golferId_); 
-  retrieveGolferNameForGolfScore(golferId_);
-  hideCurrentContentPane();
-  $("#[%divId%]").fadeIn();
-  currentContentPane="[%divId%]";
-  toggleSaveMode("[%divId%]Form",false);
-  $("#[%divId%]Form-golfer_id").val(golferId_);
+	if(!isUserAuthorized("[%SELECT_GRANT%]") ){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
+	retrieve[%ucfirst(divId)%]List(golferId_); 
+	retrieveGolferNameForGolfScore(golferId_);
+	hideCurrentContentPane();
+	$("#[%divId%]").fadeIn();
+	currentContentPane="[%divId%]";
+	toggleSaveMode("[%divId%]Form",false);
+	$("#[%divId%]Form-golfer_id").val(golferId_);
 }
 
 //After complete Load setup
 $(document).ready(function(){
-    $("#[%divId%]Form-game_dt" ).datepicker();
-    });
+		$("#[%divId%]Form-game_dt" ).datepicker();
+		});
 
 //page specific functions
 function retrieveGolferNameForGolfScore(golferId_){
-  var params = prepParams(params,"GOLFER","SELECT");
-  params['where_clause'] = "golfer_id =" + golferId_;
-  var successf = function(rslt){
-    $("#[%divId%]GolferNameId").html(rslt.rows[0].name);
-  }
-  serverCall(params,successf,FAILF);
+	if(!isUserAuthorized("SELECT_GOLFER") ){
+		briefNotify("Access Violation","ERROR");
+		return false;
+	}
+
+	var params = prepParams(params,"GOLFER","SELECT");
+	params['where_clause'] = "golfer_id =" + golferId_;
+	var successf = function(rslt){
+		$("#[%divId%]GolferNameId").html(rslt.rows[0].name);
+	}
+	serverCall(params,successf,FAILF);
 }
 
 function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
-	if(!isUserAuthorized("[%UPDATE_GRANT%]")){
-		$("#[%divId%]FormSave").addClass ("SecurityDisabled");
-	}else{
-	  $("#[%divId%]FormSave").removeClass("SecurityDisabled");
+	var divIdToSecure;
+	divIdToSecure ="#[%divId%]FormSave";
+	(isUserAuthorized("[%UPDATE_GRANT%]"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#[%divId%]FormAdd";
+	(isUserAuthorized("[%INSERT_GRANT%]"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#[%divId%]EntryDivId";
+	(isUserAuthorized("[%UPDATE_GRANT%]") ||isUserAuthorized("[%INSERT_GRANT%]") )? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	if(isUserAuthorized("[%SELECT_GRANT%]") && !isUserAuthorized("[%UPDATE_GRANT%]")){
+	  securityLockForm("[%divId%]Form");
 	}
 
-	if(!isUserAuthorized("[%INSERT_GRANT%]")){
-		$("#[%divId%]FormAdd").addClass ("SecurityDisabled");
-	}else{
-	  $("#[%divId%]FormAdd").removeClass("SecurityDisabled");
-	}
-	if(!isUserAuthorized("[%INSERT_GRANT%]") && !isUserAuthorized("[%UPDATE_GRANT%]") ){
-		$("#[%divId%]EntryDivId").addClass ("SecurityDisabled");
-	}else{
-	  $("#[%divId%]EntryDivId").removeClass("SecurityDisabled");
-	}
+
 }
 
 
@@ -212,44 +220,44 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 
 </script>
 <div id="[%divId%]" class="contentPane MainLayout"  >
-  <h1 id="[%divId%]GolferNameId" class="pageTitle"></h1>
-  <div class="row">
-    <span class="sixcol">
-      <table id="[%divId%]ListTable"  class='dataTable' >
-      </table>
-    </span>
-    <span class = "sixcol last">
-      <form id="[%divId%]Form" >
-	<div class="formLayout_Standard">
-	  [%dbColumnName = 'golf_score'%]
-	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
-	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Score</label>
-	    <input  type="text" class="VALIDATEinteger" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
-	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	  </div>
-	  [%dbColumnName = 'game_dt'%]
-	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
-	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Game Date</label>
-	    <input  type="text" class="VALIDATEmmddyyyydate" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
-	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	  </div>
+	<h1 id="[%divId%]GolferNameId" class="pageTitle"></h1>
+	<div class="row">
+		<span class="sixcol">
+			<table id="[%divId%]ListTable"  class='dataTable' >
+			</table>
+		</span>
+		<span class = "sixcol last">
+			<form id="[%divId%]Form" >
+				<div class="formLayout_Standard">
+					[%dbColumnName = 'golf_score'%]
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Score</label>
+						<input  type="text" class="VALIDATEinteger" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
+					[%dbColumnName = 'game_dt'%]
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Game Date</label>
+						<input  type="text" class="VALIDATEmmddyyyydate" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
 
 
 
 
-	  <div class="formButtons">
+					<div class="formButtons">
 
-	    <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-	    <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-	    <button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
-	  </div>
+						<button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+						<button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
+						<button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
+					</div>
 
-	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-	  <input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">
-	  <input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
+					<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+					<input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">
+					<input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
+				</div>
+			</form>
+
+		</span>
 	</div>
-      </form>
-
-    </span>
-  </div>
 </div> <!--end:[%ucfirst(divId)%]-->

@@ -3,11 +3,22 @@
 [%prkey="security_profile_id"%]
 [%prettyName="Security Profile"%]
 
+[%UPDATE_GRANT=  "UPDATE_" _ spwfResource FILTER upper%]
+[%INSERT_GRANT=  "INSERT_" _ spwfResource  FILTER upper%]
+[%SELECT_GRANT=  "SELECT_" _ spwfResource  FILTER upper%]
+[%DELETE_GRANT=  "DELETE_" _ spwfResource  FILTER upper%]
+
+
 <script type="text/javascript">
   //<![CDATA[
 "use strict";
 //Server Calls
 function retrieve[%ucfirst(divId)%]List(){
+	if(!isUserAuthorized("[%SELECT_GRANT%]") ){
+		briefNotify("Access Violation retrieve[%ucfirst(divId)%]List" ,"ERROR");
+	  return false;
+	}
+
   $("#[%divId%]ListTable").html("");
   var params =prepParams(params,"[%spwfResource%]" ,"select" );
   var successf = function (rslt){
@@ -21,6 +32,11 @@ function retrieve[%ucfirst(divId)%]List(){
   serverCall(params,successf,FAILF);
 }
 function retrieve[%ucfirst(divId)%](params){
+	if(!isUserAuthorized("[%SELECT_GRANT%]") ){
+		briefNotify("Access Violation - retrieve[%ucfirst(divId)%]","ERROR");
+	  return false;
+	}
+
   params = prepParams(params,"[%spwfResource%]","SELECT");
   var successf = function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
@@ -37,6 +53,11 @@ function retrieve[%ucfirst(divId)%](params){
 
 
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
+	if(!isUserAuthorized("[%DELETE_GRANT%]") ){
+		briefNotify("Access Violation -  delete[%ucfirst(divId)%] ","ERROR");
+	  return false;
+	}
+
   var params =prepParams(params,"[%spwfResource%]" ,"delete" );
   params['[%prkey%]'] = [%toCC(prkey)%]_;
   params['last_update'] = lastUpdate_;
@@ -53,6 +74,11 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
 }
 
 function save[%ucfirst(divId)%](params){
+	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%INSERT_GRANT%]")){
+		briefNotify("Access Violation - save[%ucfirst(divId)%] ","ERROR");
+	  return false;
+	}
+
   params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
   var successf=function(rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
@@ -73,15 +99,27 @@ function save[%ucfirst(divId)%](params){
 
 //ServerCall Wrappers
 function edit[%ucfirst(divId)%]([%divId%]Id_){
-  if([%divId%]Id_){
-    makeAvailableAllPrivileges();
-    var params ={"where_clause":"[%prkey%]=" +[%divId%]Id_};
-    retrieve[%ucfirst(divId)%](params);
-    retrieveAllGrantedPrivilegesList([%divId%]Id_);
-  }
+	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%INSERT_GRANT%]")){
+		briefNotify("Access Violation - edit[%ucfirst(divId)%]","ERROR");
+	  return false;
+	}
+	 $("#grantAssignDiv").removeClass("LogicDisabled");
+    if([%divId%]Id_){
+      makeAvailableAllPrivileges();
+      var params ={"where_clause":"[%prkey%]=" +[%divId%]Id_};
+			retrieve[%ucfirst(divId)%](params);
+			if(isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT")){
+				retrieveAllGrantedPrivilegesList([%divId%]Id_);
+			}
+	  }
 }
 
 function save[%ucfirst(divId)%]Form(){
+	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%INSERT_GRANT%]")){
+		briefNotify("Access Violation  - save[%ucfirst(divId)%]Form","ERROR");
+	  return false;
+	}
+
   if(validate[%ucfirst(divId)%]Form()){
     var params = bindForm("[%divId%]Form");
     save[%ucfirst(divId)%](params);
@@ -107,8 +145,16 @@ function populate[%ucfirst(divId)%](dataRows){
 function build[%ucfirst(divId)%]ListTableRow(data){
   var htmlRow ="<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'><td>";
   htmlRow += data.profile_name  +"</td>";
-  htmlRow += "<td class='accentColumn'><a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> |"
-    htmlRow += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>  </td> </tr>";
+	htmlRow += "<td class='accentColumn'>";
+	if(isUserAuthorized("[%UPDATE_GRANT%]") ){
+		htmlRow += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
+		htmlRow+= " &nbsp; &nbsp; ";
+	}
+  if(isUserAuthorized("[%DELETE_GRANT%]")){
+		htmlRow += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>";
+	}
+		htmlRow += "	</td>";
+ 	htmlRow += "	</tr>";
   return htmlRow;
 }
 
@@ -124,12 +170,24 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
 
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](){
+	if(!isUserAuthorized("[%SELECT_GRANT%]") ){
+		briefNotify("Access Violation - show[%ucfirst(divId)%]","ERROR");
+		return false;
+	}
+
   retrieve[%ucfirst(divId)%]List(); 
   hideCurrentContentPane();
   $("#[%divId%]").fadeIn();
   currentContentPane="[%divId%]";
-  toggleSaveMode("[%divId%]Form",false);
-  retrieveAllAvailablePrivilegesList();
+	toggleSaveMode("[%divId%]Form",false);
+	if(isUserAuthorized("SELECT_SECURITY_PRIVILEGE") ){
+		if($("#[%divId%]Form-[%prkey%]").val() ==""){
+			retrieveAllAvailablePrivilegesList();
+		}
+	}
+	if ($("#[%divId%]Form-[%prkey%]").val() ==""){
+	  $("#grantAssignDiv").addClass("LogicDisabled");
+	}
 }
 
 //After complete Load setup
@@ -143,6 +201,11 @@ $(document).ready(function(){
 //page specific functions
 var allAvailablePrivilegeList;
 function retrieveAllAvailablePrivilegesList(){
+	if(!isUserAuthorized("SELECT_SECURITY_PRIVILEGE") ){
+		briefNotify("Access Violation - retrieveAllAvailablePrivilegesList","ERROR");
+		return false;
+	}
+
   var params =prepParams(params,"security_privilege" ,"select" );
   var successf = function (rslt){
     allAvailablePrivilegeList = deepCopy(rslt.rows);
@@ -163,6 +226,11 @@ function populateAvailableGrantsWithAll(){
 }
 
 function makeDragable(identifierTodraggable_){
+	if(!isUserAuthorized("UPDATE_SECURITY_PRIVILEGE") || !isUserAuthorized("INSERT_SECURITY_PRIVILEGE")){
+		briefNotify("Access Violation - makeDragable","ERROR");
+		return false;
+	}
+
   $(identifierTodraggable_).draggable({snap: ".securityGrantReceiver", revert:"invalid", scroll:false, helper:'clone' });
   if($(identifierTodraggable_).parent().attr('id') === "availableGrantsId"){
     $(identifierTodraggable_).dblclick(function(){
@@ -172,6 +240,11 @@ function makeDragable(identifierTodraggable_){
 }
 
 function retrieveAllGrantedPrivilegesList(profileId_){
+	if(!isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT") ){
+		briefNotify("Access Violation  - retrieveAllGrantedPrivilegesList" ,"ERROR");
+	  return false;
+	}
+
   var params =prepParams(params,"security_profile_grant" ,"select" );
   params["where_clause"] = "security_profile_id=" +profileId_;
   var successf = function (rslt){
@@ -195,6 +268,12 @@ function handleSecurityRevokeDrop( event, ui ){
 }
 
 function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
+	if(!isUserAuthorized("UPDATE_SECURITY_PROFILE_GRANT") ){
+		briefNotify("Access Violation - attemptSecurityGrantRevoke ","ERROR");
+		return false;
+	}
+
+	
   var profileId = $("#[%divId%]Form-[%prkey%]").val();
   var privId = divId_.replace("securityGrant","");
   privId = privId.replace("Id","");
@@ -213,6 +292,11 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
 }
 
 function assignGrantStatus(grantDivId_, status_){
+  if(!isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT") ){
+		briefNotify("Access Violation - assignGrantStatus","ERROR");
+		return false;
+	}
+
   var fromLocation, toLocation;
   if (status_ == "GRANT"){fromLocation= "#availableGrantsId"; toLocation="#grantedPrivilegesId";
   } else{fromLocation= "#grantedPrivilegesId";toLocation="#availableGrantsId"; }
@@ -223,6 +307,11 @@ function assignGrantStatus(grantDivId_, status_){
 }
 
 function grantPrivilege(securityPrivilegeId_, securityProfileId_){
+	if(!isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT") ){
+		briefNotify("Access Violation -grantPrivilege ","ERROR");
+		return false;
+	}
+
   var params =prepParams(params,"security_profile_grant" ,"insert" );
   params['security_privilege_id'] = securityPrivilegeId_;
   params['security_profile_id'] = securityProfileId_;
@@ -241,6 +330,11 @@ function grantPrivilege(securityPrivilegeId_, securityProfileId_){
 }
 
 function revokePrivilege(securityPrivilegeId_, securityProfileId_){
+	if(!isUserAuthorized("[%DELETE_GRANT%]") ){
+		briefNotify("Access Violation  - revokePrivilege" ,"ERROR");
+		return false;
+	}
+
   var params =prepParams(params,"security_profile_grant" ,"deletew" );
   params['where_clause'] = 'security_privilege_id=' + securityPrivilegeId_ + ' and security_profile_id = ' + securityProfileId_ ;
   params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
@@ -262,7 +356,9 @@ function makeAvailableAllPrivileges(){
   $('#grantedPrivilegesId').children().remove();
   $('#availableGrantsId').children().remove();
   populateAvailableGrantsWithAll();
-  sortDivChildren("#availableGrantsId");
+	sortDivChildren("#availableGrantsId");
+	
+
 }
 function sortDivChildren(divName_){
   var children = $(divName_).children().sort(function (a,b){
@@ -275,6 +371,33 @@ function sortDivChildren(divName_){
   makeDragable(divName_ + " .securityGrant");
 }
 
+function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
+var divIdToSecure;
+	divIdToSecure ="#grantAssignDiv";
+  (isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#[%divId%]FormSave";
+  (isUserAuthorized("[%UPDATE_GRANT%]"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#[%divId%]FormAdd";
+  (isUserAuthorized("[%INSERT_GRANT%]"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#[%divId%]EntryDivId";
+	(isUserAuthorized("[%UPDATE_GRANT%]") ||isUserAuthorized("[%INSERT_GRANT%]") )? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	if(isUserAuthorized("[%SELECT_GRANT%]") && !isUserAuthorized("[%UPDATE_GRANT%]")){
+	  securityLockForm("[%divId%]Form");
+	}
+
+
+
+
+}
+function clear[%divId%]Form(){
+	clearForm('[%divId%]Form');
+	makeAvailableAllPrivileges();
+	$('#grantAssignDiv').addClass('LogicDisabled');
+}
 
 //]]>
 
@@ -293,7 +416,7 @@ function sortDivChildren(divName_){
 	  [%dbColumnName = 'profile_name'%]
 	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 	    <label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Profile Name</label>
-	    <input  type="text" class="VALIDATEinteger" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+	    <input  type="text" class="VALIDATErequired" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 	  </div>
 	  <div class="formButtons">
@@ -303,7 +426,7 @@ function sortDivChildren(divName_){
 	    <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >
 	      Add</button>
 	    <button type="button" id="[%divId%]FormClear" value="Clear" 
-	      onclick="clearForm('[%divId%]Form');makeAvailableAllPrivileges();" >Clear</button>
+	      onclick="clear[%divId%]Form();" >Clear</button>
 	  </div>
 	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 	  <input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">

@@ -7,35 +7,35 @@
       <h1 id="[%divId%]Title" >I want to&hellip;</h1>
     </div>
     <div class="row">
-      <span class="twocol largeIconSpan"><a id="launcherShowGolfScore" onclick="showGolfScoreSummary();">
+      <span class="twocol largeIconSpan" id="launcherShowViewAveragesSpanId"><a id="launcherShowGolfScore" onclick="showGolfScoreSummary();">
 	  <span class="sprite64Icon kolfIcon"></span><br/>
 	  View Averages</a>
       </span>
-      <span class="twocol largeIconSpan"><a id="launcherShowQuickGolfScore" onclick="showQuickGolfScore();">
+      <span class="twocol largeIconSpan" id="launcherShowQuickEntrySpanId"><a id="launcherShowQuickGolfScore" onclick="showQuickGolfScore();">
 	  <span class="sprite64Icon lightningFolderIcon"></span><br/>
 	  Quick Entry</a>
       </span>
 
-      <span class="twocol  largeIconSpan"><a id="launcherShowGolfer" onclick="showGolfer();">
+      <span class="twocol  largeIconSpan" id="launcherShowGolfersSpanId"><a id="launcherShowGolfer" onclick="showGolfer();">
 	  <span class="sprite64Icon peopleIcon"></span><br/>
 	  View Golfers</a>
       </span>
-      <span class="twocol largeIconSpan"><a id="launcherShowHelp" onclick="showHelpPane();">
+      <span class="twocol largeIconSpan" id="launcherShowGetHelpSpanId"><a id="launcherShowHelp" onclick="showHelpPane();">
 	  <span class="sprite64Icon helpIcon"></span><br/>
 	  Get Help</a>
       </span>
 
-      <span class="twocol largeIconSpan"><a id="launcherShowHelp" onclick="showSecurityGrants();">
+      <span class="twocol largeIconSpan" id="launcherShowGrantsSpanId"><a id="launcherShowHelp" onclick="showSecurityGrants();">
 	  <span class="sprite64Icon keyIcon"></span><br/>
-	  Grants</a>
+	  Access Groups</a>
       </span>
       <span class="twocol last largeIconSpan" id="launcherShowSecurityUserSpanId"><a id="launcherShowSecurityUserId" onclick="showSecurityUser();">
 	  <span class="sprite64Icon keyManIcon"></span><br/>
-	  Profiles</a>
+	  Application Users</a>
       </span>
-      <span class="twocol last largeIconSpan"><a id="launcherShowHelp" onclick="showChangePasswordDialog();">
+      <span class="twocol last largeIconSpan" id="launcherShowChangeOwnPasswordSpanId"><a id="launcherShowHelp" onclick="showChangePasswordDialog();">
 	  <span class="sprite64Icon lockIcon"></span><br/>
-	  Change Password</a>
+	  Change My Password</a>
       </span>
     </div>
   </div>
@@ -61,15 +61,18 @@
 function imposeLauncherSecurityUIRestrictions(){
 	var divIdToSecure;
 	divIdToSecure ="#launcherShowSecurityUserSpanId";
-	if(!isUserAuthorized("SELECT_SECURITY_USER")){
-		$(divIdToSecure).addClass ("SecurityDisabled");
-	}else{
-	  $(divIdToSecure).removeClass("SecurityDisabled");
-	}
+  (isUserAuthorized("SELECT_SECURITY_USER"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	
+	divIdToSecure ="#launcherShowViewAveragesSpanId";
+  (isUserAuthorized("SELECT_GOLFER_HANDICAP"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	
+	divIdToSecure ="#launcherShowQuickEntrySpanId";
+  (isUserAuthorized("INSERT_GOLF_SCORE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	
+	divIdToSecure ="#launcherShowGrantsSpanId";
+  (isUserAuthorized("SELECT_SECURITY_PROFILE")  )? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 }
-
-
 
 </script>
 
