@@ -232,6 +232,7 @@ margin-bottom: -.35em;
     border-width:1px;
     border-style:solid;
     border-radius:15px;
+		z-index:1000;
   }
   .centerblock{
     display: block;

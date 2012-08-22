@@ -94,10 +94,15 @@ function save[%ucfirst(divId)%](params){
 
 //ServerCall Wrappers
 function edit[%ucfirst(divId)%]([%divId%]Id_){
-	if(!isUserAuthorized("[%UPDATE_GRANT%]") && !isUserAuthorized("[%SELECT_GRANT%]")){
+	if(!isUserAuthorized("[%SELECT_GRANT%]")){
 		briefNotify("Access Violation","ERROR");
 		return false;
 	}
+	if (isUserAuthorized("[%UPDATE_GRANT%]") ){
+		securityLockForm("[%divId%]Form", false);
+	}else{securityLockForm("[%divId%]Form", true);}
+
+
 
 	if([%divId%]Id_){
 		var params ={"where_clause":"[%prkey%]=" +[%divId%]Id_};
@@ -142,6 +147,10 @@ function build[%ucfirst(divId)%]ListTableRow(data){
 	if(isUserAuthorized("[%UPDATE_GRANT%]")){
 		htmlRow += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
 		htmlRow += "&nbsp; &nbsp;";
+	}else if(isUserAuthorized("[%SELECT_GRANT%]")){
+	  htmlRow += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>View</a> ";
+		htmlRow += "&nbsp; &nbsp;";
+
 	}
 	if(isUserAuthorized("[%DELETE_GRANT%]")){
 		htmlRow += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>  ";
@@ -164,18 +173,22 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
 
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](golferId_){
-	if(!isUserAuthorized("[%SELECT_GRANT%]") ){
-		briefNotify("Access Violation","ERROR");
-		return false;
-	}
+	if(!isUserAuthorized("[%SELECT_GRANT%]", true, "show[%ucfirst(divId)%]") ) return false; 
 
 	retrieve[%ucfirst(divId)%]List(golferId_); 
 	retrieveGolferNameForGolfScore(golferId_);
 	hideCurrentContentPane();
 	$("#[%divId%]").fadeIn();
 	currentContentPane="[%divId%]";
-	toggleSaveMode("[%divId%]Form",false);
+	if ( isFormEmpty("[%divId%]Form")) toggleSaveMode("[%divId%]Form",false);
 	$("#[%divId%]Form-golfer_id").val(golferId_);
+	
+}
+
+
+function clear[%ucfirst(divId)%]Form(){
+	clearForm('[%divId%]Form');
+	(isUserAuthorized("[%INSERT_GRANT%]", false))?securityLockForm("[%divId%]Form", false) :securityLockForm("[%divId%]Form", true);
 }
 
 //After complete Load setup
@@ -208,8 +221,11 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 
 	divIdToSecure ="#[%divId%]EntryDivId";
 	(isUserAuthorized("[%UPDATE_GRANT%]") ||isUserAuthorized("[%INSERT_GRANT%]") )? securityshow(divIdToSecure):securityHide(divIdToSecure);
-	if(isUserAuthorized("[%SELECT_GRANT%]") && !isUserAuthorized("[%UPDATE_GRANT%]")){
-	  securityLockForm("[%divId%]Form");
+	if(!isUserAuthorized("[%INSERT_GRANT%]") && !isUserAuthorized("[%UPDATE_GRANT%]")){
+	  securityLockForm("[%divId%]Form",true);
+	}
+if(!isUserAuthorized("[%INSERT_GRANT%]",false) && isFormEmpty("[%divId%]Form") ){
+		securityLockForm("[%divId%]Form", true);
 	}
 
 
@@ -249,7 +265,7 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 
 						<button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
 						<button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-						<button type="button" id="[%divId%]FormClear" value="Clear" onclick="clearForm('[%divId%]Form');" >Clear</button>
+						<button type="button" id="[%divId%]FormClear" value="Clear" onclick="clear[%ucfirst(divId)%]Form();" >Clear</button>
 					</div>
 
 					<input type="hidden" name="last_update" id="[%divId%]Form-last_update">

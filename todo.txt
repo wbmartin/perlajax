@@ -1,17 +1,6 @@
-SUMMARY
-*format empty score and period
-
-
-GOLFERS
-*Create Golfer
-*Edit Golfer
-
-GOLF SCORE
-On edit, date is not populating
-
-
-SECURITY
-*Add User
-*Edit User
-*Add/Remove Grants
-
+finish testing security grants.
+email forgotten password
+pagination on side lists
+sort out form locking for inserts/updates
+|-user opens empty form has update but not insert
+|-toggle save mode onshow needs to be conditional

@@ -67,7 +67,7 @@ function imposeLauncherSecurityUIRestrictions(){
   (isUserAuthorized("SELECT_GOLFER_HANDICAP"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 	
 	divIdToSecure ="#launcherShowQuickEntrySpanId";
-  (isUserAuthorized("INSERT_GOLF_SCORE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+  (isUserAuthorized("SELECT_GOLF_SCORE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 	
 	divIdToSecure ="#launcherShowGrantsSpanId";
   (isUserAuthorized("SELECT_SECURITY_PROFILE")  )? securityshow(divIdToSecure):securityHide(divIdToSecure);

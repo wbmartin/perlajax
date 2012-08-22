@@ -367,8 +367,9 @@ function validateServerResponse(responseTxt){
   return true;
 }
 
-function isUserAuthorized(request){
+function isUserAuthorized(request, notifyUser, caller){
 	var result= false;
+	var msg="";
 	request = request.toUpperCase();
 	for (var i=0;i<SECURITY_GRANT.length;i++){
 		 if(SECURITY_GRANT[i] == request){
@@ -376,8 +377,17 @@ function isUserAuthorized(request){
 			break;
 		 }
 	}
+	//briefNotify("made it" + notifyUser);
+	if (  notifyUser && !result ){
+		msg = "Access Violation (" + request + " is required)";
+		if(caller) msg+=" from " + caller;
+		briefNotify(msg ,"ERROR");
+
+	}
  return result;
 }
+
+
 
 function securityshow(divIdToSecure){
   $(divIdToSecure).removeClass("SecurityDisabled");
@@ -387,12 +397,22 @@ function securityHide(divIdToSecure){
   $(divIdToSecure).addClass ("SecurityDisabled");
 }
 
-function securityLockForm(formName){
+function securityLockForm(formName,lock){
+	var disableStatus;
   if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form", "ERROR");
-  $.each($("form#"+formName + " input"),function (ndx,field){
-	  $("form#"+formName +" #"+field.id).attr('disabled', 'disabled');
+	if (lock == undefined)lock=true;
+
+  $.each($("form#"+formName + " input, select"),function (ndx,field){
+	  if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
+		else $("form#"+formName +" #"+field.id).removeAttr('disabled');
   });
-	$.each($("form#"+formName + " select"),function (ndx,field){
-	  $("form#"+formName +" #"+field.id).attr('disabled', 'disabled');
-  });
+	//$.each($("form#"+formName + " select"),function (ndx,field){
+	//  if(lock) $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
+	//	else $("form#"+formName +" #"+field.id).removeAttr('disabled');
+  //});
+}
+
+function isFormEmpty(formName){
+if ($("#"+formName+"-last_update").val()=="")return true;
+return false;
 }
