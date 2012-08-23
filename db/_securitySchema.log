@@ -71,11 +71,7 @@ COMMIT
 begin;
 BEGIN
 drop TABLE if exists security_privilege cascade;
-psql:securitySchema/003_CreateSecurityPrivilege.sql:2: NOTICE:  drop cascades to 4 other objects
-DETAIL:  drop cascades to constraint fk_securityprofilegrant_securityprivilege on table security_profile_grant
-drop cascades to function security_privilege_sq(text,text,text,text,text,integer,integer)
-drop cascades to function security_privilege_iq(text,text,text,integer,text,text)
-drop cascades to function security_privilege_uq(text,text,text,integer,text,text,timestamp without time zone)
+psql:securitySchema/003_CreateSecurityPrivilege.sql:2: NOTICE:  drop cascades to constraint fk_securityprofilegrant_securityprivilege on table security_profile_grant
 DROP TABLE
 CREATE TABLE security_privilege
 (
@@ -224,8 +220,7 @@ Declare
    where  user_id =userId_ and priv_name = tran_;
    
    if rowCount <> 1 then
-	--raise exception 'ACCESS DENIED-- user is not authorized for this transaction';
-    return false;
+      raise exception 'ACCESS DENIED-- user is not authorized for this transaction';
    end if;
    return true;
  End;
@@ -439,6 +434,7 @@ CREATE FUNCTION
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  security_privilege_iq(text, text, text ,integer,text,text)
 -- DROP FUNCTION security_privilege_iq( text, text, text,integer,text,text);
+/* wbmartin 2012-08-22 | select is only UI proc
 create or replace function security_privilege_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,securityPrivilegeId_ integer,privName_ text,description_ text)
   returns security_privilege as
 $body$
@@ -458,13 +454,14 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-CREATE FUNCTION
+	*/
 --alter function security_privilege_iq(text,  text, text ,integer,text,text) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_privilege_iq(text,  text, text ,integer,text,text) TO GROUP golfscore;
 --select * from security_privilege_iq('ALREADY_AUTH', 'test', 'test'  ,1, 'text', 'text', 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  security_privilege_uq(text, text, text ,integer,text,text,timestamp)
 -- DROP FUNCTION security_privilege_uq(text, text, text ,integer,text,text,timestamp);
+/* wbmartin 2012-08-22 | select is only UI proc
 create or replace function security_privilege_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityPrivilegeId_ integer, privName_ text, description_ text, lastUpdate_ timestamp)
   returns security_privilege as
 $body$
@@ -488,13 +485,14 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-CREATE FUNCTION
+	*/
 --alter function security_privilege_uq(text,  text, text ,integer,text,text,timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_privilege_uq(text, text, text ,integer,text,text,timestamp) TO GROUP golfscore;
 --select * from security_privilege_uq('ALREADY_AUTH', 'test', 'test', 'text' ,1 <last_update>, 'text', 'text');
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  security_privilege_dq(text, text ,integer, timestamp)
 -- DROP FUNCTION security_privilege_dq( text,  text ,integer, timestamp);
+/* wbmartin 2012-08-22 | select is only UI proc
 create or replace function security_privilege_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,securityPrivilegeId_ integer, lastUpdate_ timestamp  )
   returns boolean as
 $body$
@@ -516,12 +514,13 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-CREATE FUNCTION
+	*/
 --alter function security_privilege_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_privilege_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  security_privilege_dqw(text, text, text)
 -- DROP FUNCTION security_privilege_dqw( text,text,text);
+/* wbmartin 2012-08-22 | select is only UI proc
 create or replace function security_privilege_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_ text )
   returns boolean as
 $body$
@@ -543,7 +542,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-CREATE FUNCTION
+	*/
 --alter function security_privilege_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_privilege_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -699,7 +698,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-psql:securitySchema/040_CreateProc_CRUD_security_profile_grant.sql:165: ERROR:  must be owner of function security_profile_grant_dqw
+CREATE FUNCTION
 --alter function security_profile_grant_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_profile_grant_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
@@ -859,3 +858,28 @@ CREATE FUNCTION
 --alter function security_user_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_user_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+\i securitySchema/060_CreateProc_ChangePassword.sql
+CREATE OR REPLACE FUNCTION change_password(alreadyauth_ text, securityuserid_ text, sessionid_ text, userIdForUpdate_ text, newPassword_ text)
+  RETURNS boolean AS
+$BODY$
+  declare
+  begin
+    	--perform issessionvalid( securityuserid_,sessionid_) ;
+    if securityuserid_ <> userIdForUpdate_ then
+    	perform isuserauthorized( securityuserid_, 'CHANGE_OTHERS_PWD' );
+    end if;
+	update security_user set password_enc = md5(newPassword_), updated_by = securityuserid_	where user_id = userIdForUpdate_ ;
+
+	if found then
+	  return true;
+	else 
+	  raise exception 'Password Update Failed' ;
+	end if;
+  end;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+CREATE FUNCTION
+ALTER FUNCTION change_password(text, text, text, text, text)
+  OWNER TO concordc_golfscoredev;
+ALTER FUNCTION

@@ -53,6 +53,7 @@ $BODY$
 
 -- Function:  security_privilege_iq(text, text, text ,integer,text,text)
 -- DROP FUNCTION security_privilege_iq( text, text, text,integer,text,text);
+/* wbmartin 2012-08-22 | select is only UI proc
 create or replace function security_privilege_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,securityPrivilegeId_ integer,privName_ text,description_ text)
   returns security_privilege as
 $body$
@@ -72,6 +73,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
+	*/
 --alter function security_privilege_iq(text,  text, text ,integer,text,text) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_privilege_iq(text,  text, text ,integer,text,text) TO GROUP golfscore;
 
@@ -81,7 +83,7 @@ $body$
 
 -- Function:  security_privilege_uq(text, text, text ,integer,text,text,timestamp)
 -- DROP FUNCTION security_privilege_uq(text, text, text ,integer,text,text,timestamp);
-
+/* wbmartin 2012-08-22 | select is only UI proc
 create or replace function security_privilege_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityPrivilegeId_ integer, privName_ text, description_ text, lastUpdate_ timestamp)
   returns security_privilege as
 $body$
@@ -105,6 +107,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
+	*/
 --alter function security_privilege_uq(text,  text, text ,integer,text,text,timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_privilege_uq(text, text, text ,integer,text,text,timestamp) TO GROUP golfscore;
 
@@ -114,7 +117,7 @@ $body$
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function:  security_privilege_dq(text, text ,integer, timestamp)
 -- DROP FUNCTION security_privilege_dq( text,  text ,integer, timestamp);
-
+/* wbmartin 2012-08-22 | select is only UI proc
 create or replace function security_privilege_dq(alreadyauth_ text,  userid_ text, sessionid_ text ,securityPrivilegeId_ integer, lastUpdate_ timestamp  )
   returns boolean as
 $body$
@@ -136,12 +139,14 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
+	*/
 --alter function security_privilege_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_privilege_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 -- Function:  security_privilege_dqw(text, text, text)
 -- DROP FUNCTION security_privilege_dqw( text,text,text);
+/* wbmartin 2012-08-22 | select is only UI proc
 create or replace function security_privilege_dqw(alreadyauth_ text,  userid_ text, sessionid_ text , whereClause_ text )
   returns boolean as
 $body$
@@ -163,6 +168,7 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
+	*/
 --alter function security_privilege_dq(text, text, text,integer, timestamp) owner to postgres;
 --GRANT EXECUTE ON FUNCTION security_privilege_dq(text,  text, text,integer, timestamp) TO GROUP golfscore;
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

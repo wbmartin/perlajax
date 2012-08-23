@@ -37,14 +37,15 @@ INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, d
 	VALUES (10, 'SELECT_CROSS_TABLE_CACHE', now(), 'Required for all users to populate options'); 
 INSERT 0 1
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
-	VALUES (11, 'SELECT_SECURITY_PROFILE_GRANT', now(), 'Allows users to select security_profile_grant'); 
+	VALUES (11, 'SELECT_SECURITY_PROFILE_GRANT', now(), 'Allows users to view permissions assigned to a profile '); 
 INSERT 0 1
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)   
 	VALUES (12,'INSERT_SECURITY_PROFILE_GRANT', now(), 'Allows users to add records to security_profile_grant');
 INSERT 0 1
+/*	wbmartin2012-08-22|grants are inserted and deleted, not updated.
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)   
 	VALUES (13,'UPDATE_SECURITY_PROFILE_GRANT', now(), 'Allows users to update records in security_profile_grant');
-INSERT 0 1
+	*/
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)   
 	VALUES (14, 'DELETE_SECURITY_PROFILE_GRANT', now(), 'Allows users to delete records from security_profile_grant');
 INSERT 0 1
@@ -75,21 +76,23 @@ INSERT 0 1
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
 	VALUES (23 ,'SELECT_SECURITY_PRIVILEGE', now(), 'Allows users to select security_privilege'); 
 INSERT 0 1
+/* wbmartin 2012-08-22|UI doesn't use privs, uses grants instead.
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
 	VALUES (24,'INSERT_SECURITY_PRIVILEGE', now(), 'Allows users to add records to security_privilege');
-INSERT 0 1
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
 	VALUES (25,'UPDATE_SECURITY_PRIVILEGE', now(), 'Allows users to update records in security_privilege');
-INSERT 0 1
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
 	VALUES (26 ,'DELETE_SECURITY_PRIVILEGE', now(), 'Allows users to delete records from security_privilege');
+	*/
+INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
+	VALUES (27 ,'CHANGE_OTHERS_PWD', now(), 'Admin-Allows users to change other users passwords');
 INSERT 0 1
 ---------------------------------
 delete from security_profile_grant where security_profile_id =1;
 DELETE 0
 insert into security_profile_grant (security_profile_id, security_privilege_id, last_update, updated_by)
 select 1,security_privilege_id,now(),'sys' from security_privilege;
-INSERT 0 26
+INSERT 0 23
 \i data/020_INSERT_TestDat.sql
 \set ECHO all
 insert into golfer(name, last_update) values ('ABlah',now());

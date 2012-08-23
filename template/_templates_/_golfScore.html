@@ -181,13 +181,19 @@ function show[%ucfirst(divId)%](golferId_){
 	$("#[%divId%]").fadeIn();
 	currentContentPane="[%divId%]";
 	if ( isFormEmpty("[%divId%]Form")) toggleSaveMode("[%divId%]Form",false);
+	if ($("#[%divId%]Form-golfer_id").val() !=golferId_){
+		clear[%ucfirst(divId)%]Form();
+	}
 	$("#[%divId%]Form-golfer_id").val(golferId_);
+	$("#[%divId%]GolferNameId").html(GOLFER_CACHE[golferId_] + " Golf Scores ");
 	
 }
 
 
 function clear[%ucfirst(divId)%]Form(){
+	var golferId= 	$("#[%divId%]Form-golfer_id").val();
 	clearForm('[%divId%]Form');
+	$("#[%divId%]Form-golfer_id").val(golferId);
 	(isUserAuthorized("[%INSERT_GRANT%]", false))?securityLockForm("[%divId%]Form", false) :securityLockForm("[%divId%]Form", true);
 }
 
@@ -224,7 +230,7 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 	if(!isUserAuthorized("[%INSERT_GRANT%]") && !isUserAuthorized("[%UPDATE_GRANT%]")){
 	  securityLockForm("[%divId%]Form",true);
 	}
-if(!isUserAuthorized("[%INSERT_GRANT%]",false) && isFormEmpty("[%divId%]Form") ){
+  if(!isUserAuthorized("[%INSERT_GRANT%]",false) && isFormEmpty("[%divId%]Form") ){
 		securityLockForm("[%divId%]Form", true);
 	}
 

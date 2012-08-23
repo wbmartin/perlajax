@@ -230,14 +230,14 @@ function populateAvailableGrantsWithAll(){
   }
 
 	$("#availableGrantsId").html(newOptions);
-	if(isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT") && isUserAuthorized("UPDATE_SECURITY_PROFILE_GRANT")){
+	if(isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT") ){
     makeDragable(".securityGrant");
 	}
   $("#grantedPrivilegesId").children().remove();
 }
 
 function makeDragable(identifierTodraggable_){
-	if(!isUserAuthorized("UPDATE_SECURITY_PROFILE_GRANT") || !isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT")){
+	if( !isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT")){
 		briefNotify("Access Violation - makeDragable","ERROR");
 		return false;
 	}
@@ -279,7 +279,7 @@ function handleSecurityRevokeDrop( event, ui ){
 }
 
 function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
-	if(!isUserAuthorized("UPDATE_SECURITY_PROFILE_GRANT") ){
+	if(!isUserAuthorized("DELETE_SECURITY_PROFILE_GRANT") ){
 		briefNotify("Access Violation - attemptSecurityGrantRevoke ","ERROR");
 		return false;
 	}
@@ -289,7 +289,7 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
   var privId = divId_.replace("securityGrant","");
   privId = privId.replace("Id","");
   if(!isEmpty(profileId)){
-    if (grantOrRevoke_ === "GRANT"){//grant requeseted
+    if (grantOrRevoke_ === "GRANT"){//grant requested
       assignGrantStatus(divId_, "GRANT");
       grantPrivilege(privId, profileId);
     }else{//default to revoke
@@ -381,7 +381,7 @@ function sortDivChildren(divName_){
       });
   $(divName_).children().remove();
 	$(divName_).append(children);
-	if(isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT") && isUserAuthorized("UPDATE_SECURITY_PROFILE_GRANT")){
+	if(isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT") ){
 		makeDragable(divName_ + " .securityGrant");
 	}
 }
@@ -403,7 +403,7 @@ var divIdToSecure;
 	if(!isUserAuthorized("[%INSERT_GRANT%]") && !isUserAuthorized("[%UPDATE_GRANT%]")){
 	  securityLockForm("[%divId%]Form",true);
 	}
-if(!isUserAuthorized("[%INSERT_GRANT%]",false) && isFormEmpty("[%divId%]Form") ){
+  if(!isUserAuthorized("[%INSERT_GRANT%]",false) && isFormEmpty("[%divId%]Form") ){
 		securityLockForm("[%divId%]Form", true);
 	}
 
@@ -415,8 +415,16 @@ function clear[%divId%]Form(){
 	clearForm('[%divId%]Form');
 	makeAvailableAllPrivileges();
 	$('#grantAssignDiv').addClass('LogicDisabled');
-	(isUserAuthorized("[%INSERT_GRANT%]", false))? securityshow("#[%divId%]FormAdd"):securityHide("#[%divId%]FormAdd");
+	if (isUserAuthorized("[%INSERT_GRANT%]", false)){
+		securityshow("#[%divId%]FormAdd");
+		securityLockForm("[%divId%]Form", false) 
+	}else{
+		securityHide("#[%divId%]FormAdd");
+		securityLockForm("[%divId%]Form", true);
+	}
 }
+
+
 
 //]]>
 

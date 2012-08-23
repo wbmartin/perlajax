@@ -11,13 +11,14 @@ var insertUpdateChoose = "INSERTUPDATE";
 var FAILF = function(){alert("FAIL");}
 var currentContentPane="";
 var SERVER_SIDE_FAIL ='serverSideFail';
+var OUTSTANDING_SERVER_CALLS=0;
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Form Functions
 function appendValidationMsg(formId,fieldId, msg){
 	var fullyQName = "form#"+formId+" #" + fieldId;
 	if($("form#"+formId).find("#"+fieldId+"Error").attr("id")==undefined){
-	   $(fullyQName).after("<span id='" +fieldId + "Error' class='ValidationMsg'></span>");
+		$(fullyQName).after("<span id='" +fieldId + "Error' class='ValidationMsg'></span>");
 	}
 	if( $(fullyQName+"Error").html().length ==0){
 		$(fullyQName+"Error").append("*");
@@ -27,50 +28,50 @@ function appendValidationMsg(formId,fieldId, msg){
 }
 
 function highlightFieldError(formId, fieldId, yesNo){
-  var bordercolor="black";
-  if  (yesNo) bordercolor="red"
-  $("form#"+formId+" #"+fieldId).css("border-color:"+bordercolor);
+	var bordercolor="black";
+	if  (yesNo) bordercolor="red"
+		$("form#"+formId+" #"+fieldId).css("border-color:"+bordercolor);
 
 }
 
 function bindForm(formName){
-  var rslt={};
-  var fieldId="";
-  $.each($("form#"+formName+" :input"), 
-	function(key, field){
-	  fieldId = field.id.replace(formName+"-","");
-	  if(field.type != 'button') rslt[fieldId]= field.value
-	});
-  return rslt;
+	var rslt={};
+	var fieldId="";
+	$.each($("form#"+formName+" :input"), 
+			function(key, field){
+				fieldId = field.id.replace(formName+"-","");
+				if(field.type != 'button') rslt[fieldId]= field.value
+			});
+	return rslt;
 }
 
 function bindToForm(formName, obj){
-var fieldId="";
- $.each($("form#"+formName+" :input"), 
-	function(key, field){
-	  fieldId = field.id.replace(formName+"-","");
-	  if(field.type != 'button')  field.value = obj[fieldId];
-	});
+	var fieldId="";
+	$.each($("form#"+formName+" :input"), 
+			function(key, field){
+				fieldId = field.id.replace(formName+"-","");
+				if(field.type != 'button')  field.value = obj[fieldId];
+			});
 }
 
 function clearForm(formName){
-  var fieldId="";
-  $.each($("form#"+formName+" :input"), 
-	function(key, field){
-	  fieldId = field.id.replace(formName+"-","");
-	  if (field.type == 'checkbox'){
-	    field.checked=false;
-	  }else if(field.type != 'button')  field.value = "";
-	}
-  );
-  toggleSaveMode(formName, false);
+	var fieldId="";
+	$.each($("form#"+formName+" :input"), 
+			function(key, field){
+				fieldId = field.id.replace(formName+"-","");
+				if (field.type == 'checkbox'){
+					field.checked=false;
+				}else if(field.type != 'button')  field.value = "";
+			}
+			);
+	toggleSaveMode(formName, false);
 }
 
 function toggleSaveMode(formName, saveMode){
-  var buttonToShow = (saveMode)?"Save":"Add";
-  var buttonToHide = (!saveMode)?"Save":"Add";
-  $("form#"+formName+" #" +formName +buttonToHide).addClass("LogicDisabled");
-  $("form#"+formName+" #" +formName +buttonToShow).removeClass("LogicDisabled");
+	var buttonToShow = (saveMode)?"Save":"Add";
+	var buttonToHide = (!saveMode)?"Save":"Add";
+	$("form#"+formName+" #" +formName +buttonToHide).addClass("LogicDisabled");
+	$("form#"+formName+" #" +formName +buttonToShow).removeClass("LogicDisabled");
 
 
 
@@ -79,83 +80,83 @@ function toggleSaveMode(formName, saveMode){
 
 
 function standardValidate(formName){
-  var formValid = true;
-  if($("#"+formName).length==0) formValid=false;
-  $.each($("form#"+formName + " span.ValidationMsg"),function (ndx,span){
-	span.innerHTML="";
-  });
-  $.each($("form#"+formName + " .invalid"),function (ndx,field){
-	$("form#"+formName +" #"+field.id).removeClass("invalid");
-  });
-  $.each($("form#" +formName + " .VALIDATErequired"),function (ndx,field){
-	if(field.value == null || field.value==""){
-	 appendValidationMsg(formName,field.id, "Required");
-	 highlightFieldError(formName,field.id,true);
-	 formValid =false;
-	}
-  });
-  $.each($("form#" +formName + " .VALIDATEinteger"),function (ndx,field){
-	if(field.value != null && !isInteger(field.value)){
-	 appendValidationMsg(formName,field.id, "Integer Input Required");
-	 highlightFieldError(formName,field.id,true);
-	 formValid =false;
-	}
-  });
-  $.each($("form#" +formName + " .VALIDATEmmddyyyydate"),function (ndx,field){
-	if(field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)){
-	 appendValidationMsg(formName,field.id, "MM/DD/YYYY Required");
-	 highlightFieldError(formName,field.id,true);
-	 formValid =false;
-	}
-  });
+	var formValid = true;
+	if($("#"+formName).length==0) formValid=false;
+	$.each($("form#"+formName + " span.ValidationMsg"),function (ndx,span){
+		span.innerHTML="";
+	});
+	$.each($("form#"+formName + " .invalid"),function (ndx,field){
+		$("form#"+formName +" #"+field.id).removeClass("invalid");
+	});
+	$.each($("form#" +formName + " .VALIDATErequired"),function (ndx,field){
+		if(field.value == null || field.value==""){
+			appendValidationMsg(formName,field.id, "Required");
+			highlightFieldError(formName,field.id,true);
+			formValid =false;
+		}
+	});
+	$.each($("form#" +formName + " .VALIDATEinteger"),function (ndx,field){
+		if(field.value != null && !isInteger(field.value)){
+			appendValidationMsg(formName,field.id, "Integer Input Required");
+			highlightFieldError(formName,field.id,true);
+			formValid =false;
+		}
+	});
+	$.each($("form#" +formName + " .VALIDATEmmddyyyydate"),function (ndx,field){
+		if(field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)){
+			appendValidationMsg(formName,field.id, "MM/DD/YYYY Required");
+			highlightFieldError(formName,field.id,true);
+			formValid =false;
+		}
+	});
 
 
 
-return formValid;
+	return formValid;
 }
 
 function isFieldIdEmpty(fieldId_){
-  if (document.getElementById(fieldId_) == undefined) return true;
-  if (document.getElementById(fieldId_).value == undefined) return true;
-  if (document.getElementById(fieldId_).value == null) return true;
-  if (document.getElementById(fieldId_).value == "") return true;
-  return false;
+	if (document.getElementById(fieldId_) == undefined) return true;
+	if (document.getElementById(fieldId_).value == undefined) return true;
+	if (document.getElementById(fieldId_).value == null) return true;
+	if (document.getElementById(fieldId_).value == "") return true;
+	return false;
 }
 
 function isEmpty(val){
-  if (typeof(val) == "undefined")return true;
-  if (val == null || val =="") return true;
-  return false;
+	if (typeof(val) == "undefined")return true;
+	if (val == null || val =="") return true;
+	return false;
 }
 
 function isInteger(value){ 
-  if((parseFloat(value) == parseInt(value)) && !isNaN(value)){
-      return true;
-  } else { 
-      return false;
-  } 
+	if((parseFloat(value) == parseInt(value)) && !isNaN(value)){
+		return true;
+	} else { 
+		return false;
+	} 
 }
 
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Formatting Functions
 function pgDate(val){
-var rslt;
-      if (val !=null){
-	rslt = val.substring(5,7)+"/"+val.substring(8,10) +"/"+ val.substring(0,4);
-      }else{
-	rslt= "";
-      }
-  return rslt;
+	var rslt;
+	if (val !=null){
+		rslt = val.substring(5,7)+"/"+val.substring(8,10) +"/"+ val.substring(0,4);
+	}else{
+		rslt= "";
+	}
+	return rslt;
 }
 
 function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
-        if (isNaN(parseInt(num))) return "---";
+	if (isNaN(parseInt(num))) return "---";
 	var tmpNum = num;
 	var iSign = num < 0 ? -1 : 1;		// Get sign of number
 	tmpNum *= Math.pow(10,decimalNum);
 	tmpNum = Math.round(Math.abs(tmpNum))
-	tmpNum /= Math.pow(10,decimalNum);
+		tmpNum /= Math.pow(10,decimalNum);
 	tmpNum *= iSign;						
 	var tmpNumStr = new String(tmpNum);
 
@@ -163,7 +164,7 @@ function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 	if (!bolLeadingZero && num < 1 && num > -1 && num != 0)
 		if (num > 0)tmpNumStr = tmpNumStr.substring(1,tmpNumStr.length);
 		else tmpNumStr = "-" + tmpNumStr.substring(2,tmpNumStr.length);
-		
+
 	// See if we need to put in the commas
 	if (bolCommas && (num >= 1000 || num <= -1000)) {
 		var iStart = tmpNumStr.indexOf(".");
@@ -172,7 +173,7 @@ function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 		iStart -= 3;
 		while (iStart >= 1) {
 			tmpNumStr = tmpNumStr.substring(0,iStart) + "," + tmpNumStr.substring(iStart,tmpNumStr.length)
-			iStart -= 3;
+				iStart -= 3;
 		}		
 	}
 
@@ -180,10 +181,10 @@ function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 	if (bolParens && num < 0) tmpNumStr = "(" + tmpNumStr.substring(1,tmpNumStr.length) + ")";
 
 	if(tmpNumStr.indexOf(".")<0 && decimalNum >0){
-	  tmpNumStr += ".";
+		tmpNumStr += ".";
 	}
 	while((tmpNumStr.length -tmpNumStr.indexOf(".")) <= decimalNum){
-	  tmpNumStr += "0";
+		tmpNumStr += "0";
 
 	}
 
@@ -201,24 +202,24 @@ function filterCacheArrayByVal ( cacheArray, idToSet){
 }
 
 function digest(er, ee) {
-    if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
-    for (var attr in ee) {
-        er[attr] = ee[attr];
-    }
-    return er;
+	if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
+	for (var attr in ee) {
+		er[attr] = ee[attr];
+	}
+	return er;
 }
 
 
 function deepCopy(obj){
-  return $.extend(true, [], obj);
+	return $.extend(true, [], obj);
 }
 
 function setSelectOptions(selectId, obj){
-  var newhtml="<option value=''></option>";
-  $.each(obj,function(key,val){
-   newhtml += "<option value='" + key + "'>"+val +"</option>";
-  });
-  $(selectId).html(newhtml);
+	var newhtml="<option value=''></option>";
+	$.each(obj,function(key,val){
+		newhtml += "<option value='" + key + "'>"+val +"</option>";
+	});
+	$(selectId).html(newhtml);
 
 }
 
@@ -232,98 +233,110 @@ function timeoutIfNoAction(){ "use strict";
 		statusMsg("Logging Out User in 1 minute");
 		window.setTimeout(function(){if (usrLogoutScheduled){logOutUser();}},60000);
 	}else{
-	  window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
+		window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
 	}
 
 }
 
 
 function hideCurrentContentPane(){
-  if(document.getElementById(currentContentPane)!= undefined){
-	document.getElementById(currentContentPane).style.display="none";
-  }
-  $(document).unbind("keypress");
+	if(document.getElementById(currentContentPane)!= undefined){
+		document.getElementById(currentContentPane).style.display="none";
+	}
+	$(document).unbind("keypress");
 }
 
 
 function standardShowContentPane(name){
 	hideCurrentContentPane();
-  	$("#"+name).fadeIn();
-  	currentContentPane= name;
+	$("#"+name).fadeIn();
+	currentContentPane= name;
 }
 
 function hideMainContent(){
- return "";
+	return "";
 }
 
 function registerAction(){
-  usrLastAction= new Date();
-  usrLogoutScheduled = false;
+	usrLastAction= new Date();
+	usrLogoutScheduled = false;
 }
 
 window.onbeforeunload = function () {
-  if(usrSessionId !=""){
-   return "If you click OK and continue to refresh this page, you will lose any data that has not been saved"
-  }
+	if(usrSessionId !=""){
+		return "If you click OK and continue to refresh this page, you will lose any data that has not been saved"
+	}
 }
 
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Log Msg Functions
 function briefNotify(msg,type){
-  var color;
-  if (type== null || type=="INFO"){
-    color="green";
-  }else if (type=="WARNING"){
-    color="yellow";
-  }else if (type=="ERROR"){
-    color="red";
-  }else{
-    color="black";
-  }
-  $("#briefNoticeMsg").css("border-color",color);
-  $("#briefNoticeMsg").css("color",color);
-  $("#briefNoticeMsg").html(msg);
-  $('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
-  statusMsg(msg);
+	var color;
+	if (type== null || type=="INFO"){
+		color="green";
+	}else if (type=="WARNING"){
+		color="yellow";
+	}else if (type=="ERROR"){
+		color="red";
+	}else{
+		color="black";
+	}
+	$("#briefNoticeMsg").css("border-color",color);
+	$("#briefNoticeMsg").css("color",color);
+	$("#briefNoticeMsg").html(msg);
+	$('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
+	statusMsg(msg);
 }
 function statusMsg(msg){
-  $("#statusMsg").html(msg);
-  logMsg("Console Msg:" +msg);
+	$("#statusMsg").html(msg);
+	logMsg("Console Msg:" +msg);
 }
 function logMsg(msg,requestId){
-  var timingInfo="";
-  var logId = clientLog.length;
-  if (requestId != null && requestId != "NEW"){ logId = requestId; }
-  if( logId == clientLog.length){ 
-	clientLog[logId] = {logDt: new Date()}; 
-  }else{
-	timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
-  }
-  clientLog[logId].msg= msg+timingInfo;
-  
-return logId;
+	var timingInfo="";
+	var logId = clientLog.length;
+	if (requestId != null && requestId != "NEW"){ logId = requestId; }
+	if( logId == clientLog.length){ 
+		clientLog[logId] = {logDt: new Date()}; 
+	}else{
+		timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
+	}
+	clientLog[logId].msg= msg+timingInfo;
+
+	return logId;
 }
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Server Call Functions
 function serverCall(params, successCallback, failCallback){
-  var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
-  params['requestId'] =logMsg(resourceActionInfo + " Started");
-  var successCallbackMod = function(rslt){
-	logMsg(resourceActionInfo + " Responded", rslt.requestId);
- 	if(!validateServerResponse(rslt)){
-		logMsg(resourceActionInfo + " Failed to validate the server response - " +  rslt['errorMsg']);
-		rslt[SERVER_SIDE_FAIL] = true;
-	}else{
-		rslt[SERVER_SIDE_FAIL] = false;
-	}	  
-	successCallback(rslt);
-  }
-  $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
-	  success: successCallbackMod, error: failCallback });
+	var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
+	params['requestId'] =logMsg(resourceActionInfo + " Started");
+	var successCallbackMod = function(rslt){
+		decrementServerCalls();
+		logMsg(resourceActionInfo + " Responded", rslt.requestId);
+		if(!validateServerResponse(rslt)){
+			logMsg(resourceActionInfo + " Failed to validate the server response - " +  rslt['errorMsg']);
+			rslt[SERVER_SIDE_FAIL] = true;
+		}else{
+			rslt[SERVER_SIDE_FAIL] = false;
+		}	  
+		successCallback(rslt);
+	}
+	incrementServerCalls();
+	$.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
+		success: successCallbackMod, error: failCallback });
 
 }
+
+function incrementServerCalls(){
+	$("#outstandingServerCalls").html("Open Requests: " + ++OUTSTANDING_SERVER_CALLS)
+}
+
+function decrementServerCalls(){
+	OUTSTANDING_SERVER_CALLS = (--OUTSTANDING_SERVER_CALLS <0)?0:OUTSTANDING_SERVER_CALLS;
+$("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
+}
+
 
 function handleServerResponse(msg, startTime, data){
 	if(!validateServerResponse(data)){
@@ -335,36 +348,36 @@ function handleServerResponse(msg, startTime, data){
 }
 
 function prepParams(params, resource, action){
- 	if(params == null){ params = {}; }
-  	params['spwfResource'] = resource;
+	if(params == null){ params = {}; }
+	params['spwfResource'] = resource;
 	params['user_id'] = usrLoginId;
 	params['session_id'] = usrSessionId;
-  	if (action ==insertUpdateChoose){
- 	  if(params['last_update']!= null && params['last_update']!= ""){
-      		action = "update";
-    	  }else{
-      		action= "insert";
-    	  }
-        }
-  	params['spwfAction'] = action;
+	if (action ==insertUpdateChoose){
+		if(params['last_update']!= null && params['last_update']!= ""){
+			action = "update";
+		}else{
+			action= "insert";
+		}
+	}
+	params['spwfAction'] = action;
 	return params;
 }
 
 function validateServerResponse(responseTxt){
 	if(responseTxt == undefined ||responseTxt==null ){
-	  logMsg("validateServerResponse - undefined response");
-	  alert("Sorry, there was an unexpected error communicating with the server.");
-	  return false;
+		logMsg("validateServerResponse - undefined response");
+		alert("Sorry, there was an unexpected error communicating with the server.");
+		return false;
 	}else if(responseTxt.errorMsg != undefined){
 		if(responseTxt.errorMsg.indexOf('Session Invalid')>-1 ){
-	  		alert("Sorry, the session has expired and you will be logged out");
+			alert("Sorry, the session has expired and you will be logged out");
 			usrSessionId="";
 		}
-	   logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
-	   return false;
+		logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
+		return false;
 	}
-  registerAction();
-  return true;
+	registerAction();
+	return true;
 }
 
 function isUserAuthorized(request, notifyUser, caller){
@@ -372,10 +385,10 @@ function isUserAuthorized(request, notifyUser, caller){
 	var msg="";
 	request = request.toUpperCase();
 	for (var i=0;i<SECURITY_GRANT.length;i++){
-		 if(SECURITY_GRANT[i] == request){
+		if(SECURITY_GRANT[i] == request){
 			result=true;
 			break;
-		 }
+		}
 	}
 	//briefNotify("made it" + notifyUser);
 	if (  notifyUser && !result ){
@@ -384,35 +397,47 @@ function isUserAuthorized(request, notifyUser, caller){
 		briefNotify(msg ,"ERROR");
 
 	}
- return result;
+	return result;
 }
 
 
 
 function securityshow(divIdToSecure){
-  $(divIdToSecure).removeClass("SecurityDisabled");
+	$(divIdToSecure).removeClass("SecurityDisabled");
 }
-	
+
 function securityHide(divIdToSecure){
-  $(divIdToSecure).addClass ("SecurityDisabled");
+	$(divIdToSecure).addClass ("SecurityDisabled");
 }
 
 function securityLockForm(formName,lock){
 	var disableStatus;
-  if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form", "ERROR");
+	if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form", "ERROR");
 	if (lock == undefined)lock=true;
 
-  $.each($("form#"+formName + " input, select"),function (ndx,field){
-	  if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
+	$.each($("form#"+formName + " input, select"),function (ndx,field){
+		if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
 		else $("form#"+formName +" #"+field.id).removeAttr('disabled');
-  });
+	});
 	//$.each($("form#"+formName + " select"),function (ndx,field){
 	//  if(lock) $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
 	//	else $("form#"+formName +" #"+field.id).removeAttr('disabled');
-  //});
+	//});
 }
 
 function isFormEmpty(formName){
-if ($("#"+formName+"-last_update").val()=="")return true;
-return false;
+	if ($("#"+formName+"-last_update").val()=="")return true;
+	return false;
+}
+
+function buildPagination(currentPageNum, totalItemCount,itemsPerPagefunctionName){
+	var htmlPageBlock;
+	htmlPageBlock="<ul>;
+	if (currentPageNum !=1) htmlPageBlock +="<li><a href='#'>Prev</a></li>";
+
+
+
+
+	htmlPageBlock+="</ul>;
+	return htmlPageBlock;
 }

@@ -1,6 +1,4 @@
-finish testing security grants.
 email forgotten password
 pagination on side lists
-sort out form locking for inserts/updates
-|-user opens empty form has update but not insert
-|-toggle save mode onshow needs to be conditional
+FAQ Page
+Support Request

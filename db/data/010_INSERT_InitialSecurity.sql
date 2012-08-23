@@ -32,8 +32,10 @@ INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, d
 	VALUES (11, 'SELECT_SECURITY_PROFILE_GRANT', now(), 'Allows users to view permissions assigned to a profile '); 
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)   
 	VALUES (12,'INSERT_SECURITY_PROFILE_GRANT', now(), 'Allows users to add records to security_profile_grant');
+/*	wbmartin2012-08-22|grants are inserted and deleted, not updated.
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)   
 	VALUES (13,'UPDATE_SECURITY_PROFILE_GRANT', now(), 'Allows users to update records in security_profile_grant');
+	*/
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)   
 	VALUES (14, 'DELETE_SECURITY_PROFILE_GRANT', now(), 'Allows users to delete records from security_profile_grant');
 
@@ -54,15 +56,16 @@ INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, 
 	VALUES (21,'UPDATE_SECURITY_USER', now(), 'Allows users to update records in security_user');
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
 	VALUES (22 ,'DELETE_SECURITY_USER', now(), 'Allows users to delete records from security_user');
-
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
 	VALUES (23 ,'SELECT_SECURITY_PRIVILEGE', now(), 'Allows users to select security_privilege'); 
+/* wbmartin 2012-08-22|UI doesn't use privs, uses grants instead.
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
 	VALUES (24,'INSERT_SECURITY_PRIVILEGE', now(), 'Allows users to add records to security_privilege');
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
 	VALUES (25,'UPDATE_SECURITY_PRIVILEGE', now(), 'Allows users to update records in security_privilege');
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
 	VALUES (26 ,'DELETE_SECURITY_PRIVILEGE', now(), 'Allows users to delete records from security_privilege');
+	*/
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
 	VALUES (27 ,'CHANGE_OTHERS_PWD', now(), 'Admin-Allows users to change other users passwords');
 
