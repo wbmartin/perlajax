@@ -12,6 +12,7 @@ var FAILF = function(){alert("FAIL");}
 var currentContentPane="";
 var SERVER_SIDE_FAIL ='serverSideFail';
 var OUTSTANDING_SERVER_CALLS=0;
+var PAGINATION_ROW_LIMIT=10;
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Form Functions
@@ -190,6 +191,22 @@ function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 
 	return tmpNumStr.toString();		// Return our formatted string!
 }
+
+
+String.prototype.ucfirst = function () {
+    // Split the string into words if string contains multiple words.
+    var x = this.split(/\s+/g);
+    for (var i = 0; i < x.length; i++) {
+        // Splits the word into two parts. One part being the first letter,
+        // second being the rest of the word.
+        var parts = x[i].match(/(\w)(\w*)/);
+        // Put it back together but uppercase the first letter and
+        x[i] = parts[1].toUpperCase() + parts[2];
+    }
+    // Rejoin the string and return.
+    return x.join(' ');
+};
+
 
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -430,14 +447,40 @@ function isFormEmpty(formName){
 	return false;
 }
 
-function buildPagination(currentPageNum, totalItemCount,itemsPerPagefunctionName){
+function buildPaginationBlock(currentPageNum, totalItemCount,itemsPerPage,functionName){
 	var htmlPageBlock;
-	htmlPageBlock="<ul>;
-	if (currentPageNum !=1) htmlPageBlock +="<li><a href='#'>Prev</a></li>";
+	var totalPageCount = 	Math.round(totalItemCount/itemsPerPage );
+	var firstPage;
+	var lastPage;
+	firstPage = currentPageNum-itemsPerPage/2;
+	lastPage = currentPageNum+itemsPerPage/2;
+	//alert(currentPageNum + " " + totalItemCount+ " " +itemsPerPage+ " " +functionName);
 
+	if(firstPage<1)firstPage=1;
+	if(lastPage >totalPageCount) lastPage=totalPageCount;
+	 
+	htmlPageBlock="<ul class='pagination' id='" +functionName + "PaginationULId'>";
+	if (currentPageNum !=1) {
+		htmlPageBlock +=buildPaginationLink("First",functionName,1, itemsPerPage) ;
+	  htmlPageBlock +=buildPaginationLink("Prev",functionName,currentPageNum-1, itemsPerPage);
+	}
+	for(var ndx=firstPage;ndx<=lastPage;ndx++){
+		htmlPageBlock +=buildPaginationLink(ndx,functionName, ndx, itemsPerPage);
+	}
 
+  if (currentPageNum !=totalPageCount){
+	 	htmlPageBlock +=buildPaginationLink("Next",functionName,currentPageNum+1, itemsPerPage);
+	  htmlPageBlock +=buildPaginationLink("Last",functionName,totalPageCount, itemsPerPage);
+	}
 
-
-	htmlPageBlock+="</ul>;
+	htmlPageBlock+="</ul>";
 	return htmlPageBlock;
+}
+
+function buildPaginationLink(linkTitle, functionName,targetPage, itemsPerPage){
+	var plink;
+	var functionCall = "retrieve" +functionName.ucfirst() + "Pagination(" + targetPage +","+itemsPerPage+"); ";
+	plink = "<li><span onclick='" + functionCall  + "'>" +linkTitle + "</span></li>";
+	return plink;
+
 }

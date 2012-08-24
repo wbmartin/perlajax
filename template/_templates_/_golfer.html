@@ -36,11 +36,20 @@ function save[%ucfirst(divId)%](params){
 	serverCall(params,successf,FAILF);
 }
 
+var [%divId%]ListTablePageNum =1;
+function retrieve[%ucfirst(divId)%]ListTablePagination(targetPage, rowLimit){
+	[%divId%]ListTablePageNum = targetPage;
+	var params={};
+	params.rowlimit = rowLimit;
+	params.startrow = (targetPage-1)* rowLimit;
+  retrieve[%ucfirst(divId)%](params)
+}
 
 function retrieve[%ucfirst(divId)%](params,selectedKey_){
   if(!isUserAuthorized("[%SELECT_GRANT%]", true, "retrieve[%ucfirst(divId)%]")) return false; 
 
 	params = prepParams(params,"golfer","SELECT");
+	params['spwfPagination']=true;
 	if(selectedKey_){
 		params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
 	}
@@ -51,7 +60,8 @@ function retrieve[%ucfirst(divId)%](params,selectedKey_){
 				toggleSaveMode("[%divId%]Form",true);
 			}else{
 				populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
-
+				$("#[%divId%]ListTablePaginationDivId").html(buildPaginationBlock([%divId%]ListTablePageNum, rslt.spwfTotalItemCount,PAGINATION_ROW_LIMIT,"[%divId%]ListTable"));
+				//currentPageNum, totalItemCount,itemsPerPage,functionName
 			}
 		}else{
 			briefNotify("There was a problem communicating with the Server.","ERROR")
@@ -190,11 +200,12 @@ function show[%ucfirst(divId)%](golferId_){
 	$("#[%divId%]").fadeIn();
 	currentContentPane = "[%divId%]";
 	if(golferId_){
+	  retrieve[%ucfirst(divId)%](params,golferId_);
 	}else{
 		if ( isFormEmpty("[%divId%]Form")) toggleSaveMode("[%divId%]Form", false);
 		clearForm("[%divId%]Form");
+		retrieve[%ucfirst(divId)%]ListTablePagination(1,PAGINATION_ROW_LIMIT);
 	}
-	retrieve[%ucfirst(divId)%](params,golferId_);
 	impose[%ucfirst(divId)%]SecurityUIRestrictions();
 	
 }
@@ -214,6 +225,7 @@ $(document).ready(function(){
 	<form id="[%divId%]Form" >
 		<div class="row">
 			<span class="fourcol">
+				<div id="[%divId%]ListTablePaginationDivId"></div>
 				<table id="[%divId%]ListTable" class='dataTable'></table> 
 			</span>
 			<span class="eightcol last">

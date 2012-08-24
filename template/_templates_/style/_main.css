@@ -252,6 +252,14 @@ margin-bottom: -.35em;
     margin-right: auto;
   }
 
+	ul.pagination{
+
+	}
+	ul.pagination li{
+		display: inline-block;
+		padding: .2em;
+	}
+
 	  /*PixelGreen Extract*/
   /* ----------------------------------------------------
 

@@ -37,51 +37,54 @@ Main:{
   &UTL::dbConnect(\$dbh, $DBInfo);
   $sth = &UTL::buildSTH($dbh, $params );
 
-   if(ref($sth))  {#if we have a successful connection and statement built, execute it, iterate over result set, package and return
-	print STDERR "Connection Successful\n" if($debug);
+  if(ref($sth))  {#if we have a successful connection and statement built, execute it, iterate over result set, package and return
+				print STDERR "Connection Successful\n" if($debug);
         $sth->execute();
-	if(!$sth->err){
-	  # iterate through resultset
-	  $rowCount=0;
-  	  while(my $ref = $sth->fetchrow_hashref()) {
-	    push(@rows, $ref);
-	    $rowCount++;
-  	  }
-	  #package it up in and print it
-  	  $json->{"rows"} =\@rows;
-	  $json->{"rowCount"}=$rowCount;
-	}else{
-	   $json->{"rowCount"}=0;
-	   $json->{"errorMsg"} =$DBI::errstr;
-	}
-	if (uc($params->{'spwfAction'}) eq "DELETE"){
-  	  while ( my ($key, $value) = each(%$params) ) {
-	    if($key ne 'last_update' && $key ne 'user_id' && $key ne 'session_id'){
-        	$json->{$key} = $value;
-	    }
-    	  }
-	}
-	#tag on the original action and resource form the request
-	$json->{"spwfAction"}= uc($params->{'spwfAction'});
-	$json->{"spwfResource"}= uc($params->{'spwfResource'});
-	$json->{"requestId"}=$params->{'requestId'};
-	#any variables the client sent that they wanted returned to the asynch success function
+				if(!$sth->err){
+	  			$rowCount=0;# iterate through resultset
+  	  		while(my $ref = $sth->fetchrow_hashref()) {
+	    			push(@rows, $ref);
+	    			$rowCount++;
+  	  		}
+	  			#package it up in and print it
+  	  		$json->{"rows"} =\@rows;
+	  			$json->{"rowCount"}=$rowCount;
+				}else{
+	   			$json->{"rowCount"}=0;
+	   			$json->{"errorMsg"} =$DBI::errstr;
+				}
+				if (uc($params->{'spwfAction'}) eq "DELETE"){
+  	  		while ( my ($key, $value) = each(%$params) ) {
+	    			if($key ne 'last_update' && $key ne 'user_id' && $key ne 'session_id'){
+        			$json->{$key} = $value;
+	    			}
+    	 	  }
+				}
+				print STDERR "Pagination: " . $params->{'spwfPagination'};
+				if (uc($params->{'spwfAction'}) eq "SELECT" && uc($params->{'spwfPagination'}) eq "TRUE"){
+					$json->{"spwfTotalItemCount"} = 20;
+				}
+				#tag on the original action and resource form the request
+				$json->{"spwfAction"}= uc($params->{'spwfAction'});
+				$json->{"spwfResource"}= uc($params->{'spwfResource'});
+				$json->{"requestId"}=$params->{'requestId'};
+				#any variables the client sent that they wanted returned to the asynch success function
         if(exists $params->{'passThru'}){
-	  @passThrus = split(/;/,$params->{'passThru'});
-	  foreach(@passThrus){
-	    ($key,$value) = split(/~/,$_);
-	    $key ="PT_$key";
-	    $json->{$key} = $value;	
-	  }
-	}
-	print STDERR "Package Successful\n" if($debug);
+	  			@passThrus = split(/;/,$params->{'passThru'});
+	  			foreach(@passThrus){
+	    			($key,$value) = split(/~/,$_);
+	    			$key ="PT_$key";
+	    			$json->{$key} = $value;	
+	  			}
+				}
+				print STDERR "Package Successful\n" if($debug);
     }else{#if no successful connection or statement build issue, package the error
-	$json->{"errorMsg"} =$sth;
+			$json->{"errorMsg"} =$sth;
     }  
-	$json_text = to_json($json);
+		$json_text = to_json($json);
   	print $json_text;
-	print STDERR "JSON Txt: $json_text\n"  if($debug);
-$dbh->disconnect()
+		print STDERR "JSON Txt: $json_text\n"  if($debug);
+	$dbh->disconnect()
 }#End Main
 ################################################################
 package UTL;
