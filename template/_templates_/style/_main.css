@@ -424,3 +424,14 @@ display:none;
 display:none;
 
 }
+
+.scrollingTableDiv{
+padding:0;
+margin: 0;
+display: inline-block;
+overflow:hidden;
+}
+
+.scrollingTable{
+margin-right: 20px;
+}

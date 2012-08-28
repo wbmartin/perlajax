@@ -27,7 +27,7 @@ function save[%ucfirst(divId)%](params){
 				addNewRow[%ucfirst(divId)%]ListTable(rslt.rows[0]);
 			}
 			briefNotify("Golfer Saved Successfully","INFO");
-			toggleSaveMode("[%divId%]Form", true);
+			clear[%ucfirst(divId)%]Form();
 		}else{
 			briefNotify("There was a problem communicating with the Server.","ERROR")
 		}
@@ -36,20 +36,21 @@ function save[%ucfirst(divId)%](params){
 	serverCall(params,successf,FAILF);
 }
 
-var [%divId%]ListTablePageNum =1;
+/*var [%divId%]ListTablePageNum =1;
 function retrieve[%ucfirst(divId)%]ListTablePagination(targetPage, rowLimit){
 	[%divId%]ListTablePageNum = targetPage;
 	var params={};
 	params.rowlimit = rowLimit;
 	params.startrow = (targetPage-1)* rowLimit;
   retrieve[%ucfirst(divId)%](params)
-}
+	}
+	*/
 
 function retrieve[%ucfirst(divId)%](params,selectedKey_){
   if(!isUserAuthorized("[%SELECT_GRANT%]", true, "retrieve[%ucfirst(divId)%]")) return false; 
 
 	params = prepParams(params,"golfer","SELECT");
-	params['spwfPagination']=true;
+	//params['spwfPagination']=true;
 	if(selectedKey_){
 		params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
 	}
@@ -60,8 +61,7 @@ function retrieve[%ucfirst(divId)%](params,selectedKey_){
 				toggleSaveMode("[%divId%]Form",true);
 			}else{
 				populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
-				$("#[%divId%]ListTablePaginationDivId").html(buildPaginationBlock([%divId%]ListTablePageNum, rslt.spwfTotalItemCount,PAGINATION_ROW_LIMIT,"[%divId%]ListTable"));
-				//currentPageNum, totalItemCount,itemsPerPage,functionName
+				//$("#[%divId%]ListTablePaginationDivId").html(buildPaginationBlock([%divId%]ListTablePageNum, rslt.spwfTotalItemCount,PAGINATION_ROW_LIMIT,"[%divId%]ListTable"));update row
 			}
 		}else{
 			briefNotify("There was a problem communicating with the Server.","ERROR")
@@ -127,48 +127,53 @@ function validate[%ucfirst(divId)%]Form(){
 
 //----------------------------------------------------
 //html building functions
+
+var prkeyArray = new Array();
+var [%ucfirst(divId)%]prKey = {};
 function populate[%ucfirst(divId)%]ListTable(rslt,selectedKey_) {
-	var newHTML="<tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr>";
+	var dataArray = new Array();
 	for (var i=0;i<rslt.length;i++){
-		newHTML +=buildRow[%ucfirst(divId)%]ListTable(rslt[i]);
+		dataArray[i] = buildRow[%ucfirst(divId)%]ListTable(rslt[i]);
+		[%ucfirst(divId)%]prKey[rslt[i].[%prkey%]] = i;
 		if (rslt[i].[%prkey%] == selectedKey_){
 			bindToForm("[%divId%]Form", rslt[i]);
 			toggleSaveMode("[%divId%]Form",true);
 		}   
 	}
-	$("#[%divId%]ListTable").html(newHTML);
+	$('#[%divId%]ListTable').dataTable().fnClearTable();
+	$('#[%divId%]ListTable').dataTable().fnAddData( dataArray, true );
 }
 
 function buildRow[%ucfirst(divId)%]ListTable(data){
-	var htmlRow= "<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'>";
-	htmlRow += "<td >" +data.name + "</td>";
-	htmlRow +="<td class='accentColumn'>";
-	  if(isUserAuthorized("[%UPDATE_GRANT%]", false) ){
+	var dataArray = {};
+	var htmlRow= "";
+	dataArray["name"] = data.name;
+	if(isUserAuthorized("[%UPDATE_GRANT%]", false) ){
  		  htmlRow +="<a href='#' class='edit[%ucfirst(divId)%]Link' onclick='edit[%ucfirst(divId)%](";
 			htmlRow +=data.[%prkey%] + ")'>Edit</a>";
 			htmlRow +=" &nbsp; &nbsp; ";
 	  }else if(isUserAuthorized("[%SELECT_GRANT%]", false)){
       htmlRow += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>View</a> ";
 	    htmlRow += " &nbsp; &nbsp;";
-	  }
+		}
 
 	  if(isUserAuthorized("[%DELETE_GRANT%]", false)){
 		  htmlRow +="<a href='#' class='delete[%ucfirst(divId)%]Link' onclick=\"delete[%ucfirst(divId)%](";
 		  htmlRow +=data.[%prkey%] + ",'" + data.last_update + "')\">Delete</a>";
-	  }
-	htmlRow +="</td>";
-	htmlRow +="</tr>";
-	return htmlRow;
+		}
+		dataArray["links"] = htmlRow;
+		dataArray["DT_RowId"] = "[%ucfirst(divId)%]ListTableTR-" + data.[%prkey%]
+	return dataArray;
 }
 
 function replaceRow[%ucfirst(divId)%]ListTable(row){
-	$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.golfer_id  ).replaceWith(buildRow[%ucfirst(divId)%]ListTable(row));
+  $("#[%divId%]ListTable").dataTable().fnUpdate(buildRow[%ucfirst(divId)%]ListTable(row),[%ucfirst(divId)%]prKey[row.[%prkey%]] );
 }
 function addNewRow[%ucfirst(divId)%]ListTable(row){
-	$("table#[%divId%]ListTable TR").first().after(buildRow[%ucfirst(divId)%]ListTable(row));
+	$("#[%divId%]ListTable").dataTable().fnAddData(buildRow[%ucfirst(divId)%]ListTable(row));
 }
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
-	$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+[%toCC(prkey)%]_).replaceWith("");
+  $("#[%divId%]ListTable").dataTable().fnDeleteRow([%ucfirst(divId)%]prKey[[%toCC(prkey)%]_] );
 }
  
 function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
@@ -204,7 +209,8 @@ function show[%ucfirst(divId)%](golferId_){
 	}else{
 		if ( isFormEmpty("[%divId%]Form")) toggleSaveMode("[%divId%]Form", false);
 		clearForm("[%divId%]Form");
-		retrieve[%ucfirst(divId)%]ListTablePagination(1,PAGINATION_ROW_LIMIT);
+		//retrieve[%ucfirst(divId)%]ListTablePagination(1,PAGINATION_ROW_LIMIT);
+		retrieve[%ucfirst(divId)%]();
 	}
 	impose[%ucfirst(divId)%]SecurityUIRestrictions();
 	
@@ -217,18 +223,31 @@ function clear[%ucfirst(divId)%]Form(){
 
 
 $(document).ready(function(){
+		$("#[%divId%]ListTable").dataTable( {
+    "aoColumns": [
+        { "mData": "name" },
+        { "mData": "links" }
+    ]
+} );
+            
 		});
 //]]>
 </script>
 
 <div id="[%divId%]" class="MainLayout contentPane" >
-	<form id="[%divId%]Form" >
 		<div class="row">
 			<span class="fourcol">
-				<div id="[%divId%]ListTablePaginationDivId"></div>
-				<table id="[%divId%]ListTable" class='dataTable'></table> 
+				<!--<div id="[%divId%]ListTablePaginationDivId"></div> -->
+				<div id="[%divId%]ListTableDivId" >
+				<table id='[%divId%]ListTable' class='dataTable scrollingTable' >
+					<thead><tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr></thead>
+					<tbody></tbody>
+				</table>
+
+						</div>
 			</span>
 			<span class="eightcol last">
+	<form id="[%divId%]Form" >
 				<div id="[%divId%]EntryDivId" class="formLayout_Standard">
 					[%dbColumnName = 'name'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
@@ -244,9 +263,10 @@ $(document).ready(function(){
 						<button type="button" id="[%divId%]FormClear" value="Clear" onclick="clear[%ucfirst(divId)%]Form();" >Clear</button>
 					</div>
 				</div>
+				<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+			<input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
+
+			</form>
 			</span>
 			</div [%# row%]>	  
-			<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-			<input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
-		</form>
-	</div> [%# end golfScoreSummary%]
+				</div> [%# end golfScoreSummary%]

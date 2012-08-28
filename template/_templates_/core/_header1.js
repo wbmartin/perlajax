@@ -426,26 +426,54 @@ function securityshow(divIdToSecure){
 function securityHide(divIdToSecure){
 	$(divIdToSecure).addClass ("SecurityDisabled");
 }
-
+[%# /*
+ wbmartin 2012-08-24 | function to iterate over arbitrary form and disable/enable fields
+ args:	formname - id
+				lock - boolean, true to lock, false to unlock
+*/ %]
 function securityLockForm(formName,lock){
 	var disableStatus;
 	if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form", "ERROR");
 	if (lock == undefined)lock=true;
 
-	$.each($("form#"+formName + " input, select"),function (ndx,field){
-		if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
+$.each($("form#"+formName + "> input, >select"),function (ndx,field){
+if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
 		else $("form#"+formName +" #"+field.id).removeAttr('disabled');
 	});
+[%# /*
+
 	//$.each($("form#"+formName + " select"),function (ndx,field){
 	//  if(lock) $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
 	//	else $("form#"+formName +" #"+field.id).removeAttr('disabled');
 	//});
+*/ %]
 }
 
 function isFormEmpty(formName){
 	if ($("#"+formName+"-last_update").val()=="")return true;
 	return false;
 }
+[%# /*
+ wbmartin 2012-08-25 | on hold in favor of scrolling
+related calls:
+
+retrieve[_pct_ucfirst(divId)_pct_]ListTablePagination(1,PAGINATION_ROW_LIMIT);
+<!--<div id="[_pct_divId_pct_]ListTablePaginationDivId"></div> -->
+/*var [_pct_divId_pct_]ListTablePageNum =1;
+function retrieve[_pct_ucfirst(divId)_pct_]ListTablePagination(targetPage, rowLimit){
+	[_pct_divId_pct_]ListTablePageNum = targetPage;
+	var params={};
+	params.rowlimit = rowLimit;
+	params.startrow = (targetPage-1)* rowLimit;
+  retrieve[_pct_ucfirst(divId)_pct_](params)
+	}
+	*/
+//in retrieve before call: params['spwfPagination']=true;
+//in retrieve: $("#[_pct_divId_pct_]ListTablePaginationDivId").html(buildPaginationBlock([_pct_divId_pct_]ListTablePageNum, rslt.spwfTotalItemCount,PAGINATION_ROW_LIMIT,"[_pct_divId_pct_]ListTable"));
+//in show: retrieve[_pct_ucfirst(divId)_pct_]ListTablePagination(1,PAGINATION_ROW_LIMIT);
+
+
+*/ %]
 
 function buildPaginationBlock(currentPageNum, totalItemCount,itemsPerPage,functionName){
 	var htmlPageBlock;
@@ -454,7 +482,6 @@ function buildPaginationBlock(currentPageNum, totalItemCount,itemsPerPage,functi
 	var lastPage;
 	firstPage = currentPageNum-itemsPerPage/2;
 	lastPage = currentPageNum+itemsPerPage/2;
-	//alert(currentPageNum + " " + totalItemCount+ " " +itemsPerPage+ " " +functionName);
 
 	if(firstPage<1)firstPage=1;
 	if(lastPage >totalPageCount) lastPage=totalPageCount;
@@ -476,6 +503,9 @@ function buildPaginationBlock(currentPageNum, totalItemCount,itemsPerPage,functi
 	htmlPageBlock+="</ul>";
 	return htmlPageBlock;
 }
+[%# /*
+ wbmartin 2012-08-25 | used in conjunction with buildPaginationBlock on hold
+*/ %]
 
 function buildPaginationLink(linkTitle, functionName,targetPage, itemsPerPage){
 	var plink;
@@ -483,4 +513,22 @@ function buildPaginationLink(linkTitle, functionName,targetPage, itemsPerPage){
 	plink = "<li><span onclick='" + functionCall  + "'>" +linkTitle + "</span></li>";
 	return plink;
 
+}
+[%# /*
+ wbmartin 2012-08-25 | created to synchronize tables split for scrolling
+*/ %]
+function synchTableColWidths(t1_,t2_, finalWidths_){
+  var t1widths = new Array();
+  if (finalWidths_ == undefined){[%#// if final widths is not defined, determine largest width foreach col %]
+    finalWidths_ = new Array();
+    $.each($("#"+t1_ +" tr:first").children(),function(ndx_,td_){ 
+			t1widths[ndx_] = $(td_).width();
+	  });
+    $.each($("#"+t2_ +" tr:first ").children(),function(ndx_,td_){ 
+	    finalWidths_[ndx_] = ($(td_).width() >t1widths[ndx_])?$(td_).width() :t1widths[ndx_] ;      
+    });
+  }
+	[%#// use finalwidths%]
+  $.each($("#"+t1_ +" tr:first ").children(),function(ndx_,td_){  $(td_).width(finalWidths_[ndx_])});
+  $.each($("#"+t2_ +" tr:first ").children(),function(ndx_,td_){  $(td_).width(finalWidths_[ndx_])});
 }

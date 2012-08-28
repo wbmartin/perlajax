@@ -87,7 +87,9 @@ function save[%ucfirst(divId)%](params){
       }else if (rslt.spwfAction == "INSERT"){
 	addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
       }
-      briefNotify("[%prettyName%] Successfully Saved","INFO");
+			briefNotify("[%prettyName%] Successfully Saved","INFO");
+			clear[%ucfirst(divId)%]Form();
+
     }else{
       briefNotify("There was a problem communicating with the Server.","ERROR")
     }

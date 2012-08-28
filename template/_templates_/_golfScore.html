@@ -77,13 +77,16 @@ function save[%ucfirst(divId)%](params){
 	params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
 	var successf=function(rslt){
 		if(!rslt[SERVER_SIDE_FAIL]){
-			clearForm('[%divId%]Form');
 			if (rslt.spwfAction == "UPDATE"){
 				replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
 			}else if (rslt.spwfAction == "INSERT"){
 				addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
 			}
 			briefNotify("Golf Score Successfully Saved","INFO");
+			var tempGolferId = $("#[%divId%]Form-golfer_id").val();
+			clear[%ucfirst(divId)%]Form();
+			$("#[%divId%]Form-golfer_id").val(tempGolferId);
+
 		}else{
 			briefNotify("There was a problem communicating with the Server.","ERROR")
 		}

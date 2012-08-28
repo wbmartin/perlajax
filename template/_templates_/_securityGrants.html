@@ -88,7 +88,9 @@ function save[%ucfirst(divId)%](params){
       }else if (rslt.spwfAction == "INSERT"){
 	addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
       }
-      briefNotify("[%prettyName%] Successfully Saved");
+			briefNotify("[%prettyName%] Successfully Saved");
+			clear[%ucfirst(divId)%]Form();
+
     }else{
       briefNotify("There was a problem communicating with the Server.","ERROR")
     }
@@ -411,7 +413,7 @@ var divIdToSecure;
 
 
 }
-function clear[%divId%]Form(){
+function clear[%ucfirst(divId)%]Form(){
 	clearForm('[%divId%]Form');
 	makeAvailableAllPrivileges();
 	$('#grantAssignDiv').addClass('LogicDisabled');
@@ -453,7 +455,7 @@ function clear[%divId%]Form(){
 	    <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >
 	      Add</button>
 	    <button type="button" id="[%divId%]FormClear" value="Clear" 
-	      onclick="clear[%divId%]Form();" >Clear</button>
+	      onclick="clear[%ucfirst(divId)%]Form();" >Clear</button>
 	  </div>
 	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 	  <input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
