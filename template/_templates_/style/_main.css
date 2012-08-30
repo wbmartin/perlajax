@@ -2,7 +2,7 @@
 [%grayColor="#666666"%]
 [%standardBackgroundColor="#FFF"%]
 [%lightGrayColor="#BFBFBF"%]
-[%lighterGrayColor="#BFBFBF"%]
+[%lighterGrayColor="#EFEFEF"%]
 [%accentColumnColor="#F5F5F5"%]
 .MainContentPaneStyle{
   width:100%;
@@ -357,14 +357,14 @@ margin-bottom: -.35em;
     border-width: 3px;
     padding-left: 1.1em;
     padding-right: 1.1em;
-    border-color: [%lighterGrayColor%];
-    color: [%lighterGrayColor%];
+    border-color: [%lightGrayColor%];
+    color: [%lightGrayColor%];
     font-weight:bold;
   }
   .dataTable td{
     padding-left: 1.1em;
     padding-right: 1.1em;
-    border-color: [%lighterGrayColor%];
+    border-color: [%lightGrayColor%];
     border-width: 1px;
     border-bottom-style:solid;
     color:[%primaryColor%];
@@ -372,6 +372,7 @@ margin-bottom: -.35em;
   }
   .dataTable a {
     text-decoration: none;
+    color:[%primaryColor%];
   }
   .dataTable a:visited{
     color:[%primaryColor%];
@@ -380,6 +381,150 @@ margin-bottom: -.35em;
   .dataTable .accentColumn{
     background:[%accentColumnColor%];
   }
+[%# Begin dataTable Stuff%]
+[%dataTablePeriphFontSize ="0.6em"%]
+
+div.dataTables_length {
+    float: left;
+    background-color:[%lighterGrayColor%];
+		font-size: [%dataTablePeriphFontSize %];
+}
+ 
+div.dataTables_filter {
+    float: right;
+		font-size: [%dataTablePeriphFontSize %];
+		background-color:[%lighterGrayColor%];
+}
+div.dataTables_filter  input{
+	width:10em;
+}
+ 
+div.dataTables_info {
+    float: left;
+    background-color:[%standardBackgroundColor%] ;
+		font-size: [%dataTablePeriphFontSize %];
+}
+ 
+div.dataTables_paginate {
+    float: right;
+    background-color:[%standardBackgroundColor%] ;
+		font-size: [%dataTablePeriphFontSize %];
+}
+ 
+div.dataTables_length,
+div.dataTables_filter,
+div.dataTables_paginate,
+div.dataTables_info {
+    padding: .03em;
+}
+div.dataTables_filter{
+padding-top: 3px;
+}
+
+
+table.pretty {
+    clear: both;
+		min-width:350px;
+}
+ 
+/* Self clearing - */
+div.dataTables_wrapper:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+		
+}
+html[xmlns] .dataTables_wrapper { display: block; }
+* html .dataTables_wrapper { height: 1%; }
+/* Body cells */
+table.pretty tbody th {
+    text-align: left;
+    background: [%standardBackgroundColor%];
+}
+     
+table.pretty tbody td {
+    text-align: center;
+    background: [%standardBackgroundColor%];
+}
+         
+table.pretty tbody tr.odd td {
+    background: [%standardBackgroundColor%];
+}
+
+/* Footer cells */ 
+table.pretty tfoot th {
+    background: [%standardBackgroundColor%];
+    text-align: left;
+}
+     
+table.pretty tfoot td {
+    background: [%standardBackgroundColor%];
+    text-align: center;
+    font-weight: bold;
+}
+div.dataTables_wrapper {
+		background-color:[%lighterGrayColor%];
+}
+table.pretty thead th.sorting_asc {
+    background: [%standardBackgroundColor%] url('images/sort_asc.png') no-repeat right center;
+}
+ 
+table.pretty thead th.sorting_desc {
+    background: [%standardBackgroundColor%] url('images/sort_desc.png') no-repeat right center;
+}
+ 
+table.pretty thead th.sorting {
+    background: [%standardBackgroundColor%] url('images/sort_both.png') no-repeat right center;
+}
+a.paginate_button,
+a.paginate_active {
+    display: inline-block;
+    background-color: [%lighterGrayColor%];
+    padding: 2px 6px;
+    margin-left: 2px;
+    cursor: pointer;
+    *cursor: hand;
+}
+
+ 
+a.paginate_active {
+    background-color: transparent;
+    border: 1px solid black;
+}
+ 
+a.paginate_button_disabled {
+    color: #3d6672;
+}
+.paging_full_numbers a:active {
+    outline: none
+}
+.paging_full_numbers a:hover {
+    text-decoration: none;
+}
+ 
+div.dataTables_paginate span>a {
+    width: 15px;
+    text-align: center;
+}
+div.paging_two_button {
+    padding: 9px 2px 6px 6px;
+		background-color:[%lighterGrayColor%];
+}
+div.paging_two_button a{
+    margin-left: 6px;
+}
+
+ 
+div.dataTables_info {
+    padding: 9px 6px 6px 2px;
+		background-color:[%lighterGrayColor%];
+}
+
+[%# End dataTable Stuff=================================================================================================%]
+
   .securityGrant{
     border-style: solid;
     border-width: 1px;

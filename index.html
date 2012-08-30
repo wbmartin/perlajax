@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- 1140px Grid styles for IE -->
   <!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
-
 <script type="text/javascript"> 
 //<![CDATA[
 //header1.js
@@ -1883,6 +1882,7 @@ catch(e){
 </script>
 
 
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
 <style type="text/css">
 
 /* _jqueryui*/
@@ -2914,7 +2914,7 @@ margin-bottom: -.35em;
     color: #246B24;
   }
   #header .secondary{
-    color:#BFBFBF;
+    color:#EFEFEF;
   }
   #header a{
     text-decoration:none;
@@ -2952,7 +2952,7 @@ margin-bottom: -.35em;
   .logoBlock h2 {
     font-size: .75em;
     margin-left: 2.5em;
-    color: #BFBFBF;
+    color: #EFEFEF;
     margin-top: -.5em
 
   }
@@ -3004,6 +3004,7 @@ margin-bottom: -.35em;
   }
   .dataTable a {
     text-decoration: none;
+    color:#246B24;
   }
   .dataTable a:visited{
     color:#246B24;
@@ -3012,7 +3013,149 @@ margin-bottom: -.35em;
   .dataTable .accentColumn{
     background:#F5F5F5;
   }
-  .securityGrant{
+
+
+
+div.dataTables_length {
+    float: left;
+    background-color:#EFEFEF;
+		font-size: 0.6em;
+}
+ 
+div.dataTables_filter {
+    float: right;
+		font-size: 0.6em;
+		background-color:#EFEFEF;
+}
+div.dataTables_filter  input{
+	width:10em;
+}
+ 
+div.dataTables_info {
+    float: left;
+    background-color:#FFF ;
+		font-size: 0.6em;
+}
+ 
+div.dataTables_paginate {
+    float: right;
+    background-color:#FFF ;
+		font-size: 0.6em;
+}
+ 
+div.dataTables_length,
+div.dataTables_filter,
+div.dataTables_paginate,
+div.dataTables_info {
+    padding: .03em;
+}
+div.dataTables_filter{
+padding-top: 3px;
+}
+
+
+table.pretty {
+    clear: both;
+		min-width:350px;
+}
+ 
+/* Self clearing - */
+div.dataTables_wrapper:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+		
+}
+html[xmlns] .dataTables_wrapper { display: block; }
+* html .dataTables_wrapper { height: 1%; }
+/* Body cells */
+table.pretty tbody th {
+    text-align: left;
+    background: #FFF;
+}
+     
+table.pretty tbody td {
+    text-align: center;
+    background: #FFF;
+}
+         
+table.pretty tbody tr.odd td {
+    background: #FFF;
+}
+
+/* Footer cells */ 
+table.pretty tfoot th {
+    background: #FFF;
+    text-align: left;
+}
+     
+table.pretty tfoot td {
+    background: #FFF;
+    text-align: center;
+    font-weight: bold;
+}
+div.dataTables_wrapper {
+		background-color:#EFEFEF;
+}
+table.pretty thead th.sorting_asc {
+    background: #FFF url('images/sort_asc.png') no-repeat right center;
+}
+ 
+table.pretty thead th.sorting_desc {
+    background: #FFF url('images/sort_desc.png') no-repeat right center;
+}
+ 
+table.pretty thead th.sorting {
+    background: #FFF url('images/sort_both.png') no-repeat right center;
+}
+a.paginate_button,
+a.paginate_active {
+    display: inline-block;
+    background-color: #EFEFEF;
+    padding: 2px 6px;
+    margin-left: 2px;
+    cursor: pointer;
+    *cursor: hand;
+}
+
+ 
+a.paginate_active {
+    background-color: transparent;
+    border: 1px solid black;
+}
+ 
+a.paginate_button_disabled {
+    color: #3d6672;
+}
+.paging_full_numbers a:active {
+    outline: none
+}
+.paging_full_numbers a:hover {
+    text-decoration: none;
+}
+ 
+div.dataTables_paginate span>a {
+    width: 15px;
+    text-align: center;
+}
+div.paging_two_button {
+    padding: 9px 2px 6px 6px;
+		background-color:#EFEFEF;
+}
+div.paging_two_button a{
+    margin-left: 6px;
+}
+
+ 
+div.dataTables_info {
+    padding: 9px 6px 6px 2px;
+		background-color:#EFEFEF;
+}
+
+ .securityGrant{
     border-style: solid;
     border-width: 1px;
     border-radius:10px;
@@ -3772,7 +3915,7 @@ function imposeQuickGolfScoreSecurityUIRestrictions(){
 
 
 
- 
+
 
 
 
@@ -3786,7 +3929,7 @@ function imposeQuickGolfScoreSecurityUIRestrictions(){
 function saveGolfer(params){
 	if(!isUserAuthorized("UPDATE_GOLFER",false) && !isUserAuthorized("INSERT_GOLFER",false)){
 		briefNotify("Access Violation","ERROR");
-	  return false;
+		return false;
 	}
 	params = prepParams(params,"golfer",insertUpdateChoose);
 	var successf=function(rslt){
@@ -3808,17 +3951,17 @@ function saveGolfer(params){
 }
 
 /*var golferListTablePageNum =1;
-function retrieveGolferListTablePagination(targetPage, rowLimit){
+	function retrieveGolferListTablePagination(targetPage, rowLimit){
 	golferListTablePageNum = targetPage;
 	var params={};
 	params.rowlimit = rowLimit;
 	params.startrow = (targetPage-1)* rowLimit;
-  retrieveGolfer(params)
+	retrieveGolfer(params)
 	}
-	*/
+ */
 
 function retrieveGolfer(params,selectedKey_){
-  if(!isUserAuthorized("SELECT_GOLFER", true, "retrieveGolfer")) return false; 
+	if(!isUserAuthorized("SELECT_GOLFER", true, "retrieveGolfer")) return false; 
 
 	params = prepParams(params,"golfer","SELECT");
 	//params['spwfPagination']=true;
@@ -3863,7 +4006,7 @@ function deleteGolfer(golferId_, lastUpdate_){
 //-----------------------
 //Server Call Wrappers
 function editGolfer(rowId_){
-  if( !isUserAuthorized("SELECT_GOLFER", true, "editGolfer") ) return false; 
+	if( !isUserAuthorized("SELECT_GOLFER", true, "editGolfer") ) return false; 
 
 	if (isUserAuthorized("UPDATE_GOLFER", false) ){
 		securityLockForm("golferForm", false);
@@ -3876,9 +4019,9 @@ function editGolfer(rowId_){
 }
 
 function saveGolferForm(){
-  if(!isUserAuthorized("UPDATE_GOLFER", false) && !isUserAuthorized("INSERT_GOLFER",false) ){
+	if(!isUserAuthorized("UPDATE_GOLFER", false) && !isUserAuthorized("INSERT_GOLFER",false) ){
 		briefNotify("Access Violation saveGolferForm","ERROR");
-	  return false;
+		return false;
 	}
 
 	if(validateGolferForm()){
@@ -3920,49 +4063,47 @@ function buildRowGolferListTable(data){
 	var htmlRow= "";
 	dataArray["name"] = data.name;
 	if(isUserAuthorized("UPDATE_GOLFER", false) ){
- 		  htmlRow +="<a href='#' class='editGolferLink' onclick='editGolfer(";
-			htmlRow +=data.golfer_id + ")'>Edit</a>";
-			htmlRow +=" &nbsp; &nbsp; ";
-	  }else if(isUserAuthorized("SELECT_GOLFER", false)){
-      htmlRow += "<a class='alink' onclick='editGolfer(" +data.golfer_id + ")'>View</a> ";
-	    htmlRow += " &nbsp; &nbsp;";
-		}
+		htmlRow +="<a href='#' class='editGolferLink' onclick='editGolfer(";
+		htmlRow +=data.golfer_id + ")'>Edit</a>";
+		htmlRow +=" &nbsp; &nbsp; ";
+	}else if(isUserAuthorized("SELECT_GOLFER", false)){
+		htmlRow += "<a class='alink' onclick='editGolfer(" +data.golfer_id + ")'>View</a> ";
+		htmlRow += " &nbsp; &nbsp;";
+	}
 
-	  if(isUserAuthorized("DELETE_GOLFER", false)){
-		  htmlRow +="<a href='#' class='deleteGolferLink' onclick=\"deleteGolfer(";
-		  htmlRow +=data.golfer_id + ",'" + data.last_update + "')\">Delete</a>";
-		}
-		dataArray["links"] = htmlRow;
-		dataArray["DT_RowId"] = "GolferListTableTR-" + data.golfer_id
-	return dataArray;
+	if(isUserAuthorized("DELETE_GOLFER", false)){
+		htmlRow +="<a href='#' class='deleteGolferLink' onclick=\"deleteGolfer(";
+		htmlRow +=data.golfer_id + ",'" + data.last_update + "')\">Delete</a>";
+	}
+	dataArray["links"] = htmlRow;
+	dataArray["DT_RowId"] = "GolferListTableTR-" + data.golfer_id
+		return dataArray;
 }
 
 function replaceRowGolferListTable(row){
-  $("#golferListTable").dataTable().fnUpdate(buildRowGolferListTable(row),GolferprKey[row.golfer_id] );
+	$("#golferListTable").dataTable().fnUpdate(buildRowGolferListTable(row),GolferprKey[row.golfer_id] );
 }
 function addNewRowGolferListTable(row){
 	$("#golferListTable").dataTable().fnAddData(buildRowGolferListTable(row));
-	//$("table#golferListTable TR").first().after(buildRowGolferListTable(row));
 }
 function removeGolferListTableRow(golferId_){
-  $("#golferListTable").dataTable().fnDeleteRow(GolferprKey[golferId_] );
-	//$("table#golferListTable #GolferListTableTR-"+golferId_).replaceWith("");
+	$("#golferListTable").dataTable().fnDeleteRow(GolferprKey[golferId_] );
 }
- 
+
 function imposeGolferSecurityUIRestrictions(){
 
-		var divIdToSecure;
+	var divIdToSecure;
 	divIdToSecure ="#golferFormSave";
-  (isUserAuthorized("UPDATE_GOLFER",false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	(isUserAuthorized("UPDATE_GOLFER",false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 	divIdToSecure ="#golferFormAdd";
-  (isUserAuthorized("INSERT_GOLFER",false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	(isUserAuthorized("INSERT_GOLFER",false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 	divIdToSecure ="#golferEntryDivId";
 	if(!isUserAuthorized("INSERT_GOLFER",false) && !isUserAuthorized("UPDATE_GOLFER",false)){
-	  securityLockForm("golferForm",true);
+		securityLockForm("golferForm",true);
 	}
-if(!isUserAuthorized("INSERT_GOLFER",false) && isFormEmpty("golferForm") ){
+	if(!isUserAuthorized("INSERT_GOLFER",false) && isFormEmpty("golferForm") ){
 		securityLockForm("golferForm", true);
 	}
 
@@ -3978,7 +4119,7 @@ function showGolfer(golferId_){
 	$("#golfer").fadeIn();
 	currentContentPane = "golfer";
 	if(golferId_){
-	  retrieveGolfer(params,golferId_);
+		retrieveGolfer(params,golferId_);
 	}else{
 		if ( isFormEmpty("golferForm")) toggleSaveMode("golferForm", false);
 		clearForm("golferForm");
@@ -3986,7 +4127,7 @@ function showGolfer(golferId_){
 		retrieveGolfer();
 	}
 	imposeGolferSecurityUIRestrictions();
-	
+
 }
 
 function clearGolferForm(){
@@ -3997,30 +4138,31 @@ function clearGolferForm(){
 
 $(document).ready(function(){
 		$("#golferListTable").dataTable( {
-    "aoColumns": [
-        { "mData": "name" },
-        { "mData": "links" }
-    ]
-} );
-            
+			"aoColumns": [
+			{ "mData": "name" },
+			{ "mData": "links" }
+			],
+		 "sPaginationType": "two_button"
+			}
+		 	);
+
 		});
 //]]>
 </script>
 
 <div id="golfer" class="MainLayout contentPane" >
-		<div class="row">
-			<span class="fourcol">
-				<!--<div id="golferListTablePaginationDivId"></div> -->
-				<div id="golferListTableDivId" >
-				<table id='golferListTable' class='dataTable scrollingTable' >
+	<div class="row">
+		<span class="fourcol">
+			<!--<div id="golferListTablePaginationDivId"></div> -->
+			<div id="golferListTableDivId"  >
+				<table id='golferListTable' class='dataTable  pretty' >
 					<thead><tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr></thead>
 					<tbody></tbody>
 				</table>
-
-						</div>
-			</span>
-			<span class="eightcol last">
-	<form id="golferForm" >
+			</div>
+		</span>
+		<span class="eightcol last">
+			<form id="golferForm" >
 				<div id="golferEntryDivId" class="formLayout_Standard">
 					
 					<div class="formFieldGroup" id="golferForm-nameDivId">
@@ -4037,12 +4179,12 @@ $(document).ready(function(){
 					</div>
 				</div>
 				<input type="hidden" name="last_update" id="golferForm-last_update">
-			<input type="hidden" name="golfer_id" id="golferForm-golfer_id">
+				<input type="hidden" name="golfer_id" id="golferForm-golfer_id">
 
 			</form>
-			</span>
-			</div >	  
-				</div> 
+		</span>
+		</div >	  
+	</div> 
 
 
 <div id="aboutPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
