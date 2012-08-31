@@ -228,11 +228,12 @@ $(document).ready(function(){
 			{ "mData": "name" },
 			{ "mData": "links" }
 			],
-		 "sPaginationType": "two_button"
+			"sPaginationType": "two_button"
 			}
 		 	);
 
 		});
+
 //]]>
 </script>
 
@@ -249,19 +250,19 @@ $(document).ready(function(){
 		</span>
 		<span class="eightcol last">
 			<form id="[%divId%]Form" >
-				<div id="[%divId%]EntryDivId" class="formLayout_Standard">
+				<div id="[%divId%]EntryDivId" class="formLayout_Standard prettyWrapper">
 					[%dbColumnName = 'name'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-name">Name</label>
-						<input  type="text" class="VALIDATERequired" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+						<input  type="text" class="VALIDATErequired" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 
 					<div class="formButtons">
 
-						<button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-						<button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-						<button type="button" id="[%divId%]FormClear" value="Clear" onclick="clear[%ucfirst(divId)%]Form();" >Clear</button>
+						<button type="button" id="[%divId%]FormSave" class="standardButton" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+						<button type="button" id="[%divId%]FormAdd" class="standardButton" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
+						<button type="button" id="[%divId%]FormClear" class="standardButton" value="Clear" onclick="clear[%ucfirst(divId)%]Form();" >Clear</button>
 					</div>
 				</div>
 				<input type="hidden" name="last_update" id="[%divId%]Form-last_update">

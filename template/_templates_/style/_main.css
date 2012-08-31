@@ -122,52 +122,60 @@ Form Layout styles
 }
 
 .formLayout_Standard hr{
-margin:0;
+  margin:0;
 }
 .formLayout_Standard .small{
-margin-top: -.35em;
-margin-bottom: -.35em;
+  margin-top: -.35em;
+  margin-bottom: -.35em;
 }
 .formLayout_Standard    {
-  background: -webkit-gradient(linear, bottom, left 175px, from(#CCCCCC), to(#EEEEEE));
-  background: -moz-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
-  margin:auto;
+   margin:auto;
   position:relative;
-  font-family: Tahoma, Geneva, sans-serif;
+  /*font-family: Tahoma, Geneva, sans-serif;*/
   font-size: 1em;
   font-style: italic;
   line-height: 2em;
   font-weight: bold;
   color: [%primaryColor%];
   text-decoration: none;
-  -webkit-border-radius: 10px;
+  padding:1em;
+ }
+
+.prettyWrapper{
+	margin:auto;
+	 background: -webkit-gradient(linear, bottom, left 175px, from(#CCCCCC), to(#EEEEEE));
+  background: -moz-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+ -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
-  padding:1em;
   border: 1px solid [%lightGrayColor%];
   border: inset 1px solid #333;
   -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+
 }
 
-.formLayout_Standard button {
+.standardButton {
+	display: inline-block;
+	text-align:center;
+  height:30px;
   width:100px;
   right:20px;
   bottom:20px;
   background:[%primaryColor%];
   color:#fff;
-  font-family: Tahoma, Geneva, sans-serif;
-  height:30px;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
   border: 1px solid [%lightGrayColor%];
 }
-.formLayout_Standard button:hover {
+button.standardButton:hover,a.standardButton:hover  {
   background:#fff;
   color:[%primaryColor%];
 }
+
+
 .formButtons{
   display:block;
 }
@@ -386,39 +394,40 @@ margin-bottom: -.35em;
 
 div.dataTables_length {
     float: left;
-    background-color:[%lighterGrayColor%];
 		font-size: [%dataTablePeriphFontSize %];
 }
  
 div.dataTables_filter {
     float: right;
 		font-size: [%dataTablePeriphFontSize %];
-		background-color:[%lighterGrayColor%];
+		margin-right: 8px;
 }
 div.dataTables_filter  input{
-	width:10em;
+	  width:10em;
 }
  
 div.dataTables_info {
     float: left;
-    background-color:[%standardBackgroundColor%] ;
 		font-size: [%dataTablePeriphFontSize %];
+		padding: 9px 6px 6px 2px;
+
 }
  
 div.dataTables_paginate {
     float: right;
     background-color:[%standardBackgroundColor%] ;
 		font-size: [%dataTablePeriphFontSize %];
+		margin-right: 8px;
 }
  
 div.dataTables_length,
 div.dataTables_filter,
 div.dataTables_paginate,
 div.dataTables_info {
-    padding: .03em;
+    /*padding: .03em;*/
 }
 div.dataTables_filter{
-padding-top: 3px;
+    padding-top: 3px;
 }
 
 
@@ -465,9 +474,12 @@ table.pretty tfoot td {
     text-align: center;
     font-weight: bold;
 }
+
 div.dataTables_wrapper {
-		background-color:[%lighterGrayColor%];
+		min-width:360px;
+		padding: .5em;
 }
+
 table.pretty thead th.sorting_asc {
     background: [%standardBackgroundColor%] url('images/sort_asc.png') no-repeat right center;
 }
@@ -511,29 +523,30 @@ div.dataTables_paginate span>a {
 }
 div.paging_two_button {
     padding: 9px 2px 6px 6px;
-		background-color:[%lighterGrayColor%];
 }
-div.paging_two_button a{
-    margin-left: 6px;
+.smallButton{
+	width:50px;
+  height:12px;
+
+}
+div.paging_two_button a {
 }
 
+
+
  
-div.dataTables_info {
-    padding: 9px 6px 6px 2px;
-		background-color:[%lighterGrayColor%];
-}
 
 [%# End dataTable Stuff=================================================================================================%]
 
-  .securityGrant{
+.securityGrant{
     border-style: solid;
     border-width: 1px;
     border-radius:10px;
     width: 21em;
     font-size: .7em;
     padding: .3em;
-  }
-  .securityGrantReceiver{
+}
+.securityGrantReceiver{
     display:inline-block;
     vertical-align: top;
     border-style:solid;
@@ -544,32 +557,32 @@ div.dataTables_info {
     height:20em;
     overflow:auto;
 
-  }
+}
 
-  #grantedPrivilegesId{
+#grantedPrivilegesId{
     border-style:solid;
     border-width:1px;
-  }
-  div.ui-draggable-dragging {
+}
+div.ui-draggable-dragging {
     -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
     -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
     box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
-  }
-  #grantAssignDiv{
+}
+#grantAssignDiv{
     vertical-align:top;
-  }
-  h1.pageTitle{
+}
+h1.pageTitle{
     font-size: 1.5em;
-  }
+}
 .SecurityDisabled{
-display:none;
+  display:none;
 }
 
 .LogicDisabled{
 display:none;
 
 }
-
+/*
 .scrollingTableDiv{
 padding:0;
 margin: 0;
@@ -580,3 +593,4 @@ overflow:hidden;
 .scrollingTable{
 margin-right: 20px;
 }
+*/

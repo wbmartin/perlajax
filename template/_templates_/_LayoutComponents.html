@@ -21,6 +21,14 @@ function displayMainLayout(showHide){
 }
 
 $(document).ready( function(){
+
+$.fn.dataTableExt.oStdClasses.sPagePrevDisabled ="standardButton smallButton";
+$.fn.dataTableExt.oStdClasses.sPagePrevEnabled ="standardButton smallButton";
+$.fn.dataTableExt.oStdClasses.sPageNextDisabled ="standardButton smallButton";
+$.fn.dataTableExt.oStdClasses.sPageNextEnabled ="standardButton smallButton";
+
+$.fn.dataTableExt.oStdClasses.sWrapper="prettyWrapper dataTables_wrapper";
+
 });
 //]]>
 </script>
