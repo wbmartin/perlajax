@@ -19,11 +19,10 @@ function retrieve[%ucfirst(divId)%]List(){
 	  return false;
 	}
 
-  $("#[%divId%]ListTable").html("");
   var params =prepParams(params,"[%spwfResource%]" ,"select" );
   var successf = function (rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
-      populate[%ucfirst(divId)%](rslt.rows);
+      populate[%ucfirst(divId)%]ListTable(rslt.rows);
     }else{
       briefNotify("There was a problem communicating with the Server.","ERROR")
     }
@@ -141,41 +140,47 @@ function validate[%ucfirst(divId)%]Form(){
 }
 
 //Top Level HTML Manip
-function populate[%ucfirst(divId)%](dataRows){
-  var htmlAggregator ="<tr><th>Profile Name</th><th class='accentColumn'>I want to&hellip;</th></tr>";
-  for(var ndx=0;ndx< dataRows.length;ndx++){
-    htmlAggregator +=build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
+var [%ucfirst(divId)%]prKey = {};
+function populate[%ucfirst(divId)%]ListTable(dataRows){
+	var dataArray= new Array();
+	for(var ndx=0;ndx< dataRows.length;ndx++){
+			dataArray[ndx] = build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
+		[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
   }
-  $("#[%divId%]ListTable").html(htmlAggregator);
+  $('#[%divId%]ListTable').dataTable().fnClearTable();
+	$('#[%divId%]ListTable').dataTable().fnAddData( dataArray, true );
+
+
 }
 
 function build[%ucfirst(divId)%]ListTableRow(data){
-  var htmlRow ="<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'><td>";
-  htmlRow += data.profile_name  +"</td>";
-	htmlRow += "<td class='accentColumn'>";
+	var dataHash= {};
+	var links ="";
+	dataHash["profile_name"] =data.profile_name;
 	if(isUserAuthorized("[%UPDATE_GRANT%]") ){
-		htmlRow += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
-		htmlRow+= " &nbsp; &nbsp; ";
+		links += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
+		links += " &nbsp; &nbsp; ";
 	}else if(isUserAuthorized("[%SELECT_GRANT%]") ){
-	  htmlRow += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>View</a> ";
-		htmlRow+= " &nbsp; &nbsp; ";
+	  links += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>View</a> ";
+		links += " &nbsp; &nbsp; ";
 	}
   if(isUserAuthorized("[%DELETE_GRANT%]")){
-		htmlRow += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>";
+		links += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>";
 	}
-		htmlRow += "	</td>";
- 	htmlRow += "	</tr>";
-  return htmlRow;
+		dataHash["links"] =links; 
+	dataHash["DT_RowId"] = "[%ucfirst(divId)%]ListTableTR-" + data.[%prkey%];
+
+  return dataHash;
 }
 
 function replace[%ucfirst(divId)%]ListTableRow(row){
-  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.[%prkey%]).replaceWith(build[%ucfirst(divId)%]ListTableRow(row));
+	$("#[%divId%]ListTable").dataTable().fnUpdate(build[%ucfirst(divId)%]ListTableRow(row),[%ucfirst(divId)%]prKey[row.[%prkey%]] );
 }
 function addNew[%ucfirst(divId)%]ListTableRow(row){
-  $("table#[%divId%]ListTable TR").first().after(build[%ucfirst(divId)%]ListTableRow(row));
+	$("#[%divId%]ListTable").dataTable().fnAddData(build[%ucfirst(divId)%]ListTableRow(row));
 }
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
-  $("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+[%toCC(prkey)%]_).replaceWith("");
+	$("#[%divId%]ListTable").dataTable().fnDeleteRow([%ucfirst(divId)%]prKey[[%toCC(prkey)%]_] );
 }
 
 //Div Access and App Layout Calls
@@ -203,6 +208,16 @@ function show[%ucfirst(divId)%](){
 
 //After complete Load setup
 $(document).ready(function(){
+  $("#[%divId%]ListTable").dataTable( {
+			"aoColumns": [
+			{ "mData": "profile_name" },
+			{ "mData": "links", asSorting:"none" }
+			],
+			"sPaginationType": "two_button"
+			}
+		 	);
+
+		
 
     $("#availableGrantsId").droppable({accept:".securityGrant", drop:handleSecurityRevokeDrop});
     $("#grantedPrivilegesId").droppable({accept:".securityGrant", drop:handleSecurityGrantDrop});
@@ -435,12 +450,14 @@ function clear[%ucfirst(divId)%]Form(){
   <h1 id="[%divId%]GolferNameId" class="pageTitle">Security Grants</h1>
   <div class="row">
     <span class="fourcol">
-      <table id="[%divId%]ListTable"  class='dataTable' >
+			<table id="[%divId%]ListTable"  class='dataTable pretty' >
+				<thead><tr><th>Profile Name</th><th >I want to&hellip;</th></tr></thead>
+				<tbody></tbody>
       </table>
     </span>
     <span class = "eightcol last">
-      <div class="formLayout_Standard">
 	<form id="[%divId%]Form" >
+      <div class="formLayout_Standard prettyWrapper">
 
 	  [%dbColumnName = 'profile_name'%]
 	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
@@ -450,17 +467,17 @@ function clear[%ucfirst(divId)%]Form(){
 	  </div>
 	  <div class="formButtons">
 
-	    <button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >
+	    <button type="button" id="[%divId%]FormSave" class="standardButton"  value="Save" onclick="save[%ucfirst(divId)%]Form();" >
 	      Save</button>
-	    <button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >
+	    <button type="button" id="[%divId%]FormAdd" class="standardButton"  value="Add" onclick="save[%ucfirst(divId)%]Form();" >
 	      Add</button>
-	    <button type="button" id="[%divId%]FormClear" value="Clear" 
+	    <button type="button" id="[%divId%]FormClear" class="standardButton"  value="Clear" 
 	      onclick="clear[%ucfirst(divId)%]Form();" >Clear</button>
 	  </div>
 	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 	  <input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
-	</form>
       </div>
+	</form>
       <br/>
 				Available - Granted
 			<div id="grantAssignDiv">

@@ -15,14 +15,13 @@
 function retrieve[%ucfirst(divId)%]List(){
 	if(!isUserAuthorized("[%SELECT_GRANT%]", true, "retrieve[%ucfirst(divId)%]List") ) return false; 
 
-	$("#[%divId%]ListTable").html("");
 	var params =prepParams(params,"[%spwfResource%]" ,"select" );
 	params['orderby_clause'] =" order by game_dt desc"
 		var successf = function (rslt){
 			if(!rslt[SERVER_SIDE_FAIL]){
-				populate[%ucfirst(divId)%](rslt.rows)
+				populate[%ucfirst(divId)%]ListTable(rslt.rows)
 			}else{
-				briefNotify("There was a problem communicating with the Server.","ERROR")
+				briefNotify("There was a problem communicating with the Server.","ERROR");
 			}
 		};
 	serverCall(params,successf,FAILF);
@@ -126,45 +125,49 @@ function validate[%ucfirst(divId)%]Form(){
 }
 
 //Top Level HTML Manip
-function populate[%ucfirst(divId)%](dataRows){
-	var htmlAggregator ="<tr><th>Golfer</th> <th class='accentColumn'>Score</th><th >Date</th> <th class='accentColumn'>I want to&hellip;</th></tr>";
+var [%ucfirst(divId)%]prKey = {};
+function populate[%ucfirst(divId)%]ListTable(dataRows){
+	var dataArray= new Array();
 	for(var ndx=0;ndx< dataRows.length;ndx++){
-		htmlAggregator +=build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
+		dataArray[ndx] = build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
+		[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
 	}
-	$("#[%divId%]ListTable").html(htmlAggregator);
+	$('#[%divId%]ListTable').dataTable().fnClearTable();
+	$('#[%divId%]ListTable').dataTable().fnAddData( dataArray, true );
 }
 
 function build[%ucfirst(divId)%]ListTableRow(data){
-	var htmlRow ="<tr id='[%ucfirst(divId)%]ListTableTR-" +data.[%prkey%] + "'>";
-	htmlRow += "<td>"+GOLFER_CACHE[data.golfer_id] + "</td>";
-	htmlRow += "<td class='accentColumn'>" + formatNumber(data.golf_score,0,true,false,true)  +"</td>";
-	htmlRow += "<td >" + pgDate(data.game_dt) + " </td> ";
-	htmlRow += "<td class='accentColumn'>";
+	var dataHash= {};
+	var links ="";
+	dataHash["golfer_name"] = GOLFER_CACHE[data.golfer_id];
+	dataHash["golf_score"] = formatNumber(data.golf_score,0,true,false,true);
+	dataHash["game_dt"] = pgDate(data.game_dt);
 	if(isUserAuthorized("[%UPDATE_GRANT%]", false)){
-		htmlRow += "	<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
-		htmlRow += " &nbsp; &nbsp ";
+		links += "	<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
+		links += " &nbsp; &nbsp ";
 	}else if(isUserAuthorized("[%SELECT_GRANT%]", false)){
-		htmlRow += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>View</a> ";
-		htmlRow += " &nbsp; &nbsp;";
+		links += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>View</a> ";
+		links += " &nbsp; &nbsp;";
 
 	}
 
 	if(isUserAuthorized("[%DELETE_GRANT%]", false)){
-		htmlRow += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>  ";
+		links += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>  ";
 	}
-	htmlRow += "</td>";
-	htmlRow += "</tr>";
-	return htmlRow;
+		dataHash["links"] =links; 
+	dataHash["DT_RowId"] = "[%ucfirst(divId)%]ListTableTR-" + data.[%prkey%];
+
+	return dataHash;
 }
 
 function replace[%ucfirst(divId)%]ListTableRow(row){
-	$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+row.[%prkey%]).replaceWith(build[%ucfirst(divId)%]ListTableRow(row));
+	$("#[%divId%]ListTable").dataTable().fnUpdate(build[%ucfirst(divId)%]ListTableRow(row),[%ucfirst(divId)%]prKey[row.[%prkey%]] );
 }
 function addNew[%ucfirst(divId)%]ListTableRow(row){
-	$("table#[%divId%]ListTable TR").first().after(build[%ucfirst(divId)%]ListTableRow(row));
+	$("#[%divId%]ListTable").dataTable().fnAddData(build[%ucfirst(divId)%]ListTableRow(row));
 }
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
-	$("table#[%divId%]ListTable #[%ucfirst(divId)%]ListTableTR-"+[%toCC(prkey)%]_).replaceWith("");
+	$("#[%divId%]ListTable").dataTable().fnDeleteRow([%ucfirst(divId)%]prKey[[%toCC(prkey)%]_] );
 }
 
 //Div Access and App Layout Calls
@@ -186,7 +189,18 @@ function clear[%ucfirst(divId)%]Form(){
 //After complete Load setup
 $(document).ready(function(){
 		$("#[%divId%]Form-game_dt" ).datepicker();
-		});
+
+		$("#[%divId%]ListTable").dataTable( {
+			"aoColumns": [
+			{ "mData": "golfer_name" },
+			{ "mData": "golf_score" },
+			{ "mData": "game_dt" },
+			{ "mData": "links", asSorting:"none" }
+			],
+			"sPaginationType": "two_button"
+			}
+		 	);
+});
 
 //page specific functions
 function retrieveGolferNameForGolfScore(golferId_){
@@ -228,12 +242,14 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 	<h1 id="[%divId%]h1" class="pageTitle">Recent Golf Scores</h1>
 	<div class="row">
 		<span class="sixcol">
-			<table id="[%divId%]ListTable"  class='dataTable' >
+			<table id="[%divId%]ListTable"  class='dataTable pretty' >
+				<thead><tr><th>Golfer</th> <th >Score</th><th >Date</th> <th >I want to&hellip;</th></tr></thead>
+				<tbody></tbody>
 			</table>
 		</span>
 		<span class = "sixcol last">
 			<form id="[%divId%]Form" >
-				<div class="formLayout_Standard" id="[%divId%]EntryDivId">
+				<div class="formLayout_Standard prettyWrapper" id="[%divId%]EntryDivId">
 					[%dbColumnName = 'golfer_id'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Name</label>
@@ -257,9 +273,9 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 
 					<div class="formButtons">
 
-						<button type="button" id="[%divId%]FormSave" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-						<button type="button" id="[%divId%]FormAdd" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-						<button type="button" id="[%divId%]FormClear" value="Clear" onclick="clear[%ucfirst(divId)%]Form();" >Clear</button>
+						<button type="button" id="[%divId%]FormSave" class="standardButton" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
+						<button type="button" id="[%divId%]FormAdd"  class="standardButton" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
+						<button type="button" id="[%divId%]FormClear"  class="standardButton" value="Clear" onclick="clear[%ucfirst(divId)%]Form();" >Clear</button>
 					</div>
 					<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 					<input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">

@@ -8,19 +8,16 @@
 
 <script type="text/javascript">
 
-	var golfScoreSummaryList = new Array();
-	function retrieveGolfScoreSummary(){
+	function retrieve[%ucfirst(divId)%]List(){
 		if(!isUserAuthorized("[%SELECT_GRANT%]") ){
 			briefNotify("Access Violation","ERROR");
 			return false;
 		}
 
-		$("#[%divId%]Table").html("");
 		var params =prepParams(params,"[%spwfResource%]" ,"select" );
 		var successf = function (rslt){
 			if(!rslt[SERVER_SIDE_FAIL]){
-				golfScoreSummaryList=rslt.rows;
-				displayGolfScoreSummaryList(golfScoreSummaryList);
+				populate[%ucfirst(divId)%]ListTable(rslt.rows);
 			}else{
 				briefNotify("There was a problem communicating with the Server.","ERROR")
 			}
@@ -30,35 +27,41 @@
 		serverCall(params,successf,failf);
 
 	}
-function display[%ucfirst(divId)%]List([%divId%]List_){
-	var newrowsHTML = "<tr> <th>Golfer</th><th class='accentColumn'>Last 10 Avg</th><th>Period</th><th class='accentColumn'>I want to&hellip;</th></tr>";
-	var gs = {};
-	for(var ndx=0; ndx<[%divId%]List_.length; ndx++){
-		newrowsHTML +=build[%ucfirst(divId)%]Row(golfScoreSummaryList_[ndx]);
+//var [%ucfirst(divId)%]prKey = {};
+function populate[%ucfirst(divId)%]ListTable(dataRows){
+	var dataArray= new Array();
+	for(var ndx=0; ndx<dataRows.length; ndx++){
+		dataArray[ndx] = build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
+		//[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
 	}
-	$("#[%divId%]Table").html(newrowsHTML);
+	$('#[%divId%]ListTable').dataTable().fnClearTable();
+	$('#[%divId%]ListTable').dataTable().fnAddData( dataArray, true );
+
 }
 
-function build[%ucfirst(divId)%]Row(gs){
-	var newrow ="<tr><td>" + gs.golfer_name+"</td>";
-	newrow +="<td class='accentColumn'>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
-	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-	newrow +="<td class ='accentColumn'>";
+function build[%ucfirst(divId)%]ListTableRow(gs){
+	var dataHash={};
+	var links="";
+	dataHash['golfer_name'] = gs.golfer_name;
+	dataHash['handicap'] = formatNumber(gs.golf_score,2,true,false,true);
+	dataHash['date_range'] = pgDate(gs.first_date) + " - " + pgDate(gs.last_date);
+
 	if(isUserAuthorized("SELECT_GOLF_SCORE")){
-		newrow +="<a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a>  ";
-	  newrow +="&nbsp; &nbsp;"
+		links+="<a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a>  ";
+		links +="&nbsp; &nbsp;"
 	}
 	if(isUserAuthorized("SELECT_GOLFER")){
-		newrow +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a>";
+		links +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a>";
 	}
-	newrow +="</td>";
-	newrow +="</tr>";
-	return newrow;
+	dataHash["links"] =links; 
+	//dataHash["DT_RowId"] = "[%ucfirst(divId)%]ListTableTR-" + data.[%prkey%];
+
+	return dataHash;
 
 }
 
 function show[%ucfirst(divId)%](){
-	retrieve[%ucfirst(divId)%]();
+	retrieve[%ucfirst(divId)%]List();
 	standardShowContentPane("[%divId%]");
 }
 
@@ -66,9 +69,31 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 
 }
 
-</script>
-<div id="[%divId%]" class="MainLayout MainContentPaneStyle contentPane"  >
 
-	<table id="[%divId%]Table"  class='dataTable' >
-	</table>
-</div> [%# end golfScoreSummary%]
+//After complete Load setup
+$(document).ready(function(){
+		$("#[%divId%]ListTable").dataTable( 
+			{
+			"aoColumns": [
+			{ "mData": "golfer_name" },
+			{ "mData": "handicap" },
+			{ "mData": "date_range" },
+			{ "mData": "links", asSorting:"none" }
+			],
+			"sPaginationType": "two_button"
+			});
+		});
+
+	</script>
+	<div id="[%divId%]" class="contentPane MainLayout"  >
+		<h1 id="[%divId%]GolferNameId" class="pageTitle"> Handicap Summary</h1>
+		<div style="display:inline-block"[%# inline block needed to keep pretty wrapper from expanding%]>
+			<table id="[%divId%]ListTable"  class='dataTable pretty' >
+				<thead>
+					<tr> <th>Golfer</th><th >Last 10 Avg</th><th>Period</th><th >I want to&hellip;</th></tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div> [%# ennewrowd golfScoreSummary%]

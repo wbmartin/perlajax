@@ -21,6 +21,9 @@ body{
   font-size:1.1em;
 
 }
+h1{
+	color: [%primaryColor%]
+}
 .small{
   color:[%grayColor%];
   display:block;
@@ -582,15 +585,4 @@ h1.pageTitle{
 display:none;
 
 }
-/*
-.scrollingTableDiv{
-padding:0;
-margin: 0;
-display: inline-block;
-overflow:hidden;
-}
 
-.scrollingTable{
-margin-right: 20px;
-}
-*/

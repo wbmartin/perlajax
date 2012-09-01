@@ -1882,8 +1882,16 @@ catch(e){
 </script>
 
 
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
 <style type="text/css">
+	/*reset yahooapis  http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css */
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.3.0
+build: 3167
+*/
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}
 
 /* _jqueryui*/
 /*
@@ -2653,6 +2661,9 @@ body{
   font-size:1.1em;
 
 }
+h1{
+	color: #246B24
+}
 .small{
   color:#666666;
   display:block;
@@ -3212,18 +3223,7 @@ h1.pageTitle{
 display:none;
 
 }
-/*
-.scrollingTableDiv{
-padding:0;
-margin: 0;
-display: inline-block;
-overflow:hidden;
-}
 
-.scrollingTable{
-margin-right: 20px;
-}
-*/
 
 </style>
 </head>
@@ -3253,9 +3253,9 @@ function displayMainLayout(showHide){
 
 $(document).ready( function(){
 
-$.fn.dataTableExt.oStdClasses.sPagePrevDisabled ="standardButton smallButton";
+$.fn.dataTableExt.oStdClasses.sPagePrevDisabled ="standardButton smallButton LogicDisabled";
 $.fn.dataTableExt.oStdClasses.sPagePrevEnabled ="standardButton smallButton";
-$.fn.dataTableExt.oStdClasses.sPageNextDisabled ="standardButton smallButton";
+$.fn.dataTableExt.oStdClasses.sPageNextDisabled ="standardButton smallButton LogicDisabled";
 $.fn.dataTableExt.oStdClasses.sPageNextEnabled ="standardButton smallButton";
 
 $.fn.dataTableExt.oStdClasses.sWrapper="prettyWrapper dataTables_wrapper";
@@ -3308,19 +3308,16 @@ $.fn.dataTableExt.oStdClasses.sWrapper="prettyWrapper dataTables_wrapper";
 
 <script type="text/javascript">
 
-	var golfScoreSummaryList = new Array();
-	function retrieveGolfScoreSummary(){
+	function retrieveGolfScoreSummaryList(){
 		if(!isUserAuthorized("SELECT_GOLFER_HANDICAP") ){
 			briefNotify("Access Violation","ERROR");
 			return false;
 		}
 
-		$("#golfScoreSummaryTable").html("");
 		var params =prepParams(params,"golf_score_summary" ,"select" );
 		var successf = function (rslt){
 			if(!rslt[SERVER_SIDE_FAIL]){
-				golfScoreSummaryList=rslt.rows;
-				displayGolfScoreSummaryList(golfScoreSummaryList);
+				populateGolfScoreSummaryListTable(rslt.rows);
 			}else{
 				briefNotify("There was a problem communicating with the Server.","ERROR")
 			}
@@ -3330,35 +3327,41 @@ $.fn.dataTableExt.oStdClasses.sWrapper="prettyWrapper dataTables_wrapper";
 		serverCall(params,successf,failf);
 
 	}
-function displayGolfScoreSummaryList(golfScoreSummaryList_){
-	var newrowsHTML = "<tr> <th>Golfer</th><th class='accentColumn'>Last 10 Avg</th><th>Period</th><th class='accentColumn'>I want to&hellip;</th></tr>";
-	var gs = {};
-	for(var ndx=0; ndx<golfScoreSummaryList_.length; ndx++){
-		newrowsHTML +=buildGolfScoreSummaryRow(golfScoreSummaryList_[ndx]);
+//var GolfScoreSummaryprKey = {};
+function populateGolfScoreSummaryListTable(dataRows){
+	var dataArray= new Array();
+	for(var ndx=0; ndx<dataRows.length; ndx++){
+		dataArray[ndx] = buildGolfScoreSummaryListTableRow(dataRows[ndx]);
+		//GolfScoreSummaryprKey[dataRows[ndx].] = ndx;
 	}
-	$("#golfScoreSummaryTable").html(newrowsHTML);
+	$('#golfScoreSummaryListTable').dataTable().fnClearTable();
+	$('#golfScoreSummaryListTable').dataTable().fnAddData( dataArray, true );
+
 }
 
-function buildGolfScoreSummaryRow(gs){
-	var newrow ="<tr><td>" + gs.golfer_name+"</td>";
-	newrow +="<td class='accentColumn'>" + formatNumber(gs.golf_score,2,true,false,true)+ "</td>";
-	newrow +="<td>" + pgDate(gs.first_date) + " - " + pgDate(gs.last_date) + "</td>";
-	newrow +="<td class ='accentColumn'>";
+function buildGolfScoreSummaryListTableRow(gs){
+	var dataHash={};
+	var links="";
+	dataHash['golfer_name'] = gs.golfer_name;
+	dataHash['handicap'] = formatNumber(gs.golf_score,2,true,false,true);
+	dataHash['date_range'] = pgDate(gs.first_date) + " - " + pgDate(gs.last_date);
+
 	if(isUserAuthorized("SELECT_GOLF_SCORE")){
-		newrow +="<a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a>  ";
-	  newrow +="&nbsp; &nbsp;"
+		links+="<a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a>  ";
+		links +="&nbsp; &nbsp;"
 	}
 	if(isUserAuthorized("SELECT_GOLFER")){
-		newrow +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a>";
+		links +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a>";
 	}
-	newrow +="</td>";
-	newrow +="</tr>";
-	return newrow;
+	dataHash["links"] =links; 
+	//dataHash["DT_RowId"] = "GolfScoreSummaryListTableTR-" + data.;
+
+	return dataHash;
 
 }
 
 function showGolfScoreSummary(){
-	retrieveGolfScoreSummary();
+	retrieveGolfScoreSummaryList();
 	standardShowContentPane("golfScoreSummary");
 }
 
@@ -3366,12 +3369,34 @@ function imposeGolfScoreSummarySecurityUIRestrictions(){
 
 }
 
-</script>
-<div id="golfScoreSummary" class="MainLayout MainContentPaneStyle contentPane"  >
 
-	<table id="golfScoreSummaryTable"  class='dataTable' >
-	</table>
-</div> 
+//After complete Load setup
+$(document).ready(function(){
+		$("#golfScoreSummaryListTable").dataTable( 
+			{
+			"aoColumns": [
+			{ "mData": "golfer_name" },
+			{ "mData": "handicap" },
+			{ "mData": "date_range" },
+			{ "mData": "links", asSorting:"none" }
+			],
+			"sPaginationType": "two_button"
+			});
+		});
+
+	</script>
+	<div id="golfScoreSummary" class="contentPane MainLayout"  >
+		<h1 id="golfScoreSummaryGolferNameId" class="pageTitle"> Handicap Summary</h1>
+		<div style="display:inline-block">
+			<table id="golfScoreSummaryListTable"  class='dataTable pretty' >
+				<thead>
+					<tr> <th>Golfer</th><th >Last 10 Avg</th><th>Period</th><th >I want to&hellip;</th></tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div> 
 
 
 
@@ -3386,17 +3411,21 @@ function imposeGolfScoreSummarySecurityUIRestrictions(){
 	//<![CDATA[
 "use strict";
 //Server Calls
-function retrieveGolfScoreList(golferId_){
+function retrieveGolfScoreList(golferId_,selectedKey_){
 	if(!isUserAuthorized("SELECT_GOLF_SCORE") ){
 		briefNotify("Access Violation","ERROR");
 		return false;
 	}
 
-	$("#golfScoreListTable").html("");
 	var params =prepParams(params,"golf_score" ,"select" );
 	params['where_clause'] = "golfer_id =" + golferId_;
 	var successf = function (rslt){
-		populateGolfScore(rslt.rows)
+		if(!rslt[SERVER_SIDE_FAIL]){
+			populateGolfScoreListTable(rslt.rows)
+			
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR");
+		}
 	};
 	serverCall(params,successf,FAILF);
 }
@@ -3434,7 +3463,7 @@ function deleteGolfScore(golfScoreId_, lastUpdate_){
 	var successf = function (rslt){
 		if(!rslt[SERVER_SIDE_FAIL]){
 			removeGolfScoreListTableRow(rslt.golf_score_id);
-			briefNotify("Golf Score Deleted Successfully","INFO");a
+			briefNotify("Golf Score Deleted Successfully","INFO");
 		}else{
 			briefNotify("There was a problem communicating with the Server.","ERROR")
 		}
@@ -3509,44 +3538,51 @@ function validateGolfScoreForm(){
 }
 
 //Top Level HTML Manip
-function populateGolfScore(dataRows){
-	var htmlAggregator ="<tr> <th>Score</th><th class='accentColumn'>Date</th> <th>I want to&hellip;</th></tr>";
+var GolfScoreprKey = {};
+function populateGolfScoreListTable(dataRows){
+ var dataArray= new Array();
 	for(var ndx=0;ndx< dataRows.length;ndx++){
-		htmlAggregator +=buildGolfScoreListTableRow(dataRows[ndx]);
+		dataArray[ndx] = buildGolfScoreListTableRow(dataRows[ndx]);
+		GolfScoreprKey[dataRows[ndx].golf_score_id] = ndx;
+
 	}
-	$("#golfScoreListTable").html(htmlAggregator);
+  $('#golfScoreListTable').dataTable().fnClearTable();
+	$('#golfScoreListTable').dataTable().fnAddData( dataArray, true );
+	
 }
 
 function buildGolfScoreListTableRow(data){
-	var htmlRow ="<tr id='GolfScoreListTableTR-" +data.golf_score_id + "'>";
-	htmlRow += "<td>" + formatNumber(data.golf_score,0,true,false,true)  +"</td>";
-	htmlRow += "<td class='accentColumn'>" + pgDate(data.game_dt) + " </td> ";
-	htmlRow += "<td>";
+	var dataHash= {};
+	var links ="";
+	dataHash["golf_score"] = formatNumber(data.golf_score,0,true,false,true) ;
+	dataHash["game_dt"] =pgDate(data.game_dt)
+		
 	if(isUserAuthorized("UPDATE_GOLF_SCORE")){
-		htmlRow += "<a class='alink' onclick='editGolfScore(" +data.golf_score_id + ")'>Edit</a> ";
-		htmlRow += "&nbsp; &nbsp;";
+		links += "<a class='alink' onclick='editGolfScore(" +data.golf_score_id + ")'>Edit</a> ";
+		links += "&nbsp; &nbsp;";
 	}else if(isUserAuthorized("SELECT_GOLF_SCORE")){
-	  htmlRow += "<a class='alink' onclick='editGolfScore(" +data.golf_score_id + ")'>View</a> ";
-		htmlRow += "&nbsp; &nbsp;";
+	  links += "<a class='alink' onclick='editGolfScore(" +data.golf_score_id + ")'>View</a> ";
+		links += "&nbsp; &nbsp;";
 
 	}
 	if(isUserAuthorized("DELETE_GOLF_SCORE")){
-		htmlRow += "<a class='alink' onclick=\"deleteGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  ";
-		htmlRow +="&nbsp; &nbsp;"
+		links += "<a class='alink' onclick=\"deleteGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  ";
+		links +="&nbsp; &nbsp;"
 	}
-	htmlRow += "</td>";
-	htmlRow += "</tr>";
-	return htmlRow;
+
+		dataHash["links"] =links; 
+	dataHash["DT_RowId"] = "GolfScoreListTableTR-" + data.golf_score_id;
+	return dataHash;
 }
 
 function replaceGolfScoreListTableRow(row){
-	$("table#golfScoreListTable #GolfScoreListTableTR-"+row.golf_score_id).replaceWith(buildGolfScoreListTableRow(row));
+	$("#golfScoreListTable").dataTable().fnUpdate(buildGolfScoreListTableRow(row),GolfScoreprKey[row.golf_score_id] );
 }
 function addNewGolfScoreListTableRow(row){
-	$("table#golfScoreListTable TR").first().after(buildGolfScoreListTableRow(row));
+	$("#golfScoreListTable").dataTable().fnAddData(buildGolfScoreListTableRow(row));
 }
 function removeGolfScoreListTableRow(golfScoreId_){
-	$("table#golfScoreListTable #GolfScoreListTableTR-"+golfScoreId_).replaceWith("");
+	$("#golfScoreListTable").dataTable().fnDeleteRow(GolfScoreprKey[golfScoreId_] );
 }
 
 //Div Access and App Layout Calls
@@ -3565,6 +3601,7 @@ function showGolfScore(golferId_){
 	$("#golfScoreForm-golfer_id").val(golferId_);
 	$("#golfScoreGolferNameId").html(GOLFER_CACHE[golferId_] + " Golf Scores ");
 	
+	imposeGolfScoreSecurityUIRestrictions();
 }
 
 
@@ -3578,7 +3615,18 @@ function clearGolfScoreForm(){
 //After complete Load setup
 $(document).ready(function(){
 		$("#golfScoreForm-game_dt" ).datepicker();
+
+		$("#golfScoreListTable").dataTable( {
+			"aoColumns": [
+			{ "mData": "golf_score" },
+			{ "mData": "game_dt" },
+			{ "mData": "links", asSorting:"none" }
+			],
+			"sPaginationType": "two_button"
+			}
+		 	);
 		});
+
 
 //page specific functions
 function retrieveGolferNameForGolfScore(golferId_){
@@ -3620,15 +3668,19 @@ function imposeGolfScoreSecurityUIRestrictions(){
 
 </script>
 <div id="golfScore" class="contentPane MainLayout"  >
-	<h1 id="golfScoreGolferNameId" class="pageTitle"></h1>
+	<h1 id="golfScoreGolferNameId" class="pageTitle">Handicap Summary</h1>
 	<div class="row">
-		<span class="sixcol">
-			<table id="golfScoreListTable"  class='dataTable' >
-			</table>
+		<span class="fourcol">
+			<div style="display:inline-block">
+			<table id="golfScoreListTable"  class='dataTable pretty' >
+					<thead><tr><th>Score</th><th>Game Date</th><th class='accentColumn'>I want to&hellip;</th></tr></thead>
+					<tbody></tbody>
+				</table>
+			</div>
 		</span>
-		<span class = "sixcol last">
+		<span class = "eightcol last">
 			<form id="golfScoreForm" >
-				<div class="formLayout_Standard">
+				<div class="formLayout_Standard prettyWrapper">
 					
 					<div class="formFieldGroup" id="golfScoreForm-golf_scoreDivId">
 						<label for ="golfScoreForm-golf_score" id="golfScoreFormLabel-golf_score">Score</label>
@@ -3647,9 +3699,9 @@ function imposeGolfScoreSecurityUIRestrictions(){
 
 					<div class="formButtons">
 
-						<button type="button" id="golfScoreFormSave" value="Save" onclick="saveGolfScoreForm();" >Save</button>
-						<button type="button" id="golfScoreFormAdd" value="Add" onclick="saveGolfScoreForm();" >Add</button>
-						<button type="button" id="golfScoreFormClear" value="Clear" onclick="clearGolfScoreForm();" >Clear</button>
+						<button type="button" id="golfScoreFormSave" class="standardButton" value="Save" onclick="saveGolfScoreForm();" >Save</button>
+						<button type="button" id="golfScoreFormAdd" class="standardButton" value="Add" onclick="saveGolfScoreForm();" >Add</button>
+						<button type="button" id="golfScoreFormClear" class="standardButton" value="Clear" onclick="clearGolfScoreForm();" >Clear</button>
 					</div>
 
 					<input type="hidden" name="last_update" id="golfScoreForm-last_update">
@@ -3679,14 +3731,13 @@ function imposeGolfScoreSecurityUIRestrictions(){
 function retrieveQuickGolfScoreList(){
 	if(!isUserAuthorized("SELECT_GOLF_SCORE", true, "retrieveQuickGolfScoreList") ) return false; 
 
-	$("#quickGolfScoreListTable").html("");
 	var params =prepParams(params,"golf_score" ,"select" );
 	params['orderby_clause'] =" order by game_dt desc"
 		var successf = function (rslt){
 			if(!rslt[SERVER_SIDE_FAIL]){
-				populateQuickGolfScore(rslt.rows)
+				populateQuickGolfScoreListTable(rslt.rows)
 			}else{
-				briefNotify("There was a problem communicating with the Server.","ERROR")
+				briefNotify("There was a problem communicating with the Server.","ERROR");
 			}
 		};
 	serverCall(params,successf,FAILF);
@@ -3790,45 +3841,49 @@ function validateQuickGolfScoreForm(){
 }
 
 //Top Level HTML Manip
-function populateQuickGolfScore(dataRows){
-	var htmlAggregator ="<tr><th>Golfer</th> <th class='accentColumn'>Score</th><th >Date</th> <th class='accentColumn'>I want to&hellip;</th></tr>";
+var QuickGolfScoreprKey = {};
+function populateQuickGolfScoreListTable(dataRows){
+	var dataArray= new Array();
 	for(var ndx=0;ndx< dataRows.length;ndx++){
-		htmlAggregator +=buildQuickGolfScoreListTableRow(dataRows[ndx]);
+		dataArray[ndx] = buildQuickGolfScoreListTableRow(dataRows[ndx]);
+		QuickGolfScoreprKey[dataRows[ndx].golf_score_id] = ndx;
 	}
-	$("#quickGolfScoreListTable").html(htmlAggregator);
+	$('#quickGolfScoreListTable').dataTable().fnClearTable();
+	$('#quickGolfScoreListTable').dataTable().fnAddData( dataArray, true );
 }
 
 function buildQuickGolfScoreListTableRow(data){
-	var htmlRow ="<tr id='QuickGolfScoreListTableTR-" +data.golf_score_id + "'>";
-	htmlRow += "<td>"+GOLFER_CACHE[data.golfer_id] + "</td>";
-	htmlRow += "<td class='accentColumn'>" + formatNumber(data.golf_score,0,true,false,true)  +"</td>";
-	htmlRow += "<td >" + pgDate(data.game_dt) + " </td> ";
-	htmlRow += "<td class='accentColumn'>";
+	var dataHash= {};
+	var links ="";
+	dataHash["golfer_name"] = GOLFER_CACHE[data.golfer_id];
+	dataHash["golf_score"] = formatNumber(data.golf_score,0,true,false,true);
+	dataHash["game_dt"] = pgDate(data.game_dt);
 	if(isUserAuthorized("UPDATE_GOLF_SCORE", false)){
-		htmlRow += "	<a class='alink' onclick='editQuickGolfScore(" +data.golf_score_id + ")'>Edit</a> ";
-		htmlRow += " &nbsp; &nbsp ";
+		links += "	<a class='alink' onclick='editQuickGolfScore(" +data.golf_score_id + ")'>Edit</a> ";
+		links += " &nbsp; &nbsp ";
 	}else if(isUserAuthorized("SELECT_GOLF_SCORE", false)){
-		htmlRow += "<a class='alink' onclick='editQuickGolfScore(" +data.golf_score_id + ")'>View</a> ";
-		htmlRow += " &nbsp; &nbsp;";
+		links += "<a class='alink' onclick='editQuickGolfScore(" +data.golf_score_id + ")'>View</a> ";
+		links += " &nbsp; &nbsp;";
 
 	}
 
 	if(isUserAuthorized("DELETE_GOLF_SCORE", false)){
-		htmlRow += "<a class='alink' onclick=\"deleteQuickGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  ";
+		links += "<a class='alink' onclick=\"deleteQuickGolfScore(" +data.golf_score_id + ",'"+data.last_update +"')\">Delete</a>  ";
 	}
-	htmlRow += "</td>";
-	htmlRow += "</tr>";
-	return htmlRow;
+		dataHash["links"] =links; 
+	dataHash["DT_RowId"] = "QuickGolfScoreListTableTR-" + data.golf_score_id;
+
+	return dataHash;
 }
 
 function replaceQuickGolfScoreListTableRow(row){
-	$("table#quickGolfScoreListTable #QuickGolfScoreListTableTR-"+row.golf_score_id).replaceWith(buildQuickGolfScoreListTableRow(row));
+	$("#quickGolfScoreListTable").dataTable().fnUpdate(buildQuickGolfScoreListTableRow(row),QuickGolfScoreprKey[row.golf_score_id] );
 }
 function addNewQuickGolfScoreListTableRow(row){
-	$("table#quickGolfScoreListTable TR").first().after(buildQuickGolfScoreListTableRow(row));
+	$("#quickGolfScoreListTable").dataTable().fnAddData(buildQuickGolfScoreListTableRow(row));
 }
 function removeQuickGolfScoreListTableRow(golfScoreId_){
-	$("table#quickGolfScoreListTable #QuickGolfScoreListTableTR-"+golfScoreId_).replaceWith("");
+	$("#quickGolfScoreListTable").dataTable().fnDeleteRow(QuickGolfScoreprKey[golfScoreId_] );
 }
 
 //Div Access and App Layout Calls
@@ -3850,7 +3905,18 @@ function clearQuickGolfScoreForm(){
 //After complete Load setup
 $(document).ready(function(){
 		$("#quickGolfScoreForm-game_dt" ).datepicker();
-		});
+
+		$("#quickGolfScoreListTable").dataTable( {
+			"aoColumns": [
+			{ "mData": "golfer_name" },
+			{ "mData": "golf_score" },
+			{ "mData": "game_dt" },
+			{ "mData": "links", asSorting:"none" }
+			],
+			"sPaginationType": "two_button"
+			}
+		 	);
+});
 
 //page specific functions
 function retrieveGolferNameForGolfScore(golferId_){
@@ -3892,12 +3958,14 @@ function imposeQuickGolfScoreSecurityUIRestrictions(){
 	<h1 id="quickGolfScoreh1" class="pageTitle">Recent Golf Scores</h1>
 	<div class="row">
 		<span class="sixcol">
-			<table id="quickGolfScoreListTable"  class='dataTable' >
+			<table id="quickGolfScoreListTable"  class='dataTable pretty' >
+				<thead><tr><th>Golfer</th> <th >Score</th><th >Date</th> <th >I want to&hellip;</th></tr></thead>
+				<tbody></tbody>
 			</table>
 		</span>
 		<span class = "sixcol last">
 			<form id="quickGolfScoreForm" >
-				<div class="formLayout_Standard" id="quickGolfScoreEntryDivId">
+				<div class="formLayout_Standard prettyWrapper" id="quickGolfScoreEntryDivId">
 					
 					<div class="formFieldGroup" id="quickGolfScoreForm-golfer_idDivId">
 						<label for ="quickGolfScoreForm-golfer_id" id="quickGolfScoreFormLabel-golfer_id">Name</label>
@@ -3921,9 +3989,9 @@ function imposeQuickGolfScoreSecurityUIRestrictions(){
 
 					<div class="formButtons">
 
-						<button type="button" id="quickGolfScoreFormSave" value="Save" onclick="saveQuickGolfScoreForm();" >Save</button>
-						<button type="button" id="quickGolfScoreFormAdd" value="Add" onclick="saveQuickGolfScoreForm();" >Add</button>
-						<button type="button" id="quickGolfScoreFormClear" value="Clear" onclick="clearQuickGolfScoreForm();" >Clear</button>
+						<button type="button" id="quickGolfScoreFormSave" class="standardButton" value="Save" onclick="saveQuickGolfScoreForm();" >Save</button>
+						<button type="button" id="quickGolfScoreFormAdd"  class="standardButton" value="Add" onclick="saveQuickGolfScoreForm();" >Add</button>
+						<button type="button" id="quickGolfScoreFormClear"  class="standardButton" value="Clear" onclick="clearQuickGolfScoreForm();" >Clear</button>
 					</div>
 					<input type="hidden" name="last_update" id="quickGolfScoreForm-last_update">
 					<input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id">
@@ -3948,6 +4016,31 @@ function imposeQuickGolfScoreSecurityUIRestrictions(){
 "use strict";
 //----------------------------------------------------
 //server calls
+function retrieveGolfer(params,selectedKey_){
+	if(!isUserAuthorized("SELECT_GOLFER", true, "retrieveGolfer")) return false; 
+
+	params = prepParams(params,"golfer","SELECT");
+	//params['spwfPagination']=true;
+	if(selectedKey_){
+		params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
+	}
+	var successf = function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			if(rslt.rowCount==1){
+				bindToForm("golferForm", rslt.rows[0]);
+				toggleSaveMode("golferForm",true);
+			}else{
+				populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
+			}
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
+
+	}
+	serverCall(params,successf,FAILF);
+}
+
+
 function saveGolfer(params){
 	if(!isUserAuthorized("UPDATE_GOLFER",false) && !isUserAuthorized("INSERT_GOLFER",false)){
 		briefNotify("Access Violation","ERROR");
@@ -3972,40 +4065,8 @@ function saveGolfer(params){
 	serverCall(params,successf,FAILF);
 }
 
-/*var golferListTablePageNum =1;
-	function retrieveGolferListTablePagination(targetPage, rowLimit){
-	golferListTablePageNum = targetPage;
-	var params={};
-	params.rowlimit = rowLimit;
-	params.startrow = (targetPage-1)* rowLimit;
-	retrieveGolfer(params)
-	}
- */
 
-function retrieveGolfer(params,selectedKey_){
-	if(!isUserAuthorized("SELECT_GOLFER", true, "retrieveGolfer")) return false; 
 
-	params = prepParams(params,"golfer","SELECT");
-	//params['spwfPagination']=true;
-	if(selectedKey_){
-		params['passThru'] = "SELECTED_KEY~" + selectedKey_ + ";"
-	}
-	var successf = function(rslt){
-		if(!rslt[SERVER_SIDE_FAIL]){
-			if(rslt.rowCount==1){
-				bindToForm("golferForm", rslt.rows[0]);
-				toggleSaveMode("golferForm",true);
-			}else{
-				populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
-				//$("#golferListTablePaginationDivId").html(buildPaginationBlock(golferListTablePageNum, rslt.spwfTotalItemCount,PAGINATION_ROW_LIMIT,"golferListTable"));update row
-			}
-		}else{
-			briefNotify("There was a problem communicating with the Server.","ERROR")
-		}
-
-	}
-	serverCall(params,successf,FAILF);
-}
 function deleteGolfer(golferId_, lastUpdate_){
 	if(!isUserAuthorized("DELETE_GOLFER", true, "deleteGolfer" )) return false; 
 
@@ -4064,15 +4125,14 @@ function validateGolferForm(){
 //----------------------------------------------------
 //html building functions
 
-var prkeyArray = new Array();
 var GolferprKey = {};
-function populateGolferListTable(rslt,selectedKey_) {
+function populateGolferListTable(dataRows,selectedKey_) {
 	var dataArray = new Array();
-	for (var i=0;i<rslt.length;i++){
-		dataArray[i] = buildRowGolferListTable(rslt[i]);
-		GolferprKey[rslt[i].golfer_id] = i;
-		if (rslt[i].golfer_id == selectedKey_){
-			bindToForm("golferForm", rslt[i]);
+	for (var i=0;i<dataRows.length;i++){
+		dataArray[i] = buildGolferListTableRow(dataRows[i]);
+		GolferprKey[dataRows[i].golfer_id] = i;
+		if (dataRows[i].golfer_id == selectedKey_){
+			bindToForm("golferForm", dataRows[i]);
 			toggleSaveMode("golferForm",true);
 		}   
 	}
@@ -4080,10 +4140,10 @@ function populateGolferListTable(rslt,selectedKey_) {
 	$('#golferListTable').dataTable().fnAddData( dataArray, true );
 }
 
-function buildRowGolferListTable(data){
-	var dataArray = {};
+function buildGolferListTableRow(data){
+	var dataHash = {};
 	var htmlRow= "";
-	dataArray["name"] = data.name;
+	dataHash["name"] = data.name;
 	if(isUserAuthorized("UPDATE_GOLFER", false) ){
 		htmlRow +="<a href='#' class='editGolferLink' onclick='editGolfer(";
 		htmlRow +=data.golfer_id + ")'>Edit</a>";
@@ -4097,16 +4157,16 @@ function buildRowGolferListTable(data){
 		htmlRow +="<a href='#' class='deleteGolferLink' onclick=\"deleteGolfer(";
 		htmlRow +=data.golfer_id + ",'" + data.last_update + "')\">Delete</a>";
 	}
-	dataArray["links"] = htmlRow;
-	dataArray["DT_RowId"] = "GolferListTableTR-" + data.golfer_id
-		return dataArray;
+	dataHash["links"] = htmlRow;
+	dataHash["DT_RowId"] = "GolferListTableTR-" + data.golfer_id;
+		return dataHash;
 }
 
 function replaceRowGolferListTable(row){
-	$("#golferListTable").dataTable().fnUpdate(buildRowGolferListTable(row),GolferprKey[row.golfer_id] );
+	$("#golferListTable").dataTable().fnUpdate(buildGolferListTableRow(row),GolferprKey[row.golfer_id] );
 }
 function addNewRowGolferListTable(row){
-	$("#golferListTable").dataTable().fnAddData(buildRowGolferListTable(row));
+	$("#golferListTable").dataTable().fnAddData(buildGolferListTableRow(row));
 }
 function removeGolferListTableRow(golferId_){
 	$("#golferListTable").dataTable().fnDeleteRow(GolferprKey[golferId_] );
@@ -4162,18 +4222,18 @@ $(document).ready(function(){
 		$("#golferListTable").dataTable( {
 			"aoColumns": [
 			{ "mData": "name" },
-			{ "mData": "links" }
+			{ "mData": "links", asSorting:"none" }
 			],
 			"sPaginationType": "two_button"
 			}
 		 	);
-
 		});
 
 //]]>
 </script>
 
 <div id="golfer" class="MainLayout contentPane" >
+	<h1 id="golferTitle" class="pageTitle" >Golfers</h1>
 	<div class="row">
 		<span class="fourcol">
 			<!--<div id="golferListTablePaginationDivId"></div> -->
@@ -4252,7 +4312,8 @@ currentContentPane = "aboutPane";
 
 <div id="helpPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
 <div id ="helpPaneCenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; background-color:white; max-width:300; ">
-  <h1 id="helpPaneTitle" >Help&hellip;</h1>
+	<h1 id="helpPaneTitle" class="pageTitle" >Help&hellip;</h1>
+
   <div class="row">
       <span class="twocol largeIconSpan"><a id="helpLauncherShowLog" onclick="showClientLogViewer();">
 	  <span class="sprite64Icon logIcon"></span><br/>
@@ -4287,7 +4348,7 @@ function showHelpPane(){
   <div id ="launchPaneCenterDiv" >
     
     <div class="row">
-      <h1 id="launchPaneTitle" >I want to&hellip;</h1>
+      <h1 id="launchPaneTitle" class="pageTitle" >I want to&hellip;</h1>
     </div>
     <div class="row">
       <span class="twocol largeIconSpan" id="launcherShowViewAveragesSpanId"><a id="launcherShowGolfScore" onclick="showGolfScoreSummary();">
@@ -4402,11 +4463,10 @@ function retrieveSecurityGrantsList(){
 	  return false;
 	}
 
-  $("#securityGrantsListTable").html("");
   var params =prepParams(params,"security_profile" ,"select" );
   var successf = function (rslt){
     if(!rslt[SERVER_SIDE_FAIL]){
-      populateSecurityGrants(rslt.rows);
+      populateSecurityGrantsListTable(rslt.rows);
     }else{
       briefNotify("There was a problem communicating with the Server.","ERROR")
     }
@@ -4524,41 +4584,47 @@ function validateSecurityGrantsForm(){
 }
 
 //Top Level HTML Manip
-function populateSecurityGrants(dataRows){
-  var htmlAggregator ="<tr><th>Profile Name</th><th class='accentColumn'>I want to&hellip;</th></tr>";
-  for(var ndx=0;ndx< dataRows.length;ndx++){
-    htmlAggregator +=buildSecurityGrantsListTableRow(dataRows[ndx]);
+var SecurityGrantsprKey = {};
+function populateSecurityGrantsListTable(dataRows){
+	var dataArray= new Array();
+	for(var ndx=0;ndx< dataRows.length;ndx++){
+			dataArray[ndx] = buildSecurityGrantsListTableRow(dataRows[ndx]);
+		SecurityGrantsprKey[dataRows[ndx].security_profile_id] = ndx;
   }
-  $("#securityGrantsListTable").html(htmlAggregator);
+  $('#securityGrantsListTable').dataTable().fnClearTable();
+	$('#securityGrantsListTable').dataTable().fnAddData( dataArray, true );
+
+
 }
 
 function buildSecurityGrantsListTableRow(data){
-  var htmlRow ="<tr id='SecurityGrantsListTableTR-" +data.security_profile_id + "'><td>";
-  htmlRow += data.profile_name  +"</td>";
-	htmlRow += "<td class='accentColumn'>";
+	var dataHash= {};
+	var links ="";
+	dataHash["profile_name"] =data.profile_name;
 	if(isUserAuthorized("UPDATE_SECURITY_PROFILE") ){
-		htmlRow += "<a class='alink' onclick='editSecurityGrants(" +data.security_profile_id + ")'>Edit</a> ";
-		htmlRow+= " &nbsp; &nbsp; ";
+		links += "<a class='alink' onclick='editSecurityGrants(" +data.security_profile_id + ")'>Edit</a> ";
+		links += " &nbsp; &nbsp; ";
 	}else if(isUserAuthorized("SELECT_SECURITY_PROFILE") ){
-	  htmlRow += "<a class='alink' onclick='editSecurityGrants(" +data.security_profile_id + ")'>View</a> ";
-		htmlRow+= " &nbsp; &nbsp; ";
+	  links += "<a class='alink' onclick='editSecurityGrants(" +data.security_profile_id + ")'>View</a> ";
+		links += " &nbsp; &nbsp; ";
 	}
   if(isUserAuthorized("DELETE_SECURITY_PROFILE")){
-		htmlRow += "<a class='alink' onclick=\"deleteSecurityGrants(" +data.security_profile_id + ",'"+data.last_update +"')\">Delete</a>";
+		links += "<a class='alink' onclick=\"deleteSecurityGrants(" +data.security_profile_id + ",'"+data.last_update +"')\">Delete</a>";
 	}
-		htmlRow += "	</td>";
- 	htmlRow += "	</tr>";
-  return htmlRow;
+		dataHash["links"] =links; 
+	dataHash["DT_RowId"] = "SecurityGrantsListTableTR-" + data.security_profile_id;
+
+  return dataHash;
 }
 
 function replaceSecurityGrantsListTableRow(row){
-  $("table#securityGrantsListTable #SecurityGrantsListTableTR-"+row.security_profile_id).replaceWith(buildSecurityGrantsListTableRow(row));
+	$("#securityGrantsListTable").dataTable().fnUpdate(buildSecurityGrantsListTableRow(row),SecurityGrantsprKey[row.security_profile_id] );
 }
 function addNewSecurityGrantsListTableRow(row){
-  $("table#securityGrantsListTable TR").first().after(buildSecurityGrantsListTableRow(row));
+	$("#securityGrantsListTable").dataTable().fnAddData(buildSecurityGrantsListTableRow(row));
 }
 function removeSecurityGrantsListTableRow(securityProfileId_){
-  $("table#securityGrantsListTable #SecurityGrantsListTableTR-"+securityProfileId_).replaceWith("");
+	$("#securityGrantsListTable").dataTable().fnDeleteRow(SecurityGrantsprKey[securityProfileId_] );
 }
 
 //Div Access and App Layout Calls
@@ -4586,6 +4652,16 @@ function showSecurityGrants(){
 
 //After complete Load setup
 $(document).ready(function(){
+  $("#securityGrantsListTable").dataTable( {
+			"aoColumns": [
+			{ "mData": "profile_name" },
+			{ "mData": "links", asSorting:"none" }
+			],
+			"sPaginationType": "two_button"
+			}
+		 	);
+
+		
 
     $("#availableGrantsId").droppable({accept:".securityGrant", drop:handleSecurityRevokeDrop});
     $("#grantedPrivilegesId").droppable({accept:".securityGrant", drop:handleSecurityGrantDrop});
@@ -4818,12 +4894,14 @@ function clearSecurityGrantsForm(){
   <h1 id="securityGrantsGolferNameId" class="pageTitle">Security Grants</h1>
   <div class="row">
     <span class="fourcol">
-      <table id="securityGrantsListTable"  class='dataTable' >
+			<table id="securityGrantsListTable"  class='dataTable pretty' >
+				<thead><tr><th>Profile Name</th><th >I want to&hellip;</th></tr></thead>
+				<tbody></tbody>
       </table>
     </span>
     <span class = "eightcol last">
-      <div class="formLayout_Standard">
 	<form id="securityGrantsForm" >
+      <div class="formLayout_Standard prettyWrapper">
 
 	  
 	  <div class="formFieldGroup" id="securityGrantsForm-profile_nameDivId">
@@ -4833,17 +4911,17 @@ function clearSecurityGrantsForm(){
 	  </div>
 	  <div class="formButtons">
 
-	    <button type="button" id="securityGrantsFormSave" value="Save" onclick="saveSecurityGrantsForm();" >
+	    <button type="button" id="securityGrantsFormSave" class="standardButton"  value="Save" onclick="saveSecurityGrantsForm();" >
 	      Save</button>
-	    <button type="button" id="securityGrantsFormAdd" value="Add" onclick="saveSecurityGrantsForm();" >
+	    <button type="button" id="securityGrantsFormAdd" class="standardButton"  value="Add" onclick="saveSecurityGrantsForm();" >
 	      Add</button>
-	    <button type="button" id="securityGrantsFormClear" value="Clear" 
+	    <button type="button" id="securityGrantsFormClear" class="standardButton"  value="Clear" 
 	      onclick="clearSecurityGrantsForm();" >Clear</button>
 	  </div>
 	  <input type="hidden" name="last_update" id="securityGrantsForm-last_update">
 	  <input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id">
-	</form>
       </div>
+	</form>
       <br/>
 				Available - Granted
 			<div id="grantAssignDiv">
@@ -4873,13 +4951,12 @@ function clearSecurityGrantsForm(){
 function retrieveSecurityUserList(){
 	if(!isUserAuthorized("SELECT_SECURITY_USER", true, "retrieveSecurityUserList") ) return false; 
 
-  $("#securityUserListTable").html("");
   var params =prepParams(params,"security_user" ,"select" );
   var successf = function (rslt){
     if(rslt[SERVER_SIDE_FAIL]){
       briefNotify("There was a problem retrieving the User Listing","ERROR");
     }else{
-      populateSecurityUser(rslt.rows);
+      populateSecurityUserListTable(rslt.rows);
     }
   
 };
@@ -5001,43 +5078,47 @@ function validateSecurityUserForm(){
 }
 
 //Top Level HTML Manip
-function populateSecurityUser(dataRows){
-  var htmlAggregator ="<tr><th>User Id</th> <th class='accentColumn'>I want to&hellip;</th></tr>";
+var SecurityUserprKey = {};
+function populateSecurityUserListTable(dataRows){
+	var dataArray= new Array();
   if (dataRows !=null)
-    for(var ndx=0;ndx< dataRows.length;ndx++){
-      htmlAggregator +=buildSecurityUserListTableRow(dataRows[ndx]);
-    }
-  $("#securityUserListTable").html(htmlAggregator);
+		for(var ndx=0;ndx< dataRows.length;ndx++){
+			dataArray[ndx] = buildSecurityUserListTableRow(dataRows[ndx]);
+		SecurityUserprKey[dataRows[ndx].security_user_id] = ndx;
+		}
+	$('#securityUserListTable').dataTable().fnClearTable();
+	$('#securityUserListTable').dataTable().fnAddData( dataArray, true );
 }
 
 function buildSecurityUserListTableRow(data){
-  var htmlRow ="<tr id='SecurityUserListTableTR-" +data.security_user_id + "'>";
-	htmlRow += "<td>" + data.user_id+ "</td> ";
-	htmlRow += "<td class='accentColumn'>";
+	var dataHash= {};
+	var links ="";
+	dataHash["user_id"] = data.user_id;
 	if(isUserAuthorized("UPDATE_SECURITY_USER", false) ){
-	  htmlRow += "<a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>Edit</a> ";
-	  htmlRow += " &nbsp; &nbsp;";
+	   links+= "<a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>Edit</a> ";
+	   links+= " &nbsp; &nbsp;";
 	}else if(isUserAuthorized("SELECT_SECURITY_USER",false)){
-    htmlRow += "<a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>View</a> ";
-	  htmlRow += " &nbsp; &nbsp;";
+     links+= "<a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>View</a> ";
+	   links+= " &nbsp; &nbsp;";
 
 	}
 	if(isUserAuthorized("DELETE_SECURITY_USER"),false){
-		htmlRow += "<a class='alink' onclick=\"deleteSecurityUser(" +data.security_user_id + ",'"+data.last_update +"')\">Delete</a>";
+		 links+= "<a class='alink' onclick=\"deleteSecurityUser(" +data.security_user_id + ",'"+data.last_update +"')\">Delete</a>";
 	}
-		htmlRow += "	</td>";
-		 htmlRow += "	</tr>";
-  return htmlRow;
+	dataHash["links"] =links; 
+	dataHash["DT_RowId"] = "SecurityUserListTableTR-" + data.security_user_id;
+
+  return dataHash;
 }
 
 function replaceSecurityUserListTableRow(row){
-  $("table#securityUserListTable #SecurityUserListTableTR-"+row.security_user_id).replaceWith(buildSecurityUserListTableRow(row));
+	$("#securityUserListTable").dataTable().fnUpdate(buildSecurityUserListTableRow(row),SecurityUserprKey[row.security_user_id] );
 }
 function addNewSecurityUserListTableRow(row){
-  $("table#securityUserListTable TR").first().after(buildSecurityUserListTableRow(row));
+	$("#securityUserListTable").dataTable().fnAddData(buildSecurityUserListTableRow(row));
 }
 function removeSecurityUserListTableRow(securityUserId_){
-  $("table#securityUserListTable #SecurityUserListTableTR-"+securityUserId_).replaceWith("");
+	$("#securityUserListTable").dataTable().fnDeleteRow(SecurityUserprKey[securityUserId_] );
 }
 
 //Div Access and App Layout Calls
@@ -5061,8 +5142,16 @@ function clearSecurityUserForm(){
 
 //After complete Load setup
 $(document).ready(function(){
+$("#securityUserListTable").dataTable( {
+			"aoColumns": [
+			  { "mData": "user_id" },
+			  { "mData": "links", asSorting:"none" }
+			],
+			"sPaginationType": "two_button"
+			}
+		 	);
 
-    });
+ });
 
 //page specific functions
 
@@ -5112,15 +5201,17 @@ if(!isUserAuthorized("INSERT_SECURITY_USER",false) && isFormEmpty("securityUserF
   <h1 id="securityUserHeaderId" class="pageTitle">Users</h1>
   <div class="row">
     <span class="fourcol">
-      <table id="securityUserListTable"  class='dataTable' >
+			<table id="securityUserListTable"  class='dataTable pretty' >
+				<thead><tr><th>User Id</th> <th >I want to&hellip;</th></tr></thead>
+				<tbody></tbody>
       </table>
     </span>
     <span class = "eightcol last">
-      <div class="formLayout_Standard">
 
 	<form id="securityUserForm" >
+      <div class="formLayout_Standard prettyWrapper">
 	  
-	  <div class="formFieldGroup">
+	  <div class="formFieldGroup ">
 	    <label>  User Id </label>
 	    <input  type="text" name="editUserId" id="securityUserForm-edit_user_id"/>
 	    <span class="ValidationMsg" id="securityUserFormLabel-editUserIdError"></span>
@@ -5163,24 +5254,24 @@ if(!isUserAuthorized("INSERT_SECURITY_USER",false) && isFormEmpty("securityUserF
 
 
 	  <div class="formButtons">
-	    <button type="button" id="securityUserFormSave" value="Save" onclick="saveSecurityUserForm();" >
+	    <button type="button" id="securityUserFormSave" value="Save" class="standardButton"  onclick="saveSecurityUserForm();" >
 	      Save
 	    </button>
-	    <button type="button" id="securityUserFormAdd" value="Add" onclick="saveSecurityUserForm();" >
+	    <button type="button" id="securityUserFormAdd" value="Add" class="standardButton"  onclick="saveSecurityUserForm();" >
 	      Add
 	    </button>
-	    <button type="button" id="securityUserFormClear" value="Clear" onclick="clearSecurityUserForm();" >
+	    <button type="button" id="securityUserFormClear" value="Clear" class="standardButton"  onclick="clearSecurityUserForm();" >
 	      Clear
 	    </button>
-	    <button  style="width:150px;" type="button" id="securityUserChangeOthersPassword" value="Change Password" onclick="initiateChangePassword();" >
+	    <button  style="width:150px;" type="button" id="securityUserChangeOthersPassword" class="standardButton"  value="Change Password" onclick="initiateChangePassword();" >
 	      Change Password
 	    </button>
 	  </div>
 	  <input type="hidden" name="last_update" id="securityUserForm-last_update">
 	  <input type="hidden" name="security_user_id" id="securityUserForm-security_user_id">
 
-	</form>
       </div>
+	</form>
     </span>
     <br/>
   </div>
