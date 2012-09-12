@@ -319,17 +319,17 @@ if(!isUserAuthorized("[%INSERT_GRANT%]",false) && isFormEmpty("[%divId%]Form") )
 
 
 	  <div class="formButtons">
-	    <button type="button" id="[%divId%]FormSave" value="Save" class="standardButton"  onclick="save[%ucfirst(divId)%]Form();" >
-	      Save
+	    <button type="button" id="[%divId%]FormSave" value="Save" class="[%buttonClass%]"  onclick="save[%ucfirst(divId)%]Form();" >
+				<span class="[%buttonTextClass%]">Save</span>
 	    </button>
-	    <button type="button" id="[%divId%]FormAdd" value="Add" class="standardButton"  onclick="save[%ucfirst(divId)%]Form();" >
-	      Add
+	    <button type="button" id="[%divId%]FormAdd" value="Add" class="[%buttonClass%]"  onclick="save[%ucfirst(divId)%]Form();" >
+	      <span class="[%buttonTextClass%]">Add</span>
 	    </button>
-	    <button type="button" id="[%divId%]FormClear" value="Clear" class="standardButton"  onclick="clear[%ucfirst(divId)%]Form();" >
-	      Clear
+	    <button type="button" id="[%divId%]FormClear" value="Clear" class="[%buttonClass%]"  onclick="clear[%ucfirst(divId)%]Form();" >
+	      <span class="[%buttonTextClass%]">Clear</span>
 	    </button>
-	    <button  style="width:150px;" type="button" id="[%divId%]ChangeOthersPassword" class="standardButton"  value="Change Password" onclick="initiateChangePassword();" >
-	      Change Password
+	    <button  style="" type="button" id="[%divId%]ChangeOthersPassword" class="[%buttonClass%]"  value="Change Password" onclick="initiateChangePassword();" >
+	      <span class="[%buttonTextClass%]">Change Password</span>
 	    </button>
 	  </div>
 	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">

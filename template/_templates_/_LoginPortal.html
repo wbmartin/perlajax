@@ -74,7 +74,7 @@ $(document).ready(function(){
 function showLoginPortal(){
 	$(document).keypress(function(e) {
 			if(e.keyCode == 13) {//enter
-			loginCall();
+			loginCall('authenticate');
 			}
 			});
 
@@ -190,12 +190,12 @@ function onetimeLogin(){
 
 					<div class="formButtons">
 
-						<button type="button"  id="cmdlogin" class="standardButton "  onclick="loginCall('authenticate')" > Login </button>  
-						<button type="button"  id="cmdOneTimelogin" class="standardButton " style="display:none;width:150px;"  onclick="loginCall('one_time')" > One Time Login </button>  
+						<button type="button"  id="cmdlogin" class="[%buttonClass%]"  onclick="loginCall('authenticate')" > <span class="[%buttonTextClass%]">Login</span> </button>  
+						<button type="button"  id="cmdOneTimelogin" class="[%buttonClass%] " style="display:none;"  onclick="loginCall('one_time')" ><span class="[%buttonTextClass%]"> One Time Login</span> </button>  
 					</div>
 				</div>  
 			</form>  
 		</div>
-		<p style="text-align:center; margin-top: 4em;"><a href="#" onclick="javascript:initPasswordReset(); return false;">I forgot My password</a> &nbsp; &nbsp;<a href="#" onclick="initForgottenUserName();return false;">I forgot my user User Id</a> </p>
+		<p style="text-align:center; margin-top: 4em;"><a href="#" class="alink" onclick="javascript:initPasswordReset(); return false;">I forgot My password</a> &nbsp; &nbsp;<a class="alink" href="#" onclick="initForgottenUserName();return false;">I forgot my user User Id</a> </p>
 	</div> <!--loginportal--> 
 	<!--End LoginPortal-->

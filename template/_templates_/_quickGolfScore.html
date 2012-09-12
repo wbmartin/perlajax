@@ -273,9 +273,9 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 
 					<div class="formButtons">
 
-						<button type="button" id="[%divId%]FormSave" class="standardButton" value="Save" onclick="save[%ucfirst(divId)%]Form();" >Save</button>
-						<button type="button" id="[%divId%]FormAdd"  class="standardButton" value="Add" onclick="save[%ucfirst(divId)%]Form();" >Add</button>
-						<button type="button" id="[%divId%]FormClear"  class="standardButton" value="Clear" onclick="clear[%ucfirst(divId)%]Form();" >Clear</button>
+						<button type="button" id="[%divId%]FormSave" class="[%buttonClass%]" value="Save" onclick="save[%ucfirst(divId)%]Form();" ><span class="[%buttonTextClass%]">Save</span></button>
+						<button type="button" id="[%divId%]FormAdd"  class="[%buttonClass%]" value="Add" onclick="save[%ucfirst(divId)%]Form();" ><span class="[%buttonTextClass%]">Add</span></button>
+							<button type="button" id="[%divId%]FormClear"  class="[%buttonClass%]" value="Clear" onclick="clear[%ucfirst(divId)%]Form();" ><span class="[%buttonTextClass%]">Clear</span></button>
 					</div>
 					<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
 					<input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">

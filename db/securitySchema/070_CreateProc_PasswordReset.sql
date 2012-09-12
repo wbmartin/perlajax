@@ -5,7 +5,7 @@ $BODY$
  Declare
   returnVal text;
   sessionId text;	
-	securityUser security_user;
+  securityUser security_user;
  Begin
  returnVal :='';
   sessionId := to_hex(((random() * 1000)^3)::Integer ) || to_hex(((random() * 1000)^3)::Integer )
@@ -14,10 +14,8 @@ $BODY$
   set pwd_reset_cd =sessionId  
   where user_id = userID_ ;
   if found then
-    returnVal := sessionId ;
+    select *into securityUser from security_user where user_id = userID_ ;
   end if;
-	securityUser.pwd_reset_cd = sessionId;
-	securityUser.user_id = userid_;
   return securityUser ;
  End;
 $BODY$
@@ -38,9 +36,11 @@ $BODY$
    select user_id into uname from security_user where email_addr = emailaddr_;
    perform init_passwd_reset('',uname);
    select * into securityUser from security_user where user_id = uname;
-      return securityUser;
+   
+   return securityUser;
   End;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;	
-commit;
+	
+	commit;

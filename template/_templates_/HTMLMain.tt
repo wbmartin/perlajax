@@ -1,5 +1,8 @@
 [%- FILTER redirect("/index.html") -%]
 [%- serverErrorMsg_Communication ="Sorry, there was a problem communicating with the server." -%]
+[%buttonClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"%]
+[%buttonTextClass="ui-button-text"%]
+
 <!DOCType html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 [%INCLUDE _header.html%]
@@ -7,9 +10,7 @@
 [%INCLUDE _LayoutComponents.html%]
 
 <div id="mainContent" class="container MainLayout"  >
-[% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-style="position:fixed;width:100%;padding: 5px 5px 5px 15px;margin:0px; overflow:auto;"
--%]
+[% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
 [%INCLUDE _golfScoreSummary.html%]
 [%INCLUDE _golfScore.html%]
 [%INCLUDE _quickGolfScore.html%]

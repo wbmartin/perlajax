@@ -1,3 +1,6 @@
+
+
+
 <!DOCType html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 <head> 
@@ -2797,26 +2800,8 @@ Form Layout styles
   -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	margin:3px;
 
-}
-
-.standardButton {
-	display: inline-block;
-	text-align:center;
-  height:30px;
-  width:100px;
-  right:20px;
-  bottom:20px;
-  background:#246B24;
-  color:#fff;
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;
-  border: 1px solid #BFBFBF;
-}
-button.standardButton:hover,a.standardButton:hover  {
-  background:#fff;
-  color:#246B24;
 }
 
 
@@ -3029,7 +3014,7 @@ button.standardButton:hover,a.standardButton:hover  {
   .dataTable a:visited{
     color:#246B24;
   }
-
+	
   .dataTable .accentColumn{
     background:#F5F5F5;
   }
@@ -3168,11 +3153,12 @@ div.dataTables_paginate span>a {
 div.paging_two_button {
     padding: 9px 2px 6px 6px;
 }
-.smallButton{
-	width:50px;
-  height:12px;
 
+.smallButton{
+color: #246B24;
+padding: 2px;
 }
+
 div.paging_two_button a {
 }
 
@@ -3236,6 +3222,14 @@ ul#creditsULId li {
 .ui-button-text{
   color:#246B24;
 }
+.ui-button{
+}
+.ui-button-text-only .ui-button-text{
+	padding-bottom: .35em; 
+}
+a.alink:visited {
+		color:#246B24;
+}
 
 
 </style>
@@ -3266,10 +3260,10 @@ function displayMainLayout(showHide){
 
 $(document).ready( function(){
 
-		$.fn.dataTableExt.oStdClasses.sPagePrevDisabled ="standardButton smallButton LogicDisabled";
-		$.fn.dataTableExt.oStdClasses.sPagePrevEnabled ="standardButton smallButton";
-		$.fn.dataTableExt.oStdClasses.sPageNextDisabled ="standardButton smallButton LogicDisabled";
-		$.fn.dataTableExt.oStdClasses.sPageNextEnabled ="standardButton smallButton";
+		$.fn.dataTableExt.oStdClasses.sPagePrevDisabled ="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only smallButton LogicDisabled";
+		$.fn.dataTableExt.oStdClasses.sPagePrevEnabled ="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only smallButton";
+		$.fn.dataTableExt.oStdClasses.sPageNextDisabled ="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only smallButton LogicDisabled";
+		$.fn.dataTableExt.oStdClasses.sPageNextEnabled ="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only smallButton";
 
 		$.fn.dataTableExt.oStdClasses.sWrapper="prettyWrapper dataTables_wrapper";
 
@@ -3739,14 +3733,11 @@ function imposeGolfScoreSecurityUIRestrictions(){
 						<span class="ValidationMsg" id="golfScoreFormLabel-gameDtError"></span>
 					</div>
 
-
-
-
 					<div class="formButtons">
 
-						<button type="button" id="golfScoreFormSave" class="standardButton" value="Save" onclick="saveGolfScoreForm();" >Save</button>
-						<button type="button" id="golfScoreFormAdd" class="standardButton" value="Add" onclick="saveGolfScoreForm();" >Add</button>
-						<button type="button" id="golfScoreFormClear" class="standardButton" value="Clear" onclick="clearGolfScoreForm();" >Clear</button>
+						<button type="button" id="golfScoreFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveGolfScoreForm();" > <span class="ui-button-text">Save</span></button>
+						<button type="button" id="golfScoreFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveGolfScoreForm();" > <span class="ui-button-text">Add</span></button>
+							<button type="button" id="golfScoreFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearGolfScoreForm();" > <span class="ui-button-text">Clear</span></button>
 					</div>
 
 					<input type="hidden" name="last_update" id="golfScoreForm-last_update">
@@ -4034,9 +4025,9 @@ function imposeQuickGolfScoreSecurityUIRestrictions(){
 
 					<div class="formButtons">
 
-						<button type="button" id="quickGolfScoreFormSave" class="standardButton" value="Save" onclick="saveQuickGolfScoreForm();" >Save</button>
-						<button type="button" id="quickGolfScoreFormAdd"  class="standardButton" value="Add" onclick="saveQuickGolfScoreForm();" >Add</button>
-						<button type="button" id="quickGolfScoreFormClear"  class="standardButton" value="Clear" onclick="clearQuickGolfScoreForm();" >Clear</button>
+						<button type="button" id="quickGolfScoreFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveQuickGolfScoreForm();" ><span class="ui-button-text">Save</span></button>
+						<button type="button" id="quickGolfScoreFormAdd"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveQuickGolfScoreForm();" ><span class="ui-button-text">Add</span></button>
+							<button type="button" id="quickGolfScoreFormClear"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearQuickGolfScoreForm();" ><span class="ui-button-text">Clear</span></button>
 					</div>
 					<input type="hidden" name="last_update" id="quickGolfScoreForm-last_update">
 					<input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id">
@@ -4298,12 +4289,11 @@ $(document).ready(function(){
 						<input  type="text" class="VALIDATErequired" name="name" id="golferForm-name"/>
 						<span class="ValidationMsg" id="golferFormLabel-nameError"></span>
 					</div>
+										<div class="formButtons">
 
-					<div class="formButtons">
-
-						<button type="button" id="golferFormSave" class="standardButton" value="Save" onclick="saveGolferForm();" >Save</button>
-						<button type="button" id="golferFormAdd" class="standardButton" value="Add" onclick="saveGolferForm();" >Add</button>
-						<button type="button" id="golferFormClear" class="standardButton" value="Clear" onclick="clearGolferForm();" >Clear</button>
+						<button type="button" id="golferFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveGolferForm();" ><span class="ui-button-text">Save</span></button>
+						<button type="button" id="golferFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveGolferForm();" ><span class="ui-button-text">Add</span></button>
+						<button type="button" id="golferFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearGolferForm();" ><span class="ui-button-text">Clear</span></button>
 					</div>
 				</div>
 				<input type="hidden" name="last_update" id="golferForm-last_update">
@@ -4958,12 +4948,12 @@ function clearSecurityGrantsForm(){
 	  </div>
 	  <div class="formButtons">
 
-	    <button type="button" id="securityGrantsFormSave" class="standardButton"  value="Save" onclick="saveSecurityGrantsForm();" >
-	      Save</button>
-	    <button type="button" id="securityGrantsFormAdd" class="standardButton"  value="Add" onclick="saveSecurityGrantsForm();" >
-	      Add</button>
-	    <button type="button" id="securityGrantsFormClear" class="standardButton"  value="Clear" 
-	      onclick="clearSecurityGrantsForm();" >Clear</button>
+	    <button type="button" id="securityGrantsFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Save" onclick="saveSecurityGrantsForm();" >
+				<span class="ui-button-text">Save</span></button>
+	    <button type="button" id="securityGrantsFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Add" onclick="saveSecurityGrantsForm();" >
+	      <span class="ui-button-text">Add</span></button>
+	    <button type="button" id="securityGrantsFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Clear" 
+	      onclick="clearSecurityGrantsForm();" ><span class="ui-button-text">Clear</span></button>
 	  </div>
 	  <input type="hidden" name="last_update" id="securityGrantsForm-last_update">
 	  <input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id">
@@ -5301,17 +5291,17 @@ if(!isUserAuthorized("INSERT_SECURITY_USER",false) && isFormEmpty("securityUserF
 
 
 	  <div class="formButtons">
-	    <button type="button" id="securityUserFormSave" value="Save" class="standardButton"  onclick="saveSecurityUserForm();" >
-	      Save
+	    <button type="button" id="securityUserFormSave" value="Save" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="saveSecurityUserForm();" >
+				<span class="ui-button-text">Save</span>
 	    </button>
-	    <button type="button" id="securityUserFormAdd" value="Add" class="standardButton"  onclick="saveSecurityUserForm();" >
-	      Add
+	    <button type="button" id="securityUserFormAdd" value="Add" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="saveSecurityUserForm();" >
+	      <span class="ui-button-text">Add</span>
 	    </button>
-	    <button type="button" id="securityUserFormClear" value="Clear" class="standardButton"  onclick="clearSecurityUserForm();" >
-	      Clear
+	    <button type="button" id="securityUserFormClear" value="Clear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="clearSecurityUserForm();" >
+	      <span class="ui-button-text">Clear</span>
 	    </button>
-	    <button  style="width:150px;" type="button" id="securityUserChangeOthersPassword" class="standardButton"  value="Change Password" onclick="initiateChangePassword();" >
-	      Change Password
+	    <button  style="" type="button" id="securityUserChangeOthersPassword" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Change Password" onclick="initiateChangePassword();" >
+	      <span class="ui-button-text">Change Password</span>
 	    </button>
 	  </div>
 	  <input type="hidden" name="last_update" id="securityUserForm-last_update">
@@ -5453,7 +5443,7 @@ function loginCall(action){
 				usrLoginId = r.user_id;
 				onSuccessfulLogin();
 				if(rslt.spwfAction=="ONE_TIME"){
-				 showDialog("You just completed a one time logon.  You password has not been changed, please change your password for your next visit. ");
+				 showDialog("You just completed a one time logon.  You password has not been changed, please change your password for your next visit if you have forgotten it. ");
 				}
 			}
 		}else{
@@ -5506,7 +5496,7 @@ $(document).ready(function(){
 function showLoginPortal(){
 	$(document).keypress(function(e) {
 			if(e.keyCode == 13) {//enter
-			loginCall();
+			loginCall('authenticate');
 			}
 			});
 
@@ -5622,13 +5612,13 @@ function onetimeLogin(){
 
 					<div class="formButtons">
 
-						<button type="button"  id="cmdlogin" class="standardButton "  onclick="loginCall('authenticate')" > Login </button>  
-						<button type="button"  id="cmdOneTimelogin" class="standardButton " style="display:none;width:150px;"  onclick="loginCall('one_time')" > One Time Login </button>  
+						<button type="button"  id="cmdlogin" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="loginCall('authenticate')" > <span class="ui-button-text">Login</span> </button>  
+						<button type="button"  id="cmdOneTimelogin" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only " style="display:none;"  onclick="loginCall('one_time')" ><span class="ui-button-text"> One Time Login</span> </button>  
 					</div>
 				</div>  
 			</form>  
 		</div>
-		<p style="text-align:center; margin-top: 4em;"><a href="#" onclick="javascript:initPasswordReset(); return false;">I forgot My password</a> &nbsp; &nbsp;<a href="#" onclick="initForgottenUserName();return false;">I forgot my user User Id</a> </p>
+		<p style="text-align:center; margin-top: 4em;"><a href="#" class="alink" onclick="javascript:initPasswordReset(); return false;">I forgot My password</a> &nbsp; &nbsp;<a class="alink" href="#" onclick="initForgottenUserName();return false;">I forgot my user User Id</a> </p>
 	</div> <!--loginportal--> 
 	<!--End LoginPortal-->
 

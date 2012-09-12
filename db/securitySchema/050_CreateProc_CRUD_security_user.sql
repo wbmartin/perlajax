@@ -11,7 +11,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_USER' );
     end if;
-    return query execute 'select security_user_id, user_id, last_update, updated_by, ''''::text password_enc, security_profile_id, session_id, session_expire_dt, active_yn, email_addr from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
+    return query execute 'select security_user_id, user_id, last_update, updated_by, ''''::text password_enc, security_profile_id, session_id, session_expire_dt, active_yn, email_addr, pwd_reset_cd from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
