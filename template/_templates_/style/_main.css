@@ -585,4 +585,16 @@ h1.pageTitle{
 display:none;
 
 }
+#creditsULId{
+
+	width:40em;
+	padding: 10px 0px 10px 100px;
+}
+ul#creditsULId li {
+	list-style-type: square;
+}
+
+.ui-button-text{
+  color:[%primaryColor%];
+}
 

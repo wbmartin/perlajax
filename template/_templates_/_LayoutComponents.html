@@ -1,55 +1,83 @@
 <script type="text/javascript">
-//<![CDATA[
+	//<![CDATA[
 function sizeLeftNav(){
-[%headerHeight = 100%]
-[%leftNavWidth = 0%]
- // document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
-  document.getElementById('mainContent').style.top="[%headerHeight%]px";
-  document.getElementById('mainContent').style.left="0px";
-  document.getElementById('mainContent').style.height=(window.innerHeight - [%headerHeight + 35%] ) +"px";
-  document.getElementById('mainContent').style.width=(window.innerWidth- [%leftNavWidth +20%] ) +"px";
+	[%headerHeight = 100%]
+		[%leftNavWidth = 0%]
+		// document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
+		document.getElementById('mainContent').style.top="[%headerHeight%]px";
+	document.getElementById('mainContent').style.left="0px";
+	document.getElementById('mainContent').style.height=(window.innerHeight - [%headerHeight + 35%] ) +"px";
+	document.getElementById('mainContent').style.width=(window.innerWidth- [%leftNavWidth +20%] ) +"px";
 }
 function displayMainLayout(showHide){
-  var display = (showHide)?"block":"none";
-  //document.getElementById('leftnav').style.display=display;
-  document.getElementById('header').style.display=display;
-  document.getElementById('footer').style.display=display;
-  document.getElementById('mainContent').style.display=display;
-  display = (showHide)?"none":"block";
-  document.getElementById('LoginPortal').style.display=display;
-  if(!showHide)showLoginPortal();
+	var display = (showHide)?"block":"none";
+	//document.getElementById('leftnav').style.display=display;
+	document.getElementById('header').style.display=display;
+	document.getElementById('footer').style.display=display;
+	document.getElementById('mainContent').style.display=display;
+	display = (showHide)?"none":"block";
+	document.getElementById('LoginPortal').style.display=display;
+	if(!showHide)showLoginPortal();
 }
 
 $(document).ready( function(){
 
-$.fn.dataTableExt.oStdClasses.sPagePrevDisabled ="standardButton smallButton LogicDisabled";
-$.fn.dataTableExt.oStdClasses.sPagePrevEnabled ="standardButton smallButton";
-$.fn.dataTableExt.oStdClasses.sPageNextDisabled ="standardButton smallButton LogicDisabled";
-$.fn.dataTableExt.oStdClasses.sPageNextEnabled ="standardButton smallButton";
+		$.fn.dataTableExt.oStdClasses.sPagePrevDisabled ="standardButton smallButton LogicDisabled";
+		$.fn.dataTableExt.oStdClasses.sPagePrevEnabled ="standardButton smallButton";
+		$.fn.dataTableExt.oStdClasses.sPageNextDisabled ="standardButton smallButton LogicDisabled";
+		$.fn.dataTableExt.oStdClasses.sPageNextEnabled ="standardButton smallButton";
 
-$.fn.dataTableExt.oStdClasses.sWrapper="prettyWrapper dataTables_wrapper";
+		$.fn.dataTableExt.oStdClasses.sWrapper="prettyWrapper dataTables_wrapper";
 
+		});
+
+function showDialog(msg_, height_, width_, modal_, buttons_, title_){
+	$("#genericDialogDivId").dialog( "destroy" );
+
+	msg_ =msg_ ||"No message Defined";
+	height_ = height_|| 300;
+	width_=width_ || 400;
+	modal_ = (modal_ === undefined)?true: modal_;
+	buttons_=buttons_||{"Ok": function(){$( this ).dialog( "close" );}};
+	title_ = title_ ||"";
+	$("#genericDialogDivId").attr("title",title_);
+	$("#dialogMsgSpanId").html(msg_);
+	$("#genericDialogDivId").dialog(
+			{
+resizable: false, 
+height:height_, 
+width:width_, 
+modal: modal_,
+buttons: buttons_
 });
+if (title_ ===""){
+	$("#genericDialogDivId").siblings(".ui-dialog-titlebar").hide();
+}else{
+	$("#genericDialogDivId").siblings(".ui-dialog-titlebar").show();
+
+}
+
+}
 //]]>
 </script>
 <div id="header" class="container">
- <div class="row">
-    <div class="sixcol ">
-	<div class="logoBlock center" style="width:17em">
-	  <h1 id="logo"><a href="index.html" title=""><span class="primary">golf</span><span class="secondary">score</span></a></h1>
-		<h2 id="slogan">keepin' it honest...</h2>
-    	</div>
-    </div>
-    <div class="sixcol last" id= "topMenuBar" > 
-		<div class="center" style="width:25em;"> 
-		  <ul class="buttonbar" style = "">
-			<li><a id="SummaryPage" onclick="showLaunchPane();">Home</a></li>
-			<li><a id="aboutGolfScore" onclick="showHelpPane();">Help</a></li>
-			<li><a id="logoutButtonId" onclick="logOutUser();">Logout</a></li>			
-		  </ul>
-		</div>	
-    </div>
- </div>
+	<div class="row">
+		<div class="sixcol ">
+			<div class="logoBlock center" style="width:17em">
+				<h1 id="logo"><a href="index.html" title=""><span class="primary">golf</span><span class="secondary">score</span></a></h1>
+				<h2 id="slogan">keepin' it honest...</h2>
+			</div>
+		</div>
+		<div class="sixcol last" id= "topMenuBar" > 
+			<div class="center" style="width:25em;"> 
+				<ul class="buttonbar" style = "">
+					<li><a id="SummaryPage" onclick="showLaunchPane();">Home</a></li>
+					<li><a id="aboutGolfScore" onclick="showHelpPane();">Help</a></li>
+					<li><a id="logoutButtonId" onclick="logOutUser();">Logout</a></li>			
+				</ul>
+			</div>	
+		</div>
+	</div>
 </div>
 
 <div id="footer" class="MainLayout container" style="">
@@ -57,10 +85,14 @@ $.fn.dataTableExt.oStdClasses.sWrapper="prettyWrapper dataTables_wrapper";
 	<span id="outstandingServerCalls" ></span>
 </div>
 <div id="briefNotice" style="display:none;">
-<table style="width:100%">
-  <tr>  <td style="width:33%" >&nbsp;</td>
-	<td style="width:33%" ><div id="briefNoticeMsg"></div></td>
-	<td style="width:33%" >&nbsp;</td>
-  </tr>
-</table>
+	<table style="width:100%">
+		<tr>  <td style="width:33%" >&nbsp;</td>
+			<td style="width:33%" ><div id="briefNoticeMsg"></div></td>
+			<td style="width:33%" >&nbsp;</td>
+		</tr>
+	</table>
+</div>
+
+<div id="genericDialogDivId">
+	<span id="dialogMsgSpanId"></span>
 </div>

@@ -1,6 +1,7 @@
 "use strict";
 //shared variables
-var urlTarget = "cgi-bin/SimpleRespond.pl";
+var urlTarget = "cgi-bin/server.pl";
+var passwordResetUrlTarget="cgi-bin/pwdreset.pl";
 var usrSessionId="";
 var usrLoginId="";
 var usrLastAction= new Date();

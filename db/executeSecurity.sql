@@ -16,4 +16,5 @@
 \i securitySchema/040_CreateProc_CRUD_security_profile_grant.sql
 \i securitySchema/050_CreateProc_CRUD_security_user.sql
 \i securitySchema/060_CreateProc_ChangePassword.sql
+\i securitySchema/070_CreateProc_PasswordReset.sql
 

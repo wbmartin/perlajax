@@ -36,7 +36,7 @@ $BODY$
 --    	perform isSessionValid( securityuserId_,sessionId_) ;
 --    	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_USER' );
 --    end if;
---security_user_id, user_id, last_update, updated_by, password_enc, security_profile_id, session_id, session_expire_dt, active_yn, email_addr
+--security_user_id, user_id, last_update, updated_by, password_enc, security_profile_id, session_id, session_expire_dt, active_yn, email_addr, pwd_reset_cd
 --     select * into result from security_user where security_user_id=securityUserId_;
 --     return result;
 --  End;
@@ -51,9 +51,9 @@ $BODY$
 
 
 
--- Function:  security_user_iq(text, text, text ,text,text,integer,text,timestamp,character,text)
--- DROP FUNCTION security_user_iq( text, text, text,text,text,integer,text,timestamp,character,text);
-create or replace function security_user_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,userId_ text,passwordEnc_ text,securityProfileId_ integer,sessionId_ text,sessionExpireDt_ timestamp,activeYn_ character,emailAddr_ text)
+-- Function:  security_user_iq(text, text, text ,text,text,integer,text,timestamp,character,text,text)
+-- DROP FUNCTION security_user_iq( text, text, text,text,text,integer,text,timestamp,character,text,text);
+create or replace function security_user_iq(alreadyauth_ text, securityuserid_ text, sessionid_ text,userId_ text,passwordEnc_ text,securityProfileId_ integer,sessionId_ text,sessionExpireDt_ timestamp,activeYn_ character,emailAddr_ text,pwdResetCd_ text)
   returns security_user as
 $body$
   declare
@@ -65,24 +65,24 @@ $body$
     end if;
 
 
-    insert into security_user( user_id,last_update,updated_by,password_enc,security_profile_id,session_id,session_expire_dt,active_yn,email_addr)  values ( userId_, now(), securityuserid_,passwordEnc_,securityProfileId_,sessionId_,sessionExpireDt_,activeYn_,emailAddr_) 
+    insert into security_user( user_id,last_update,updated_by,password_enc,security_profile_id,session_id,session_expire_dt,active_yn,email_addr,pwd_reset_cd)  values ( userId_, now(), securityuserid_,passwordEnc_,securityProfileId_,sessionId_,sessionExpireDt_,activeYn_,emailAddr_,pwdResetCd_) 
 	returning * into newrow;
       return newrow;
   end;
 $body$
   language 'plpgsql' volatile
   cost 100;
---alter function security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character,text) owner to postgres;
---GRANT EXECUTE ON FUNCTION security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character,text) TO GROUP golfscore;
+--alter function security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character,text,text) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_user_iq(text,  text, text ,text,text,integer,text,timestamp,character,text,text) TO GROUP golfscore;
 
---select * from security_user_iq('ALREADY_AUTH', 'test', 'test' , 'text', 'text', 'text' ,1, 'text', 'text', 'text', 'text' );
+--select * from security_user_iq('ALREADY_AUTH', 'test', 'test' , 'text', 'text', 'text' ,1, 'text', 'text', 'text', 'text', 'text' );
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 
--- Function:  security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character,text)
--- DROP FUNCTION security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character,text);
+-- Function:  security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character,text,text)
+-- DROP FUNCTION security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character,text,text);
 
-create or replace function security_user_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityUserId_ integer, userId_ text, lastUpdate_ timestamp, passwordEnc_ text, securityProfileId_ integer, sessionId_ text, sessionExpireDt_ timestamp, activeYn_ character, emailAddr_ text)
+create or replace function security_user_uq(alreadyauth_ text,  securityuserid_ text, sessionid_ text , securityUserId_ integer, userId_ text, lastUpdate_ timestamp, passwordEnc_ text, securityProfileId_ integer, sessionId_ text, sessionExpireDt_ timestamp, activeYn_ character, emailAddr_ text, pwdResetCd_ text)
   returns security_user as
 $body$
   declare
@@ -92,7 +92,7 @@ $body$
     	perform issessionvalid( securityuserid_,sessionid_) ;
     	perform isuserauthorized( securityuserid_, 'UPDATE_SECURITY_USER' );
     end if;
-	update security_user set user_id= userId_ ,  last_update = now() , updated_by = securityuserid_,  password_enc= passwordEnc_ ,  security_profile_id= securityProfileId_ ,  session_id= sessionId_ ,  session_expire_dt= sessionExpireDt_ ,  active_yn= activeYn_ ,  email_addr= emailAddr_ 	where security_user_id=securityUserId_   and   last_update = lastUpdate_
+	update security_user set user_id= userId_ ,  last_update = now() , updated_by = securityuserid_,  password_enc= passwordEnc_ ,  security_profile_id= securityProfileId_ ,  session_id= sessionId_ ,  session_expire_dt= sessionExpireDt_ ,  active_yn= activeYn_ ,  email_addr= emailAddr_ ,  pwd_reset_cd= pwdResetCd_ 	where security_user_id=securityUserId_   and   last_update = lastUpdate_
 	returning * into updatedrow;
 
 	if found then
@@ -105,10 +105,10 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
---alter function security_user_uq(text,  text, text ,integer,text,timestamp,text,integer,text,timestamp,character,text) owner to postgres;
---GRANT EXECUTE ON FUNCTION security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character,text) TO GROUP golfscore;
+--alter function security_user_uq(text,  text, text ,integer,text,timestamp,text,integer,text,timestamp,character,text,text) owner to postgres;
+--GRANT EXECUTE ON FUNCTION security_user_uq(text, text, text ,integer,text,timestamp,text,integer,text,timestamp,character,text,text) TO GROUP golfscore;
 
---select * from security_user_uq('ALREADY_AUTH', 'test', 'test', 'text', 'text' <last_update>, 'text' ,1, 'text', 'text', 'text', 'text' <security_user_id>);
+--select * from security_user_uq('ALREADY_AUTH', 'test', 'test', 'text', 'text' <last_update>, 'text', 'text' ,1, 'text', 'text', 'text', 'text' <security_user_id>);
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
