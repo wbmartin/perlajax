@@ -589,3 +589,7 @@ a.alink:visited {
 		color:[%primaryColor%];
 }
 
+#clientLogViewer{
+padding: 5px;
+}
+
