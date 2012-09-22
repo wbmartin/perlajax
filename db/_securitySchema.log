@@ -37,11 +37,14 @@ COMMIT
 begin;
 BEGIN
 DROP TABLE  if exists SECURITY_USER cascade;
-psql:securitySchema/002_CreateSecurityUser.sql:2: NOTICE:  drop cascades to 4 other objects
+psql:securitySchema/002_CreateSecurityUser.sql:2: NOTICE:  drop cascades to 7 other objects
 DETAIL:  drop cascades to function initsession(text,text,text,text)
+drop cascades to function initsession_onetime(text,text,text,text)
 drop cascades to function security_user_sq(text,text,text,text,text,integer,integer)
 drop cascades to function security_user_iq(text,text,text,text,text,integer,character,text)
 drop cascades to function security_user_uq(text,text,text,integer,text,timestamp without time zone,integer,character,text)
+drop cascades to function init_passwd_reset(text,text)
+drop cascades to function init_lostuname(text,text)
 DROP TABLE
 CREATE TABLE security_user
 ( security_user_id serial,
@@ -54,6 +57,7 @@ CREATE TABLE security_user
   session_expire_dt timestamp(3) without time zone,
   active_yn character(1),
   email_addr text,
+	pwd_reset_cd text,
   CONSTRAINT security_user_pkey PRIMARY KEY (security_user_id),
   CONSTRAINT fk_security_user_2 FOREIGN KEY (security_profile_id)
       REFERENCES security_profile (security_profile_id) MATCH SIMPLE
@@ -62,8 +66,8 @@ CREATE TABLE security_user
 WITH (
   OIDS=FALSE
 );
-psql:securitySchema/002_CreateSecurityUser.sql:21: NOTICE:  CREATE TABLE will create implicit sequence "security_user_security_user_id_seq" for serial column "security_user.security_user_id"
-psql:securitySchema/002_CreateSecurityUser.sql:21: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_user_pkey" for table "security_user"
+psql:securitySchema/002_CreateSecurityUser.sql:22: NOTICE:  CREATE TABLE will create implicit sequence "security_user_security_user_id_seq" for serial column "security_user.security_user_id"
+psql:securitySchema/002_CreateSecurityUser.sql:22: NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "security_user_pkey" for table "security_user"
 CREATE TABLE
 commit;
 COMMIT
@@ -71,7 +75,9 @@ COMMIT
 begin;
 BEGIN
 drop TABLE if exists security_privilege cascade;
-psql:securitySchema/003_CreateSecurityPrivilege.sql:2: NOTICE:  drop cascades to constraint fk_securityprofilegrant_securityprivilege on table security_profile_grant
+psql:securitySchema/003_CreateSecurityPrivilege.sql:2: NOTICE:  drop cascades to 2 other objects
+DETAIL:  drop cascades to constraint fk_securityprofilegrant_securityprivilege on table security_profile_grant
+drop cascades to function security_privilege_sq(text,text,text,text,text,integer,integer)
 DROP TABLE
 CREATE TABLE security_privilege
 (
@@ -160,9 +166,34 @@ $BODY$
   sessionId_ := to_hex(((random() * 1000)^3)::Integer ) || to_hex(((random() * 1000)^3)::Integer )
 	|| to_hex(((random() * 1000)^3)::Integer )  || to_hex(((random() * 1000)^3)::Integer );
   update security_user 
-  set session_id =sessionId_ , session_expire_dt = now()+ '20 min'
+  set session_id =sessionId_ , session_expire_dt = now()+ '20 min', pwd_reset_cd=''
   where user_id = userID_ 
     and password_enc = md5(password_);
+  if found then
+  select * into securityUser from security_user where user_id =  userID_;
+    
+  else 
+    securityUser.user_id :='';
+    securityUser.session_id='';
+  end if;
+  return securityUser ;
+ End;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+CREATE FUNCTION
+CREATE OR REPLACE FUNCTION initsession_onetime(checkauthdummyplaceholder text, userid_ text, sessiondummyplaceholder text, resetcode_ text)
+  RETURNS security_user AS
+$BODY$
+ Declare
+	sessionId_  character varying;
+	securityUser security_user;
+ Begin
+  
+  update security_user 
+  set session_id =resetcode_, session_expire_dt = now()+ '20 min', pwd_reset_cd=''
+  where user_id = userID_ 
+    and pwd_reset_cd =resetcode_ ;
   if found then
   select * into securityUser from security_user where user_id =  userID_;
     
@@ -714,7 +745,7 @@ $BODY$
     	perform isSessionValid( securityuserId_,sessionId_) ;
     	perform isUserAuthorized( securityuserId_, 'SELECT_SECURITY_USER' );
     end if;
-    return query execute 'select security_user_id, user_id, last_update, updated_by, ''''::text password_enc, security_profile_id, session_id, session_expire_dt, active_yn, email_addr from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
+    return query execute 'select security_user_id, user_id, last_update, updated_by, ''''::text password_enc, security_profile_id, session_id, session_expire_dt, active_yn, email_addr, pwd_reset_cd from security_user ' ||  buildSQLClauses(whereClause_,orderByClause_,rowLimit_,rowOffset_);  
   End;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
@@ -883,3 +914,52 @@ CREATE FUNCTION
 ALTER FUNCTION change_password(text, text, text, text, text)
   OWNER TO concordc_golfscoredev;
 ALTER FUNCTION
+\i securitySchema/070_CreateProc_PasswordReset.sql
+begin;
+BEGIN
+CREATE OR REPLACE FUNCTION init_passwd_reset(checkauthdummyplaceholder text, userid_ text)
+  RETURNS security_user AS
+$BODY$
+ Declare
+  returnVal text;
+  sessionId text;	
+  securityUser security_user;
+ Begin
+ returnVal :='';
+  sessionId := to_hex(((random() * 1000)^3)::Integer ) || to_hex(((random() * 1000)^3)::Integer )
+	|| to_hex(((random() * 1000)^3)::Integer )  || to_hex(((random() * 1000)^3)::Integer );
+  update security_user 
+  set pwd_reset_cd =sessionId  
+  where user_id = userID_ ;
+  if found then
+    select *into securityUser from security_user where user_id = userID_ ;
+  end if;
+  return securityUser ;
+ End;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+CREATE FUNCTION
+CREATE OR REPLACE FUNCTION init_lostuname(checkauthdummyplaceholder text, emailaddr_ text)
+  RETURNS security_user AS
+$BODY$
+ Declare
+  returnVal text;
+  sessionId text;
+  uname text;
+  securityUser security_user;
+	
+ Begin
+   select user_id into uname from security_user where email_addr = emailaddr_;
+   perform init_passwd_reset('',uname);
+   select * into securityUser from security_user where user_id = uname;
+   
+   return securityUser;
+  End;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;	
+CREATE FUNCTION
+	
+	commit;
+COMMIT

@@ -59,6 +59,13 @@ h1{
   background:url(images/consolidatedIcons.png) no-repeat;
   padding: 0 0 0 0;
 }
+.sprite16Icon{
+  display:inline-block;
+  height:16px;
+  width:16px;
+  background:url(images/consolidatedIcons.png) no-repeat;
+  padding: 0 0 0 0;
+}
 
 
 
@@ -96,6 +103,18 @@ h1{
 }
 .lockIcon{
   background-position:0px -725px;
+}
+.askForHelpIcon{
+background-position:0px -800px;
+
+}
+.smallPlusIcon{
+background-position:0px -180px;
+
+}
+.smallCancelIcon{
+background-position:-20px -180px;
+
 }
 
 /*

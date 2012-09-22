@@ -2703,6 +2703,13 @@ h1{
   background:url(images/consolidatedIcons.png) no-repeat;
   padding: 0 0 0 0;
 }
+.sprite16Icon{
+  display:inline-block;
+  height:16px;
+  width:16px;
+  background:url(images/consolidatedIcons.png) no-repeat;
+  padding: 0 0 0 0;
+}
 
 
 
@@ -2740,6 +2747,18 @@ h1{
 }
 .lockIcon{
   background-position:0px -725px;
+}
+.askForHelpIcon{
+background-position:0px -800px;
+
+}
+.smallPlusIcon{
+background-position:0px -180px;
+
+}
+.smallCancelIcon{
+background-position:-20px -180px;
+
 }
 
 /*
@@ -4352,33 +4371,38 @@ currentContentPane = "aboutPane";
 
 
 <div id="helpPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
-<div id ="helpPaneCenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; background-color:white; max-width:300; ">
-	<h1 id="helpPaneTitle" class="pageTitle" >Help&hellip;</h1>
+	<div id ="helpPaneCenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; background-color:white; max-width:300; ">
+		<h1 id="helpPaneTitle" class="pageTitle" >Help&hellip;</h1>
 
-  <div class="row">
-      <span class="twocol largeIconSpan"><a id="helpLauncherShowLog" onclick="showClientLogViewer();">
-	  <span class="sprite64Icon logIcon"></span><br/>
-	  View Log</a>
-      </span>
-      <span class="twocol largeIconSpan"><a id="launcherShowAbout" onclick="showAboutPane();">
-	  <span class="sprite64Icon learnMoreIcon"></span><br/>
-	  Learn More</a>
-      </span>
+		<div class="row">
+			<span class="twocol largeIconSpan"><a id="helpLauncherShowLog" onclick="showClientLogViewer();">
+					<span class="sprite64Icon logIcon"></span><br/>
+					View Log</a>
+			</span>
+			<span class="twocol largeIconSpan"><a id="launcherShowAbout" onclick="showAboutPane();">
+					<span class="sprite64Icon learnMoreIcon"></span><br/>
+					Learn More</a>
+			</span>
+			<span class="twocol largeIconSpan"><a id="launcherShowAbout" onclick="showSupportRequest();">
+					<span class="sprite64Icon askForHelpIcon"></span><br/>
+					Ask For Help</a>
+			</span>
 
-  </div>
+
+		</div>
 
 
 
-</div>
+	</div>
 </div>
 <script type="text/javascript">
 
-function showHelpPane(){
-  hideCurrentContentPane();
-  $("#helpPane").fadeIn();
-  currentContentPane = "helpPane";
-  return "helpPane";
-}
+	function showHelpPane(){
+		hideCurrentContentPane();
+		$("#helpPane").fadeIn();
+		currentContentPane = "helpPane";
+		return "helpPane";
+	}
 
 </script>
 
@@ -5422,6 +5446,335 @@ $(document).ready(function(){
     </div>
   </form>
 </div> 
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	//<![CDATA[
+"use strict";
+//Server Calls
+function retrieveSupportRequestList(){
+	if(!isUserAuthorized("SELECT_SUPPORT_REQUEST", true, "retrieveSupportRequestList") ) return false; 
+
+	var params =prepParams(params,"support_request" ,"select" );
+	//params['orderby_clause'] =" order by game_dt desc"
+		var successf = function (rslt){
+			if(!rslt[SERVER_SIDE_FAIL]){
+				populateSupportRequestListTable(rslt.rows)
+			}else{
+				briefNotify("There was a problem communicating with the Server.","ERROR");
+			}
+		};
+	serverCall(params,successf,FAILF);
+}
+function retrieveSupportRequest(params){
+	if(!isUserAuthorized("SELECT_SUPPORT_REQUEST", true, "retrieveSupportRequest" ) ) return false; 
+
+	params = prepParams(params,"support_request","SELECT");
+	var successf = function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+			bindToForm("supportRequestForm", rslt.rows[0]);
+			toggleSaveMode("supportRequestForm",true);
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
+
+	}
+	serverCall(params,successf,FAILF);
+}
+
+
+
+function deleteSupportRequest(supportRequestId_, lastUpdate_){
+	if(!isUserAuthorized("DELETE_SUPPORT_REQUEST"), true, "deleteSupportRequest" ) return false;
+	var params =prepParams(params,"support_request" ,"delete" );
+	params['support_request_id'] = supportRequestId_;
+	params['last_update'] = lastUpdate_;
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			removeSupportRequestListTableRow(rslt.support_request_id);
+			briefNotify("Support Request Deleted Successfully","INFO");
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
+
+	};
+	serverCall(params,successf,FAILF);
+}
+
+function saveSupportRequest(params){
+	if(!isUserAuthorized("UPDATE_SUPPORT_REQUEST", false) && !isUserAuthorized("INSERT_SUPPORT_REQUEST", false)){
+		briefNotify("Access Violation:saveSupportRequest ","ERROR");
+		return false;
+	}
+
+	params = prepParams(params,"support_request",insertUpdateChoose);
+	var successf=function(rslt){
+		clearForm('supportRequestForm');
+		if(!rslt[SERVER_SIDE_FAIL]){
+			if (rslt.spwfAction == "UPDATE"){
+				replaceSupportRequestListTableRow(rslt.rows[0]);
+			}else if (rslt.spwfAction == "INSERT"){
+				addNewSupportRequestListTableRow(rslt.rows[0]);
+			}
+			briefNotify("Support Request Successfully Saved","INFO");
+			clearSupportRequestForm();
+
+		}
+		else{
+			briefNotify("Support Request Score Saved Failed","ERROR");
+
+		}
+	};
+	serverCall(params,successf,FAILF);
+}
+
+//ServerCall Wrappers
+function editSupportRequest(supportRequestId_){
+	if( !isUserAuthorized("SELECT_SUPPORT_REQUEST", true, "editSupportRequest")) return false; 
+	if (isUserAuthorized("UPDATE_SUPPORT_REQUEST",false) ){
+		securityLockForm("supportRequestForm", false);
+	}else{securityLockForm("supportRequestForm", true);}
+
+
+	if(supportRequestId_){
+		var params ={"where_clause":"support_request_id=" +supportRequestId_};
+		retrieveSupportRequest(params);
+	}
+}
+
+function saveSupportRequestForm(){
+	if(!isUserAuthorized("UPDATE_SUPPORT_REQUEST") && !isUserAuthorized("SELECT_SUPPORT_REQUEST")){
+		briefNotify("Access Violation: save Support Request","ERROR");
+		return false;
+	}
+
+	if(validateSupportRequestForm()){
+		var params = bindForm("supportRequestForm");
+		saveSupportRequest(params);
+	}
+}
+
+//validation
+function validateSupportRequestForm(){
+	var formName="supportRequestForm";
+	var formValid  = standardValidate(formName);
+	return formValid;
+}
+
+//Top Level HTML Manip
+var SupportRequestprKey = {};
+function populateSupportRequestListTable(dataRows){
+	var dataArray= new Array();
+	for(var ndx=0;ndx< dataRows.length;ndx++){
+		dataArray[ndx] = buildSupportRequestListTableRow(dataRows[ndx]);
+		SupportRequestprKey[dataRows[ndx].support_request_id] = ndx;
+	}
+	$('#supportRequestListTable').dataTable().fnClearTable();
+	$('#supportRequestListTable').dataTable().fnAddData( dataArray, true );
+}
+
+function buildSupportRequestListTableRow(data){
+	var dataHash= {};
+	var links ="";
+	dataHash["details"] = "<span class='sprite16Icon smallPlusIcon expanderClass'></span>" ;
+
+	dataHash["support_request_id"] = data.support_request_id ;
+	dataHash["summary"] =  data.summary;
+	dataHash["detailed_description"] = data.detailed_description;
+	dataHash["log_details"] = data.log_details;
+	dataHash["solution_description"] = data.solution_description;
+	dataHash["last_update"] = pgDate(data.last_update);
+	dataHash["updated_by"] = data.updated_by;
+
+	if(isUserAuthorized("UPDATE_SUPPORT_REQUEST", false)){
+		links += "	<a class='alink' onclick='editSupportRequest(" +data.support_request_id + ")'>Edit</a> ";
+		links += " &nbsp; &nbsp ";
+	}else if(isUserAuthorized("SELECT_SUPPORT_REQUEST", false)){
+		links += "<a class='alink' onclick='editSupportRequest(" +data.support_request_id + ")'>View</a> ";
+		links += " &nbsp; &nbsp;";
+
+	}
+
+	if(isUserAuthorized("DELETE_SUPPORT_REQUEST", false)){
+		links += "<a class='alink' onclick=\"deleteSupportRequest(" +data.support_request_id + ",'"+data.last_update +"')\">Delete</a>  ";
+	}
+		dataHash["links"] =links; 
+	dataHash["DT_RowId"] = "SupportRequestListTableTR-" + data.support_request_id;
+
+	return dataHash;
+}
+
+function replaceSupportRequestListTableRow(row){
+	$("#supportRequestListTable").dataTable().fnUpdate(buildSupportRequestListTableRow(row),SupportRequestprKey[row.support_request_id] );
+}
+function addNewSupportRequestListTableRow(row){
+	$("#supportRequestListTable").dataTable().fnAddData(buildSupportRequestListTableRow(row));
+}
+function removeSupportRequestListTableRow(supportRequestId_){
+	$("#supportRequestListTable").dataTable().fnDeleteRow(SupportRequestprKey[supportRequestId_] );
+}
+
+//Div Access and App Layout Calls
+function showSupportRequest(){
+	retrieveSupportRequestList(); 
+	hideCurrentContentPane();
+	$("#supportRequest").fadeIn();
+	currentContentPane="supportRequest";
+	if ( isFormEmpty("supportRequestForm")) toggleSaveMode("supportRequestForm",false);
+
+}
+
+function clearSupportRequestForm(){
+	clearForm('supportRequestForm');
+	(isUserAuthorized("INSERT_SUPPORT_REQUEST", false))?securityLockForm("supportRequestForm", false) :securityLockForm("supportRequestForm", true);
+}
+
+
+//After complete Load setup
+$(document).ready(function(){
+		$("#supportRequestListTable").dataTable( {
+			"aoColumns": [
+			{ "mData": "details" },
+			{ "mData": "support_request_id" },
+			{ "mData": "summary" },
+			{ "mData": "detailed_description" },
+			//{ "mData": "log_details" },
+			//{ "mData": "solution_description" },
+			{ "mData": "last_update" },
+			//{ "mData": "updated_by" },
+			{ "mData": "links", asSorting:"none" }
+			],
+			"sPaginationType": "two_button"
+			}
+			);
+
+
+		$('#supportRequestListTable tbody td span.expanderClass').live('click', function () {
+			var nTr = $(this).parents('tr')[0];
+			var oTable = $("#supportRequestListTable").dataTable();
+        if ( oTable.fnIsOpen(nTr) ) { /* This row is already open - close it */
+				$(this).replaceWith( "<span class='sprite16Icon smallPlusIcon expanderClass'></span>") ;
+				$("#supportRequestForm").hide();
+				$("#supportRequestForm").appendTo("#supportRequestFormDockId");
+            oTable.fnClose( nTr );
+        }
+        else { /* Open this row */
+            $(this).replaceWith( "<span class='sprite16Icon smallCancelIcon expanderClass'></span>") ;
+						oTable.fnOpen( nTr, fnFormatSupportRequestExpansion(oTable, nTr), 'details' );
+						$("#supportRequestForm").appendTo("#SupportRequestExpansion");
+						$("#supportRequestForm").show();
+        }
+    } );
+});
+
+
+
+
+function fnFormatSupportRequestExpansion ( oTable, nTr )
+{
+    var aData = oTable.fnGetData( nTr );
+    //var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+    //sOut += '<tr><td>Rendering engine:</td><td>Data' + aData.support_request_id+'</td></tr>';
+    //    sOut += '</table>';
+		var sOut = "<span id='SupportRequestExpansion'></span>";  
+    return sOut;
+}
+//page specific functions
+function imposeSupportRequestSecurityUIRestrictions(){
+	var divIdToSecure;
+	divIdToSecure ="#supportRequestFormSave";
+	(isUserAuthorized("UPDATE_SUPPORT_REQUEST", false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#supportRequestFormAdd";
+	(isUserAuthorized("INSERT_SUPPORT_REQUEST", false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	divIdToSecure ="#supportRequestEntryDivId";
+	(isUserAuthorized("UPDATE_SUPPORT_REQUEST",false) ||isUserAuthorized("INSERT_SUPPORT_REQUEST",false) )? securityshow(divIdToSecure):securityHide(divIdToSecure);
+
+	if(!isUserAuthorized("INSERT_SUPPORT_REQUEST",false ) && !isUserAuthorized("UPDATE_SUPPORT_REQUEST", false) ){
+		securityLockForm("supportRequestForm", true);
+
+	}
+	if(!isUserAuthorized("INSERT_SUPPORT_REQUEST",false) && isFormEmpty("supportRequestForm") ){
+		securityLockForm("supportRequestForm", true);
+	}
+
+}
+
+
+//]]>
+
+</script>
+<div id="supportRequest" class="contentPane MainLayout"  >
+	<h1 id="supportRequesth1" class="pageTitle">Support Request</h1>
+	<div class="row">
+		<span class="twelvecol">
+			<table id="supportRequestListTable"  class='dataTable pretty' >
+				<thead><tr><th>Details</th><th>ID</th> <th > Summary</th><th >detailed_description</th> <th>last_update</th> <th >I want to&hellip;</th></tr></thead>
+				<tbody></tbody>
+			</table>
+		</span>
+		<span id="supportRequestFormDockId" class = "" style="display:none">
+			<form id="supportRequestForm" >
+				<div class="formLayout_Standard prettyWrapper" id="supportRequestEntryDivId">
+					
+					<div class="formFieldGroup" id="supportRequestForm-summaryDivId">
+						<label for ="supportRequestForm-summary" id="supportRequestFormLabel-summary">Summary</label>
+						<input type="text" name="summary" id="supportRequestForm-summary" class="VALIDATErequired">
+						<span class="ValidationMsg" id="supportRequestFormLabel-summaryError"></span>
+					</div>
+					
+					<div class="formFieldGroup" id="supportRequestForm-detailed_descriptionDivId">
+						<label for ="supportRequestForm-detailed_description" id="supportRequestFormLabel-detailed_description">Detailed Description</label>
+						<textarea  class="VALIDATErequired" name="detailedDescription" id="supportRequestForm-detailed_description"/></textarea>
+						<span class="ValidationMsg" id="supportRequestFormLabel-detailedDescriptionError"></span>
+					</div>
+					
+					<div class="formFieldGroup" id="supportRequestForm-solution_descriptionDivId">
+						<label for ="supportRequestForm-solution_description" id="supportRequestFormLabel-solution_description">Solution Description</label>
+						<textarea  class="" name="solutionDescription" id="supportRequestForm-solution_description"/></textarea>
+						<span class="ValidationMsg" id="supportRequestFormLabel-solutionDescriptionError"></span>
+					</div>
+					
+					<div class="formFieldGroup" id="supportRequestForm-log_detailsDivId">
+						<label for ="supportRequestForm-log_details" id="supportRequestFormLabel-log_details">Log Details</label>
+						<textarea  class="" disabled="disabled" name="logDetails" id="supportRequestForm-log_details"/></textarea>
+						<span class="ValidationMsg" id="supportRequestFormLabel-logDetailsError"></span>
+					</div>
+					
+					<div class="formFieldGroup" id="supportRequestForm-last_updateDivId" display:"none">
+						<label for ="supportRequestForm-last_update" id="supportRequestFormLabel-name">Date</label>
+						<input type="text" disabled ="disabled" name="lastUpdate" id="supportRequestForm-last_update" class=""/>
+						<span class="ValidationMsg" id="supportRequestFormLabel-lastUpdateError"></span>
+					</div>
+
+
+
+					<div class="formButtons">
+
+						<button type="button" id="supportRequestFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveSupportRequestForm();" ><span class="ui-button-text">Save</span></button>
+						<button type="button" id="supportRequestFormAdd"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveSupportRequestForm();" ><span class="ui-button-text">Add</span></button>
+							<button type="button" id="supportRequestFormClear"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearSupportRequestForm();" ><span class="ui-button-text">Clear</span></button>
+					</div>
+					<input type="hidden" name="last_update" id="supportRequestForm-last_update">
+					<input type="hidden" name="support_request_id" id="supportRequestForm-support_request_id">
+				</div>
+			</form>
+
+		</span>
+	</div>
+</div> <!--end:SupportRequest-->
 
 </div><!--End Main Content-->
 <!--Begin LoginPortal-->

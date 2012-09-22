@@ -70,6 +70,14 @@ INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, 
 	VALUES (27 ,'CHANGE_OTHERS_PWD', now(), 'Admin-Allows users to change other users passwords');
 
 
+INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
+	VALUES ( 28,'SELECT_SUPPORT_REQUEST', now(), 'Allows users to select support_request'); 
+INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
+	VALUES (29,'INSERT_SUPPORT_REQUEST', now(), 'Allows users to add records to support_request');
+INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
+	VALUES (30,'UPDATE_SUPPORT_REQUEST', now(), 'Allows users to update records in support_request');
+INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
+	VALUES ( 31,'DELETE_SUPPORT_REQUEST', now(), 'Allows users to delete records from support_request');
 
 
 

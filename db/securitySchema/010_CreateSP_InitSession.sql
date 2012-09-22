@@ -9,7 +9,7 @@ $BODY$
   sessionId_ := to_hex(((random() * 1000)^3)::Integer ) || to_hex(((random() * 1000)^3)::Integer )
 	|| to_hex(((random() * 1000)^3)::Integer )  || to_hex(((random() * 1000)^3)::Integer );
   update security_user 
-  set session_id =sessionId_ , session_expire_dt = now()+ '20 min', password_reset_cd=''
+  set session_id =sessionId_ , session_expire_dt = now()+ '20 min', pwd_reset_cd=''
   where user_id = userID_ 
     and password_enc = md5(password_);
   if found then
