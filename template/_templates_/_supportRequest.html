@@ -92,10 +92,13 @@ function save[%ucfirst(divId)%](params){
 
 //ServerCall Wrappers
 function edit[%ucfirst(divId)%]([%divId%]Id_){
+   show[%ucfirst(divId)%]Dialog();	
 	if( !isUserAuthorized("[%SELECT_GRANT%]", true, "edit[%ucfirst(divId)%]")) return false; 
 	if (isUserAuthorized("[%UPDATE_GRANT%]",false) ){
 		securityLockForm("[%divId%]Form", false);
 	}else{securityLockForm("[%divId%]Form", true);}
+
+
 
 
 	if([%divId%]Id_){
@@ -111,6 +114,7 @@ function save[%ucfirst(divId)%]Form(){
 	}
 
 	if(validate[%ucfirst(divId)%]Form()){
+		$("#[%divId%]FormHolder").dialog("close");
 		var params = bindForm("[%divId%]Form");
 		save[%ucfirst(divId)%](params);
 	}
@@ -187,6 +191,7 @@ function show[%ucfirst(divId)%](){
 }
 
 function clear[%ucfirst(divId)%]Form(){
+	$("#[%divId%]FormHolder").dialog("close");
 	clearForm('[%divId%]Form');
 	(isUserAuthorized("[%INSERT_GRANT%]", false))?securityLockForm("[%divId%]Form", false) :securityLockForm("[%divId%]Form", true);
 }
@@ -196,15 +201,15 @@ function clear[%ucfirst(divId)%]Form(){
 $(document).ready(function(){
 		$("#[%divId%]ListTable").dataTable( {
 			"aoColumns": [
-			{ "mData": "details" },
-			{ "mData": "support_request_id" },
-			{ "mData": "summary" },
-			{ "mData": "detailed_description" },
+			{ "mData": "details" , bSortable:false, "sWidth":"10"},
+			{ "mData": "support_request_id","sWidth":"10" },
+			{ "mData": "summary"  ,"sClass":"textAlignLeft"},
+			{ "mData": "detailed_description", bVisible:false },
 			//{ "mData": "log_details" },
 			//{ "mData": "solution_description" },
-			{ "mData": "last_update" },
+			{ "mData": "last_update",  bVisible:false},
 			//{ "mData": "updated_by" },
-			{ "mData": "links", asSorting:"none" }
+			{ "mData": "links", asSorting:"none","sWidth":"10em" }
 			],
 			"sPaginationType": "two_button"
 			}
@@ -216,17 +221,15 @@ $(document).ready(function(){
 			var oTable = $("#[%divId%]ListTable").dataTable();
         if ( oTable.fnIsOpen(nTr) ) { /* This row is already open - close it */
 				$(this).replaceWith( "<span class='sprite16Icon smallPlusIcon expanderClass'></span>") ;
-				$("#[%divId%]Form").hide();
-				$("#[%divId%]Form").appendTo("#[%divId%]FormDockId");
             oTable.fnClose( nTr );
         }
         else { /* Open this row */
             $(this).replaceWith( "<span class='sprite16Icon smallCancelIcon expanderClass'></span>") ;
 						oTable.fnOpen( nTr, fnFormat[%ucfirst(divId)%]Expansion(oTable, nTr), 'details' );
-						$("#[%divId%]Form").appendTo("#[%ucfirst(divId)%]Expansion");
-						$("#[%divId%]Form").show();
         }
-    } );
+				} );
+
+	
 });
 
 
@@ -235,10 +238,15 @@ $(document).ready(function(){
 function fnFormat[%ucfirst(divId)%]Expansion ( oTable, nTr )
 {
     var aData = oTable.fnGetData( nTr );
-    //var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
-    //sOut += '<tr><td>Rendering engine:</td><td>Data' + aData.support_request_id+'</td></tr>';
-    //    sOut += '</table>';
-		var sOut = "<span id='[%ucfirst(divId)%]Expansion'></span>";  
+		var sOut = '<div style="padding-left:50px;">';
+		var divStyle= ""
+		sOut += ''
+			sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Detailed Description:</span><span>' + aData.detailed_description+'</span></div>';
+		sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Solution Description:</span><span>' + aData.solution_description+'</span></div>';
+		sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Log Details:</span><span>' + aData.log_details+'</span></div>';
+		sOut +='';
+        sOut += '</div>';
+		//var sOut = "<span id='[%ucfirst(divId)%]Expansion'></span>";  
     return sOut;
 }
 //page specific functions
@@ -263,53 +271,57 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 
 }
 
+function addNew[%ucfirst(divId)%](){
+  clear[%ucfirst(divId)%]Form();
+  show[%ucfirst(divId)%]Dialog();
+}
+function  show[%ucfirst(divId)%]Dialog(){
+	$("#[%divId%]FormHolder").dialog({modal:true,  width: "90%" });
+}
 
 //]]>
 
 </script>
 <div id="[%divId%]" class="contentPane MainLayout"  >
 	<h1 id="[%divId%]h1" class="pageTitle">[%prettyName%]</h1>
+	<div class="row" style="text-align:center">
+		<button type="button" id="[%divId%]Create" class="[%buttonClass%]" value="Request Help" onclick="addNew[%ucfirst(divId)%]();" ><span class="[%buttonTextClass%]">Enter New Help Request</span></button>
+	</div>
 	<div class="row">
 		<span class="twelvecol">
-			<table id="[%divId%]ListTable"  class='dataTable pretty' >
+			<table id="[%divId%]ListTable"  class='dataTable pretty' width="100%">
 				<thead><tr><th>Details</th><th>ID</th> <th > Summary</th><th >detailed_description</th> <th>last_update</th> <th >I want to&hellip;</th></tr></thead>
 				<tbody></tbody>
 			</table>
 		</span>
-		<span id="[%divId%]FormDockId" class = "" style="display:none">
-			<form id="[%divId%]Form" >
+		<div id="[%divId%]FormHolder" title="Support Request" class = "" style="display:none; height:400px !important; overflow:auto;">
+			<form id="[%divId%]Form"  title="Support Request" style="overflow:auto;">
 				<div class="formLayout_Standard prettyWrapper" id="[%divId%]EntryDivId">
 					[%dbColumnName = 'summary'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Summary</label>
-						<input type="text" name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATErequired">
+						<textarea name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATErequired" rows="1" cols="60"></textarea>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 					[%dbColumnName = 'detailed_description'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Detailed Description</label>
-						<textarea  class="VALIDATErequired" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/></textarea>
+						<textarea  class="VALIDATErequired" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]" rows="5" cols="60"/></textarea>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 					[%dbColumnName = 'solution_description'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Solution Description</label>
-						<textarea  class="" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/></textarea>
+						<textarea  class="" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]" rows="5" cols="60"/></textarea>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 					[%dbColumnName = 'log_details'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Log Details</label>
-						<textarea  class="" disabled="disabled" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/></textarea>
+						<textarea  class="" disabled="disabled" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]" rows="5" cols="60"/></textarea>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
-					[%dbColumnName = 'last_update'%]
-					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId" display:"none">
-						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-name">Date</label>
-						<input type="text" disabled ="disabled" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]" class=""/>
-						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-					</div>
-
+					
 
 
 					<div class="formButtons">
@@ -323,6 +335,6 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 				</div>
 			</form>
 
-		</span>
+		</div>
 	</div>
 </div> <!--end:[%ucfirst(divId)%]-->

@@ -434,7 +434,7 @@ function securityHide(divIdToSecure){
 */ %]
 function securityLockForm(formName,lock){
 	var disableStatus;
-	if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form", "ERROR");
+	if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form:" + formName, "ERROR");
 	if (lock == undefined)lock=true;
 
 $.each($("form#"+formName + "> input, >select"),function (ndx,field){

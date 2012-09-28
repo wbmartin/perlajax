@@ -444,7 +444,7 @@ function securityHide(divIdToSecure){
 
 function securityLockForm(formName,lock){
 	var disableStatus;
-	if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form", "ERROR");
+	if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form:" + formName, "ERROR");
 	if (lock == undefined)lock=true;
 
 $.each($("form#"+formName + "> input, >select"),function (ndx,field){
@@ -3253,7 +3253,18 @@ a.alink:visited {
 #clientLogViewer{
 padding: 5px;
 }
+td.textAlignLeft{
+text-align: left !important;
+}
 
+.supportRequestAdditionalInfo{
+align:left;
+text-align:left;
+}
+.supportRequestAdditionalInfoTitle{
+	font-weight:bold;
+
+}
 
 </style>
 </head>
@@ -5541,10 +5552,13 @@ function saveSupportRequest(params){
 
 //ServerCall Wrappers
 function editSupportRequest(supportRequestId_){
+   showSupportRequestDialog();	
 	if( !isUserAuthorized("SELECT_SUPPORT_REQUEST", true, "editSupportRequest")) return false; 
 	if (isUserAuthorized("UPDATE_SUPPORT_REQUEST",false) ){
 		securityLockForm("supportRequestForm", false);
 	}else{securityLockForm("supportRequestForm", true);}
+
+
 
 
 	if(supportRequestId_){
@@ -5560,6 +5574,7 @@ function saveSupportRequestForm(){
 	}
 
 	if(validateSupportRequestForm()){
+		$("#supportRequestFormHolder").dialog("close");
 		var params = bindForm("supportRequestForm");
 		saveSupportRequest(params);
 	}
@@ -5636,6 +5651,7 @@ function showSupportRequest(){
 }
 
 function clearSupportRequestForm(){
+	$("#supportRequestFormHolder").dialog("close");
 	clearForm('supportRequestForm');
 	(isUserAuthorized("INSERT_SUPPORT_REQUEST", false))?securityLockForm("supportRequestForm", false) :securityLockForm("supportRequestForm", true);
 }
@@ -5645,15 +5661,15 @@ function clearSupportRequestForm(){
 $(document).ready(function(){
 		$("#supportRequestListTable").dataTable( {
 			"aoColumns": [
-			{ "mData": "details" },
-			{ "mData": "support_request_id" },
-			{ "mData": "summary" },
-			{ "mData": "detailed_description" },
+			{ "mData": "details" , bSortable:false, "sWidth":"10"},
+			{ "mData": "support_request_id","sWidth":"10" },
+			{ "mData": "summary"  ,"sClass":"textAlignLeft"},
+			{ "mData": "detailed_description", bVisible:false },
 			//{ "mData": "log_details" },
 			//{ "mData": "solution_description" },
-			{ "mData": "last_update" },
+			{ "mData": "last_update",  bVisible:false},
 			//{ "mData": "updated_by" },
-			{ "mData": "links", asSorting:"none" }
+			{ "mData": "links", asSorting:"none","sWidth":"10em" }
 			],
 			"sPaginationType": "two_button"
 			}
@@ -5665,17 +5681,15 @@ $(document).ready(function(){
 			var oTable = $("#supportRequestListTable").dataTable();
         if ( oTable.fnIsOpen(nTr) ) { /* This row is already open - close it */
 				$(this).replaceWith( "<span class='sprite16Icon smallPlusIcon expanderClass'></span>") ;
-				$("#supportRequestForm").hide();
-				$("#supportRequestForm").appendTo("#supportRequestFormDockId");
             oTable.fnClose( nTr );
         }
         else { /* Open this row */
             $(this).replaceWith( "<span class='sprite16Icon smallCancelIcon expanderClass'></span>") ;
 						oTable.fnOpen( nTr, fnFormatSupportRequestExpansion(oTable, nTr), 'details' );
-						$("#supportRequestForm").appendTo("#SupportRequestExpansion");
-						$("#supportRequestForm").show();
         }
-    } );
+				} );
+
+	
 });
 
 
@@ -5684,10 +5698,15 @@ $(document).ready(function(){
 function fnFormatSupportRequestExpansion ( oTable, nTr )
 {
     var aData = oTable.fnGetData( nTr );
-    //var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
-    //sOut += '<tr><td>Rendering engine:</td><td>Data' + aData.support_request_id+'</td></tr>';
-    //    sOut += '</table>';
-		var sOut = "<span id='SupportRequestExpansion'></span>";  
+		var sOut = '<div style="padding-left:50px;">';
+		var divStyle= ""
+		sOut += ''
+			sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Detailed Description:</span><span>' + aData.detailed_description+'</span></div>';
+		sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Solution Description:</span><span>' + aData.solution_description+'</span></div>';
+		sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Log Details:</span><span>' + aData.log_details+'</span></div>';
+		sOut +='';
+        sOut += '</div>';
+		//var sOut = "<span id='SupportRequestExpansion'></span>";  
     return sOut;
 }
 //page specific functions
@@ -5712,53 +5731,57 @@ function imposeSupportRequestSecurityUIRestrictions(){
 
 }
 
+function addNewSupportRequest(){
+  clearSupportRequestForm();
+  showSupportRequestDialog();
+}
+function  showSupportRequestDialog(){
+	$("#supportRequestFormHolder").dialog({modal:true,  width: "90%" });
+}
 
 //]]>
 
 </script>
 <div id="supportRequest" class="contentPane MainLayout"  >
 	<h1 id="supportRequesth1" class="pageTitle">Support Request</h1>
+	<div class="row" style="text-align:center">
+		<button type="button" id="supportRequestCreate" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Request Help" onclick="addNewSupportRequest();" ><span class="ui-button-text">Enter New Help Request</span></button>
+	</div>
 	<div class="row">
 		<span class="twelvecol">
-			<table id="supportRequestListTable"  class='dataTable pretty' >
+			<table id="supportRequestListTable"  class='dataTable pretty' width="100%">
 				<thead><tr><th>Details</th><th>ID</th> <th > Summary</th><th >detailed_description</th> <th>last_update</th> <th >I want to&hellip;</th></tr></thead>
 				<tbody></tbody>
 			</table>
 		</span>
-		<span id="supportRequestFormDockId" class = "" style="display:none">
-			<form id="supportRequestForm" >
+		<div id="supportRequestFormHolder" title="Support Request" class = "" style="display:none; height:400px !important; overflow:auto;">
+			<form id="supportRequestForm"  title="Support Request" style="overflow:auto;">
 				<div class="formLayout_Standard prettyWrapper" id="supportRequestEntryDivId">
 					
 					<div class="formFieldGroup" id="supportRequestForm-summaryDivId">
 						<label for ="supportRequestForm-summary" id="supportRequestFormLabel-summary">Summary</label>
-						<input type="text" name="summary" id="supportRequestForm-summary" class="VALIDATErequired">
+						<textarea name="summary" id="supportRequestForm-summary" class="VALIDATErequired" rows="1" cols="60"></textarea>
 						<span class="ValidationMsg" id="supportRequestFormLabel-summaryError"></span>
 					</div>
 					
 					<div class="formFieldGroup" id="supportRequestForm-detailed_descriptionDivId">
 						<label for ="supportRequestForm-detailed_description" id="supportRequestFormLabel-detailed_description">Detailed Description</label>
-						<textarea  class="VALIDATErequired" name="detailedDescription" id="supportRequestForm-detailed_description"/></textarea>
+						<textarea  class="VALIDATErequired" name="detailedDescription" id="supportRequestForm-detailed_description" rows="5" cols="60"/></textarea>
 						<span class="ValidationMsg" id="supportRequestFormLabel-detailedDescriptionError"></span>
 					</div>
 					
 					<div class="formFieldGroup" id="supportRequestForm-solution_descriptionDivId">
 						<label for ="supportRequestForm-solution_description" id="supportRequestFormLabel-solution_description">Solution Description</label>
-						<textarea  class="" name="solutionDescription" id="supportRequestForm-solution_description"/></textarea>
+						<textarea  class="" name="solutionDescription" id="supportRequestForm-solution_description" rows="5" cols="60"/></textarea>
 						<span class="ValidationMsg" id="supportRequestFormLabel-solutionDescriptionError"></span>
 					</div>
 					
 					<div class="formFieldGroup" id="supportRequestForm-log_detailsDivId">
 						<label for ="supportRequestForm-log_details" id="supportRequestFormLabel-log_details">Log Details</label>
-						<textarea  class="" disabled="disabled" name="logDetails" id="supportRequestForm-log_details"/></textarea>
+						<textarea  class="" disabled="disabled" name="logDetails" id="supportRequestForm-log_details" rows="5" cols="60"/></textarea>
 						<span class="ValidationMsg" id="supportRequestFormLabel-logDetailsError"></span>
 					</div>
 					
-					<div class="formFieldGroup" id="supportRequestForm-last_updateDivId" display:"none">
-						<label for ="supportRequestForm-last_update" id="supportRequestFormLabel-name">Date</label>
-						<input type="text" disabled ="disabled" name="lastUpdate" id="supportRequestForm-last_update" class=""/>
-						<span class="ValidationMsg" id="supportRequestFormLabel-lastUpdateError"></span>
-					</div>
-
 
 
 					<div class="formButtons">
@@ -5772,7 +5795,7 @@ function imposeSupportRequestSecurityUIRestrictions(){
 				</div>
 			</form>
 
-		</span>
+		</div>
 	</div>
 </div> <!--end:SupportRequest-->
 

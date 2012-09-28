@@ -611,4 +611,15 @@ a.alink:visited {
 #clientLogViewer{
 padding: 5px;
 }
+td.textAlignLeft{
+text-align: left !important;
+}
 
+.supportRequestAdditionalInfo{
+align:left;
+text-align:left;
+}
+.supportRequestAdditionalInfoTitle{
+	font-weight:bold;
+
+}
