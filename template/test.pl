@@ -1,3 +1,6 @@
 #!/usr/bin/perl
 use FindBin;
-print "$FindBin::Bin/../lib" ;
+use  lib "$FindBin::Bin/";
+require DBGen_Util;
+
+print "$FindBin::Bin/" ;
