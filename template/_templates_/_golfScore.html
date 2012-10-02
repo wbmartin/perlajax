@@ -188,7 +188,7 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](golferId_){
 	if(!isUserAuthorized("[%SELECT_GRANT%]", true, "show[%ucfirst(divId)%]") ) return false; 
-
+  statusMsg("Navigated to Golf Score View");
 	retrieve[%ucfirst(divId)%]List(golferId_); 
 	retrieveGolferNameForGolfScore(golferId_);
 	hideCurrentContentPane();

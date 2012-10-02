@@ -31,7 +31,8 @@
 <script type="text/javascript">
 
 function show[%ucfirst(divId)%](){
-  hideCurrentContentPane();
+	hideCurrentContentPane();
+	statusMsg("Navigated to About");
   $("#[%divId%]").fadeIn();
 currentContentPane = "[%divId%]";
   return "[%divId%]";

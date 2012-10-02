@@ -6,7 +6,7 @@
 <!DOCType html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 [%INCLUDE _header.html%]
-<body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();" > 
+<body  onload='bodyOnLoad();' onresize="bodyOnResize();" > 
 [%INCLUDE _LayoutComponents.html%]
 
 <div id="mainContent" class="container MainLayout"  >

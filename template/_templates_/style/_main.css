@@ -19,6 +19,7 @@
 body{
   font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
   font-size:1.1em;
+	background-color:white;
 
 }
 h1{
@@ -561,6 +562,7 @@ div.paging_two_button a {
     width:17em;
     height:20em;
     overflow:auto;
+		margin: 15px;
 
 }
 

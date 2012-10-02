@@ -10,43 +10,43 @@
 
 
 <script type="text/javascript">
-  //<![CDATA[
+	//<![CDATA[
 "use strict";
 //Server Calls
 function retrieve[%ucfirst(divId)%]List(){
 	if(!isUserAuthorized("[%SELECT_GRANT%]", true, "retrieve[%ucfirst(divId)%]List") ) return false; 
 
-  var params =prepParams(params,"[%spwfResource%]" ,"select" );
-  var successf = function (rslt){
-    if(rslt[SERVER_SIDE_FAIL]){
-      briefNotify("There was a problem retrieving the [%prettyName%] Listing","ERROR");
-    }else{
-      populate[%ucfirst(divId)%]ListTable(rslt.rows);
-    }
-  
-};
-serverCall(params,successf,FAILF);
+	var params =prepParams(params,"[%spwfResource%]" ,"select" );
+	var successf = function (rslt){
+		if(rslt[SERVER_SIDE_FAIL]){
+			briefNotify("There was a problem retrieving the [%prettyName%] Listing","ERROR");
+		}else{
+			populate[%ucfirst(divId)%]ListTable(rslt.rows);
+		}
+
+	};
+	serverCall(params,successf,FAILF);
 }
 function retrieve[%ucfirst(divId)%](params){
 	if(!isUserAuthorized("[%SELECT_GRANT%]", true, "retrieve[%ucfirst(divId)%]") ) return false; 
 
-  params = prepParams(params,"[%spwfResource%]","SELECT");
-  var successf = function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      bindToForm("[%divId%]Form", rslt.rows[0]);
-      document.getElementById("[%divId%]Form-edit_user_id").value=rslt.rows[0].user_id;
-      if(rslt.rows[0].active_yn =="Y"){
-	document.getElementById('[%divId%]Form-active_yn').checked=true;
-      }else{
-	document.getElementById('[%divId%]Form-active_yn').checked=false;
-      }
-      toggleSaveMode("[%divId%]Form",true);
-      showPasswordFields(false);
-    }else{
-      briefNotify("There was a problem retrieving the [%prettyName%].","ERROR");
-    }
-  }
-  serverCall(params,successf,FAILF);
+	params = prepParams(params,"[%spwfResource%]","SELECT");
+	var successf = function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			bindToForm("[%divId%]Form", rslt.rows[0]);
+			document.getElementById("[%divId%]Form-edit_user_id").value=rslt.rows[0].user_id;
+			if(rslt.rows[0].active_yn =="Y"){
+				document.getElementById('[%divId%]Form-active_yn').checked=true;
+			}else{
+				document.getElementById('[%divId%]Form-active_yn').checked=false;
+			}
+			toggleSaveMode("[%divId%]Form",true);
+			showPasswordFields(false);
+		}else{
+			briefNotify("There was a problem retrieving the [%prettyName%].","ERROR");
+		}
+	}
+	serverCall(params,successf,FAILF);
 }
 
 
@@ -54,19 +54,19 @@ function retrieve[%ucfirst(divId)%](params){
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
 	if(!isUserAuthorized("[%DELETE_GRANT%]", true, "delete[%ucfirst(divId)%]") ) return false; 
 
-  var params =prepParams(params,"[%spwfResource%]" ,"delete" );
-  params['[%prkey%]'] = [%toCC(prkey)%]_;
-  params['last_update'] = lastUpdate_;
-  var successf = function (rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-      briefNotify("[%prettyName%] Deleted Successfully","INFO");
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	var params =prepParams(params,"[%spwfResource%]" ,"delete" );
+	params['[%prkey%]'] = [%toCC(prkey)%]_;
+	params['last_update'] = lastUpdate_;
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
+			briefNotify("[%prettyName%] Deleted Successfully","INFO");
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 function save[%ucfirst(divId)%](params){
@@ -75,26 +75,26 @@ function save[%ucfirst(divId)%](params){
 		return false;
 	}
 
-  params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
-  var successf=function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
+	params = prepParams(params,"[%spwfResource%]",insertUpdateChoose);
+	var successf=function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
 
-      clearForm('[%divId%]Form');
-      showPasswordFields(true);
-      if (rslt.spwfAction == "UPDATE"){
-	replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
-      }else if (rslt.spwfAction == "INSERT"){
-	addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
-      }
+			clearForm('[%divId%]Form');
+			showPasswordFields(true);
+			if (rslt.spwfAction == "UPDATE"){
+				replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+			}else if (rslt.spwfAction == "INSERT"){
+				addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
+			}
 			briefNotify("[%prettyName%] Successfully Saved","INFO");
 			clear[%ucfirst(divId)%]Form();
 
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 //ServerCall Wrappers
@@ -106,50 +106,50 @@ function edit[%ucfirst(divId)%]([%divId%]Id_){
 
 
 
-  if([%divId%]Id_){
-    var params ={"where_clause":"[%prkey%]=" +[%divId%]Id_};
-    retrieve[%ucfirst(divId)%](params);
-  }
+	if([%divId%]Id_){
+		var params ={"where_clause":"[%prkey%]=" +[%divId%]Id_};
+		retrieve[%ucfirst(divId)%](params);
+	}
 }
 
 function save[%ucfirst(divId)%]Form(){
 	if(!isUserAuthorized("[%UPDATE_GRANT%]", false) 
 			&& !isUserAuthorized("[%INSERT_GRANT%]", false)) {
 		briefNotify("Access Violation: save[%ucfirst(divId)%]Form "  , "ERROR")
-		return false;
+			return false;
 	}
 
-  if(validate[%ucfirst(divId)%]Form()){
-    var params = bindForm("[%divId%]Form");
-    if (document.getElementById('[%divId%]Form-active_yn').checked){
-      params['active_yn']='Y';
-    }else{
-      params['active_yn']='N';
-    }
-    save[%ucfirst(divId)%](params);
-  }
+	if(validate[%ucfirst(divId)%]Form()){
+		var params = bindForm("[%divId%]Form");
+		if (document.getElementById('[%divId%]Form-active_yn').checked){
+			params['active_yn']='Y';
+		}else{
+			params['active_yn']='N';
+		}
+		save[%ucfirst(divId)%](params);
+	}
 }
 
 //validation
 function validate[%ucfirst(divId)%]Form(){
-  var formName="[%divId%]Form";
-  var formValid  = standardValidate(formName);
-  if(document.getElementById('[%divId%]Form-password_enc').value != document.getElementById('[%divId%]Form-password_validate').value){
-    alert("Please ensure the passwords match to continue");
-    formValid = false;
-  }
+	var formName="[%divId%]Form";
+	var formValid  = standardValidate(formName);
+	if(document.getElementById('[%divId%]Form-password_enc').value != document.getElementById('[%divId%]Form-password_validate').value){
+		alert("Please ensure the passwords match to continue");
+		formValid = false;
+	}
 
-  return formValid;
+	return formValid;
 }
 
 //Top Level HTML Manip
 var [%ucfirst(divId)%]prKey = {};
 function populate[%ucfirst(divId)%]ListTable(dataRows){
 	var dataArray= new Array();
-  if (dataRows !=null)
+	if (dataRows !=null)
 		for(var ndx=0;ndx< dataRows.length;ndx++){
 			dataArray[ndx] = build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
-		[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
+			[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
 		}
 	$('#[%divId%]ListTable').dataTable().fnClearTable();
 	$('#[%divId%]ListTable').dataTable().fnAddData( dataArray, true );
@@ -160,20 +160,20 @@ function build[%ucfirst(divId)%]ListTableRow(data){
 	var links ="";
 	dataHash["user_id"] = data.user_id;
 	if(isUserAuthorized("[%UPDATE_GRANT%]", false) ){
-	   links+= "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
-	   links+= " &nbsp; &nbsp;";
+		links+= "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
+		links+= " &nbsp; &nbsp;";
 	}else if(isUserAuthorized("[%SELECT_GRANT%]",false)){
-     links+= "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>View</a> ";
-	   links+= " &nbsp; &nbsp;";
+		links+= "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>View</a> ";
+		links+= " &nbsp; &nbsp;";
 
 	}
 	if(isUserAuthorized("[%DELETE_GRANT%]"),false){
-		 links+= "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>";
+		links+= "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>";
 	}
 	dataHash["links"] =links; 
 	dataHash["DT_RowId"] = "[%ucfirst(divId)%]ListTableTR-" + data.[%prkey%];
 
-  return dataHash;
+	return dataHash;
 }
 
 function replace[%ucfirst(divId)%]ListTableRow(row){
@@ -188,49 +188,50 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
 
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](){
+	statusMsg("Navigated to Security Users");
 	if(!isUserAuthorized("[%SELECT_GRANT%]", true, "show[%ucfirst(divId)%]" ) ) return false; 
 
-  retrieve[%ucfirst(divId)%]List(); 
-  hideCurrentContentPane();
-  $("#[%divId%]").fadeIn();
-  currentContentPane="[%divId%]";
-  if ( isFormEmpty("[%divId%]Form")) toggleSaveMode("[%divId%]Form",false);
+	retrieve[%ucfirst(divId)%]List(); 
+	hideCurrentContentPane();
+	$("#[%divId%]").fadeIn();
+	currentContentPane="[%divId%]";
+	if ( isFormEmpty("[%divId%]Form")) toggleSaveMode("[%divId%]Form",false);
 	showPasswordFields(true);
-	}
+}
 function clear[%ucfirst(divId)%]Form(){
 	clearForm('[%divId%]Form');
 	showPasswordFields(true);
 	(isUserAuthorized("[%INSERT_GRANT%]", false))?securityLockForm("[%divId%]Form", false) :securityLockForm("[%divId%]Form", true);
-	
+
 }
 
 
 //After complete Load setup
 $(document).ready(function(){
-$("#[%divId%]ListTable").dataTable( {
+		$("#[%divId%]ListTable").dataTable( {
 			"aoColumns": [
-			  { "mData": "user_id" },
-			  { "mData": "links", asSorting:"none" }
+			{ "mData": "user_id" },
+			{ "mData": "links", asSorting:"none" }
 			],
 			"sPaginationType": "two_button"
 			}
-		 	);
+			);
 
- });
+		});
 
 //page specific functions
 
 function showPasswordFields(show){
-  if (show){
-    $("#[%divId%]Form-password_encDivId").fadeIn();
-    $("#[%divId%]Form-password_validateDivId").fadeIn();
-  }else{
-    $("#[%divId%]Form-password_encDivId").fadeOut();
-    $("#[%divId%]Form-password_validateDivId").fadeOut();
-  }
+	if (show){
+		$("#[%divId%]Form-password_encDivId").fadeIn();
+		$("#[%divId%]Form-password_validateDivId").fadeIn();
+	}else{
+		$("#[%divId%]Form-password_encDivId").fadeOut();
+		$("#[%divId%]Form-password_validateDivId").fadeOut();
+	}
 }
 function initiateChangePassword(){
-  showChangePasswordDialog($("#[%divId%]Form-edit_user_id").val());
+	showChangePasswordDialog($("#[%divId%]Form-edit_user_id").val());
 }
 
 function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
@@ -245,12 +246,12 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 	(isUserAuthorized("[%UPDATE_GRANT%]", false) ||isUserAuthorized("[%INSERT_GRANT%]", false) )? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 	if(!isUserAuthorized("[%INSERT_GRANT%]", false) && !isUserAuthorized("[%UPDATE_GRANT%]", false)){
-	  securityLockForm("[%divId%]Form", true);
+		securityLockForm("[%divId%]Form", true);
 	}
 	divIdToSecure ="#[%divId%]ChangeOthersPassword";
-  (isUserAuthorized("CHANGE_OTHERS_PWD", false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	(isUserAuthorized("CHANGE_OTHERS_PWD", false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
-if(!isUserAuthorized("[%INSERT_GRANT%]",false) && isFormEmpty("[%divId%]Form") ){
+	if(!isUserAuthorized("[%INSERT_GRANT%]",false) && isFormEmpty("[%divId%]Form") ){
 		securityLockForm("[%divId%]Form", true);
 	}
 
@@ -263,81 +264,81 @@ if(!isUserAuthorized("[%INSERT_GRANT%]",false) && isFormEmpty("[%divId%]Form") )
 
 </script>
 <div id="[%divId%]" class="contentPane MainLayout"  >
-  <h1 id="[%divId%]HeaderId" class="pageTitle">Users</h1>
-  <div class="row">
-    <span class="fourcol">
+	<h1 id="[%divId%]HeaderId" class="pageTitle">Users</h1>
+	<div class="row">
+		<span class="fourcol">
 			<table id="[%divId%]ListTable"  class='dataTable pretty' >
 				<thead><tr><th>User Id</th> <th >I want to&hellip;</th></tr></thead>
 				<tbody></tbody>
-      </table>
-    </span>
-    <span class = "eightcol last">
+			</table>
+		</span>
+		<span class = "eightcol last">
 
-	<form id="[%divId%]Form" >
-      <div class="formLayout_Standard prettyWrapper">
-	  [%dbColumnName = 'edit_user_id'%]
-	  <div class="formFieldGroup ">
-	    <label>  User Id </label>
-	    <input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
-	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	  </div>
-	  [%dbColumnName = 'email_addr'%]
-	  <div class="formFieldGroup"id="[%divId%]Form-[%dbColumnName%]DivId">
-	    <label>  E-mail </label>
-	    <input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
-	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	  </div>
-	  [%dbColumnName = 'password_enc'%]
-	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
-	    <label  for ="[%divId%]Form-[%dbColumnName%]">  Password </label>
-	    <input type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
-	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	  </div>
-	  [%dbColumnName = 'password_validate'%]
-	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
-	    <label for ="[%divId%]Form-[%dbColumnName%]">  Confirm Password </label>
-	    <input  type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
-	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	  </div>
-
-
-	  [%dbColumnName = 'security_profile_id'%]
-	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
-	    <label>  Security Profile </label>
-	    <select name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></select>
-	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	  </div>
-	  [%dbColumnName = 'active_yn'%]
-	  <div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
-	    <label style="display:inline-block" for ="[%divId%]Form-[%dbColumnName%]">  Active </label>
-	    <input style="width:25px;" type="checkbox" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
-	    <span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
-	  </div>
+			<form id="[%divId%]Form" >
+				<div class="formLayout_Standard prettyWrapper">
+					[%dbColumnName = 'edit_user_id'%]
+					<div class="formFieldGroup ">
+						<label>  User Id </label>
+						<input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
+					[%dbColumnName = 'email_addr'%]
+					<div class="formFieldGroup"id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label>  E-mail </label>
+						<input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
+					[%dbColumnName = 'password_enc'%]
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label  for ="[%divId%]Form-[%dbColumnName%]">  Password </label>
+						<input type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
+					[%dbColumnName = 'password_validate'%]
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label for ="[%divId%]Form-[%dbColumnName%]">  Confirm Password </label>
+						<input  type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
 
 
+					[%dbColumnName = 'security_profile_id'%]
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label>  Security Profile </label>
+						<select name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></select>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
+					[%dbColumnName = 'active_yn'%]
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label style="display:inline-block" for ="[%divId%]Form-[%dbColumnName%]">  Active </label>
+						<input style="width:25px;" type="checkbox" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
 
 
 
-	  <div class="formButtons">
-	    <button type="button" id="[%divId%]FormSave" value="Save" class="[%buttonClass%]"  onclick="save[%ucfirst(divId)%]Form();" >
-				<span class="[%buttonTextClass%]">Save</span>
-	    </button>
-	    <button type="button" id="[%divId%]FormAdd" value="Add" class="[%buttonClass%]"  onclick="save[%ucfirst(divId)%]Form();" >
-	      <span class="[%buttonTextClass%]">Add</span>
-	    </button>
-	    <button type="button" id="[%divId%]FormClear" value="Clear" class="[%buttonClass%]"  onclick="clear[%ucfirst(divId)%]Form();" >
-	      <span class="[%buttonTextClass%]">Clear</span>
-	    </button>
-	    <button  style="" type="button" id="[%divId%]ChangeOthersPassword" class="[%buttonClass%]"  value="Change Password" onclick="initiateChangePassword();" >
-	      <span class="[%buttonTextClass%]">Change Password</span>
-	    </button>
-	  </div>
-	  <input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-	  <input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
 
-      </div>
-	</form>
-    </span>
-    <br/>
-  </div>
+
+					<div class="formButtons">
+						<button type="button" id="[%divId%]FormSave" value="Save" class="[%buttonClass%]"  onclick="save[%ucfirst(divId)%]Form();" >
+							<span class="[%buttonTextClass%]">Save</span>
+						</button>
+						<button type="button" id="[%divId%]FormAdd" value="Add" class="[%buttonClass%]"  onclick="save[%ucfirst(divId)%]Form();" >
+							<span class="[%buttonTextClass%]">Add</span>
+						</button>
+						<button type="button" id="[%divId%]FormClear" value="Clear" class="[%buttonClass%]"  onclick="clear[%ucfirst(divId)%]Form();" >
+							<span class="[%buttonTextClass%]">Clear</span>
+						</button>
+						<button  style="" type="button" id="[%divId%]ChangeOthersPassword" class="[%buttonClass%]"  value="Change Password" onclick="initiateChangePassword();" >
+							<span class="[%buttonTextClass%]">Change Password</span>
+						</button>
+					</div>
+					<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+					<input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
+
+				</div>
+			</form>
+		</span>
+		<br/>
+	</div>
 </div> <!--end:[%ucfirst(divId)%]-->

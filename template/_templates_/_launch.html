@@ -42,7 +42,8 @@
 </div>
 <script type="text/javascript">
 
-  function show[%ucfirst(divId)%](){
+	function show[%ucfirst(divId)%](){
+		statusMsg("Navigated to Main Portal");
     hideCurrentContentPane();
     $("#[%divId%]").fadeIn();
     currentContentPane = "[%divId%]";

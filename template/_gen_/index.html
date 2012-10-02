@@ -373,7 +373,8 @@ $("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
 function handleServerResponse(msg, startTime, data){
 	if(!validateServerResponse(data)){
 		alert("Sorry, there was a problem communicating with the server.");
-		return false
+		statusMsg("Server Communication Error");
+		return false;
 	}
 	statusMsg( msg +" in " + (new Date().getTime()-startTime.getTime())/1000 + "s" );
 	return true;
@@ -2663,6 +2664,7 @@ width: 91.35%;
 body{
   font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
   font-size:1.1em;
+	background-color:white;
 
 }
 h1{
@@ -3203,6 +3205,7 @@ div.paging_two_button a {
     width:17em;
     height:20em;
     overflow:auto;
+		margin: 15px;
 
 }
 
@@ -3269,7 +3272,7 @@ text-align:left;
 </style>
 </head>
 
-<body style="background-color:white; " onload='bodyOnLoad();' onresize="bodyOnResize();" > 
+<body  onload='bodyOnLoad();' onresize="bodyOnResize();" > 
 <script type="text/javascript">
 	//<![CDATA[
 function sizeLeftNav(){
@@ -3434,6 +3437,7 @@ function buildGolfScoreSummaryListTableRow(gs){
 }
 
 function showGolfScoreSummary(){
+	statusMsg("Navigated to Golf Score Summary View ");
 	retrieveGolfScoreSummaryList();
 	standardShowContentPane("golfScoreSummary");
 }
@@ -3661,7 +3665,7 @@ function removeGolfScoreListTableRow(golfScoreId_){
 //Div Access and App Layout Calls
 function showGolfScore(golferId_){
 	if(!isUserAuthorized("SELECT_GOLF_SCORE", true, "showGolfScore") ) return false; 
-
+  statusMsg("Navigated to Golf Score View");
 	retrieveGolfScoreList(golferId_); 
 	retrieveGolferNameForGolfScore(golferId_);
 	hideCurrentContentPane();
@@ -3958,6 +3962,7 @@ function removeQuickGolfScoreListTableRow(golfScoreId_){
 
 //Div Access and App Layout Calls
 function showQuickGolfScore(){
+	statusMsg("Navigated to Quick Golf Score Entry");
 	retrieveQuickGolfScoreList(); 
 	hideCurrentContentPane();
 	$("#quickGolfScore").fadeIn();
@@ -4229,7 +4234,7 @@ function buildGolferListTableRow(data){
 	}
 	dataHash["links"] = htmlRow;
 	dataHash["DT_RowId"] = "GolferListTableTR-" + data.golfer_id;
-		return dataHash;
+	return dataHash;
 }
 
 function replaceRowGolferListTable(row){
@@ -4266,6 +4271,7 @@ function imposeGolferSecurityUIRestrictions(){
 //-------------------------------------------------
 //Div Access and App Layout Calls
 function showGolfer(golferId_){
+	statusMsg("Navigated to Golfer View");
 	var params={};
 	hideCurrentContentPane();
 	$("#golfer").fadeIn();
@@ -4296,7 +4302,7 @@ $(document).ready(function(){
 			],
 			"sPaginationType": "two_button"
 			}
-		 	);
+			);
 		});
 
 //]]>
@@ -4323,7 +4329,7 @@ $(document).ready(function(){
 						<input  type="text" class="VALIDATErequired" name="name" id="golferForm-name"/>
 						<span class="ValidationMsg" id="golferFormLabel-nameError"></span>
 					</div>
-										<div class="formButtons">
+					<div class="formButtons">
 
 						<button type="button" id="golferFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveGolferForm();" ><span class="ui-button-text">Save</span></button>
 						<button type="button" id="golferFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveGolferForm();" ><span class="ui-button-text">Add</span></button>
@@ -4371,7 +4377,8 @@ $(document).ready(function(){
 <script type="text/javascript">
 
 function showAboutPane(){
-  hideCurrentContentPane();
+	hideCurrentContentPane();
+	statusMsg("Navigated to About");
   $("#aboutPane").fadeIn();
 currentContentPane = "aboutPane";
   return "aboutPane";
@@ -4409,6 +4416,7 @@ currentContentPane = "aboutPane";
 <script type="text/javascript">
 
 	function showHelpPane(){
+		statusMsg("Navigated to Help Portal");
 		hideCurrentContentPane();
 		$("#helpPane").fadeIn();
 		currentContentPane = "helpPane";
@@ -4462,7 +4470,8 @@ currentContentPane = "aboutPane";
 </div>
 <script type="text/javascript">
 
-  function showLaunchPane(){
+	function showLaunchPane(){
+		statusMsg("Navigated to Main Portal");
     hideCurrentContentPane();
     $("#launchPane").fadeIn();
     currentContentPane = "launchPane";
@@ -4505,7 +4514,8 @@ function imposeLauncherSecurityUIRestrictions(){
 <script type="text/javascript">
 
 function showClientLogViewer(){
-  hideCurrentContentPane();
+	hideCurrentContentPane();
+	statusMsg("Navigated to Log Viewer");
   var newHTML="";
   $("#clientLogViewer").fadeIn();
   $("ul#clientLogView").find("li").remove();
@@ -4530,43 +4540,43 @@ function showClientLogViewer(){
 
 
 <script type="text/javascript">
-  //<![CDATA[
+	//<![CDATA[
 "use strict";
 //Server Calls
 function retrieveSecurityGrantsList(){
 	if(!isUserAuthorized("SELECT_SECURITY_PROFILE") ){
 		briefNotify("Access Violation retrieveSecurityGrantsList" ,"ERROR");
-	  return false;
+		return false;
 	}
 
-  var params =prepParams(params,"security_profile" ,"select" );
-  var successf = function (rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      populateSecurityGrantsListTable(rslt.rows);
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	var params =prepParams(params,"security_profile" ,"select" );
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			populateSecurityGrantsListTable(rslt.rows);
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 function retrieveSecurityGrants(params){
 	if(!isUserAuthorized("SELECT_SECURITY_PROFILE") ){
 		briefNotify("Access Violation - retrieveSecurityGrants","ERROR");
-	  return false;
+		return false;
 	}
 
-  params = prepParams(params,"security_profile","SELECT");
-  var successf = function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      bindToForm("securityGrantsForm", rslt.rows[0]);
-      toggleSaveMode("securityGrantsForm",true);
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	params = prepParams(params,"security_profile","SELECT");
+	var successf = function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			bindToForm("securityGrantsForm", rslt.rows[0]);
+			toggleSaveMode("securityGrantsForm",true);
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  }
-  serverCall(params,successf,FAILF);
+	}
+	serverCall(params,successf,FAILF);
 }
 
 
@@ -4574,89 +4584,89 @@ function retrieveSecurityGrants(params){
 function deleteSecurityGrants(securityProfileId_, lastUpdate_){
 	if(!isUserAuthorized("DELETE_SECURITY_PROFILE") ){
 		briefNotify("Access Violation -  deleteSecurityGrants ","ERROR");
-	  return false;
+		return false;
 	}
 
-  var params =prepParams(params,"security_profile" ,"delete" );
-  params['security_profile_id'] = securityProfileId_;
-  params['last_update'] = lastUpdate_;
-  var successf = function (rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      removeSecurityGrantsListTableRow(rslt.security_profile_id);
-      briefNotify("Golf Score Deleted Successfully","INFO");
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	var params =prepParams(params,"security_profile" ,"delete" );
+	params['security_profile_id'] = securityProfileId_;
+	params['last_update'] = lastUpdate_;
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			removeSecurityGrantsListTableRow(rslt.security_profile_id);
+			briefNotify("Golf Score Deleted Successfully","INFO");
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 function saveSecurityGrants(params){
 	if(!isUserAuthorized("UPDATE_SECURITY_PROFILE") && !isUserAuthorized("INSERT_SECURITY_PROFILE")){
 		briefNotify("Access Violation - saveSecurityGrants ","ERROR");
-	  return false;
+		return false;
 	}
 
-  params = prepParams(params,"security_profile",insertUpdateChoose);
-  var successf=function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      clearForm('securityGrantsForm');
-      if (rslt.spwfAction == "UPDATE"){
-	replaceSecurityGrantsListTableRow(rslt.rows[0]);
-      }else if (rslt.spwfAction == "INSERT"){
-	addNewSecurityGrantsListTableRow(rslt.rows[0]);
-      }
+	params = prepParams(params,"security_profile",insertUpdateChoose);
+	var successf=function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			clearForm('securityGrantsForm');
+			if (rslt.spwfAction == "UPDATE"){
+				replaceSecurityGrantsListTableRow(rslt.rows[0]);
+			}else if (rslt.spwfAction == "INSERT"){
+				addNewSecurityGrantsListTableRow(rslt.rows[0]);
+			}
 			briefNotify("Security Profile Successfully Saved");
 			clearSecurityGrantsForm();
 
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 //ServerCall Wrappers
 function editSecurityGrants(securityGrantsId_){
 	if(!isUserAuthorized("SELECT_SECURITY_PROFILE") ){
 		briefNotify("Access Violation - editSecurityGrants","ERROR");
-	  return false;
+		return false;
 	}
 
 	if (isUserAuthorized("UPDATE_SECURITY_PROFILE") ){
 		securityLockForm("securityGrantsForm", false);
 	}else{securityLockForm("securityGrantsForm", true);}
 
-	 $("#grantAssignDiv").removeClass("LogicDisabled");
-    if(securityGrantsId_){
-      makeAvailableAllPrivileges();
-      var params ={"where_clause":"security_profile_id=" +securityGrantsId_};
-			retrieveSecurityGrants(params);
-			if(isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT")){
-				retrieveAllGrantedPrivilegesList(securityGrantsId_);
-			}
-	  }
+	$("#grantAssignDiv").removeClass("LogicDisabled");
+	if(securityGrantsId_){
+		makeAvailableAllPrivileges();
+		var params ={"where_clause":"security_profile_id=" +securityGrantsId_};
+		retrieveSecurityGrants(params);
+		if(isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT")){
+			retrieveAllGrantedPrivilegesList(securityGrantsId_);
+		}
+	}
 }
 
 function saveSecurityGrantsForm(){
 	if(!isUserAuthorized("UPDATE_SECURITY_PROFILE") && !isUserAuthorized("INSERT_SECURITY_PROFILE")){
 		briefNotify("Access Violation  - saveSecurityGrantsForm","ERROR");
-	  return false;
+		return false;
 	}
 
-  if(validateSecurityGrantsForm()){
-    var params = bindForm("securityGrantsForm");
-    saveSecurityGrants(params);
-  }
+	if(validateSecurityGrantsForm()){
+		var params = bindForm("securityGrantsForm");
+		saveSecurityGrants(params);
+	}
 }
 
 //validation
 function validateSecurityGrantsForm(){
-  var formName="securityGrantsForm";
-  var formValid  = standardValidate(formName);
-  return formValid;
+	var formName="securityGrantsForm";
+	var formValid  = standardValidate(formName);
+	return formValid;
 }
 
 //Top Level HTML Manip
@@ -4664,10 +4674,10 @@ var SecurityGrantsprKey = {};
 function populateSecurityGrantsListTable(dataRows){
 	var dataArray= new Array();
 	for(var ndx=0;ndx< dataRows.length;ndx++){
-			dataArray[ndx] = buildSecurityGrantsListTableRow(dataRows[ndx]);
+		dataArray[ndx] = buildSecurityGrantsListTableRow(dataRows[ndx]);
 		SecurityGrantsprKey[dataRows[ndx].security_profile_id] = ndx;
-  }
-  $('#securityGrantsListTable').dataTable().fnClearTable();
+	}
+	$('#securityGrantsListTable').dataTable().fnClearTable();
 	$('#securityGrantsListTable').dataTable().fnAddData( dataArray, true );
 
 
@@ -4681,16 +4691,16 @@ function buildSecurityGrantsListTableRow(data){
 		links += "<a class='alink' onclick='editSecurityGrants(" +data.security_profile_id + ")'>Edit</a> ";
 		links += " &nbsp; &nbsp; ";
 	}else if(isUserAuthorized("SELECT_SECURITY_PROFILE") ){
-	  links += "<a class='alink' onclick='editSecurityGrants(" +data.security_profile_id + ")'>View</a> ";
+		links += "<a class='alink' onclick='editSecurityGrants(" +data.security_profile_id + ")'>View</a> ";
 		links += " &nbsp; &nbsp; ";
 	}
-  if(isUserAuthorized("DELETE_SECURITY_PROFILE")){
+	if(isUserAuthorized("DELETE_SECURITY_PROFILE")){
 		links += "<a class='alink' onclick=\"deleteSecurityGrants(" +data.security_profile_id + ",'"+data.last_update +"')\">Delete</a>";
 	}
-		dataHash["links"] =links; 
+	dataHash["links"] =links; 
 	dataHash["DT_RowId"] = "SecurityGrantsListTableTR-" + data.security_profile_id;
 
-  return dataHash;
+	return dataHash;
 }
 
 function replaceSecurityGrantsListTableRow(row){
@@ -4705,15 +4715,16 @@ function removeSecurityGrantsListTableRow(securityProfileId_){
 
 //Div Access and App Layout Calls
 function showSecurityGrants(){
+	statusMsg("Navigated to Security Grants");
 	if(!isUserAuthorized("SELECT_SECURITY_PROFILE") ){
 		briefNotify("Access Violation - showSecurityGrants","ERROR");
 		return false;
 	}
 
-  retrieveSecurityGrantsList(); 
-  hideCurrentContentPane();
-  $("#securityGrants").fadeIn();
-  currentContentPane="securityGrants";
+	retrieveSecurityGrantsList(); 
+	hideCurrentContentPane();
+	$("#securityGrants").fadeIn();
+	currentContentPane="securityGrants";
 	if ( isFormEmpty("securityGrantsForm")) toggleSaveMode("securityGrantsForm",false);
 	if(isUserAuthorized("SELECT_SECURITY_PRIVILEGE") ){
 		if($("#securityGrantsForm-security_profile_id").val() ==""){
@@ -4721,28 +4732,28 @@ function showSecurityGrants(){
 		}
 	}
 	if ($("#securityGrantsForm-security_profile_id").val() ==""){
-	  $("#grantAssignDiv").addClass("LogicDisabled");
+		$("#grantAssignDiv").addClass("LogicDisabled");
 	}
-	
+
 }
 
 //After complete Load setup
 $(document).ready(function(){
-  $("#securityGrantsListTable").dataTable( {
+		$("#securityGrantsListTable").dataTable( {
 			"aoColumns": [
 			{ "mData": "profile_name" },
 			{ "mData": "links", asSorting:"none" }
 			],
 			"sPaginationType": "two_button"
 			}
-		 	);
+			);
 
-		
 
-    $("#availableGrantsId").droppable({accept:".securityGrant", drop:handleSecurityRevokeDrop});
-    $("#grantedPrivilegesId").droppable({accept:".securityGrant", drop:handleSecurityGrantDrop});
 
-    });
+		$("#availableGrantsId").droppable({accept:".securityGrant", drop:handleSecurityRevokeDrop});
+		$("#grantedPrivilegesId").droppable({accept:".securityGrant", drop:handleSecurityGrantDrop});
+
+		});
 
 //page specific functions
 var allAvailablePrivilegeList;
@@ -4752,25 +4763,25 @@ function retrieveAllAvailablePrivilegesList(){
 		return false;
 	}
 
-  var params =prepParams(params,"security_privilege" ,"select" );
-  var successf = function (rslt){
-    allAvailablePrivilegeList = deepCopy(rslt.rows);
-    populateAvailableGrantsWithAll();
-  };
-  serverCall(params,successf,FAILF);
+	var params =prepParams(params,"security_privilege" ,"select" );
+	var successf = function (rslt){
+		allAvailablePrivilegeList = deepCopy(rslt.rows);
+		populateAvailableGrantsWithAll();
+	};
+	serverCall(params,successf,FAILF);
 }
 
 function populateAvailableGrantsWithAll(){
-  var newOptions="";
-  for(var ndx=0; ndx < allAvailablePrivilegeList.length;ndx++){
-    newOptions += '<div class="securityGrant" id="securityGrant'+allAvailablePrivilegeList[ndx].security_privilege_id+'Id"><span class="securityGrantName"> '+allAvailablePrivilegeList[ndx].priv_name  +'</span> <span class="securityGrantDescription">' +allAvailablePrivilegeList[ndx].description + '</span></div>';
-  }
+	var newOptions="";
+	for(var ndx=0; ndx < allAvailablePrivilegeList.length;ndx++){
+		newOptions += '<div class="securityGrant" id="securityGrant'+allAvailablePrivilegeList[ndx].security_privilege_id+'Id"><span class="securityGrantName"> '+allAvailablePrivilegeList[ndx].priv_name  +'</span> <span class="securityGrantDescription">' +allAvailablePrivilegeList[ndx].description + '</span></div>';
+	}
 
 	$("#availableGrantsId").html(newOptions);
 	if(isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT") ){
-    makeDragable(".securityGrant");
+		makeDragable(".securityGrant");
 	}
-  $("#grantedPrivilegesId").children().remove();
+	$("#grantedPrivilegesId").children().remove();
 }
 
 function makeDragable(identifierTodraggable_){
@@ -4779,40 +4790,40 @@ function makeDragable(identifierTodraggable_){
 		return false;
 	}
 
-  $(identifierTodraggable_).draggable({snap: ".securityGrantReceiver", revert:"invalid", scroll:false, helper:'clone' });
-  if($(identifierTodraggable_).parent().attr('id') === "availableGrantsId"){
-    $(identifierTodraggable_).dblclick(function(){
-	attemptSecurityGrantRevoke("GRANT",$(this).attr('id') );
-	});
-  }
+	$(identifierTodraggable_).draggable({snap: ".securityGrantReceiver", revert:"invalid", scroll:false, helper:'clone' });
+	if($(identifierTodraggable_).parent().attr('id') === "availableGrantsId"){
+		$(identifierTodraggable_).dblclick(function(){
+				attemptSecurityGrantRevoke("GRANT",$(this).attr('id') );
+				});
+	}
 }
 
 function retrieveAllGrantedPrivilegesList(profileId_){
 	if(!isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT") ){
 		briefNotify("Access Violation  - retrieveAllGrantedPrivilegesList" ,"ERROR");
-	  return false;
+		return false;
 	}
 
-  var params =prepParams(params,"security_profile_grant" ,"select" );
-  params["where_clause"] = "security_profile_id=" +profileId_;
-  var successf = function (rslt){
-    var grants =  rslt.rows;
-    for (var i =0; i< grants.length; i++){
-      assignGrantStatus("securityGrant"+ grants[i].security_privilege_id + "Id", "GRANT");
-    }
-    sortDivChildren("#grantedPrivilegesId");
-  };
-  serverCall(params,successf,FAILF);
+	var params =prepParams(params,"security_profile_grant" ,"select" );
+	params["where_clause"] = "security_profile_id=" +profileId_;
+	var successf = function (rslt){
+		var grants =  rslt.rows;
+		for (var i =0; i< grants.length; i++){
+			assignGrantStatus("securityGrant"+ grants[i].security_privilege_id + "Id", "GRANT");
+		}
+		sortDivChildren("#grantedPrivilegesId");
+	};
+	serverCall(params,successf,FAILF);
 }
 
 
 function handleSecurityGrantDrop( event, ui ){
-  if(ui.draggable.parent().attr('id') !="grantedPrivilegesId")
-    attemptSecurityGrantRevoke("GRANT", ui.draggable.attr('id'));
+	if(ui.draggable.parent().attr('id') !="grantedPrivilegesId")
+		attemptSecurityGrantRevoke("GRANT", ui.draggable.attr('id'));
 }
 function handleSecurityRevokeDrop( event, ui ){
-  if(ui.draggable.parent().attr('id') !="availableGrantsId")
-    attemptSecurityGrantRevoke("REVOKE", ui.draggable.attr('id'));
+	if(ui.draggable.parent().attr('id') !="availableGrantsId")
+		attemptSecurityGrantRevoke("REVOKE", ui.draggable.attr('id'));
 }
 
 function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
@@ -4821,35 +4832,35 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_){
 		return false;
 	}
 
-	
-  var profileId = $("#securityGrantsForm-security_profile_id").val();
-  var privId = divId_.replace("securityGrant","");
-  privId = privId.replace("Id","");
-  if(!isEmpty(profileId)){
-    if (grantOrRevoke_ === "GRANT"){//grant requested
-      assignGrantStatus(divId_, "GRANT");
-      grantPrivilege(privId, profileId);
-    }else{//default to revoke
-      assignGrantStatus(divId_, "REVOKE");
-      revokePrivilege(privId, profileId);
-    }
-  }else{// div is auto removed if not assignGrantsStatus above called
-    briefNotify("Please choose a profile");
-  }
+
+	var profileId = $("#securityGrantsForm-security_profile_id").val();
+	var privId = divId_.replace("securityGrant","");
+	privId = privId.replace("Id","");
+	if(!isEmpty(profileId)){
+		if (grantOrRevoke_ === "GRANT"){//grant requested
+			assignGrantStatus(divId_, "GRANT");
+			grantPrivilege(privId, profileId);
+		}else{//default to revoke
+			assignGrantStatus(divId_, "REVOKE");
+			revokePrivilege(privId, profileId);
+		}
+	}else{// div is auto removed if not assignGrantsStatus above called
+		briefNotify("Please choose a profile");
+	}
 
 }
 
 function assignGrantStatus(grantDivId_, status_){
-  if(!isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT") ){
+	if(!isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT") ){
 		briefNotify("Access Violation - assignGrantStatus","ERROR");
 		return false;
 	}
 
-  var fromLocation, toLocation;
-  if (status_ == "GRANT"){fromLocation= "#availableGrantsId"; toLocation="#grantedPrivilegesId";
-  } else{fromLocation= "#grantedPrivilegesId";toLocation="#availableGrantsId"; }
-  fromLocation += " #"+grantDivId_;
-  $(fromLocation).appendTo(toLocation);
+	var fromLocation, toLocation;
+	if (status_ == "GRANT"){fromLocation= "#availableGrantsId"; toLocation="#grantedPrivilegesId";
+	} else{fromLocation= "#grantedPrivilegesId";toLocation="#availableGrantsId"; }
+	fromLocation += " #"+grantDivId_;
+	$(fromLocation).appendTo(toLocation);
 	$(fromLocation).remove();
 	if(isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT") && isUserAuthorized("UPDATE_SECURITY_PROFILE_GRANT")){
 		makeDragable(toLocation + " #"+grantDivId_ );
@@ -4862,21 +4873,21 @@ function grantPrivilege(securityPrivilegeId_, securityProfileId_){
 		return false;
 	}
 
-  var params =prepParams(params,"security_profile_grant" ,"insert" );
-  params['security_privilege_id'] = securityPrivilegeId_;
-  params['security_profile_id'] = securityProfileId_;
-  params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
-  var successf = function (rslt){
-    if(!rslt['serverSideFail']) {
-      briefNotify("Privilege Granted");
-      sortDivChildren('#grantedPrivilegesId');
-    }
-    else{ 
-      briefNotify('There was a problem granting this privilege');
-      assignGrantStatus(rslt['PT_pendingDiv'],"AVAIL");
-    }
-  };
-  serverCall(params,successf,FAILF);
+	var params =prepParams(params,"security_profile_grant" ,"insert" );
+	params['security_privilege_id'] = securityPrivilegeId_;
+	params['security_profile_id'] = securityProfileId_;
+	params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
+	var successf = function (rslt){
+		if(!rslt['serverSideFail']) {
+			briefNotify("Privilege Granted");
+			sortDivChildren('#grantedPrivilegesId');
+		}
+		else{ 
+			briefNotify('There was a problem granting this privilege');
+			assignGrantStatus(rslt['PT_pendingDiv'],"AVAIL");
+		}
+	};
+	serverCall(params,successf,FAILF);
 }
 
 function revokePrivilege(securityPrivilegeId_, securityProfileId_){
@@ -4885,38 +4896,38 @@ function revokePrivilege(securityPrivilegeId_, securityProfileId_){
 		return false;
 	}
 
-  var params =prepParams(params,"security_profile_grant" ,"deletew" );
-  params['where_clause'] = 'security_privilege_id=' + securityPrivilegeId_ + ' and security_profile_id = ' + securityProfileId_ ;
-  params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
-  var successf = function (rslt){
-    if(!rslt['serverSideFail']) {
-      briefNotify("Privilege Revoked");
-      sortDivChildren('#availableGrantsId');
-    }else{ 
-      briefNotify('There was a problem granting this privilege');
-      assignGrantStatus(rslt['PT_pendingDiv'],"GRANT");
-    }
+	var params =prepParams(params,"security_profile_grant" ,"deletew" );
+	params['where_clause'] = 'security_privilege_id=' + securityPrivilegeId_ + ' and security_profile_id = ' + securityProfileId_ ;
+	params['passThru'] ="pendingDiv~securityGrant" + securityPrivilegeId_ + "Id;";
+	var successf = function (rslt){
+		if(!rslt['serverSideFail']) {
+			briefNotify("Privilege Revoked");
+			sortDivChildren('#availableGrantsId');
+		}else{ 
+			briefNotify('There was a problem granting this privilege');
+			assignGrantStatus(rslt['PT_pendingDiv'],"GRANT");
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 function makeAvailableAllPrivileges(){
 
-  $('#grantedPrivilegesId').children().remove();
-  $('#availableGrantsId').children().remove();
-  populateAvailableGrantsWithAll();
+	$('#grantedPrivilegesId').children().remove();
+	$('#availableGrantsId').children().remove();
+	populateAvailableGrantsWithAll();
 	sortDivChildren("#availableGrantsId");
-	
+
 
 }
 function sortDivChildren(divName_){
-  var children = $(divName_).children().sort(function (a,b){
-      var vA = $(a).attr('id');
-      var vB = $(b).attr('id');
-      return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
-      });
-  $(divName_).children().remove();
+	var children = $(divName_).children().sort(function (a,b){
+			var vA = $(a).attr('id');
+			var vB = $(b).attr('id');
+			return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
+			});
+	$(divName_).children().remove();
 	$(divName_).append(children);
 	if(isUserAuthorized("INSERT_SECURITY_PROFILE_GRANT") ){
 		makeDragable(divName_ + " .securityGrant");
@@ -4924,23 +4935,23 @@ function sortDivChildren(divName_){
 }
 
 function imposeSecurityGrantsSecurityUIRestrictions(){
-var divIdToSecure;
+	var divIdToSecure;
 	divIdToSecure ="#grantAssignDiv";
-  (isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	(isUserAuthorized("SELECT_SECURITY_PROFILE_GRANT"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 	divIdToSecure ="#securityGrantsFormSave";
-  (isUserAuthorized("UPDATE_SECURITY_PROFILE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	(isUserAuthorized("UPDATE_SECURITY_PROFILE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 	divIdToSecure ="#securityGrantsFormAdd";
-  (isUserAuthorized("INSERT_SECURITY_PROFILE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	(isUserAuthorized("INSERT_SECURITY_PROFILE"))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 	divIdToSecure ="#securityGrantsEntryDivId";
 	(isUserAuthorized("UPDATE_SECURITY_PROFILE") ||isUserAuthorized("INSERT_SECURITY_PROFILE") )? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 	if(!isUserAuthorized("INSERT_SECURITY_PROFILE") && !isUserAuthorized("UPDATE_SECURITY_PROFILE")){
-	  securityLockForm("securityGrantsForm",true);
+		securityLockForm("securityGrantsForm",true);
 	}
-  if(!isUserAuthorized("INSERT_SECURITY_PROFILE",false) && isFormEmpty("securityGrantsForm") ){
+	if(!isUserAuthorized("INSERT_SECURITY_PROFILE",false) && isFormEmpty("securityGrantsForm") ){
 		securityLockForm("securityGrantsForm", true);
 	}
 
@@ -4967,47 +4978,51 @@ function clearSecurityGrantsForm(){
 
 </script>
 <div id="securityGrants" class="contentPane MainLayout"  >
-  <h1 id="securityGrantsGolferNameId" class="pageTitle">Security Grants</h1>
-  <div class="row">
-    <span class="fourcol">
+	<h1 id="securityGrantsGolferNameId" class="pageTitle">Security Grants</h1>
+	<div class="row">
+		<span class="fourcol">
 			<table id="securityGrantsListTable"  class='dataTable pretty' >
 				<thead><tr><th>Profile Name</th><th >I want to&hellip;</th></tr></thead>
 				<tbody></tbody>
-      </table>
-    </span>
-    <span class = "eightcol last">
-	<form id="securityGrantsForm" >
-      <div class="formLayout_Standard prettyWrapper">
+			</table>
+		</span>
+		<span class = "eightcol last">
+			<form id="securityGrantsForm" >
+				<div class="formLayout_Standard prettyWrapper">
 
-	  
-	  <div class="formFieldGroup" id="securityGrantsForm-profile_nameDivId">
-	    <label for ="securityGrantsForm-profile_name" id="securityGrantsFormLabel-profile_name">Profile Name</label>
-	    <input  type="text" class="VALIDATErequired" name="profileName" id="securityGrantsForm-profile_name"/>
-	    <span class="ValidationMsg" id="securityGrantsFormLabel-profileNameError"></span>
-	  </div>
-	  <div class="formButtons">
+					
+					<div class="formFieldGroup" id="securityGrantsForm-profile_nameDivId">
+						<label for ="securityGrantsForm-profile_name" id="securityGrantsFormLabel-profile_name">Profile Name</label>
+						<input  type="text" class="VALIDATErequired" name="profileName" id="securityGrantsForm-profile_name"/>
+						<span class="ValidationMsg" id="securityGrantsFormLabel-profileNameError"></span>
+					</div>
+					<div class="formButtons">
 
-	    <button type="button" id="securityGrantsFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Save" onclick="saveSecurityGrantsForm();" >
-				<span class="ui-button-text">Save</span></button>
-	    <button type="button" id="securityGrantsFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Add" onclick="saveSecurityGrantsForm();" >
-	      <span class="ui-button-text">Add</span></button>
-	    <button type="button" id="securityGrantsFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Clear" 
-	      onclick="clearSecurityGrantsForm();" ><span class="ui-button-text">Clear</span></button>
-	  </div>
-	  <input type="hidden" name="last_update" id="securityGrantsForm-last_update">
-	  <input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id">
-      </div>
-	</form>
-      <br/>
-				Available - Granted
+						<button type="button" id="securityGrantsFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Save" onclick="saveSecurityGrantsForm();" >
+							<span class="ui-button-text">Save</span></button>
+						<button type="button" id="securityGrantsFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Add" onclick="saveSecurityGrantsForm();" >
+							<span class="ui-button-text">Add</span></button>
+						<button type="button" id="securityGrantsFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Clear" 
+							onclick="clearSecurityGrantsForm();" ><span class="ui-button-text">Clear</span></button>
+					</div>
+					<input type="hidden" name="last_update" id="securityGrantsForm-last_update">
+					<input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id">
+				</div>
+			</form>
+			<br/>
 			<div id="grantAssignDiv">
-	<div id="availableGrantsId" size="15" class="securityGrantReceiver"></div>
-	<span class="sprite32Icon plusIcon"></span>
-	<span class="sprite32Icon cancelIcon"></span>
-	<div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div>
-      </div>
-    </div>
-  </div> <!--end:SecurityGrants-->
+				<table cellpadding="10"> <tr><td style="text-align:center;">Available </td><td> &nbsp; </td><td style="text-align:center;">Granted</td></tr>
+					<tr><td>
+							<div id="availableGrantsId" size="15" class="securityGrantReceiver"></div></td>
+						<td><span class="sprite32Icon plusIcon"></span>
+							<span class="sprite32Icon cancelIcon"></span>
+						</td>
+						<td><div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div> <!--end:SecurityGrants-->
 
 
 
@@ -5021,43 +5036,43 @@ function clearSecurityGrantsForm(){
 
 
 <script type="text/javascript">
-  //<![CDATA[
+	//<![CDATA[
 "use strict";
 //Server Calls
 function retrieveSecurityUserList(){
 	if(!isUserAuthorized("SELECT_SECURITY_USER", true, "retrieveSecurityUserList") ) return false; 
 
-  var params =prepParams(params,"security_user" ,"select" );
-  var successf = function (rslt){
-    if(rslt[SERVER_SIDE_FAIL]){
-      briefNotify("There was a problem retrieving the User Listing","ERROR");
-    }else{
-      populateSecurityUserListTable(rslt.rows);
-    }
-  
-};
-serverCall(params,successf,FAILF);
+	var params =prepParams(params,"security_user" ,"select" );
+	var successf = function (rslt){
+		if(rslt[SERVER_SIDE_FAIL]){
+			briefNotify("There was a problem retrieving the User Listing","ERROR");
+		}else{
+			populateSecurityUserListTable(rslt.rows);
+		}
+
+	};
+	serverCall(params,successf,FAILF);
 }
 function retrieveSecurityUser(params){
 	if(!isUserAuthorized("SELECT_SECURITY_USER", true, "retrieveSecurityUser") ) return false; 
 
-  params = prepParams(params,"security_user","SELECT");
-  var successf = function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      bindToForm("securityUserForm", rslt.rows[0]);
-      document.getElementById("securityUserForm-edit_user_id").value=rslt.rows[0].user_id;
-      if(rslt.rows[0].active_yn =="Y"){
-	document.getElementById('securityUserForm-active_yn').checked=true;
-      }else{
-	document.getElementById('securityUserForm-active_yn').checked=false;
-      }
-      toggleSaveMode("securityUserForm",true);
-      showPasswordFields(false);
-    }else{
-      briefNotify("There was a problem retrieving the User.","ERROR");
-    }
-  }
-  serverCall(params,successf,FAILF);
+	params = prepParams(params,"security_user","SELECT");
+	var successf = function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			bindToForm("securityUserForm", rslt.rows[0]);
+			document.getElementById("securityUserForm-edit_user_id").value=rslt.rows[0].user_id;
+			if(rslt.rows[0].active_yn =="Y"){
+				document.getElementById('securityUserForm-active_yn').checked=true;
+			}else{
+				document.getElementById('securityUserForm-active_yn').checked=false;
+			}
+			toggleSaveMode("securityUserForm",true);
+			showPasswordFields(false);
+		}else{
+			briefNotify("There was a problem retrieving the User.","ERROR");
+		}
+	}
+	serverCall(params,successf,FAILF);
 }
 
 
@@ -5065,19 +5080,19 @@ function retrieveSecurityUser(params){
 function deleteSecurityUser(securityUserId_, lastUpdate_){
 	if(!isUserAuthorized("DELETE_SECURITY_USER", true, "deleteSecurityUser") ) return false; 
 
-  var params =prepParams(params,"security_user" ,"delete" );
-  params['security_user_id'] = securityUserId_;
-  params['last_update'] = lastUpdate_;
-  var successf = function (rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
-      removeSecurityUserListTableRow(rslt.security_user_id);
-      briefNotify("User Deleted Successfully","INFO");
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+	var params =prepParams(params,"security_user" ,"delete" );
+	params['security_user_id'] = securityUserId_;
+	params['last_update'] = lastUpdate_;
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			removeSecurityUserListTableRow(rslt.security_user_id);
+			briefNotify("User Deleted Successfully","INFO");
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 function saveSecurityUser(params){
@@ -5086,26 +5101,26 @@ function saveSecurityUser(params){
 		return false;
 	}
 
-  params = prepParams(params,"security_user",insertUpdateChoose);
-  var successf=function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
+	params = prepParams(params,"security_user",insertUpdateChoose);
+	var successf=function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
 
-      clearForm('securityUserForm');
-      showPasswordFields(true);
-      if (rslt.spwfAction == "UPDATE"){
-	replaceSecurityUserListTableRow(rslt.rows[0]);
-      }else if (rslt.spwfAction == "INSERT"){
-	addNewSecurityUserListTableRow(rslt.rows[0]);
-      }
+			clearForm('securityUserForm');
+			showPasswordFields(true);
+			if (rslt.spwfAction == "UPDATE"){
+				replaceSecurityUserListTableRow(rslt.rows[0]);
+			}else if (rslt.spwfAction == "INSERT"){
+				addNewSecurityUserListTableRow(rslt.rows[0]);
+			}
 			briefNotify("User Successfully Saved","INFO");
 			clearSecurityUserForm();
 
-    }else{
-      briefNotify("There was a problem communicating with the Server.","ERROR")
-    }
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
 
-  };
-  serverCall(params,successf,FAILF);
+	};
+	serverCall(params,successf,FAILF);
 }
 
 //ServerCall Wrappers
@@ -5117,50 +5132,50 @@ function editSecurityUser(securityUserId_){
 
 
 
-  if(securityUserId_){
-    var params ={"where_clause":"security_user_id=" +securityUserId_};
-    retrieveSecurityUser(params);
-  }
+	if(securityUserId_){
+		var params ={"where_clause":"security_user_id=" +securityUserId_};
+		retrieveSecurityUser(params);
+	}
 }
 
 function saveSecurityUserForm(){
 	if(!isUserAuthorized("UPDATE_SECURITY_USER", false) 
 			&& !isUserAuthorized("INSERT_SECURITY_USER", false)) {
 		briefNotify("Access Violation: saveSecurityUserForm "  , "ERROR")
-		return false;
+			return false;
 	}
 
-  if(validateSecurityUserForm()){
-    var params = bindForm("securityUserForm");
-    if (document.getElementById('securityUserForm-active_yn').checked){
-      params['active_yn']='Y';
-    }else{
-      params['active_yn']='N';
-    }
-    saveSecurityUser(params);
-  }
+	if(validateSecurityUserForm()){
+		var params = bindForm("securityUserForm");
+		if (document.getElementById('securityUserForm-active_yn').checked){
+			params['active_yn']='Y';
+		}else{
+			params['active_yn']='N';
+		}
+		saveSecurityUser(params);
+	}
 }
 
 //validation
 function validateSecurityUserForm(){
-  var formName="securityUserForm";
-  var formValid  = standardValidate(formName);
-  if(document.getElementById('securityUserForm-password_enc').value != document.getElementById('securityUserForm-password_validate').value){
-    alert("Please ensure the passwords match to continue");
-    formValid = false;
-  }
+	var formName="securityUserForm";
+	var formValid  = standardValidate(formName);
+	if(document.getElementById('securityUserForm-password_enc').value != document.getElementById('securityUserForm-password_validate').value){
+		alert("Please ensure the passwords match to continue");
+		formValid = false;
+	}
 
-  return formValid;
+	return formValid;
 }
 
 //Top Level HTML Manip
 var SecurityUserprKey = {};
 function populateSecurityUserListTable(dataRows){
 	var dataArray= new Array();
-  if (dataRows !=null)
+	if (dataRows !=null)
 		for(var ndx=0;ndx< dataRows.length;ndx++){
 			dataArray[ndx] = buildSecurityUserListTableRow(dataRows[ndx]);
-		SecurityUserprKey[dataRows[ndx].security_user_id] = ndx;
+			SecurityUserprKey[dataRows[ndx].security_user_id] = ndx;
 		}
 	$('#securityUserListTable').dataTable().fnClearTable();
 	$('#securityUserListTable').dataTable().fnAddData( dataArray, true );
@@ -5171,20 +5186,20 @@ function buildSecurityUserListTableRow(data){
 	var links ="";
 	dataHash["user_id"] = data.user_id;
 	if(isUserAuthorized("UPDATE_SECURITY_USER", false) ){
-	   links+= "<a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>Edit</a> ";
-	   links+= " &nbsp; &nbsp;";
+		links+= "<a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>Edit</a> ";
+		links+= " &nbsp; &nbsp;";
 	}else if(isUserAuthorized("SELECT_SECURITY_USER",false)){
-     links+= "<a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>View</a> ";
-	   links+= " &nbsp; &nbsp;";
+		links+= "<a class='alink' onclick='editSecurityUser(" +data.security_user_id + ")'>View</a> ";
+		links+= " &nbsp; &nbsp;";
 
 	}
 	if(isUserAuthorized("DELETE_SECURITY_USER"),false){
-		 links+= "<a class='alink' onclick=\"deleteSecurityUser(" +data.security_user_id + ",'"+data.last_update +"')\">Delete</a>";
+		links+= "<a class='alink' onclick=\"deleteSecurityUser(" +data.security_user_id + ",'"+data.last_update +"')\">Delete</a>";
 	}
 	dataHash["links"] =links; 
 	dataHash["DT_RowId"] = "SecurityUserListTableTR-" + data.security_user_id;
 
-  return dataHash;
+	return dataHash;
 }
 
 function replaceSecurityUserListTableRow(row){
@@ -5199,49 +5214,50 @@ function removeSecurityUserListTableRow(securityUserId_){
 
 //Div Access and App Layout Calls
 function showSecurityUser(){
+	statusMsg("Navigated to Security Users");
 	if(!isUserAuthorized("SELECT_SECURITY_USER", true, "showSecurityUser" ) ) return false; 
 
-  retrieveSecurityUserList(); 
-  hideCurrentContentPane();
-  $("#securityUser").fadeIn();
-  currentContentPane="securityUser";
-  if ( isFormEmpty("securityUserForm")) toggleSaveMode("securityUserForm",false);
+	retrieveSecurityUserList(); 
+	hideCurrentContentPane();
+	$("#securityUser").fadeIn();
+	currentContentPane="securityUser";
+	if ( isFormEmpty("securityUserForm")) toggleSaveMode("securityUserForm",false);
 	showPasswordFields(true);
-	}
+}
 function clearSecurityUserForm(){
 	clearForm('securityUserForm');
 	showPasswordFields(true);
 	(isUserAuthorized("INSERT_SECURITY_USER", false))?securityLockForm("securityUserForm", false) :securityLockForm("securityUserForm", true);
-	
+
 }
 
 
 //After complete Load setup
 $(document).ready(function(){
-$("#securityUserListTable").dataTable( {
+		$("#securityUserListTable").dataTable( {
 			"aoColumns": [
-			  { "mData": "user_id" },
-			  { "mData": "links", asSorting:"none" }
+			{ "mData": "user_id" },
+			{ "mData": "links", asSorting:"none" }
 			],
 			"sPaginationType": "two_button"
 			}
-		 	);
+			);
 
- });
+		});
 
 //page specific functions
 
 function showPasswordFields(show){
-  if (show){
-    $("#securityUserForm-password_encDivId").fadeIn();
-    $("#securityUserForm-password_validateDivId").fadeIn();
-  }else{
-    $("#securityUserForm-password_encDivId").fadeOut();
-    $("#securityUserForm-password_validateDivId").fadeOut();
-  }
+	if (show){
+		$("#securityUserForm-password_encDivId").fadeIn();
+		$("#securityUserForm-password_validateDivId").fadeIn();
+	}else{
+		$("#securityUserForm-password_encDivId").fadeOut();
+		$("#securityUserForm-password_validateDivId").fadeOut();
+	}
 }
 function initiateChangePassword(){
-  showChangePasswordDialog($("#securityUserForm-edit_user_id").val());
+	showChangePasswordDialog($("#securityUserForm-edit_user_id").val());
 }
 
 function imposeSecurityUserSecurityUIRestrictions(){
@@ -5256,12 +5272,12 @@ function imposeSecurityUserSecurityUIRestrictions(){
 	(isUserAuthorized("UPDATE_SECURITY_USER", false) ||isUserAuthorized("INSERT_SECURITY_USER", false) )? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 	if(!isUserAuthorized("INSERT_SECURITY_USER", false) && !isUserAuthorized("UPDATE_SECURITY_USER", false)){
-	  securityLockForm("securityUserForm", true);
+		securityLockForm("securityUserForm", true);
 	}
 	divIdToSecure ="#securityUserChangeOthersPassword";
-  (isUserAuthorized("CHANGE_OTHERS_PWD", false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	(isUserAuthorized("CHANGE_OTHERS_PWD", false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
-if(!isUserAuthorized("INSERT_SECURITY_USER",false) && isFormEmpty("securityUserForm") ){
+	if(!isUserAuthorized("INSERT_SECURITY_USER",false) && isFormEmpty("securityUserForm") ){
 		securityLockForm("securityUserForm", true);
 	}
 
@@ -5274,134 +5290,134 @@ if(!isUserAuthorized("INSERT_SECURITY_USER",false) && isFormEmpty("securityUserF
 
 </script>
 <div id="securityUser" class="contentPane MainLayout"  >
-  <h1 id="securityUserHeaderId" class="pageTitle">Users</h1>
-  <div class="row">
-    <span class="fourcol">
+	<h1 id="securityUserHeaderId" class="pageTitle">Users</h1>
+	<div class="row">
+		<span class="fourcol">
 			<table id="securityUserListTable"  class='dataTable pretty' >
 				<thead><tr><th>User Id</th> <th >I want to&hellip;</th></tr></thead>
 				<tbody></tbody>
-      </table>
-    </span>
-    <span class = "eightcol last">
+			</table>
+		</span>
+		<span class = "eightcol last">
 
-	<form id="securityUserForm" >
-      <div class="formLayout_Standard prettyWrapper">
-	  
-	  <div class="formFieldGroup ">
-	    <label>  User Id </label>
-	    <input  type="text" name="editUserId" id="securityUserForm-edit_user_id"/>
-	    <span class="ValidationMsg" id="securityUserFormLabel-editUserIdError"></span>
-	  </div>
-	  
-	  <div class="formFieldGroup"id="securityUserForm-email_addrDivId">
-	    <label>  E-mail </label>
-	    <input  type="text" name="emailAddr" id="securityUserForm-email_addr"/>
-	    <span class="ValidationMsg" id="securityUserFormLabel-emailAddrError"></span>
-	  </div>
-	  
-	  <div class="formFieldGroup" id="securityUserForm-password_encDivId">
-	    <label  for ="securityUserForm-password_enc">  Password </label>
-	    <input type="password" name="passwordEnc" id="securityUserForm-password_enc"></input>
-	    <span class="ValidationMsg" id="securityUserFormLabel-passwordEncError"></span>
-	  </div>
-	  
-	  <div class="formFieldGroup" id="securityUserForm-password_validateDivId">
-	    <label for ="securityUserForm-password_validate">  Confirm Password </label>
-	    <input  type="password" name="passwordValidate" id="securityUserForm-password_validate"></input>
-	    <span class="ValidationMsg" id="securityUserFormLabel-passwordValidateError"></span>
-	  </div>
-
-
-	  
-	  <div class="formFieldGroup" id="securityUserForm-security_profile_idDivId">
-	    <label>  Security Profile </label>
-	    <select name="securityProfileId" id="securityUserForm-security_profile_id"></select>
-	    <span class="ValidationMsg" id="securityUserFormLabel-securityProfileIdError"></span>
-	  </div>
-	  
-	  <div class="formFieldGroup" id="securityUserForm-active_ynDivId">
-	    <label style="display:inline-block" for ="securityUserForm-active_yn">  Active </label>
-	    <input style="width:25px;" type="checkbox" name="activeYn" id="securityUserForm-active_yn"></input>
-	    <span class="ValidationMsg" id="securityUserFormLabel-activeYnError"></span>
-	  </div>
+			<form id="securityUserForm" >
+				<div class="formLayout_Standard prettyWrapper">
+					
+					<div class="formFieldGroup ">
+						<label>  User Id </label>
+						<input  type="text" name="editUserId" id="securityUserForm-edit_user_id"/>
+						<span class="ValidationMsg" id="securityUserFormLabel-editUserIdError"></span>
+					</div>
+					
+					<div class="formFieldGroup"id="securityUserForm-email_addrDivId">
+						<label>  E-mail </label>
+						<input  type="text" name="emailAddr" id="securityUserForm-email_addr"/>
+						<span class="ValidationMsg" id="securityUserFormLabel-emailAddrError"></span>
+					</div>
+					
+					<div class="formFieldGroup" id="securityUserForm-password_encDivId">
+						<label  for ="securityUserForm-password_enc">  Password </label>
+						<input type="password" name="passwordEnc" id="securityUserForm-password_enc"></input>
+						<span class="ValidationMsg" id="securityUserFormLabel-passwordEncError"></span>
+					</div>
+					
+					<div class="formFieldGroup" id="securityUserForm-password_validateDivId">
+						<label for ="securityUserForm-password_validate">  Confirm Password </label>
+						<input  type="password" name="passwordValidate" id="securityUserForm-password_validate"></input>
+						<span class="ValidationMsg" id="securityUserFormLabel-passwordValidateError"></span>
+					</div>
 
 
+					
+					<div class="formFieldGroup" id="securityUserForm-security_profile_idDivId">
+						<label>  Security Profile </label>
+						<select name="securityProfileId" id="securityUserForm-security_profile_id"></select>
+						<span class="ValidationMsg" id="securityUserFormLabel-securityProfileIdError"></span>
+					</div>
+					
+					<div class="formFieldGroup" id="securityUserForm-active_ynDivId">
+						<label style="display:inline-block" for ="securityUserForm-active_yn">  Active </label>
+						<input style="width:25px;" type="checkbox" name="activeYn" id="securityUserForm-active_yn"></input>
+						<span class="ValidationMsg" id="securityUserFormLabel-activeYnError"></span>
+					</div>
 
 
 
-	  <div class="formButtons">
-	    <button type="button" id="securityUserFormSave" value="Save" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="saveSecurityUserForm();" >
-				<span class="ui-button-text">Save</span>
-	    </button>
-	    <button type="button" id="securityUserFormAdd" value="Add" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="saveSecurityUserForm();" >
-	      <span class="ui-button-text">Add</span>
-	    </button>
-	    <button type="button" id="securityUserFormClear" value="Clear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="clearSecurityUserForm();" >
-	      <span class="ui-button-text">Clear</span>
-	    </button>
-	    <button  style="" type="button" id="securityUserChangeOthersPassword" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Change Password" onclick="initiateChangePassword();" >
-	      <span class="ui-button-text">Change Password</span>
-	    </button>
-	  </div>
-	  <input type="hidden" name="last_update" id="securityUserForm-last_update">
-	  <input type="hidden" name="security_user_id" id="securityUserForm-security_user_id">
 
-      </div>
-	</form>
-    </span>
-    <br/>
-  </div>
+
+					<div class="formButtons">
+						<button type="button" id="securityUserFormSave" value="Save" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="saveSecurityUserForm();" >
+							<span class="ui-button-text">Save</span>
+						</button>
+						<button type="button" id="securityUserFormAdd" value="Add" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="saveSecurityUserForm();" >
+							<span class="ui-button-text">Add</span>
+						</button>
+						<button type="button" id="securityUserFormClear" value="Clear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="clearSecurityUserForm();" >
+							<span class="ui-button-text">Clear</span>
+						</button>
+						<button  style="" type="button" id="securityUserChangeOthersPassword" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Change Password" onclick="initiateChangePassword();" >
+							<span class="ui-button-text">Change Password</span>
+						</button>
+					</div>
+					<input type="hidden" name="last_update" id="securityUserForm-last_update">
+					<input type="hidden" name="security_user_id" id="securityUserForm-security_user_id">
+
+				</div>
+			</form>
+		</span>
+		<br/>
+	</div>
 </div> <!--end:SecurityUser-->
 
 
 
 <script type="text/javascript">
-  //<![CDATA[
+	//<![CDATA[
 "use strict";
 //----------------------------------------------------
 //server calls
 function submitChangePasswordDialog(params){
-  params = prepParams(params,"SECURITY_CHANGE_PASSWORD",'CHANGE');
-  var successf=function(rslt){
-    if(!rslt[SERVER_SIDE_FAIL]){
+	params = prepParams(params,"SECURITY_CHANGE_PASSWORD",'CHANGE');
+	var successf=function(rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
 
-      if (rslt.rows[0].change_password == "1"){
-	briefNotify("Password Changed Successfully","INFO");
-      }else{
-	briefNotify("Password Change Fail","ERROR");
-      }
-    }else{
-      briefNotify("Password Change Failed","ERROR");
+			if (rslt.rows[0].change_password == "1"){
+				briefNotify("Password Changed Successfully","INFO");
+			}else{
+				briefNotify("Password Change Fail","ERROR");
+			}
+		}else{
+			briefNotify("Password Change Failed","ERROR");
 
-    }
-  };
-  serverCall(params,successf,FAILF);
+		}
+	};
+	serverCall(params,successf,FAILF);
 }
 
 //-----------------------
 //Server Call Wrappers
 
 function submitChangePasswordDialogForm(){
-  if(validateChangePasswordDialogForm()){
-    var params = bindForm("changePasswordDialogForm");
-    clearForm("changePasswordDialogForm");
-    submitChangePasswordDialog(params);
-    $( "#changePasswordDialog" ).dialog( "close" );
-  }else{
-    briefNotify("Please Correct Form Validation Errors To Continue","WARNING");
-  }
+	if(validateChangePasswordDialogForm()){
+		var params = bindForm("changePasswordDialogForm");
+		clearForm("changePasswordDialogForm");
+		submitChangePasswordDialog(params);
+		$( "#changePasswordDialog" ).dialog( "close" );
+	}else{
+		briefNotify("Please Correct Form Validation Errors To Continue","WARNING");
+	}
 }
 
 //validation
 function validateChangePasswordDialogForm(){
-  var formName="changePasswordDialogForm";
-  var formValid  = standardValidate(formName);
-  if($("#changePasswordDialogForm-new_password").val() !=$("#changePasswordDialogForm-confirm_password").val() ){
-    appendValidationMsg(formName,"changePasswordDialogForm-confirm_password", "Passwords do not match");
-    highlightFieldError(formName,"changePasswordDialogForm-confirm_password",true);
-    formValid =false;
-  }
-  return formValid;
+	var formName="changePasswordDialogForm";
+	var formValid  = standardValidate(formName);
+	if($("#changePasswordDialogForm-new_password").val() !=$("#changePasswordDialogForm-confirm_password").val() ){
+		appendValidationMsg(formName,"changePasswordDialogForm-confirm_password", "Passwords do not match");
+		highlightFieldError(formName,"changePasswordDialogForm-confirm_password",true);
+		formValid =false;
+	}
+	return formValid;
 }
 
 //----------------------------------------------------
@@ -5411,15 +5427,16 @@ function validateChangePasswordDialogForm(){
 //-------------------------------------------------
 //Div Access and App Layout Calls
 function showChangePasswordDialog(userId_){
-  var params={};
-  if(userId_ == null){
-    userId_ =$("form#loginHolder #user_id").val() ;
-  }
-  $("#changePasswordDialogForm-user_to_update").val(userId_);
-  $( "#changePasswordDialog" ).dialog( "destroy" );
+	statusMsg("Navigated to Change Password Dialog");
+	var params={};
+	if(userId_ == null){
+		userId_ =$("form#loginHolder #user_id").val() ;
+	}
+	$("#changePasswordDialogForm-user_to_update").val(userId_);
+	$( "#changePasswordDialog" ).dialog( "destroy" );
 
-  $( "#changePasswordDialog" ).dialog(
-{
+	$( "#changePasswordDialog" ).dialog(
+			{
 resizable: false, 
 height:400, 
 width:600, 
@@ -5434,28 +5451,28 @@ Cancel: function() { $( this ).dialog( "close" );clearForm("changePasswordDialog
 }
 
 $(document).ready(function(){
-    });
+		});
 //]]>
 </script>
 
 <div id="changePasswordDialog" title="Changing Password..."  style="display:none;">
-  <form id="changePasswordDialogForm" >
-    <div class="formLayout_Standard" style="border:none;box-shadow:none;">
-      
-      <div class="formFieldGroup">
-	<label>  New Password</label>
-	<input  type="password" name="newPassword" id="changePasswordDialogForm-new_password" class="VALIDATERequired"/>
-	<span class="ValidationMsg" id="changePasswordDialogFormLabel-newPasswordError"></span>
-      </div>
-      
-      <div class="formFieldGroup">
-	<label>  Confirm Password</label>
-	<input  type="password" name="confirmPassword" id="changePasswordDialogForm-confirm_password" class="VALIDATERequired"/>
-	<span class="ValidationMsg" id="changePasswordDialogFormLabel-confirmPasswordError"></span>
-      </div>
-      <input  type="hidden" name="userId" id="changePasswordDialogForm-user_to_update"/>
-    </div>
-  </form>
+	<form id="changePasswordDialogForm" >
+		<div class="formLayout_Standard" style="border:none;box-shadow:none;">
+			
+			<div class="formFieldGroup">
+				<label>  New Password</label>
+				<input  type="password" name="newPassword" id="changePasswordDialogForm-new_password" class="VALIDATERequired"/>
+				<span class="ValidationMsg" id="changePasswordDialogFormLabel-newPasswordError"></span>
+			</div>
+			
+			<div class="formFieldGroup">
+				<label>  Confirm Password</label>
+				<input  type="password" name="confirmPassword" id="changePasswordDialogForm-confirm_password" class="VALIDATERequired"/>
+				<span class="ValidationMsg" id="changePasswordDialogFormLabel-confirmPasswordError"></span>
+			</div>
+			<input  type="hidden" name="userId" id="changePasswordDialogForm-user_to_update"/>
+		</div>
+	</form>
 </div> 
 
 
@@ -5478,13 +5495,13 @@ function retrieveSupportRequestList(){
 
 	var params =prepParams(params,"support_request" ,"select" );
 	//params['orderby_clause'] =" order by game_dt desc"
-		var successf = function (rslt){
-			if(!rslt[SERVER_SIDE_FAIL]){
-				populateSupportRequestListTable(rslt.rows)
-			}else{
-				briefNotify("There was a problem communicating with the Server.","ERROR");
-			}
-		};
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			populateSupportRequestListTable(rslt.rows)
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR");
+		}
+	};
 	serverCall(params,successf,FAILF);
 }
 function retrieveSupportRequest(params){
@@ -5552,7 +5569,7 @@ function saveSupportRequest(params){
 
 //ServerCall Wrappers
 function editSupportRequest(supportRequestId_){
-   showSupportRequestDialog();	
+	showSupportRequestDialog();	
 	if( !isUserAuthorized("SELECT_SUPPORT_REQUEST", true, "editSupportRequest")) return false; 
 	if (isUserAuthorized("UPDATE_SUPPORT_REQUEST",false) ){
 		securityLockForm("supportRequestForm", false);
@@ -5624,7 +5641,7 @@ function buildSupportRequestListTableRow(data){
 	if(isUserAuthorized("DELETE_SUPPORT_REQUEST", false)){
 		links += "<a class='alink' onclick=\"deleteSupportRequest(" +data.support_request_id + ",'"+data.last_update +"')\">Delete</a>  ";
 	}
-		dataHash["links"] =links; 
+	dataHash["links"] =links; 
 	dataHash["DT_RowId"] = "SupportRequestListTableTR-" + data.support_request_id;
 
 	return dataHash;
@@ -5642,6 +5659,7 @@ function removeSupportRequestListTableRow(supportRequestId_){
 
 //Div Access and App Layout Calls
 function showSupportRequest(){
+	statusMsg("Navigated to Support Request");
 	retrieveSupportRequestList(); 
 	hideCurrentContentPane();
 	$("#supportRequest").fadeIn();
@@ -5679,17 +5697,17 @@ $(document).ready(function(){
 		$('#supportRequestListTable tbody td span.expanderClass').live('click', function () {
 			var nTr = $(this).parents('tr')[0];
 			var oTable = $("#supportRequestListTable").dataTable();
-        if ( oTable.fnIsOpen(nTr) ) { /* This row is already open - close it */
-				$(this).replaceWith( "<span class='sprite16Icon smallPlusIcon expanderClass'></span>") ;
-            oTable.fnClose( nTr );
-        }
-        else { /* Open this row */
-            $(this).replaceWith( "<span class='sprite16Icon smallCancelIcon expanderClass'></span>") ;
-						oTable.fnOpen( nTr, fnFormatSupportRequestExpansion(oTable, nTr), 'details' );
-        }
-				} );
+			if ( oTable.fnIsOpen(nTr) ) { /* This row is already open - close it */
+			$(this).replaceWith( "<span class='sprite16Icon smallPlusIcon expanderClass'></span>") ;
+			oTable.fnClose( nTr );
+			}
+			else { /* Open this row */
+			$(this).replaceWith( "<span class='sprite16Icon smallCancelIcon expanderClass'></span>") ;
+			oTable.fnOpen( nTr, fnFormatSupportRequestExpansion(oTable, nTr), 'details' );
+			}
+			} );
 
-	
+
 });
 
 
@@ -5697,17 +5715,17 @@ $(document).ready(function(){
 
 function fnFormatSupportRequestExpansion ( oTable, nTr )
 {
-    var aData = oTable.fnGetData( nTr );
-		var sOut = '<div style="padding-left:50px;">';
-		var divStyle= ""
+	var aData = oTable.fnGetData( nTr );
+	var sOut = '<div style="padding-left:50px;">';
+	var divStyle= ""
 		sOut += ''
-			sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Detailed Description:</span><span>' + aData.detailed_description+'</span></div>';
-		sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Solution Description:</span><span>' + aData.solution_description+'</span></div>';
-		sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Log Details:</span><span>' + aData.log_details+'</span></div>';
-		sOut +='';
-        sOut += '</div>';
-		//var sOut = "<span id='SupportRequestExpansion'></span>";  
-    return sOut;
+		sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Detailed Description:</span><span>' + aData.detailed_description+'</span></div>';
+	sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Solution Description:</span><span>' + aData.solution_description+'</span></div>';
+	sOut +='<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Log Details:</span><span>' + aData.log_details+'</span></div>';
+	sOut +='';
+	sOut += '</div>';
+	//var sOut = "<span id='SupportRequestExpansion'></span>";  
+	return sOut;
 }
 //page specific functions
 function imposeSupportRequestSecurityUIRestrictions(){
@@ -5732,8 +5750,15 @@ function imposeSupportRequestSecurityUIRestrictions(){
 }
 
 function addNewSupportRequest(){
-  clearSupportRequestForm();
-  showSupportRequestDialog();
+	var logText="";
+	clearSupportRequestForm();
+	showSupportRequestDialog();
+	for(var ndx=0;ndx<clientLog.length;ndx++){
+		logText += clientLog[ndx].logDt+"|" + clientLog[ndx].msg + "\n";
+	}
+
+	$("#supportRequestForm-log_details").val(logText);
+
 }
 function  showSupportRequestDialog(){
 	$("#supportRequestFormHolder").dialog({modal:true,  width: "90%" });
@@ -5781,14 +5806,14 @@ function  showSupportRequestDialog(){
 						<textarea  class="" disabled="disabled" name="logDetails" id="supportRequestForm-log_details" rows="5" cols="60"/></textarea>
 						<span class="ValidationMsg" id="supportRequestFormLabel-logDetailsError"></span>
 					</div>
-					
+
 
 
 					<div class="formButtons">
 
 						<button type="button" id="supportRequestFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveSupportRequestForm();" ><span class="ui-button-text">Save</span></button>
 						<button type="button" id="supportRequestFormAdd"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveSupportRequestForm();" ><span class="ui-button-text">Add</span></button>
-							<button type="button" id="supportRequestFormClear"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearSupportRequestForm();" ><span class="ui-button-text">Clear</span></button>
+						<button type="button" id="supportRequestFormClear"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearSupportRequestForm();" ><span class="ui-button-text">Clear</span></button>
 					</div>
 					<input type="hidden" name="last_update" id="supportRequestForm-last_update">
 					<input type="hidden" name="support_request_id" id="supportRequestForm-support_request_id">

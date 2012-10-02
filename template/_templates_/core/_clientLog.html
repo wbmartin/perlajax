@@ -6,7 +6,8 @@
 <script type="text/javascript">
 
 function show[%ucfirst(divId)%](){
-  hideCurrentContentPane();
+	hideCurrentContentPane();
+	statusMsg("Navigated to Log Viewer");
   var newHTML="";
   $("#[%divId%]").fadeIn();
   $("ul#clientLogView").find("li").remove();[%#remove all list items.%]

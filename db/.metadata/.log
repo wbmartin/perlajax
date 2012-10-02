@@ -1,0 +1,15 @@
+!SESSION 2012-09-29 06:39:39.538 -----------------------------------------------
+eclipse.buildId=I20110613-1736
+java.version=1.6.0_24
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY com.google.gdt.eclipse.suite 1 0 2012-09-29 06:40:57.478
+!MESSAGE Registering: com.google.appengine.eclipse.sdkbundle_1.5.5.r37v201110112027
+
+!ENTRY com.google.gdt.eclipse.suite 1 0 2012-09-29 06:41:00.136
+!MESSAGE Registering: com.google.gwt.eclipse.sdkbundle_2.4.0.relr37v201110112027
+
+!ENTRY org.eclipse.ui 4 4 2012-09-29 06:43:48.555
+!MESSAGE Invalid preference page path: XML Syntax

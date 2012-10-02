@@ -359,7 +359,8 @@ $("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
 function handleServerResponse(msg, startTime, data){
 	if(!validateServerResponse(data)){
 		alert("[%serverErrorMsg_Communication%]");
-		return false
+		statusMsg("Server Communication Error");
+		return false;
 	}
 	statusMsg( msg +" in " + (new Date().getTime()-startTime.getTime())/1000 + "s" );
 	return true;

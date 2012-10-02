@@ -172,6 +172,7 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_){
 
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](){
+	statusMsg("Navigated to Quick Golf Score Entry");
 	retrieve[%ucfirst(divId)%]List(); 
 	hideCurrentContentPane();
 	$("#[%divId%]").fadeIn();

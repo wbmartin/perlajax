@@ -155,7 +155,7 @@ function build[%ucfirst(divId)%]ListTableRow(data){
 	}
 	dataHash["links"] = htmlRow;
 	dataHash["DT_RowId"] = "[%ucfirst(divId)%]ListTableTR-" + data.[%prkey%];
-		return dataHash;
+	return dataHash;
 }
 
 function replaceRow[%ucfirst(divId)%]ListTable(row){
@@ -192,6 +192,7 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 //-------------------------------------------------
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](golferId_){
+	statusMsg("Navigated to Golfer View");
 	var params={};
 	hideCurrentContentPane();
 	$("#[%divId%]").fadeIn();
@@ -222,7 +223,7 @@ $(document).ready(function(){
 			],
 			"sPaginationType": "two_button"
 			}
-		 	);
+			);
 		});
 
 //]]>
@@ -249,7 +250,7 @@ $(document).ready(function(){
 						<input  type="text" class="VALIDATErequired" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
-										<div class="formButtons">
+					<div class="formButtons">
 
 						<button type="button" id="[%divId%]FormSave" class="[%buttonClass%]" value="Save" onclick="save[%ucfirst(divId)%]Form();" ><span class="[%buttonTextClass%]">Save</span></button>
 						<button type="button" id="[%divId%]FormAdd" class="[%buttonClass%]" value="Add" onclick="save[%ucfirst(divId)%]Form();" ><span class="[%buttonTextClass%]">Add</span></button>
