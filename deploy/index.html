@@ -9,13 +9,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- 1140px Grid styles for IE -->
   <!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
-<script type="text/javascript"> 
+	<script type="text/javascript"> 
+		var urlTarget = "cgi-bin/server.pl";
+    var passwordResetUrlTarget="cgi-bin/pwdreset.pl";
+
 //<![CDATA[
 //header1.js
 "use strict";
 //shared variables
-var urlTarget = "cgi-bin/server.pl";
-var passwordResetUrlTarget="cgi-bin/pwdreset.pl";
 var usrSessionId="";
 var usrLoginId="";
 var usrLastAction= new Date();
@@ -334,7 +335,6 @@ function logMsg(msg,requestId){
 		timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
 	}
 	clientLog[logId].msg= msg+timingInfo;
-
 	return logId;
 }
 
@@ -357,7 +357,6 @@ function serverCall(params, successCallback, failCallback){
 	incrementServerCalls();
 	$.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
 		success: successCallbackMod, error: failCallback });
-
 }
 
 function incrementServerCalls(){
@@ -366,7 +365,7 @@ function incrementServerCalls(){
 
 function decrementServerCalls(){
 	OUTSTANDING_SERVER_CALLS = (--OUTSTANDING_SERVER_CALLS <0)?0:OUTSTANDING_SERVER_CALLS;
-$("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
+  $("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
 }
 
 
@@ -423,7 +422,6 @@ function isUserAuthorized(request, notifyUser, caller){
 			break;
 		}
 	}
-	//briefNotify("made it" + notifyUser);
 	if (  notifyUser && !result ){
 		msg = "Access Violation (" + request + " is required)";
 		if(caller) msg+=" from " + caller;
@@ -452,7 +450,6 @@ $.each($("form#"+formName + "> input, >select"),function (ndx,field){
 if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
 		else $("form#"+formName +" #"+field.id).removeAttr('disabled');
 	});
-
 }
 
 function isFormEmpty(formName){
@@ -461,59 +458,10 @@ function isFormEmpty(formName){
 }
 
 
-function buildPaginationBlock(currentPageNum, totalItemCount,itemsPerPage,functionName){
-	var htmlPageBlock;
-	var totalPageCount = 	Math.round(totalItemCount/itemsPerPage );
-	var firstPage;
-	var lastPage;
-	firstPage = currentPageNum-itemsPerPage/2;
-	lastPage = currentPageNum+itemsPerPage/2;
-
-	if(firstPage<1)firstPage=1;
-	if(lastPage >totalPageCount) lastPage=totalPageCount;
-	 
-	htmlPageBlock="<ul class='pagination' id='" +functionName + "PaginationULId'>";
-	if (currentPageNum !=1) {
-		htmlPageBlock +=buildPaginationLink("First",functionName,1, itemsPerPage) ;
-	  htmlPageBlock +=buildPaginationLink("Prev",functionName,currentPageNum-1, itemsPerPage);
-	}
-	for(var ndx=firstPage;ndx<=lastPage;ndx++){
-		htmlPageBlock +=buildPaginationLink(ndx,functionName, ndx, itemsPerPage);
-	}
-
-  if (currentPageNum !=totalPageCount){
-	 	htmlPageBlock +=buildPaginationLink("Next",functionName,currentPageNum+1, itemsPerPage);
-	  htmlPageBlock +=buildPaginationLink("Last",functionName,totalPageCount, itemsPerPage);
-	}
-
-	htmlPageBlock+="</ul>";
-	return htmlPageBlock;
-}
 
 
-function buildPaginationLink(linkTitle, functionName,targetPage, itemsPerPage){
-	var plink;
-	var functionCall = "retrieve" +functionName.ucfirst() + "Pagination(" + targetPage +","+itemsPerPage+"); ";
-	plink = "<li><span onclick='" + functionCall  + "'>" +linkTitle + "</span></li>";
-	return plink;
 
-}
 
-function synchTableColWidths(t1_,t2_, finalWidths_){
-  var t1widths = new Array();
-  if (finalWidths_ == undefined){
-    finalWidths_ = new Array();
-    $.each($("#"+t1_ +" tr:first").children(),function(ndx_,td_){ 
-			t1widths[ndx_] = $(td_).width();
-	  });
-    $.each($("#"+t2_ +" tr:first ").children(),function(ndx_,td_){ 
-	    finalWidths_[ndx_] = ($(td_).width() >t1widths[ndx_])?$(td_).width() :t1widths[ndx_] ;      
-    });
-  }
-	
-  $.each($("#"+t1_ +" tr:first ").children(),function(ndx_,td_){  $(td_).width(finalWidths_[ndx_])});
-  $.each($("#"+t2_ +" tr:first ").children(),function(ndx_,td_){  $(td_).width(finalWidths_[ndx_])});
-}
 
 //cache.js
 var GOLFER_CACHE;

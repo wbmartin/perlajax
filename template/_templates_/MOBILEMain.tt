@@ -1,0 +1,39 @@
+[%- FILTER redirect("/mobile.html") -%]
+[%#- serverErrorMsg_Communication ="Sorry, there was a problem communicating with the server." -%]
+[%#buttonClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"%]
+[%#buttonTextClass="ui-button-text"%]
+
+<!DOCType html>
+<html> 
+<head> 	
+<style> [%INCLUDE "style/reset-min.css"%]</style>
+
+  <meta name=viewport content="user-scalable=no,width=device-width" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="apple-touch-icon" sizes="57x57" href="../images/touch-icon-iphone-114.png" />[%#< Standard iPhone   %]
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/touch-icon-iphone-114.png" />[%# Retina iPhone   %]
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/touch-icon-ipad-144.png" />[%# Standard iPad   %]
+  <link rel="apple-touch-icon" sizes="144x144" href="../images/touch-icon-ipad-144.png" />[%# Retina iPad  %]
+  <link rel=stylesheet href=http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css />
+  <script src=http://code.jquery.com/jquery-1.6.min.js></script>
+  <script src=http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js> </script>
+  <script type="text/JavaScript">
+		var urlTarget = "../cgi-bin/server.pl";
+    var passwordResetUrlTarget="../cgi-bin/pwdreset.pl";
+
+[%INCLUDE core/_header1.js %]
+  </script>
+
+
+</head> 
+<body > 
+[% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
+[%INCLUDE mobile/_login.html%]
+[%INCLUDE mobile/_summary.html%]
+
+ 
+[%INCLUDE mobile/_LayoutComponents.html%]
+[% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
+</body>
+</html>
+[%- END #filter -%]

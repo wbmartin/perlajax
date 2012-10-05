@@ -5,27 +5,27 @@
 
 <!DOCType html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
-[%INCLUDE _header.html%]
+[%INCLUDE web/_header.html%]
 <body  onload='bodyOnLoad();' onresize="bodyOnResize();" > 
-[%INCLUDE _LayoutComponents.html%]
+[%INCLUDE web/_LayoutComponents.html%]
 
 <div id="mainContent" class="container MainLayout"  >
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
-[%INCLUDE _golfScoreSummary.html%]
-[%INCLUDE _golfScore.html%]
-[%INCLUDE _quickGolfScore.html%]
-[%INCLUDE _golfer.html%]
-[%INCLUDE _about.html%]
-[%INCLUDE _help.html%]
-[%INCLUDE _launch.html%]
+[%INCLUDE web/_golfScoreSummary.html%]
+[%INCLUDE web/_golfScore.html%]
+[%INCLUDE web/_quickGolfScore.html%]
+[%INCLUDE web/_golfer.html%]
+[%INCLUDE web/_about.html%]
+[%INCLUDE web/_help.html%]
+[%INCLUDE web/_launch.html%]
 [%INCLUDE core/_clientLog.html%]
-[%INCLUDE _securityGrants.html%]
-[%INCLUDE _securityUser.html%]
-[%INCLUDE _changePasswordDialog.html%]
-[%INCLUDE _supportRequest.html%]
+[%INCLUDE web/_securityGrants.html%]
+[%INCLUDE web/_securityUser.html%]
+[%INCLUDE web/_changePasswordDialog.html%]
+[%INCLUDE web/_supportRequest.html%]
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 </div><!--End Main Content-->
-[%INCLUDE _LoginPortal.html%]
+[%INCLUDE web/_LoginPortal.html%]
 [%INCLUDE core/_msgBox.html%]
 </body>
 </html>

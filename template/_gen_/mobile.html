@@ -3,24 +3,590 @@
 
 <!DOCType html>
 <html> 
-<head> 
+<head> 	
+<style> /*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.3.0
+build: 3167
+*/
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}</style>
+
   <meta name=viewport content="user-scalable=no,width=device-width" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="apple-touch-icon" sizes="57x57" href="../images/touch-icon-iphone-114.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/touch-icon-iphone-114.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/touch-icon-ipad-144.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="../images/touch-icon-ipad-144.png" />
   <link rel=stylesheet href=http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css />
   <script src=http://code.jquery.com/jquery-1.6.min.js></script>
-  <script src=http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js>
+  <script src=http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js> </script>
+  <script type="text/JavaScript">
+		var urlTarget = "../cgi-bin/server.pl";
+    var passwordResetUrlTarget="../cgi-bin/pwdreset.pl";
+
+"use strict";
+//shared variables
+var usrSessionId="";
+var usrLoginId="";
+var usrLastAction= new Date();
+var usrLogoutScheduled=false;
+var usrTimeOutDuration = 20*60*1000;
+var clientLog=new Array();
+var insertUpdateChoose = "INSERTUPDATE";
+var FAILF = function(){alert("FAIL");}
+var currentContentPane="";
+var SERVER_SIDE_FAIL ='serverSideFail';
+var OUTSTANDING_SERVER_CALLS=0;
+var PAGINATION_ROW_LIMIT=10;
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Form Functions
+function appendValidationMsg(formId,fieldId, msg){
+	var fullyQName = "form#"+formId+" #" + fieldId;
+	if($("form#"+formId).find("#"+fieldId+"Error").attr("id")==undefined){
+		$(fullyQName).after("<span id='" +fieldId + "Error' class='ValidationMsg'></span>");
+	}
+	if( $(fullyQName+"Error").html().length ==0){
+		$(fullyQName+"Error").append("*");
+	}
+	$(fullyQName+"Error").append(" " + msg);
+	$(fullyQName).addClass("invalid");
+}
+
+function highlightFieldError(formId, fieldId, yesNo){
+	var bordercolor="black";
+	if  (yesNo) bordercolor="red"
+		$("form#"+formId+" #"+fieldId).css("border-color:"+bordercolor);
+
+}
+
+function bindForm(formName){
+	var rslt={};
+	var fieldId="";
+	$.each($("form#"+formName+" :input"), 
+			function(key, field){
+				fieldId = field.id.replace(formName+"-","");
+				if(field.type != 'button') rslt[fieldId]= field.value
+			});
+	return rslt;
+}
+
+function bindToForm(formName, obj){
+	var fieldId="";
+	$.each($("form#"+formName+" :input"), 
+			function(key, field){
+				fieldId = field.id.replace(formName+"-","");
+				if(field.type != 'button')  field.value = obj[fieldId];
+			});
+}
+
+function clearForm(formName){
+	var fieldId="";
+	$.each($("form#"+formName+" :input"), 
+			function(key, field){
+				fieldId = field.id.replace(formName+"-","");
+				if (field.type == 'checkbox'){
+					field.checked=false;
+				}else if(field.type != 'button')  field.value = "";
+			}
+			);
+	toggleSaveMode(formName, false);
+}
+
+function toggleSaveMode(formName, saveMode){
+	var buttonToShow = (saveMode)?"Save":"Add";
+	var buttonToHide = (!saveMode)?"Save":"Add";
+	$("form#"+formName+" #" +formName +buttonToHide).addClass("LogicDisabled");
+	$("form#"+formName+" #" +formName +buttonToShow).removeClass("LogicDisabled");
+
+
+
+}
+
+
+
+function standardValidate(formName){
+	var formValid = true;
+	if($("#"+formName).length==0) formValid=false;
+	$.each($("form#"+formName + " span.ValidationMsg"),function (ndx,span){
+		span.innerHTML="";
+	});
+	$.each($("form#"+formName + " .invalid"),function (ndx,field){
+		$("form#"+formName +" #"+field.id).removeClass("invalid");
+	});
+	$.each($("form#" +formName + " .VALIDATErequired"),function (ndx,field){
+		if(field.value == null || field.value==""){
+			appendValidationMsg(formName,field.id, "Required");
+			highlightFieldError(formName,field.id,true);
+			formValid =false;
+		}
+	});
+	$.each($("form#" +formName + " .VALIDATEinteger"),function (ndx,field){
+		if(field.value != null && !isInteger(field.value)){
+			appendValidationMsg(formName,field.id, "Integer Input Required");
+			highlightFieldError(formName,field.id,true);
+			formValid =false;
+		}
+	});
+	$.each($("form#" +formName + " .VALIDATEmmddyyyydate"),function (ndx,field){
+		if(field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)){
+			appendValidationMsg(formName,field.id, "MM/DD/YYYY Required");
+			highlightFieldError(formName,field.id,true);
+			formValid =false;
+		}
+	});
+
+
+
+	return formValid;
+}
+
+function isFieldIdEmpty(fieldId_){
+	if (document.getElementById(fieldId_) == undefined) return true;
+	if (document.getElementById(fieldId_).value == undefined) return true;
+	if (document.getElementById(fieldId_).value == null) return true;
+	if (document.getElementById(fieldId_).value == "") return true;
+	return false;
+}
+
+function isEmpty(val){
+	if (typeof(val) == "undefined")return true;
+	if (val == null || val =="") return true;
+	return false;
+}
+
+function isInteger(value){ 
+	if((parseFloat(value) == parseInt(value)) && !isNaN(value)){
+		return true;
+	} else { 
+		return false;
+	} 
+}
+
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Formatting Functions
+function pgDate(val){
+	var rslt;
+	if (val !=null){
+		rslt = val.substring(5,7)+"/"+val.substring(8,10) +"/"+ val.substring(0,4);
+	}else{
+		rslt= "";
+	}
+	return rslt;
+}
+
+function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
+	if (isNaN(parseInt(num))) return "---";
+	var tmpNum = num;
+	var iSign = num < 0 ? -1 : 1;		// Get sign of number
+	tmpNum *= Math.pow(10,decimalNum);
+	tmpNum = Math.round(Math.abs(tmpNum))
+		tmpNum /= Math.pow(10,decimalNum);
+	tmpNum *= iSign;						
+	var tmpNumStr = new String(tmpNum);
+
+	// See if we need to strip out the leading zero or not.
+	if (!bolLeadingZero && num < 1 && num > -1 && num != 0)
+		if (num > 0)tmpNumStr = tmpNumStr.substring(1,tmpNumStr.length);
+		else tmpNumStr = "-" + tmpNumStr.substring(2,tmpNumStr.length);
+
+	// See if we need to put in the commas
+	if (bolCommas && (num >= 1000 || num <= -1000)) {
+		var iStart = tmpNumStr.indexOf(".");
+		if (iStart < 0)	iStart = tmpNumStr.length;
+
+		iStart -= 3;
+		while (iStart >= 1) {
+			tmpNumStr = tmpNumStr.substring(0,iStart) + "," + tmpNumStr.substring(iStart,tmpNumStr.length)
+				iStart -= 3;
+		}		
+	}
+
+	// See if we need to use parenthesis
+	if (bolParens && num < 0) tmpNumStr = "(" + tmpNumStr.substring(1,tmpNumStr.length) + ")";
+
+	if(tmpNumStr.indexOf(".")<0 && decimalNum >0){
+		tmpNumStr += ".";
+	}
+	while((tmpNumStr.length -tmpNumStr.indexOf(".")) <= decimalNum){
+		tmpNumStr += "0";
+
+	}
+
+	return tmpNumStr.toString();		// Return our formatted string!
+}
+
+
+String.prototype.ucfirst = function () {
+    // Split the string into words if string contains multiple words.
+    var x = this.split(/\s+/g);
+    for (var i = 0; i < x.length; i++) {
+        // Splits the word into two parts. One part being the first letter,
+        // second being the rest of the word.
+        var parts = x[i].match(/(\w)(\w*)/);
+        // Put it back together but uppercase the first letter and
+        x[i] = parts[1].toUpperCase() + parts[2];
+    }
+    // Rejoin the string and return.
+    return x.join(' ');
+};
+
+
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//js Utility Functions
+function filterCacheArrayByVal ( cacheArray, idToSet){
+	for(var i=0;i<cacheArray.length;i++){
+		if(cacheArray[i].val == idToSet)return cacheArray[i];
+	}
+	return {};
+}
+
+function digest(er, ee) {
+	if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
+	for (var attr in ee) {
+		er[attr] = ee[attr];
+	}
+	return er;
+}
+
+
+function deepCopy(obj){
+	return $.extend(true, [], obj);
+}
+
+function setSelectOptions(selectId, obj){
+	var newhtml="<option value=''></option>";
+	$.each(obj,function(key,val){
+		newhtml += "<option value='" + key + "'>"+val +"</option>";
+	});
+	$(selectId).html(newhtml);
+
+}
+
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Content Functions
+function timeoutIfNoAction(){ "use strict";
+	var timeSince = new Date().getTime() - usrLastAction.getTime() ;
+	if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
+		usrLogoutScheduled = true;
+		statusMsg("Logging Out User in 1 minute");
+		window.setTimeout(function(){if (usrLogoutScheduled){logOutUser();}},60000);
+	}else{
+		window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
+	}
+
+}
+
+
+function hideCurrentContentPane(){
+	if(document.getElementById(currentContentPane)!= undefined){
+		document.getElementById(currentContentPane).style.display="none";
+	}
+	$(document).unbind("keypress");
+}
+
+
+function standardShowContentPane(name){
+	hideCurrentContentPane();
+	$("#"+name).fadeIn();
+	currentContentPane= name;
+}
+
+function hideMainContent(){
+	return "";
+}
+
+function registerAction(){
+	usrLastAction= new Date();
+	usrLogoutScheduled = false;
+}
+
+window.onbeforeunload = function () {
+	if(usrSessionId !=""){
+		return "If you click OK and continue to refresh this page, you will lose any data that has not been saved"
+	}
+}
+
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Log Msg Functions
+function briefNotify(msg,type){
+	var color;
+	if (type== null || type=="INFO"){
+		color="green";
+	}else if (type=="WARNING"){
+		color="yellow";
+	}else if (type=="ERROR"){
+		color="red";
+	}else{
+		color="black";
+	}
+	$("#briefNoticeMsg").css("border-color",color);
+	$("#briefNoticeMsg").css("color",color);
+	$("#briefNoticeMsg").html(msg);
+	$('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
+	statusMsg(msg);
+}
+function statusMsg(msg){
+	$("#statusMsg").html(msg);
+	logMsg("Console Msg:" +msg);
+}
+function logMsg(msg,requestId){
+	var timingInfo="";
+	var logId = clientLog.length;
+	if (requestId != null && requestId != "NEW"){ logId = requestId; }
+	if( logId == clientLog.length){ 
+		clientLog[logId] = {logDt: new Date()}; 
+	}else{
+		timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
+	}
+	clientLog[logId].msg= msg+timingInfo;
+	return logId;
+}
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//Server Call Functions
+function serverCall(params, successCallback, failCallback){
+	var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
+	params['requestId'] =logMsg(resourceActionInfo + " Started");
+	var successCallbackMod = function(rslt){
+		decrementServerCalls();
+		logMsg(resourceActionInfo + " Responded", rslt.requestId);
+		if(!validateServerResponse(rslt)){
+			logMsg(resourceActionInfo + " Failed to validate the server response - " +  rslt['errorMsg']);
+			rslt[SERVER_SIDE_FAIL] = true;
+		}else{
+			rslt[SERVER_SIDE_FAIL] = false;
+		}	  
+		successCallback(rslt);
+	}
+	incrementServerCalls();
+	$.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
+		success: successCallbackMod, error: failCallback });
+}
+
+function incrementServerCalls(){
+	$("#outstandingServerCalls").html("Open Requests: " + ++OUTSTANDING_SERVER_CALLS)
+}
+
+function decrementServerCalls(){
+	OUTSTANDING_SERVER_CALLS = (--OUTSTANDING_SERVER_CALLS <0)?0:OUTSTANDING_SERVER_CALLS;
+  $("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
+}
+
+
+function handleServerResponse(msg, startTime, data){
+	if(!validateServerResponse(data)){
+		alert("");
+		statusMsg("Server Communication Error");
+		return false;
+	}
+	statusMsg( msg +" in " + (new Date().getTime()-startTime.getTime())/1000 + "s" );
+	return true;
+}
+
+function prepParams(params, resource, action){
+	if(params == null){ params = {}; }
+	params['spwfResource'] = resource;
+	params['user_id'] = usrLoginId;
+	params['session_id'] = usrSessionId;
+	if (action ==insertUpdateChoose){
+		if(params['last_update']!= null && params['last_update']!= ""){
+			action = "update";
+		}else{
+			action= "insert";
+		}
+	}
+	params['spwfAction'] = action;
+	return params;
+}
+
+function validateServerResponse(responseTxt){
+	if(responseTxt == undefined ||responseTxt==null ){
+		logMsg("validateServerResponse - undefined response");
+		alert("Sorry, there was an unexpected error communicating with the server.");
+		return false;
+	}else if(responseTxt.errorMsg != undefined){
+		if(responseTxt.errorMsg.indexOf('Session Invalid')>-1 ){
+			alert("Sorry, the session has expired and you will be logged out");
+			usrSessionId="";
+		}
+		logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
+		return false;
+	}
+	registerAction();
+	return true;
+}
+
+function isUserAuthorized(request, notifyUser, caller){
+	var result= false;
+	var msg="";
+	request = request.toUpperCase();
+	for (var i=0;i<SECURITY_GRANT.length;i++){
+		if(SECURITY_GRANT[i] == request){
+			result=true;
+			break;
+		}
+	}
+	if (  notifyUser && !result ){
+		msg = "Access Violation (" + request + " is required)";
+		if(caller) msg+=" from " + caller;
+		briefNotify(msg ,"ERROR");
+
+	}
+	return result;
+}
+
+
+
+function securityshow(divIdToSecure){
+	$(divIdToSecure).removeClass("SecurityDisabled");
+}
+
+function securityHide(divIdToSecure){
+	$(divIdToSecure).addClass ("SecurityDisabled");
+}
+
+function securityLockForm(formName,lock){
+	var disableStatus;
+	if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form:" + formName, "ERROR");
+	if (lock == undefined)lock=true;
+
+$.each($("form#"+formName + "> input, >select"),function (ndx,field){
+if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
+		else $("form#"+formName +" #"+field.id).removeAttr('disabled');
+	});
+}
+
+function isFormEmpty(formName){
+	if ($("#"+formName+"-last_update").val()=="")return true;
+	return false;
+}
+
+
+
+
+
+
+
   </script>
+
+
 </head> 
 <body > 
-<div data-role=page>
+
+
+<script>	//<![CDATA[
+$(document).ready(function(){
+		$("#loginPageForm-user_id").val("golfscore");
+		$("#loginPageForm-password").val("golfscore");
+
+});
+function loginCall(action){
+	var params = bindForm("loginPageForm");
+	
+	params['spwfResource'] = "security_user";
+	params['spwfAction'] = action;
+	var successf = function (rslt){
+		if(!rslt[SERVER_SIDE_FAIL]){
+			var r = rslt.rows[0];
+			if(r.session_id ==""){
+				showDialog("Sorry, I Couldn't validate those Credentials");
+				$("#password").val("");
+			}else{
+				statusMsg("Successfully Authenticated User: " + r.user_id );
+				usrSessionId = r.session_id;
+				usrLoginId = r.user_id;
+				onSuccessfulLogin();
+				if(rslt.spwfAction=="ONE_TIME"){
+				 showDialog("You just completed a one time logon.  You password has not been changed, please change your password for your next visit if you have forgotten it. ");
+				}
+			}
+		}else{
+			briefNotify("There was a problem communicating with the Server.","ERROR")
+		}
+
+	};
+	if (validateLoginPageForm())serverCall(params,successf,FAILF);
+}
+
+function validateLoginPageForm(){
+return true;
+}
+
+function onSuccessfulLogin(){
+$.mobile.changePage("#summaryDivId");
+}
+//]]>
+
+ </script>
+<div data-role="page" id="loginPageDivId">
+	<div data-role="header" data-position="fixed" >
+		<h1>Golf Score</h1>
+	</div>
+
+	<div data-role="content" style="margin-top: 10%">
+		<form id ="loginPageForm">
+			<input type="text"  id="loginPageForm-user_id" placeholder="User Name"/>
+			<br/>
+			<input type="password"  id="loginPageForm-password" placeholder="Password"/>
+			<br/>
+			<button type="button" id="cmdLoginId" onclick="javascript:loginCall('AUTHENTICATE');">Login</button>
+		</form>
+	</div>
+</div>
+
+
+
+
+<script> </script>
+<div data-role="page" id="summaryDivId">
+	<div data-role="header" data-position="fixed" >
+		<h1>Golf Score</h1>
+	</div>
+
+	<div data-role="content" style="margin-top: 10%">
+		<form id ="summaryForm">
+			Summary
+						<button type="button" id="cmdLoginId" onclick="javascript:briefNotify('title','Message');">msg</button>
+		</form>
+	</div>
+</div>
+
+
+
+ 
+<div data-role="dialog" id="userMsgDialog" data-add-back-btn=true>
   <div data-role=header>
-    <h1>Window Title</h1>
+		<h1><span id="title"></span></h1>
   </div>
 
   <div data-role=content>
-    <p> Window Content </p>
+    <span id="msg"></span>
   </div>
 </div>
 
+<div id="briefNotice" style="display:none;">
+	
+	<span id="briefNoticeMsg"></span>
+</div>
+
+
+<script type="text/javascript">
+	function showDialog(title_, msg_){
+		$("#userMsgDialog #title").html(title_);
+		$("#userMsgDialog #msg").html(msg_);
+		$.mobile.changePage("#userMsgDialog", {"transition":"pop"});
+
+
+	}
+
+</script>
 
 </body>
 </html>

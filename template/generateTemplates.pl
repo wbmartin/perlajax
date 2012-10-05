@@ -34,8 +34,6 @@ Main:{
 	  $tt->process(("${templatePath}$templateName"),$var ) || die $tt->error(); 
 	  print "End template $templateName";
   }
-	$tt = Template->new(RELATIVE=>1,ABSOLUTE=>1, OUTPUT_PATH=>$outputPath, INCLUDE_PATH=>"$templatePath/mobile/");
-	$tt->process(("$templatePath/mobile/MOBILEMain.tt"),$var ) || die $tt->error();
   $dbh->disconnect();
   `cp $outputPath/index.html $absoluteSrcPath/deploy/`; # copy the generated index.html
   `cp $outputPath/mobile.html $absoluteSrcPath/deploy/mobile/index.html`; # copy the generated mobile

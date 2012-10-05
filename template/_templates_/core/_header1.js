@@ -1,7 +1,5 @@
 "use strict";
 //shared variables
-var urlTarget = "cgi-bin/server.pl";
-var passwordResetUrlTarget="cgi-bin/pwdreset.pl";
 var usrSessionId="";
 var usrLoginId="";
 var usrLastAction= new Date();
@@ -289,23 +287,6 @@ window.onbeforeunload = function () {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Log Msg Functions
-function briefNotify(msg,type){
-	var color;
-	if (type== null || type=="INFO"){
-		color="green";
-	}else if (type=="WARNING"){
-		color="yellow";
-	}else if (type=="ERROR"){
-		color="red";
-	}else{
-		color="black";
-	}
-	$("#briefNoticeMsg").css("border-color",color);
-	$("#briefNoticeMsg").css("color",color);
-	$("#briefNoticeMsg").html(msg);
-	$('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
-	statusMsg(msg);
-}
 function statusMsg(msg){
 	$("#statusMsg").html(msg);
 	logMsg("Console Msg:" +msg);
@@ -320,7 +301,6 @@ function logMsg(msg,requestId){
 		timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
 	}
 	clientLog[logId].msg= msg+timingInfo;
-
 	return logId;
 }
 
@@ -343,7 +323,6 @@ function serverCall(params, successCallback, failCallback){
 	incrementServerCalls();
 	$.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
 		success: successCallbackMod, error: failCallback });
-
 }
 
 function incrementServerCalls(){
@@ -352,7 +331,7 @@ function incrementServerCalls(){
 
 function decrementServerCalls(){
 	OUTSTANDING_SERVER_CALLS = (--OUTSTANDING_SERVER_CALLS <0)?0:OUTSTANDING_SERVER_CALLS;
-$("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
+  $("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
 }
 
 
@@ -409,7 +388,6 @@ function isUserAuthorized(request, notifyUser, caller){
 			break;
 		}
 	}
-	//briefNotify("made it" + notifyUser);
 	if (  notifyUser && !result ){
 		msg = "Access Violation (" + request + " is required)";
 		if(caller) msg+=" from " + caller;
@@ -442,13 +420,6 @@ $.each($("form#"+formName + "> input, >select"),function (ndx,field){
 if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
 		else $("form#"+formName +" #"+field.id).removeAttr('disabled');
 	});
-[%# /*
-
-	//$.each($("form#"+formName + " select"),function (ndx,field){
-	//  if(lock) $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
-	//	else $("form#"+formName +" #"+field.id).removeAttr('disabled');
-	//});
-*/ %]
 }
 
 function isFormEmpty(formName){
@@ -474,8 +445,7 @@ function retrieve[_pct_ucfirst(divId)_pct_]ListTablePagination(targetPage, rowLi
 //in retrieve: $("#[_pct_divId_pct_]ListTablePaginationDivId").html(buildPaginationBlock([_pct_divId_pct_]ListTablePageNum, rslt.spwfTotalItemCount,PAGINATION_ROW_LIMIT,"[_pct_divId_pct_]ListTable"));
 //in show: retrieve[_pct_ucfirst(divId)_pct_]ListTablePagination(1,PAGINATION_ROW_LIMIT);
 
-
-*/ %]
+/*
 
 function buildPaginationBlock(currentPageNum, totalItemCount,itemsPerPage,functionName){
 	var htmlPageBlock;
@@ -505,9 +475,10 @@ function buildPaginationBlock(currentPageNum, totalItemCount,itemsPerPage,functi
 	htmlPageBlock+="</ul>";
 	return htmlPageBlock;
 }
+*/ %]
+
 [%# /*
  wbmartin 2012-08-25 | used in conjunction with buildPaginationBlock on hold
-*/ %]
 
 function buildPaginationLink(linkTitle, functionName,targetPage, itemsPerPage){
 	var plink;
@@ -516,12 +487,13 @@ function buildPaginationLink(linkTitle, functionName,targetPage, itemsPerPage){
 	return plink;
 
 }
+*/ %]
+
 [%# /*
  wbmartin 2012-08-25 | created to synchronize tables split for scrolling
-*/ %]
 function synchTableColWidths(t1_,t2_, finalWidths_){
   var t1widths = new Array();
-  if (finalWidths_ == undefined){[%#// if final widths is not defined, determine largest width foreach col %]
+  if (finalWidths_ == undefined){// if final widths is not defined, determine largest width foreach col 
     finalWidths_ = new Array();
     $.each($("#"+t1_ +" tr:first").children(),function(ndx_,td_){ 
 			t1widths[ndx_] = $(td_).width();
@@ -530,7 +502,9 @@ function synchTableColWidths(t1_,t2_, finalWidths_){
 	    finalWidths_[ndx_] = ($(td_).width() >t1widths[ndx_])?$(td_).width() :t1widths[ndx_] ;      
     });
   }
-	[%#// use finalwidths%]
+	// use finalwidths
   $.each($("#"+t1_ +" tr:first ").children(),function(ndx_,td_){  $(td_).width(finalWidths_[ndx_])});
   $.each($("#"+t2_ +" tr:first ").children(),function(ndx_,td_){  $(td_).width(finalWidths_[ndx_])});
 }
+*/ %]
+
