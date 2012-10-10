@@ -12,6 +12,7 @@ var currentContentPane="";
 var SERVER_SIDE_FAIL ='serverSideFail';
 var OUTSTANDING_SERVER_CALLS=0;
 var PAGINATION_ROW_LIMIT=10;
+var CURRENT_PAGE="";
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Form Functions
@@ -507,4 +508,7 @@ function synchTableColWidths(t1_,t2_, finalWidths_){
   $.each($("#"+t2_ +" tr:first ").children(),function(ndx_,td_){  $(td_).width(finalWidths_[ndx_])});
 }
 */ %]
-
+function setCurrentPage(divId_){
+  CURRENT_PAGE=divId_;
+	top.location
+}

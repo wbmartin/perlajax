@@ -47,11 +47,11 @@ function build[%ucfirst(divId)%]ListTableRow(gs){
 	dataHash['date_range'] = pgDate(gs.first_date) + " - " + pgDate(gs.last_date);
 
 	if(isUserAuthorized("SELECT_GOLF_SCORE")){
-		links+="<a class='alink' onclick='showGolfScore(" +gs.golfer_id +")'>View Scores</a>  ";
+		links+="<a class='alink' onclick='changePage(function(){showGolfScore(" +gs.golfer_id +")})'>View Scores</a>  ";
 		links +="&nbsp; &nbsp;"
 	}
 	if(isUserAuthorized("SELECT_GOLFER")){
-		links +=" <a href='#' onclick='showGolfer(" +gs.golfer_id +")'>View Golfer</a>";
+		links +=" <a href='#' onclick='changePage(function(){showGolfer(" +gs.golfer_id +")})'>View Golfer</a>";
 	}
 	dataHash["links"] =links; 
 	//dataHash["DT_RowId"] = "[%ucfirst(divId)%]ListTableTR-" + data.[%prkey%];

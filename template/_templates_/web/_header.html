@@ -19,6 +19,9 @@
 [%INCLUDE "includes/jquery-ui-1.8.18.custom.min.js"%]
 //datatables
 [%INCLUDE "includes/jquery.dataTables.min.js"%]
+//jqueryHistory
+[%INCLUDE "includes/jquery.history.js"%]
+
 function bodyOnLoad(){
   sizeLeftNav();
 }
@@ -27,12 +30,35 @@ function bodyOnResize(){
   sizeLeftNav();
 }
 
+    // Prepare Ajax history
+    var History = window.History; // Note: We are using a capital H instead of a lower h
+    if ( !History.enabled ) { // History.js is disabled for this browser.
+         // This is because we can optionally choose to support HTML4 browsers or not.
+        return false;
+    }
+
+    // Bind to StateChange Event
+    History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
+				var State = History.getState(); // Note: We are using History.getState() instead of event.state
+				
+				if (State.data.f >=0 &&State.data.f <PAGE_CALLS.length ){
+				  PAGE_CALLS[State.data.f]();
+				}
+				});
+var VIEW_ID=0;
+PAGE_CALLS = new Array();
+function changePage(strFuncCall_){
+	PAGE_CALLS.push (strFuncCall_);
+	History.pushState({f: VIEW_ID },"GolfScore",("?v="+ VIEW_ID++ ));
+}
+
 //]]>
 </script>
 <script type="text/javascript"> 
 //<![CDATA[
 //1140 mediaqueries not strict safe
 [%INCLUDE "includes/css3-mediaqueries.js"%]
+//>>>>>>>>>>>>>>>>>>>>>>>>
 //]]>
 </script>
 

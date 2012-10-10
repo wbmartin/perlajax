@@ -40,6 +40,7 @@ var currentContentPane="";
 var SERVER_SIDE_FAIL ='serverSideFail';
 var OUTSTANDING_SERVER_CALLS=0;
 var PAGINATION_ROW_LIMIT=10;
+var CURRENT_PAGE="";
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Form Functions
@@ -315,23 +316,6 @@ window.onbeforeunload = function () {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Log Msg Functions
-function briefNotify(msg,type){
-	var color;
-	if (type== null || type=="INFO"){
-		color="green";
-	}else if (type=="WARNING"){
-		color="yellow";
-	}else if (type=="ERROR"){
-		color="red";
-	}else{
-		color="black";
-	}
-	$("#briefNoticeMsg").css("border-color",color);
-	$("#briefNoticeMsg").css("color",color);
-	$("#briefNoticeMsg").html(msg);
-	$('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
-	statusMsg(msg);
-}
 function statusMsg(msg){
 	$("#statusMsg").html(msg);
 	logMsg("Console Msg:" +msg);
@@ -472,7 +456,10 @@ function isFormEmpty(formName){
 
 
 
-
+function setCurrentPage(divId_){
+  CURRENT_PAGE=divId_;
+	top.location
+}
 
   </script>
 
@@ -571,10 +558,8 @@ $.mobile.changePage("#summaryDivId");
   </div>
 </div>
 
-<div id="briefNotice" style="display:none;">
-	
-	<span id="briefNoticeMsg"></span>
-</div>
+
+
 
 
 <script type="text/javascript">
@@ -585,6 +570,31 @@ $.mobile.changePage("#summaryDivId");
 
 
 	}
+
+function briefNotify(msg,type) {
+	// you are right here working on brief notify http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.js
+  if (typeof(delay)==='undefined') {
+    var delay = 3500; // in milliseconds
+  }
+  if (typeof(theme)==='undefined') {
+    var theme = 'a'; // default theme; setting this to 'e' is nice for error messages
+  }
+  var css_class = '';
+  if (theme==='e') {
+    css_class = 'ui-body-e';
+  }
+  $.mobile.loadingMessage = msg;
+  $.mobile.showPageLoadingMsg();
+  $(".ui-loader").addClass(css_class).find(".spin:visible").hide(); // hide the spinner graphic
+  setTimeout(
+    function() {
+      $(".ui-loader").removeClass(css_class).find(".spin:hidden").show(); // show the spinner graphic when we are done
+      $.mobile.hidePageLoadingMsg();
+      $.mobile.loadingMessage = default_msg; // reset back to default message
+    }, 
+    delay
+  );
+}
 
 </script>
 

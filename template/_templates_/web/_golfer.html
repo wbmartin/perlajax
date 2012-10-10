@@ -141,7 +141,7 @@ function build[%ucfirst(divId)%]ListTableRow(data){
 	var htmlRow= "";
 	dataHash["name"] = data.name;
 	if(isUserAuthorized("[%UPDATE_GRANT%]", false) ){
-		htmlRow +="<a href='#' class='edit[%ucfirst(divId)%]Link' onclick='edit[%ucfirst(divId)%](";
+		htmlRow +="<a class='edit[%ucfirst(divId)%]Link' onclick='edit[%ucfirst(divId)%](";
 		htmlRow +=data.[%prkey%] + ")'>Edit</a>";
 		htmlRow +=" &nbsp; &nbsp; ";
 	}else if(isUserAuthorized("[%SELECT_GRANT%]", false)){
