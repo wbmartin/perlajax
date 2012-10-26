@@ -1,53 +1,53 @@
 "use strict";
 //shared variables
-var usrSessionId="";
-var usrLoginId="";
-var usrLastAction= new Date();
-var usrLogoutScheduled=false;
+var usrSessionId = "";
+var usrLoginId = "";
+var usrLastAction = new Date();
+var usrLogoutScheduled = false;
 var usrTimeOutDuration = 20*60*1000;
-var clientLog=new Array();
+var clientLog = new Array();
 var insertUpdateChoose = "INSERTUPDATE";
 var FAILF = function(){alert("FAIL");}
-var currentContentPane="";
-var SERVER_SIDE_FAIL ='serverSideFail';
-var OUTSTANDING_SERVER_CALLS=0;
-var PAGINATION_ROW_LIMIT=10;
-var CURRENT_PAGE="";
+var currentContentPane = "";
+var SERVER_SIDE_FAIL = 'serverSideFail';
+var OUTSTANDING_SERVER_CALLS = 0;
+var PAGINATION_ROW_LIMIT = 10;
+var CURRENT_PAGE = "";
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Form Functions
 function appendValidationMsg(formId,fieldId, msg){
 	var fullyQName = "form#"+formId+" #" + fieldId;
-	if($("form#"+formId).find("#"+fieldId+"Error").attr("id")==undefined){
+	if($("form#"+formId).find("#"+fieldId+"Error").attr("id") == undefined) {
 		$(fullyQName).after("<span id='" +fieldId + "Error' class='ValidationMsg'></span>");
 	}
-	if( $(fullyQName+"Error").html().length ==0){
+	if( $(fullyQName+"Error").html().length ==0) {
 		$(fullyQName+"Error").append("*");
 	}
 	$(fullyQName+"Error").append(" " + msg);
 	$(fullyQName).addClass("invalid");
 }
 
-function highlightFieldError(formId, fieldId, yesNo){
+function highlightFieldError(formId, fieldId, yesNo) {
 	var bordercolor="black";
 	if  (yesNo) bordercolor="red"
 		$("form#"+formId+" #"+fieldId).css("border-color:"+bordercolor);
 
 }
 
-function bindForm(formName){
-	var rslt={};
-	var fieldId="";
+function bindForm(formName) {
+	var rslt = {};
+	var fieldId = "";
 	$.each($("form#"+formName+" :input"), 
 			function(key, field){
 				fieldId = field.id.replace(formName+"-","");
-				if(field.type != 'button') rslt[fieldId]= field.value
+				if(field.type != 'button') rslt[fieldId] = field.value
 			});
 	return rslt;
 }
 
 function bindToForm(formName, obj){
-	var fieldId="";
+	var fieldId = "";
 	$.each($("form#"+formName+" :input"), 
 			function(key, field){
 				fieldId = field.id.replace(formName+"-","");
@@ -56,11 +56,11 @@ function bindToForm(formName, obj){
 }
 
 function clearForm(formName){
-	var fieldId="";
+	var fieldId = "";
 	$.each($("form#"+formName+" :input"), 
 			function(key, field){
 				fieldId = field.id.replace(formName+"-","");
-				if (field.type == 'checkbox'){
+				if (field.type == 'checkbox') {
 					field.checked=false;
 				}else if(field.type != 'button')  field.value = "";
 			}
