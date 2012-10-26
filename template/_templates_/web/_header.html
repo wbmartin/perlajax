@@ -4,45 +4,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- 1140px Grid styles for IE -->
   <!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
-	<script type="text/javascript"> 
-		var urlTarget = "cgi-bin/server.pl";
-    var passwordResetUrlTarget="cgi-bin/pwdreset.pl";
-
-//<![CDATA[
-//header1.js
-[%INCLUDE core/_header1.js%]
-//cache.js
-[%INCLUDE web/_cache.js%]
-//jquery.js
-[%INCLUDE "includes/jquery-1.7.1.min.js"%]
-//jqueryui.js
-[%INCLUDE "includes/jquery-ui-1.8.18.custom.min.js"%]
-//datatables
-[%INCLUDE "includes/jquery.dataTables.min.js"%]
-//jqueryHistory
-[%#INCLUDE "includes/jquery.history.js"%]
-
-function bodyOnLoad(){
-  sizeLeftNav();
-}
-
-function bodyOnResize(){
-  sizeLeftNav();
-}
-
-var VIEW_ID=0;
-PAGE_CALLS = new Array();
-function changePage(strFuncCall_){
-	PAGE_CALLS.push (strFuncCall_);
-	top.location.hash= "#" + VIEW_ID++ ;
-}
-$(window).bind('hashchange', function() {
-		var id = window.location.hash.replace("#","");
-	 if (id>=0 &&id <PAGE_CALLS.length ) PAGE_CALLS[id]();
-});
-	
-//]]>
-</script>
 <script type="text/javascript"> 
 //<![CDATA[
 //1140 mediaqueries not strict safe
@@ -50,6 +11,7 @@ $(window).bind('hashchange', function() {
 //>>>>>>>>>>>>>>>>>>>>>>>>
 //]]>
 </script>
+<script type="text/javascript" src="app.js"> </script>
 
 [%#including style sheet reset css%]
 <style type="text/css">
