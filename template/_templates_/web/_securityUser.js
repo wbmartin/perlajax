@@ -164,7 +164,7 @@ function build[%ucfirst(divId)%]ListTableRow(data){
 		links+= " &nbsp; &nbsp;";
 
 	}
-	if(isUserAuthorized("[%DELETE_GRANT%]"),false){
+	if(isUserAuthorized("[%DELETE_GRANT%]",false)){
 		links+= "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ",'"+data.last_update +"')\">Delete</a>";
 	}
 	dataHash["links"] =links; 

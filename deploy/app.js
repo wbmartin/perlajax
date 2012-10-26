@@ -1,4 +1,4 @@
-
+"use strict";
 		var urlTarget = "cgi-bin/server.pl";
     var passwordResetUrlTarget="cgi-bin/pwdreset.pl";
 
@@ -444,10 +444,7 @@ function isFormEmpty(formName){
 
 
 
-function setCurrentPage(divId_){
-  CURRENT_PAGE=divId_;
-	top.location
-}
+
 
 //cache.js
 var GOLFER_CACHE;
@@ -1669,7 +1666,7 @@ function retrieveQuickGolfScore(params){
 
 
 function deleteQuickGolfScore(golfScoreId_, lastUpdate_){
-	if(!isUserAuthorized("DELETE_GOLF_SCORE"), true, "deleteQuickGolfScore" ) return false;
+	if(!isUserAuthorized("DELETE_GOLF_SCORE", true, "deleteQuickGolfScore" )) return false;
 
 
 	var params =prepParams(params,"golf_score" ,"delete" );
@@ -2774,7 +2771,7 @@ function buildSecurityUserListTableRow(data){
 		links+= " &nbsp; &nbsp;";
 
 	}
-	if(isUserAuthorized("DELETE_SECURITY_USER"),false){
+	if(isUserAuthorized("DELETE_SECURITY_USER",false)){
 		links+= "<a class='alink' onclick=\"deleteSecurityUser(" +data.security_user_id + ",'"+data.last_update +"')\">Delete</a>";
 	}
 	dataHash["links"] =links; 
@@ -2996,7 +2993,7 @@ function retrieveSupportRequest(params){
 
 
 function deleteSupportRequest(supportRequestId_, lastUpdate_){
-	if(!isUserAuthorized("DELETE_SUPPORT_REQUEST"), true, "deleteSupportRequest" ) return false;
+	if(!isUserAuthorized("DELETE_SUPPORT_REQUEST", true, "deleteSupportRequest" )) return false;
 	var params =prepParams(params,"support_request" ,"delete" );
 	params['support_request_id'] = supportRequestId_;
 	params['last_update'] = lastUpdate_;

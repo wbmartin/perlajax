@@ -507,8 +507,8 @@ function synchTableColWidths(t1_,t2_, finalWidths_){
   $.each($("#"+t1_ +" tr:first ").children(),function(ndx_,td_){  $(td_).width(finalWidths_[ndx_])});
   $.each($("#"+t2_ +" tr:first ").children(),function(ndx_,td_){  $(td_).width(finalWidths_[ndx_])});
 }
-*/ %]
 function setCurrentPage(divId_){
   CURRENT_PAGE=divId_;
 	top.location
-}
+}*/ %]
+

@@ -43,7 +43,7 @@ function retrieve[%ucfirst(divId)%](params){
 
 
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
-	if(!isUserAuthorized("[%DELETE_GRANT%]"), true, "delete[%ucfirst(divId)%]" ) return false;
+	if(!isUserAuthorized("[%DELETE_GRANT%]", true, "delete[%ucfirst(divId)%]" )) return false;
 
 
 	var params =prepParams(params,"[%spwfResource%]" ,"delete" );
