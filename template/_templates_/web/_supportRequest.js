@@ -11,15 +11,15 @@
 
 //Server Calls
 function retrieve[%ucfirst(divId)%]List(){
-	if(!isUserAuthorized("[%SELECT_GRANT%]", true, "retrieve[%ucfirst(divId)%]List") ) return false; 
+	if(!isUserAuthorized('[%SELECT_GRANT%]', true, 'retrieve[%ucfirst(divId)%]List') ) return false; 
 
-	var params =prepParams(params,"[%spwfResource%]" ,"select" );
+	var params =prepParams(params,'[%spwfResource%]' ,'select' );
 	//params['orderby_clause'] =" order by game_dt desc"
 	var successf = function (rslt){
 		if(!rslt[SERVER_SIDE_FAIL]){
 			populate[%ucfirst(divId)%]ListTable(rslt.rows)
 		}else{
-			briefNotify("There was a problem communicating with the Server.","ERROR");
+			briefNotify('There was a problem communicating with the Server.','ERROR');
 		}
 	};
 	serverCall(params,successf,FAILF);
@@ -61,7 +61,7 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_){
 }
 
 function save[%ucfirst(divId)%](params){
-	if(!isUserAuthorized("[%UPDATE_GRANT%]", false) && !isUserAuthorized("[%INSERT_GRANT%]", false)){
+	if(!isUserAuthorized("[%UPDATE_GRANT%]", false) && !isUserAuthorized('[%INSERT_GRANT%]', false)){
 		briefNotify("Access Violation:save[%ucfirst(divId)%] ","ERROR");
 		return false;
 	}
@@ -191,41 +191,41 @@ function show[%ucfirst(divId)%](){
 function clear[%ucfirst(divId)%]Form(){
 	$("#[%divId%]FormHolder").dialog("close");
 	clearForm('[%divId%]Form');
-	(isUserAuthorized("[%INSERT_GRANT%]", false))?securityLockForm("[%divId%]Form", false) :securityLockForm("[%divId%]Form", true);
+	(isUserAuthorized('[%INSERT_GRANT%]', false))?securityLockForm("[%divId%]Form", false) :securityLockForm("[%divId%]Form", true);
 }
 
 
 //After complete Load setup
 $(document).ready(function(){
-		$("#[%divId%]ListTable").dataTable( {
-			"aoColumns": [
-			{ "mData": "details" , bSortable:false, "sWidth":"10"},
-			{ "mData": "support_request_id","sWidth":"10" },
-			{ "mData": "summary"  ,"sClass":"textAlignLeft"},
-			{ "mData": "detailed_description", bVisible:false },
-			//{ "mData": "log_details" },
-			//{ "mData": "solution_description" },
-			{ "mData": "last_update",  bVisible:false},
-			//{ "mData": "updated_by" },
-			{ "mData": "links", asSorting:"none","sWidth":"10em" }
-			],
-			"sPaginationType": "two_button"
-			}
-			);
+	$("#[%divId%]ListTable").dataTable( {
+		"aoColumns": [
+	{ "mData": "details" , bSortable:false, "sWidth":"10"},
+	{ "mData": "support_request_id","sWidth":"10" },
+	{ "mData": "summary"  ,"sClass":"textAlignLeft"},
+	{ "mData": "detailed_description", bVisible:false },
+	//{ "mData": "log_details" },
+	//{ "mData": "solution_description" },
+	{ "mData": "last_update",  bVisible:false},
+	//{ "mData": "updated_by" },
+	{ "mData": "links", asSorting:"none","sWidth":"10em" }
+	],
+	"sPaginationType": "two_button"
+	}
+	);
 
 
-		$('#[%divId%]ListTable tbody td span.expanderClass').live('click', function () {
-			var nTr = $(this).parents('tr')[0];
-			var oTable = $("#[%divId%]ListTable").dataTable();
-			if ( oTable.fnIsOpen(nTr) ) { /* This row is already open - close it */
+	$('#[%divId%]ListTable tbody td span.expanderClass').live('click', function () {
+		var nTr = $(this).parents('tr')[0];
+		var oTable = $("#[%divId%]ListTable").dataTable();
+		if ( oTable.fnIsOpen(nTr) ) { /* This row is already open - close it */
 			$(this).replaceWith( "<span class='sprite16Icon smallPlusIcon expanderClass'></span>") ;
 			oTable.fnClose( nTr );
-			}
-			else { /* Open this row */
+		}
+		else { /* Open this row */
 			$(this).replaceWith( "<span class='sprite16Icon smallCancelIcon expanderClass'></span>") ;
 			oTable.fnOpen( nTr, fnFormat[%ucfirst(divId)%]Expansion(oTable, nTr), 'details' );
-			}
-			} );
+		}
+	} );
 
 
 });
@@ -254,34 +254,34 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions(){
 	(isUserAuthorized("[%UPDATE_GRANT%]", false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 	divIdToSecure ="#[%divId%]FormAdd";
-	(isUserAuthorized("[%INSERT_GRANT%]", false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	(isUserAuthorized('[%INSERT_GRANT%]', false))? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
 	divIdToSecure ="#[%divId%]EntryDivId";
-	(isUserAuthorized("[%UPDATE_GRANT%]",false) ||isUserAuthorized("[%INSERT_GRANT%]",false) )? securityshow(divIdToSecure):securityHide(divIdToSecure);
+	(isUserAuthorized("[%UPDATE_GRANT%]",false) ||isUserAuthorized('[%INSERT_GRANT%]',false) )? securityshow(divIdToSecure):securityHide(divIdToSecure);
 
-	if(!isUserAuthorized("[%INSERT_GRANT%]",false ) && !isUserAuthorized("[%UPDATE_GRANT%]", false) ){
+	if(!isUserAuthorized('[%INSERT_GRANT%]',false ) && !isUserAuthorized("[%UPDATE_GRANT%]", false) ){
 		securityLockForm("[%divId%]Form", true);
 
 	}
-	if(!isUserAuthorized("[%INSERT_GRANT%]",false) && isFormEmpty("[%divId%]Form") ){
+	if(!isUserAuthorized('[%INSERT_GRANT%]',false) && isFormEmpty("[%divId%]Form") ){
 		securityLockForm("[%divId%]Form", true);
 	}
 
 }
 
-function addNew[%ucfirst(divId)%](){
+function addNew[%ucfirst(divId)%]() {
 	var logText="";
 	clear[%ucfirst(divId)%]Form();
 	show[%ucfirst(divId)%]Dialog();
-	for(var ndx=0;ndx<clientLog.length;ndx++){
-		logText += clientLog[ndx].logDt+"|" + clientLog[ndx].msg + "\n";
+	for (var ndx=0; ndx < clientLog.length; ndx++) {
+		logText += clientLog[ndx].logDt + '|' + clientLog[ndx].msg + '\n';
 	}
 
-	$("#[%divId%]Form-log_details").val(logText);
+	$('#[%divId%]Form-log_details').val(logText);
 
 }
-function  show[%ucfirst(divId)%]Dialog(){
-	$("#[%divId%]FormHolder").dialog({modal:true,  width: "90%" });
+function show[%ucfirst(divId)%]Dialog() {
+	$('#[%divId%]FormHolder').dialog({modal: true, width: '90%' });
 }
 
 

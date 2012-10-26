@@ -1,8 +1,8 @@
-[%- FILTER redirect("/app.js") -%]
-[%- serverErrorMsg_Communication ="Sorry, there was a problem communicating with the server." -%]
-"use strict";
-		var urlTarget = "cgi-bin/server.pl";
-    var passwordResetUrlTarget="cgi-bin/pwdreset.pl";
+[%- FILTER redirect('/app.js') -%]
+[%- serverErrorMsg_Communication ='Sorry, there was a problem communicating with the server.' -%]
+'use strict';
+    var urlTarget = 'cgi-bin/server.pl';
+    var passwordResetUrlTarget='cgi-bin/pwdreset.pl';
     var VIEW_ID=0;
     var PAGE_CALLS = new Array();
 
@@ -30,22 +30,22 @@
 [%INCLUDE web/_supportRequest.js%]
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 
-function bodyOnLoad(){
+function bodyOnLoad() {
   sizeLeftNav();
 }
 
-function bodyOnResize(){
+function bodyOnResize() {
   sizeLeftNav();
 }
 
 
-function changePage(strFuncCall_){
-	PAGE_CALLS.push (strFuncCall_);
-	top.location.hash= "#" + VIEW_ID++ ;
+function changePage(strFuncCall_) {
+  PAGE_CALLS.push(strFuncCall_);
+  top.location.hash = '#' + VIEW_ID++;
 }
 $(window).bind('hashchange', function() {
-		var id = window.location.hash.replace("#","");
-	 if (id>=0 &&id <PAGE_CALLS.length ) PAGE_CALLS[id]();
+    var id = window.location.hash.replace('#', '');
+   if (id >= 0 && id < PAGE_CALLS.length) PAGE_CALLS[id]();
 });
 
 

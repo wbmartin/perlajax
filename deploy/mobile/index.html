@@ -90,7 +90,7 @@ function clearForm(formName){
 				fieldId = field.id.replace(formName+"-","");
 				if (field.type == 'checkbox') {
 					field.checked=false;
-				}else if(field.type != 'button')  field.value = "";
+				}else if(field.type != 'button') field.value = "";
 			}
 			);
 	toggleSaveMode(formName, false);
@@ -222,17 +222,17 @@ function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
 
 
 String.prototype.ucfirst = function () {
-    // Split the string into words if string contains multiple words.
-    var x = this.split(/\s+/g);
-    for (var i = 0; i < x.length; i++) {
-        // Splits the word into two parts. One part being the first letter,
-        // second being the rest of the word.
-        var parts = x[i].match(/(\w)(\w*)/);
-        // Put it back together but uppercase the first letter and
-        x[i] = parts[1].toUpperCase() + parts[2];
-    }
-    // Rejoin the string and return.
-    return x.join(' ');
+	// Split the string into words if string contains multiple words.
+	var x = this.split(/\s+/g);
+	for (var i = 0; i < x.length; i++) {
+		// Splits the word into two parts. One part being the first letter,
+		// second being the rest of the word.
+		var parts = x[i].match(/(\w)(\w*)/);
+		// Put it back together but uppercase the first letter and
+		x[i] = parts[1].toUpperCase() + parts[2];
+	}
+	// Rejoin the string and return.
+	return x.join(' ');
 };
 
 
@@ -360,7 +360,7 @@ function incrementServerCalls(){
 
 function decrementServerCalls(){
 	OUTSTANDING_SERVER_CALLS = (--OUTSTANDING_SERVER_CALLS <0)?0:OUTSTANDING_SERVER_CALLS;
-  $("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
+	$("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
 }
 
 
@@ -441,8 +441,8 @@ function securityLockForm(formName,lock){
 	if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form:" + formName, "ERROR");
 	if (lock == undefined)lock=true;
 
-$.each($("form#"+formName + "> input, >select"),function (ndx,field){
-if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
+	$.each($("form#"+formName + "> input, >select"),function (ndx,field){
+		if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
 		else $("form#"+formName +" #"+field.id).removeAttr('disabled');
 	});
 }
