@@ -1,12 +1,12 @@
-[%divId="securityUser"%]
-[%spwfResource="security_user"%]
-[%prkey="security_user_id"%]
-[%prettyName="User"%]
+[% divId = 'securityUser' %]
+[% spwfResource = 'security_user' %]
+[% prkey = 'security_user_id' %]
+[% prettyName = 'User' %]
 
-[%UPDATE_GRANT=  "UPDATE_" _ spwfResource FILTER upper%]
-[%INSERT_GRANT=  "INSERT_" _ spwfResource  FILTER upper%]
-[%SELECT_GRANT=  "SELECT_" _ spwfResource  FILTER upper%]
-[%DELETE_GRANT=  "DELETE_" _ spwfResource  FILTER upper%]
+[% UPDATE_GRANT = 'UPDATE_' _ spwfResource FILTER upper %]
+[% INSERT_GRANT = 'INSERT_' _ spwfResource  FILTER upper %]
+[% SELECT_GRANT = 'SELECT_' _ spwfResource  FILTER upper %]
+[% DELETE_GRANT = 'DELETE_' _ spwfResource  FILTER upper %]
 
 
 //Server Calls

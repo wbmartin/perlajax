@@ -1,5 +1,5 @@
-[%divId="changePasswordDialog"%]
-[%spwfResource="security_user"%]
+[% divId = 'changePasswordDialog' %]
+[% spwfResource = 'security_user' %]
 //----------------------------------------------------
 //server calls
 function submit[%ucfirst(divId)%](params){

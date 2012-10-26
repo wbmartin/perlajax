@@ -1,13 +1,13 @@
-[%divId="golfScoreSummary"%]
-[%spwfResource="golf_score_summary"%]
+[% divId='golfScoreSummary' %]
+[% spwfResource = 'golf_score_summary' %]
 
-[%UPDATE_GRANT=  "UPDATE_" _ spwfResource FILTER upper%]
-[%INSERT_GRANT=  "INSERT_" _ spwfResource  FILTER upper%]
-[%SELECT_GRANT=  "SELECT_GOLFER_HANDICAP"  FILTER upper%]
-[%DELETE_GRANT=  "DELETE_" _ spwfResource  FILTER upper%]
+[% UPDATE_GRANT = 'UPDATE_' _ spwfResource FILTER upper %]
+[% INSERT_GRANT = 'INSERT_' _ spwfResource  FILTER upper %]
+[% SELECT_GRANT = 'SELECT_GOLFER_HANDICAP'  FILTER upper %]
+[% DELETE_GRANT = 'DELETE_' _ spwfResource  FILTER upper %]
 
 
-	function retrieve[%ucfirst(divId)%]List(){
+function retrieve[%ucfirst(divId)%]List(){
 		if(!isUserAuthorized("[%SELECT_GRANT%]") ){
 			briefNotify("Access Violation","ERROR");
 			return false;

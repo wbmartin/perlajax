@@ -1,4 +1,4 @@
-[%divId="aboutPane"%]
+[% divId="aboutPane" %]
 
 function show[%ucfirst(divId)%](){
 	hideCurrentContentPane();

@@ -1,11 +1,11 @@
-[%divId="golfer"%]
-[%spwfResource="golfer"%]
-[%prkey="golfer_id"%]
+[% divId = 'golfer' %]
+[% spwfResource = 'golfer' %]
+[% prkey = 'golfer_id' %]
 
-[%UPDATE_GRANT=  "UPDATE_" _ divId FILTER upper%]
-[%INSERT_GRANT=  "INSERT_" _ divId  FILTER upper%]
-[%SELECT_GRANT=  "SELECT_" _ divId  FILTER upper%]
-[%DELETE_GRANT=  "DELETE_" _ divId  FILTER upper%]
+[% UPDATE_GRANT = 'UPDATE_' _ divId FILTER upper%]
+[% INSERT_GRANT = 'INSERT_' _ divId  FILTER upper%]
+[% SELECT_GRANT = 'SELECT_' _ divId  FILTER upper%]
+[% DELETE_GRANT = 'DELETE_' _ divId  FILTER upper%]
 
 //----------------------------------------------------
 

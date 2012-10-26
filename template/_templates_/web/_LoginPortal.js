@@ -1,6 +1,6 @@
 <!--Begin LoginPortal-->
-[%divId="LoginPortal"%]
-[%spwfResource="security_user"%]
+[% divId = 'LoginPortal' %]
+[% spwfResource = 'security_user' %]
 
 function loginCall(action){
 	var params = bindForm("[%divId%]Form");

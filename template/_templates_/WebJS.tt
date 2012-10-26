@@ -3,44 +3,18 @@
 "use strict";
 		var urlTarget = "cgi-bin/server.pl";
     var passwordResetUrlTarget="cgi-bin/pwdreset.pl";
-
-
-function bodyOnLoad(){
-  sizeLeftNav();
-}
-
-function bodyOnResize(){
-  sizeLeftNav();
-}
-
-var VIEW_ID=0;
-PAGE_CALLS = new Array();
-
-[%INCLUDE core/_header1.js%]
-//cache.js
-[%INCLUDE web/_cache.js%]
-//jquery.js
-[%INCLUDE "includes/jquery-1.7.1.min.js"%]
-//jqueryui.js
-[%INCLUDE "includes/jquery-ui-1.8.18.custom.min.js"%]
-//datatables
-[%INCLUDE "includes/jquery.dataTables.min.js"%]
-//jqueryHistory
-[%#INCLUDE "includes/jquery.history.js"%]
-
-function changePage(strFuncCall_){
-	PAGE_CALLS.push (strFuncCall_);
-	top.location.hash= "#" + VIEW_ID++ ;
-}
-$(window).bind('hashchange', function() {
-		var id = window.location.hash.replace("#","");
-	 if (id>=0 &&id <PAGE_CALLS.length ) PAGE_CALLS[id]();
-});
+    var VIEW_ID=0;
+    var PAGE_CALLS = new Array();
 
 
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
-
+//header1.js
+[%INCLUDE core/_header1.js%]
+//cache.js
+[%INCLUDE web/_cache.js%]
+//loginportal.js
 [%INCLUDE web/_LoginPortal.js%]
+//LayoutComponents.js
 [%INCLUDE web/_LayoutComponents.js%]
 [%INCLUDE web/_golfScoreSummary.js%]
 [%INCLUDE web/_golfScore.js%]
@@ -55,4 +29,24 @@ $(window).bind('hashchange', function() {
 [%INCLUDE web/_changePasswordDialog.js%]
 [%INCLUDE web/_supportRequest.js%]
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
+
+function bodyOnLoad(){
+  sizeLeftNav();
+}
+
+function bodyOnResize(){
+  sizeLeftNav();
+}
+
+
+function changePage(strFuncCall_){
+	PAGE_CALLS.push (strFuncCall_);
+	top.location.hash= "#" + VIEW_ID++ ;
+}
+$(window).bind('hashchange', function() {
+		var id = window.location.hash.replace("#","");
+	 if (id>=0 &&id <PAGE_CALLS.length ) PAGE_CALLS[id]();
+});
+
+
 [%- END #filter -%]
