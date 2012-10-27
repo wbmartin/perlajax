@@ -30,21 +30,21 @@ function onRefreshCache(data) {
 
 
 function retrieveCache() {
-	var params = prepParams (params,'cross_table_cache','select');
-	var successf = function (rslt){
+	var params = prepParams (params, 'cross_table_cache', 'select');
+	var successf = function (rslt) {
 		onRefreshCache(rslt.rows);
 	};
-	serverCall(params,successf,FAILF);
+	serverCall(params, successf, FAILF);
 }
 
-//function getLbl4Val(val, type){
+//function getLbl4Val(val, type) {
 //  var lbl;
-//  if (type ==="golfer"){ lbl=GOLFER_CACHE.val; 
-//  }else if( type==""){
-//  }else{
+//  if (type ==="golfer") { lbl=GOLFER_CACHE.val; 
+//  }else if ( type=="") {
+//  }else {
 //    return "INVALID CACHE REQUESTED";
 //  }
-//  if (isEmpty(lbl) ){
+//  if (isEmpty(lbl) ) {
 //    lbl ="--";
 //  }
 //  return lbl;

@@ -1,6 +1,6 @@
 [% divId ='helpPane' %]
 
-	function show[%ucfirst(divId)%](){
+	function show[%ucfirst(divId)%]() {
 		statusMsg("Navigated to Help Portal");
 		hideCurrentContentPane();
 		$("#[%divId%]").fadeIn();

@@ -1,4 +1,3 @@
-"use strict";
 //shared variables
 var usrSessionId = "";
 var usrLoginId = "";
