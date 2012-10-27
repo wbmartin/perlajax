@@ -1,11 +1,11 @@
 function sizeLeftNav() {
 	[%headerHeight = 100%]
 		[%leftNavWidth = 0%]
-		// document.getElementById('leftnav').style.height= (window.innerHeight-60) +"px";
+		// document.getElementById('leftnav').style.height= (window.innerHeight-60) + "px";
 		document.getElementById('mainContent').style.top="[%headerHeight%]px";
 	document.getElementById('mainContent').style.left="0px";
-	document.getElementById('mainContent').style.height=(window.innerHeight - [%headerHeight + 35%] ) +"px";
-	document.getElementById('mainContent').style.width=(window.innerWidth- [%leftNavWidth +20%] ) +"px";
+	document.getElementById('mainContent').style.height=(window.innerHeight - [%headerHeight + 35%] ) + "px";
+	document.getElementById('mainContent').style.width=(window.innerWidth- [%leftNavWidth + 20%] ) + "px";
 }
 function displayMainLayout(showHide) {
 	var display = (showHide) ? "block" : "none";
@@ -37,7 +37,7 @@ function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
 	width_=width_ || 400;
 	modal_ = (modal_ === undefined) ? true : modal_;
 	buttons_=buttons_|| {"Ok" : function() {$( this ).dialog( "close" );}};
-	title_ = title_ || "";
+	title_ = title_ || '';
 	$("#genericDialogDivId").attr("title", title_);
 	$("#dialogMsgSpanId").html(msg_);
 	$("#genericDialogDivId").dialog(
@@ -48,7 +48,7 @@ width : width_,
 modal : modal_, 
 buttons : buttons_
 });
-if (title_ ==="") {
+if (title_ ==='') {
 	$("#genericDialogDivId").siblings(".ui-dialog-titlebar").hide();
 }else {
 	$("#genericDialogDivId").siblings(".ui-dialog-titlebar").show();
@@ -60,11 +60,11 @@ if (title_ ==="") {
 
 function briefNotify(msg, type) {
 	var color;
-	if (type== null || type=="INFO") {
+	if (type== null || type=='INFO') {
 		color="green";
-	}else if (type=="WARNING") {
+	}else if (type=='WARNING') {
 		color="yellow";
-	}else if (type=="ERROR") {
+	}else if (type=='ERROR') {
 		color="red";
 	}else {
 		color="black";

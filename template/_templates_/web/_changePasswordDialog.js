@@ -3,7 +3,7 @@
 //----------------------------------------------------
 //server calls
 function submit[%ucfirst(divId)%](params) {
-	params = prepParams(params, "SECURITY_CHANGE_PASSWORD", 'CHANGE');
+	params = prepParams(params, 'SECURITY_CHANGE_PASSWORD', 'CHANGE');
 	var successf=function(rslt) {
 		if (!rslt[SERVER_SIDE_FAIL]) {
 
@@ -28,9 +28,9 @@ function submit[%ucfirst(divId)%]Form() {
 		var params = bindForm('[%divId%]Form');
 		clearForm('[%divId%]Form');
 		submit[%ucfirst(divId)%](params);
-		$( "#[%divId%]" ).dialog( "close" );
+		$('#[%divId%]').dialog('close');
 	} else {
-		briefNotify("Please Correct Form Validation Errors To Continue", "WARNING");
+		briefNotify('Please Correct Form Validation Errors To Continue', 'WARNING');
 	}
 }
 
@@ -38,9 +38,11 @@ function submit[%ucfirst(divId)%]Form() {
 function validate[%ucfirst(divId)%]Form() {
 	var formName='[%divId%]Form';
 	var formValid  = standardValidate(formName);
-	if ($("#[%divId%]Form-new_password").val() !=$("#[%divId%]Form-confirm_password").val() ) {
-		appendValidationMsg(formName, "[%divId%]Form-confirm_password", "Passwords do not match");
-		highlightFieldError(formName, "[%divId%]Form-confirm_password", true);
+	if ($('#[%divId%]Form-new_password').val() != $('#[%divId%]Form-confirm_password').val()) {
+		appendValidationMsg(formName, '[%divId%]Form-confirm_password', 
+				'Passwords do not match'
+				);
+		highlightFieldError(formName, '[%divId%]Form-confirm_password', true);
 		formValid =false;
 	}
 	return formValid;
@@ -53,23 +55,23 @@ function validate[%ucfirst(divId)%]Form() {
 //-------------------------------------------------
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](userId_) {
-	statusMsg("Navigated to Change Password Dialog");
-	var params= {};
+	statusMsg('Navigated to Change Password Dialog');
+	var params = {};
 	if (userId_ == null) {
-		userId_ =$("form#loginHolder #user_id").val() ;
+		userId_ =$('form#loginHolder #user_id').val() ;
 	}
-	$("#[%divId%]Form-user_to_update").val(userId_);
-	$( "#[%divId%]" ).dialog( "destroy" );
+	$('#[%divId%]Form-user_to_update').val(userId_);
+	$('#[%divId%]').dialog('destroy');
 
-	$( "#[%divId%]" ).dialog(
+	$('#[%divId%]').dialog(
 			 {
-resizable : false, 
-height : 400, 
-width : 600, 
-modal : true, 
-buttons : {
-"Submit" : function() { submit[%ucfirst(divId)%]Form(); }, 
-Cancel : function() { $( this ).dialog( "close" );clearForm('[%divId%]Form'); }
+resizable: false, 
+height: 400, 
+width: 600, 
+modal: true, 
+buttons: {
+'Submit': function() { submit[%ucfirst(divId)%]Form(); }, 
+Cancel: function() { $( this ).dialog('close');clearForm('[%divId%]Form'); }
 }
 });
 

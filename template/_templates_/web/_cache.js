@@ -5,7 +5,7 @@ function onRefreshCache(data) {
 	GOLFER_CACHE = {};
 	SECURITY_PROFILE_CACHE = {};
 	SECURITY_GRANT = new Array();
-	for (var i = 0; i < data.length; i++) {
+	for (var i = 0; i < data.length; i++ ) {
 		if (data[i].tp === 'golfer') {
 			GOLFER_CACHE[data[i].val] = data[i].lbl;
 		} else if (data[i].tp === 'securityProfile') {
@@ -15,8 +15,12 @@ function onRefreshCache(data) {
 		}
 	}
 
-	setSelectOptions('#quickGolfScoreForm select[name=golfer_id]', GOLFER_CACHE);
-	setSelectOptions('#securityUserForm select[name=securityProfileId]', SECURITY_PROFILE_CACHE);
+	setSelectOptions('#quickGolfScoreForm select[name=golfer_id]', 
+										GOLFER_CACHE
+									);
+	setSelectOptions('#securityUserForm select[name=securityProfileId]',
+		 								SECURITY_PROFILE_CACHE
+									);
 
 	imposeGolferSecurityUIRestrictions();
 	imposeGolfScoreSecurityUIRestrictions();
@@ -40,11 +44,11 @@ function retrieveCache() {
 //function getLbl4Val(val, type) {
 //  var lbl;
 //  if (type ==="golfer") { lbl=GOLFER_CACHE.val; 
-//  }else if ( type=="") {
+//  }else if ( type=='') {
 //  }else {
 //    return "INVALID CACHE REQUESTED";
 //  }
-//  if (isEmpty(lbl) ) {
+//  if (isEmpty(lbl)) {
 //    lbl ="--";
 //  }
 //  return lbl;

@@ -10,30 +10,30 @@
 
 //Server Calls
 function retrieve[%ucfirst(divId)%]List() {
-	if (!isUserAuthorized("[%SELECT_GRANT%]", true, "retrieve[%ucfirst(divId)%]List") ) return false; 
+	if (!isUserAuthorized('[%SELECT_GRANT%]', true, "retrieve[%ucfirst(divId)%]List")) return false; 
 
-	var params =prepParams(params, "[%spwfResource%]" , "select" );
+	var params =prepParams(params, '[%spwfResource%]' , "select" );
 	params['orderby_clause'] =" order by game_dt desc"
 		var successf = function (rslt) {
 			if (!rslt[SERVER_SIDE_FAIL]) {
 				populate[%ucfirst(divId)%]ListTable(rslt.rows)
 			}else {
-				briefNotify("There was a problem communicating with the Server.", "ERROR");
+				briefNotify('There was a problem communicating with the Server.', 'ERROR');
 			}
 		};
 	serverCall(params, successf, FAILF);
 }
 function retrieve[%ucfirst(divId)%](params) {
-	if (!isUserAuthorized("[%SELECT_GRANT%]", true, "retrieve[%ucfirst(divId)%]" ) ) return false; 
+	if (!isUserAuthorized('[%SELECT_GRANT%]', true, "retrieve[%ucfirst(divId)%]" )) return false; 
 
-	params = prepParams(params, "[%spwfResource%]", "SELECT");
+	params = prepParams(params, '[%spwfResource%]', 'SELECT');
 	var successf = function(rslt) {
 		if (!rslt[SERVER_SIDE_FAIL]) {
 			rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
 			bindToForm('[%divId%]Form', rslt.rows[0]);
 			toggleSaveMode('[%divId%]Form', true);
 		}else {
-			briefNotify("There was a problem communicating with the Server.", "ERROR")
+			briefNotify('There was a problem communicating with the Server.', 'ERROR')
 		}
 
 	}
@@ -43,18 +43,18 @@ function retrieve[%ucfirst(divId)%](params) {
 
 
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
-	if (!isUserAuthorized("[%DELETE_GRANT%]", true, "delete[%ucfirst(divId)%]" )) return false;
+	if (!isUserAuthorized('[%DELETE_GRANT%]', true, "delete[%ucfirst(divId)%]" )) return false;
 
 
-	var params =prepParams(params, "[%spwfResource%]" , "delete" );
+	var params =prepParams(params, '[%spwfResource%]' , "delete" );
 	params['[%prkey%]'] = [%toCC(prkey)%]_;
 	params['last_update'] = lastUpdate_;
 	var successf = function (rslt) {
 		if (!rslt[SERVER_SIDE_FAIL]) {
 			remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
-			briefNotify("Golf Score Deleted Successfully", "INFO");
+			briefNotify("Golf Score Deleted Successfully", 'INFO');
 		}else {
-			briefNotify("There was a problem communicating with the Server.", "ERROR")
+			briefNotify('There was a problem communicating with the Server.', 'ERROR')
 		}
 
 	};
@@ -63,25 +63,25 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 
 function save[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]', false) && !isUserAuthorized('[%INSERT_GRANT%]', false)) {
-		briefNotify("Access Violation : save[%ucfirst(divId)%] ", "ERROR");
+		briefNotify("Access Violation : save[%ucfirst(divId)%] ", 'ERROR');
 		return false;
 	}
 
-	params = prepParams(params, "[%spwfResource%]", insertUpdateChoose);
+	params = prepParams(params, '[%spwfResource%]', insertUpdateChoose);
 	var successf=function(rslt) {
 		clearForm('[%divId%]Form');
 		if (!rslt[SERVER_SIDE_FAIL]) {
 			if (rslt.spwfAction == "UPDATE") {
 				replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
-			}else if (rslt.spwfAction == "INSERT") {
+			}else if (rslt.spwfAction == 'INSERT') {
 				addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
 			}
-			briefNotify("Golf Score Successfully Saved", "INFO");
+			briefNotify("Golf Score Successfully Saved", 'INFO');
 			clear[%ucfirst(divId)%]Form();
 
 		}
 		else {
-			briefNotify("Golf Score Saved Failed", "ERROR");
+			briefNotify("Golf Score Saved Failed", 'ERROR');
 
 		}
 	};
@@ -90,21 +90,21 @@ function save[%ucfirst(divId)%](params) {
 
 //ServerCall Wrappers
 function edit[%ucfirst(divId)%]([%divId%]Id_) {
-	if ( !isUserAuthorized("[%SELECT_GRANT%]", true, "edit[%ucfirst(divId)%]")) return false; 
-	if (isUserAuthorized('[%UPDATE_GRANT%]', false) ) {
+	if ( !isUserAuthorized('[%SELECT_GRANT%]', true, "edit[%ucfirst(divId)%]")) return false; 
+	if (isUserAuthorized('[%UPDATE_GRANT%]', false)) {
 		securityLockForm('[%divId%]Form', false);
 	}else {securityLockForm('[%divId%]Form', true);}
 
 
 	if ([%divId%]Id_) {
-		var params = {"where_clause" : "[%prkey%]=" +[%divId%]Id_};
+		var params = {"where_clause" : "[%prkey%]=" + [%divId%]Id_};
 		retrieve[%ucfirst(divId)%](params);
 	}
 }
 
 function save[%ucfirst(divId)%]Form() {
-	if (!isUserAuthorized('[%UPDATE_GRANT%]') && !isUserAuthorized("[%SELECT_GRANT%]")) {
-		briefNotify("Access Violation : save", "ERROR");
+	if (!isUserAuthorized('[%UPDATE_GRANT%]') && !isUserAuthorized('[%SELECT_GRANT%]')) {
+		briefNotify("Access Violation : save", 'ERROR');
 		return false;
 	}
 
@@ -125,7 +125,7 @@ function validate[%ucfirst(divId)%]Form() {
 var [%ucfirst(divId)%]prKey = {};
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray= new Array();
-	for(var ndx = 0;ndx< dataRows.length;ndx++) {
+	for(var ndx = 0;ndx< dataRows.length;ndx++ ) {
 		dataArray[ndx] = build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
 		[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
 	}
@@ -135,21 +135,21 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 
 function build[%ucfirst(divId)%]ListTableRow(data) {
 	var dataHash= {};
-	var links ="";
+	var links ='';
 	dataHash["golfer_name"] = GOLFER_CACHE[data.golfer_id];
 	dataHash["golf_score"] = formatNumber(data.golf_score, 0, true, false, true);
 	dataHash["game_dt"] = pgDate(data.game_dt);
 	if (isUserAuthorized('[%UPDATE_GRANT%]', false)) {
-		links += "	<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>Edit</a> ";
+		links += "	<a class='alink' onclick='edit[%ucfirst(divId)%](" + data.[%prkey%] + ")'>Edit</a> ";
 		links += " &nbsp; &nbsp ";
-	}else if (isUserAuthorized("[%SELECT_GRANT%]", false)) {
-		links += "<a class='alink' onclick='edit[%ucfirst(divId)%](" +data.[%prkey%] + ")'>View</a> ";
+	}else if (isUserAuthorized('[%SELECT_GRANT%]', false)) {
+		links += "<a class='alink' onclick='edit[%ucfirst(divId)%](" + data.[%prkey%] + ")'>View</a> ";
 		links += " &nbsp; &nbsp;";
 
 	}
 
-	if (isUserAuthorized("[%DELETE_GRANT%]", false)) {
-		links += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" +data.[%prkey%] + ", '"+data.last_update +"')\">Delete</a>  ";
+	if (isUserAuthorized('[%DELETE_GRANT%]', false)) {
+		links += "<a class='alink' onclick=\"delete[%ucfirst(divId)%](" + data.[%prkey%] + ", '" + data.last_update + "')\">Delete</a>  ";
 	}
 		dataHash["links"] =links; 
 	dataHash["DT_RowId"] = "[%ucfirst(divId)%]ListTableTR-" + data.[%prkey%];
@@ -190,21 +190,21 @@ $(document).ready(function() {
 
 		$("#[%divId%]ListTable").dataTable( {
 			"aoColumns" : [
-			 { "mData" : "golfer_name" }, 
-			 { "mData" : "golf_score" }, 
-			 { "mData" : "game_dt" }, 
-			 { "mData" : "links", asSorting : "none" }
+			 { 'mData': "golfer_name" }, 
+			 { 'mData': "golf_score" }, 
+			 { 'mData': "game_dt" }, 
+			 { 'mData': "links", asSorting : "none" }
 			], 
-			"sPaginationType" : "two_button"
+			'sPaginationType' : 'two_button'
 			}
 		 	);
 });
 
 //page specific functions
 function retrieveGolferNameForGolfScore(golferId_) {
-	if (!isUserAuthorized("[%SELECT_GRANT%]", true, "retrieveGolferNameForGolfScore" ) ) return false; 
+	if (!isUserAuthorized('[%SELECT_GRANT%]', true, "retrieveGolferNameForGolfScore" )) return false; 
 
-	var params = prepParams(params, "GOLFER", "SELECT");
+	var params = prepParams(params, "GOLFER", 'SELECT');
 	params['where_clause'] = "golfer_id =" + golferId_;
 	var successf = function(rslt) {
 		$("#[%divId%]GolferNameId").html(rslt.rows[0].name);
@@ -214,19 +214,19 @@ function retrieveGolferNameForGolfScore(golferId_) {
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	var divIdToSecure;
 	divIdToSecure ='#[%divId%]FormSave';
-	(isUserAuthorized('[%UPDATE_GRANT%]', false)) ?  securityshow(divIdToSecure) : securityHide(divIdToSecure);
+	(isUserAuthorized('[%UPDATE_GRANT%]', false)) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
 	divIdToSecure ='#[%divId%]FormAdd';
-	(isUserAuthorized('[%INSERT_GRANT%]', false)) ?  securityshow(divIdToSecure) : securityHide(divIdToSecure);
+	(isUserAuthorized('[%INSERT_GRANT%]', false)) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
 	divIdToSecure ='#[%divId%]EntryDivId';
-	(isUserAuthorized('[%UPDATE_GRANT%]', false) || isUserAuthorized('[%INSERT_GRANT%]', false) ) ?  securityshow(divIdToSecure) : securityHide(divIdToSecure);
+	(isUserAuthorized('[%UPDATE_GRANT%]', false) || isUserAuthorized('[%INSERT_GRANT%]', false)) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-	if (!isUserAuthorized('[%INSERT_GRANT%]', false ) && !isUserAuthorized('[%UPDATE_GRANT%]', false) ) {
+	if (!isUserAuthorized('[%INSERT_GRANT%]', false ) && !isUserAuthorized('[%UPDATE_GRANT%]', false)) {
 		securityLockForm('[%divId%]Form', true);
 
 	}
-	if (!isUserAuthorized('[%INSERT_GRANT%]', false) && isFormEmpty('[%divId%]Form') ) {
+	if (!isUserAuthorized('[%INSERT_GRANT%]', false) && isFormEmpty('[%divId%]Form')) {
 		securityLockForm('[%divId%]Form', true);
 	}
 
