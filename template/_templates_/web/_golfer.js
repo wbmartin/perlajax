@@ -86,7 +86,9 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 //-----------------------
 //Server Call Wrappers
 function edit[%ucfirst(divId)%](rowId_) {
-	if ( !isUserAuthorized('[%SELECT_GRANT%]', true, 'edit[%ucfirst(divId)%]')) 
+	if ( !isUserAuthorized('[%SELECT_GRANT%]', 
+												true, 
+												'edit[%ucfirst(divId)%]')) 
 		return false; 
 
 	if (isUserAuthorized('[%UPDATE_GRANT%]', false)) {
@@ -94,7 +96,7 @@ function edit[%ucfirst(divId)%](rowId_) {
 	}else {securityLockForm('[%divId%]Form', true);}
 
 	if (rowId_) {
-		var params = {'where_clause' : 'golfer_id=' + rowId_};
+		var params = {'where_clause': 'golfer_id=' + rowId_};
 		retrieve[%ucfirst(divId)%](params);
 	}
 }
@@ -110,7 +112,9 @@ function save[%ucfirst(divId)%]Form() {
 		var params = bindForm('[%divId%]Form');
 		save[%ucfirst(divId)%](params);
 	}else {
-		briefNotify('Please Correct Form Validation Errors To Continue', 'WARNING');
+		briefNotify('Please Correct Form Validation Errors To Continue', 
+								'WARNING'
+								);
 	}
 }
 
@@ -157,7 +161,8 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 	if (isUserAuthorized('[%DELETE_GRANT%]', false)) {
 		htmlRow += '<a href="#" class="delete[%ucfirst(divId)%]Link" ';
 	 	htmlRow += ' onclick="delete[%ucfirst(divId)%](';
-		htmlRow += data.[%prkey%] + ', "' + data.last_update + '")>Delete</a>';
+		htmlRow += data.[%prkey%] + ', "' + data.last_update;
+	 	htmlRow += '")>Delete</a>';
 	}
 	dataHash['links'] = htmlRow;
 	dataHash['DT_RowId'] = '[%ucfirst(divId)%]ListTableTR-' + data.[%prkey%];
@@ -194,11 +199,11 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	divIdToSecure ='#[%divId%]EntryDivId';
 	if (!isUserAuthorized('[%INSERT_GRANT%]', false) && 
 			!isUserAuthorized('[%UPDATE_GRANT%]', false)) {
-		securityLockForm('[%divId%]Form', true);
+			securityLockForm('[%divId%]Form', true);
 	}
 	if (!isUserAuthorized('[%INSERT_GRANT%]', false) && 
 			isFormEmpty('[%divId%]Form')) {
-		securityLockForm('[%divId%]Form', true);
+			securityLockForm('[%divId%]Form', true);
 	}
 
 

@@ -752,18 +752,19 @@ function retrieveGolfScoreSummaryList() {
       if (!rslt[SERVER_SIDE_FAIL]) {
         populateGolfScoreSummaryListTable(rslt.rows);
       }else {
-        briefNotify('There was a problem communicating with the Server.', 'ERROR')
+        briefNotify('There was a problem communicating with the Server.', 
+            'ERROR')
       }
 
     };
-    var failf = function() {alert("failed");}
+    var failf = function() {alert('failed');}
     serverCall(params, successf, failf);
 
   }
 //var GolfScoreSummaryprKey = {};
 function populateGolfScoreSummaryListTable(dataRows) {
   var dataArray= new Array();
-  for(var ndx = 0; ndx<dataRows.length; ndx++ ) {
+  for(var ndx = 0; ndx < dataRows.length; ndx++) {
     dataArray[ndx] = buildGolfScoreSummaryListTableRow(dataRows[ndx]);
     //GolfScoreSummaryprKey[dataRows[ndx].] = ndx;
   }
@@ -777,16 +778,18 @@ function buildGolfScoreSummaryListTableRow(gs) {
   var links='';
   dataHash['golfer_name'] = gs.golfer_name;
   dataHash['handicap'] = formatNumber(gs.golf_score, 2, true, false, true);
-  dataHash['date_range'] = pgDate(gs.first_date) + " - " + pgDate(gs.last_date);
+  dataHash['date_range'] = pgDate(gs.first_date) + ' - ' + pgDate(gs.last_date);
 
-  if (isUserAuthorized("SELECT_GOLF_SCORE")) {
-    links += "<a class='alink' onclick='changePage(function() {showGolfScore(" + gs.golfer_id + ")})'>View Scores</a>  ";
-    links += "&nbsp; &nbsp;"
+  if (isUserAuthorized('SELECT_GOLF_SCORE')) {
+    links += '<a class="alink" onclick="changePage(function() {showGolfScore(';
+     links += gs.golfer_id + ')})">View Scores</a>  ';
+    links += '&nbsp; &nbsp;';
   }
   if (isUserAuthorized("SELECT_GOLFER")) {
-    links += " <a href='#' onclick='changePage(function() {showGolfer(" + gs.golfer_id + ")})'>View Golfer</a>";
+    links += ' <a href="" onclick="changePage(function() {showGolfer(';
+     links += gs.golfer_id + ')})">View Golfer</a>';
   }
-  dataHash["links"] =links; 
+  dataHash['links'] =links; 
   //dataHash["DT_RowId"] = "GolfScoreSummaryListTableTR-" + data.;
 
   return dataHash;
@@ -794,9 +797,9 @@ function buildGolfScoreSummaryListTableRow(gs) {
 }
 
 function showGolfScoreSummary() {
-  statusMsg("Navigated to Golf Score Summary View ");
+  statusMsg('Navigated to Golf Score Summary View');
   retrieveGolfScoreSummaryList();
-  standardShowContentPane("golfScoreSummary");
+  standardShowContentPane('golfScoreSummary');
 }
 
 function imposeGolfScoreSummarySecurityUIRestrictions() {
@@ -806,15 +809,15 @@ function imposeGolfScoreSummarySecurityUIRestrictions() {
 
 //After complete Load setup
 $(document).ready(function() {
-    $("#golfScoreSummaryListTable").dataTable( 
+    $('#golfScoreSummaryListTable').dataTable( 
        {
-      "aoColumns" : [
-       { 'mData': "golfer_name" }, 
-       { 'mData': "handicap" }, 
-       { 'mData': "date_range" }, 
-       { 'mData': "links", asSorting : "none" }
+      'aoColumns' : [
+       {'mData': 'golfer_name' }, 
+       {'mData': 'handicap' }, 
+       {'mData': 'date_range' }, 
+       {'mData': 'links', asSorting: 'none' }
       ], 
-      'sPaginationType' : 'two_button'
+      'sPaginationType': 'two_button'
       });
     });
 
@@ -893,7 +896,8 @@ function deleteGolfScore(golfScoreId_, lastUpdate_) {
 }
 
 function saveGolfScore(params) {
-  if (!isUserAuthorized('UPDATE_GOLF_SCORE') && !isUserAuthorized('INSERT_GOLF_SCORE')) {
+  if (!isUserAuthorized('UPDATE_GOLF_SCORE') && 
+      !isUserAuthorized('INSERT_GOLF_SCORE')) {
     briefNotify('Access Violation', 'ERROR');
     return false;
   }
@@ -939,7 +943,8 @@ function editGolfScore(golfScoreId_) {
 
 function saveGolfScoreForm() {
 
-  if (!isUserAuthorized('UPDATE_GOLF_SCORE') && !isUserAuthorized('INSERT_GOLF_SCORE')) {
+  if (!isUserAuthorized('UPDATE_GOLF_SCORE') && 
+      !isUserAuthorized('INSERT_GOLF_SCORE')) {
     briefNotify("Access Violation", 'ERROR');
     return false;
   }
@@ -974,75 +979,88 @@ function populateGolfScoreListTable(dataRows) {
 function buildGolfScoreListTableRow(data) {
   var dataHash= {};
   var links ='';
-  dataHash['golf_score'] = formatNumber(data.golf_score, 0, true, false, true) ;
-  dataHash['game_dt'] =pgDate(data.game_dt)
+  dataHash['golf_score'] = formatNumber(data.golf_score, 0, true, false, true);
+  dataHash['game_dt'] = pgDate(data.game_dt)
     
   if (isUserAuthorized('UPDATE_GOLF_SCORE')) {
-    links += "<a class='alink' onclick='editGolfScore(" + data.golf_score_id + ")'>Edit</a> ";
-    links += "&nbsp; &nbsp;";
+    links += '<a class="alink" onclick="editGolfScore(';
+    links +=  data.golf_score_id + ')">Edit</a> ';
+    links += '&nbsp; &nbsp;';
   } else if (isUserAuthorized('SELECT_GOLF_SCORE')) {
-    links += "<a class='alink' onclick='editGolfScore(" + data.golf_score_id + ")'>View</a> ";
+    links += '<a class="alink" onclick="editGolfScore(';
+    linke += data.golf_score_id + ')">View</a> ';
     links += '&nbsp; &nbsp;';
 
   }
   if (isUserAuthorized('DELETE_GOLF_SCORE')) {
-    links += "<a class='alink' onclick=\"deleteGolfScore(" + data.golf_score_id + ", '" + data.last_update + "')\">Delete</a>  ";
-    links += "&nbsp; &nbsp;"
+    links += '<a class="alink" onclick="deleteGolfScore(';
+    links +=  data.golf_score_id + ', "' + data.last_update + '")>Delete</a> ';
+    links += '&nbsp; &nbsp;';
   }
 
-    dataHash["links"] =links; 
-  dataHash["DT_RowId"] = "GolfScoreListTableTR-" + data.golf_score_id;
+    dataHash['links'] =links; 
+  dataHash['DT_RowId'] = 'GolfScoreListTableTR-' + data.golf_score_id;
   return dataHash;
 }
 
 function replaceGolfScoreListTableRow(row) {
-  $('#golfScoreListTable').dataTable().fnUpdate(buildGolfScoreListTableRow(row), GolfScoreprKey[row.golf_score_id] );
+  $('#golfScoreListTable').dataTable().fnUpdate(
+      buildGolfScoreListTableRow(row), 
+      GolfScoreprKey[row.golf_score_id]
+      );
 }
 function addNewGolfScoreListTableRow(row) {
-  $('#golfScoreListTable').dataTable().fnAddData(buildGolfScoreListTableRow(row));
+  $('#golfScoreListTable').dataTable().fnAddData(
+      buildGolfScoreListTableRow(row)
+      );
 }
 function removeGolfScoreListTableRow(golfScoreId_) {
-  $('#golfScoreListTable').dataTable().fnDeleteRow(GolfScoreprKey[golfScoreId_] );
+  $('#golfScoreListTable').dataTable().fnDeleteRow(
+      GolfScoreprKey[golfScoreId_] 
+      );
 }
 
 //Div Access and App Layout Calls
 function showGolfScore(golferId_) {
-  if (!isUserAuthorized('SELECT_GOLF_SCORE', true, 'showGolfScore')) return false; 
-  statusMsg("Navigated to Golf Score View");
+  if (!isUserAuthorized('SELECT_GOLF_SCORE', 
+        true,  'showGolfScore')) 
+    return false; 
+  statusMsg('Navigated to Golf Score View');
   retrieveGolfScoreList(golferId_); 
   retrieveGolferNameForGolfScore(golferId_);
   hideCurrentContentPane();
-  $("#golfScore").fadeIn();
-  currentContentPane="golfScore";
+  $('#golfScore').fadeIn();
+  currentContentPane='golfScore';
   if ( isFormEmpty('golfScoreForm')) toggleSaveMode('golfScoreForm', false);
-  if ($("#golfScoreForm-golfer_id").val() !=golferId_) {
+  if ($('#golfScoreForm-golfer_id').val() != golferId_) {
     clearGolfScoreForm();
   }
-  $("#golfScoreForm-golfer_id").val(golferId_);
-  $("#golfScoreGolferNameId").html(GOLFER_CACHE[golferId_] + " Golf Scores ");
+  $('#golfScoreForm-golfer_id').val(golferId_);
+  $('#golfScoreGolferNameId').html(GOLFER_CACHE[golferId_] + ' Golf Scores ');
   
   imposeGolfScoreSecurityUIRestrictions();
 }
 
 
 function clearGolfScoreForm() {
-  var golferId=   $("#golfScoreForm-golfer_id").val();
+  var golferId =  $('#golfScoreForm-golfer_id').val();
   clearForm('golfScoreForm');
-  $("#golfScoreForm-golfer_id").val(golferId);
-  (isUserAuthorized('INSERT_GOLF_SCORE', false)) ? securityLockForm('golfScoreForm', false) : securityLockForm('golfScoreForm', true);
+  $('#golfScoreForm-golfer_id').val(golferId);
+  (isUserAuthorized('INSERT_GOLF_SCORE', false)) ? 
+    securityLockForm('golfScoreForm', false) : securityLockForm('golfScoreForm', true);
 }
 
 //After complete Load setup
 $(document).ready(function() {
-    $("#golfScoreForm-game_dt" ).datepicker();
+    $('#golfScoreForm-game_dt').datepicker();
 
-    $("#golfScoreListTable").dataTable( {
-      "aoColumns" : [
-       { 'mData': "golf_score" }, 
-       { 'mData': "game_dt" }, 
-       { 'mData': "links", asSorting : "none" }
+    $('#golfScoreListTable').dataTable( {
+      'aoColumns': [
+       {'mData': 'golf_score'}, 
+       {'mData': 'game_dt'}, 
+       {'mData': 'links', asSorting: 'none'}
       ], 
-      'sPaginationType' : 'two_button'
+      'sPaginationType':'two_button'
       }
        );
     });
@@ -1050,15 +1068,15 @@ $(document).ready(function() {
 
 //page specific functions
 function retrieveGolferNameForGolfScore(golferId_) {
-  if (!isUserAuthorized("SELECT_GOLFER")) {
-    briefNotify("Access Violation", 'ERROR');
+  if (!isUserAuthorized('SELECT_GOLFER')) {
+    briefNotify('Access Violation', 'ERROR');
     return false;
   }
 
-  var params = prepParams(params, "GOLFER", 'SELECT');
-  params['where_clause'] = "golfer_id =" + golferId_;
+  var params = prepParams(params, 'GOLFER', 'SELECT');
+  params['where_clause'] = 'golfer_id =' + golferId_;
   var successf = function(rslt) {
-    $("#golfScoreGolferNameId").html(rslt.rows[0].name);
+    $('#golfScoreGolferNameId').html(rslt.rows[0].name);
   }
   serverCall(params, successf, FAILF);
 }
@@ -1066,17 +1084,23 @@ function retrieveGolferNameForGolfScore(golferId_) {
 function imposeGolfScoreSecurityUIRestrictions() {
   var divIdToSecure;
   divIdToSecure ='#golfScoreFormSave';
-  (isUserAuthorized('UPDATE_GOLF_SCORE')) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  (isUserAuthorized('UPDATE_GOLF_SCORE')) ? 
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
   divIdToSecure ='#golfScoreFormAdd';
-  (isUserAuthorized('INSERT_GOLF_SCORE')) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  (isUserAuthorized('INSERT_GOLF_SCORE')) ? 
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
   divIdToSecure ='#golfScoreEntryDivId';
-  (isUserAuthorized('UPDATE_GOLF_SCORE') || isUserAuthorized('INSERT_GOLF_SCORE')) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
-  if (!isUserAuthorized('INSERT_GOLF_SCORE') && !isUserAuthorized('UPDATE_GOLF_SCORE')) {
+  (isUserAuthorized('UPDATE_GOLF_SCORE') || 
+   isUserAuthorized('INSERT_GOLF_SCORE')) ? 
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  if (!isUserAuthorized('INSERT_GOLF_SCORE') && 
+      !isUserAuthorized('UPDATE_GOLF_SCORE')) {
     securityLockForm('golfScoreForm', true);
   }
-  if (!isUserAuthorized('INSERT_GOLF_SCORE', false) && isFormEmpty('golfScoreForm')) {
+  if (!isUserAuthorized('INSERT_GOLF_SCORE', false) && 
+      isFormEmpty('golfScoreForm')) {
     securityLockForm('golfScoreForm', true);
   }
 
@@ -1408,7 +1432,9 @@ function deleteGolfer(golferId_, lastUpdate_) {
 //-----------------------
 //Server Call Wrappers
 function editGolfer(rowId_) {
-  if ( !isUserAuthorized('SELECT_GOLFER', true, 'editGolfer')) 
+  if ( !isUserAuthorized('SELECT_GOLFER', 
+                        true, 
+                        'editGolfer')) 
     return false; 
 
   if (isUserAuthorized('UPDATE_GOLFER', false)) {
@@ -1416,7 +1442,7 @@ function editGolfer(rowId_) {
   }else {securityLockForm('golferForm', true);}
 
   if (rowId_) {
-    var params = {'where_clause' : 'golfer_id=' + rowId_};
+    var params = {'where_clause': 'golfer_id=' + rowId_};
     retrieveGolfer(params);
   }
 }
@@ -1432,7 +1458,9 @@ function saveGolferForm() {
     var params = bindForm('golferForm');
     saveGolfer(params);
   }else {
-    briefNotify('Please Correct Form Validation Errors To Continue', 'WARNING');
+    briefNotify('Please Correct Form Validation Errors To Continue', 
+                'WARNING'
+                );
   }
 }
 
@@ -1479,7 +1507,8 @@ function buildGolferListTableRow(data) {
   if (isUserAuthorized('DELETE_GOLFER', false)) {
     htmlRow += '<a href="#" class="deleteGolferLink" ';
      htmlRow += ' onclick="deleteGolfer(';
-    htmlRow += data.golfer_id + ', "' + data.last_update + '")>Delete</a>';
+    htmlRow += data.golfer_id + ', "' + data.last_update;
+     htmlRow += '")>Delete</a>';
   }
   dataHash['links'] = htmlRow;
   dataHash['DT_RowId'] = 'GolferListTableTR-' + data.golfer_id;
@@ -1516,11 +1545,11 @@ function imposeGolferSecurityUIRestrictions() {
   divIdToSecure ='#golferEntryDivId';
   if (!isUserAuthorized('INSERT_GOLFER', false) && 
       !isUserAuthorized('UPDATE_GOLFER', false)) {
-    securityLockForm('golferForm', true);
+      securityLockForm('golferForm', true);
   }
   if (!isUserAuthorized('INSERT_GOLFER', false) && 
       isFormEmpty('golferForm')) {
-    securityLockForm('golferForm', true);
+      securityLockForm('golferForm', true);
   }
 
 
@@ -2103,12 +2132,19 @@ function clearSecurityGrantsForm() {
 
 //Server Calls
 function retrieveSecurityUserList() {
-  if (!isUserAuthorized('SELECT_SECURITY_USER', true, "retrieveSecurityUserList")) return false; 
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+        true,
+        'retrieveSecurityUserList')) {
+           return false;
+      }
 
-  var params =prepParams(params, 'security_user' , "select" );
+  var params = prepParams(params, 'security_user' , 'select');
   var successf = function (rslt) {
     if (rslt[SERVER_SIDE_FAIL]) {
-      briefNotify("There was a problem retrieving the User Listing", 'ERROR');
+      briefNotify(
+          'There was a problem retrieving the User Listing',
+          'ERROR'
+          );
     }else {
       populateSecurityUserListTable(rslt.rows);
     }
@@ -2117,22 +2153,28 @@ function retrieveSecurityUserList() {
   serverCall(params, successf, FAILF);
 }
 function retrieveSecurityUser(params) {
-  if (!isUserAuthorized('SELECT_SECURITY_USER', true, "retrieveSecurityUser")) return false; 
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+        true,
+        'retrieveSecurityUser')) {
+           return false;
+        }
 
   params = prepParams(params, 'security_user', 'SELECT');
   var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
       bindToForm('securityUserForm', rslt.rows[0]);
-      document.getElementById("securityUserForm-edit_user_id").value=rslt.rows[0].user_id;
-      if (rslt.rows[0].active_yn =="Y") {
-        document.getElementById('securityUserForm-active_yn').checked=true;
+      $('#securityUserForm-edit_user_id').val(rslt.rows[0].user_id);
+      if (rslt.rows[0].active_yn == 'Y') {
+        document.getElementById('securityUserForm-active_yn').checked = true;
       }else {
-        document.getElementById('securityUserForm-active_yn').checked=false;
+        document.getElementById('securityUserForm-active_yn').checked = false;
       }
       toggleSaveMode('securityUserForm', true);
       showPasswordFields(false);
     }else {
-      briefNotify("There was a problem retrieving the User.", 'ERROR');
+      briefNotify('There was a problem retrieving the User.',
+          'ERROR'
+          );
     }
   }
   serverCall(params, successf, FAILF);
@@ -2141,17 +2183,23 @@ function retrieveSecurityUser(params) {
 
 
 function deleteSecurityUser(securityUserId_, lastUpdate_) {
-  if (!isUserAuthorized('DELETE_SECURITY_USER', true, "deleteSecurityUser")) return false; 
+  if (!isUserAuthorized('DELETE_SECURITY_USER',
+        true,
+        'deleteSecurityUser')){
+           return false;
+        }
 
-  var params =prepParams(params, 'security_user' , "delete" );
+  var params = prepParams(params, 'security_user' , 'delete' );
   params['security_user_id'] = securityUserId_;
   params['last_update'] = lastUpdate_;
-  var successf = function (rslt) {
+  var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
       removeSecurityUserListTableRow(rslt.security_user_id);
-      briefNotify("User Deleted Successfully", 'INFO');
+      briefNotify('User Deleted Successfully', 'INFO');
     }else {
-      briefNotify('There was a problem communicating with the Server.', 'ERROR')
+      briefNotify('There was a problem communicating with the Server.',
+          'ERROR'
+          );
     }
 
   };
@@ -2159,27 +2207,32 @@ function deleteSecurityUser(securityUserId_, lastUpdate_) {
 }
 
 function saveSecurityUser(params) {
-  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) && !isUserAuthorized('INSERT_SECURITY_USER', false)) {
-    briefNotify("Access Violation", 'ERROR');
+  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
+      !isUserAuthorized('INSERT_SECURITY_USER', false)) {
+    briefNotify('Access Violation', 'ERROR');
     return false;
   }
 
   params = prepParams(params, 'security_user', insertUpdateChoose);
-  var successf=function(rslt) {
+  var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
 
       clearForm('securityUserForm');
       showPasswordFields(true);
-      if (rslt.spwfAction == "UPDATE") {
+      if (rslt.spwfAction == 'UPDATE') {
         replaceSecurityUserListTableRow(rslt.rows[0]);
       }else if (rslt.spwfAction == 'INSERT') {
         addNewSecurityUserListTableRow(rslt.rows[0]);
       }
-      briefNotify("User Successfully Saved", 'INFO');
+      briefNotify('User Successfully Saved',
+          'INFO'
+          );
       clearSecurityUserForm();
 
     }else {
-      briefNotify('There was a problem communicating with the Server.', 'ERROR')
+      briefNotify('There was a problem communicating with the Server.',
+         'ERROR'
+         );
     }
 
   };
@@ -2188,7 +2241,11 @@ function saveSecurityUser(params) {
 
 //ServerCall Wrappers
 function editSecurityUser(securityUserId_) {
-  if (!isUserAuthorized('SELECT_SECURITY_USER', true, "editSecurityUser")) return false; 
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+        true,
+        'editSecurityUser')) {
+          return false;
+        }
   if (isUserAuthorized('UPDATE_SECURITY_USER', false)) {
     securityLockForm('securityUserForm', false);
   }else {securityLockForm('securityUserForm', true);}
@@ -2196,24 +2253,26 @@ function editSecurityUser(securityUserId_) {
 
 
   if (securityUserId_) {
-    var params = {"where_clause" : "security_user_id=" + securityUserId_};
+    var params = {'where_clause': 'security_user_id=' + securityUserId_};
     retrieveSecurityUser(params);
   }
 }
 
 function saveSecurityUserForm() {
-  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) 
-      && !isUserAuthorized('INSERT_SECURITY_USER', false)) {
-    briefNotify("Access Violation : saveSecurityUserForm "  , 'ERROR')
+  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
+      !isUserAuthorized('INSERT_SECURITY_USER', false)) {
+    briefNotify('Access Violation: saveSecurityUserForm',
+       'ERROR'
+       );
       return false;
   }
 
   if (validateSecurityUserForm()) {
     var params = bindForm('securityUserForm');
     if (document.getElementById('securityUserForm-active_yn').checked) {
-      params['active_yn']='Y';
+      params['active_yn'] = 'Y';
     }else {
-      params['active_yn']='N';
+      params['active_yn'] = 'N';
     }
     saveSecurityUser(params);
   }
@@ -2221,10 +2280,11 @@ function saveSecurityUserForm() {
 
 //validation
 function validateSecurityUserForm() {
-  var formName='securityUserForm';
-  var formValid  = standardValidate(formName);
-  if (document.getElementById('securityUserForm-password_enc').value != document.getElementById('securityUserForm-password_validate').value) {
-    alert("Please ensure the passwords match to continue");
+  var formName = 'securityUserForm';
+  var formValid = standardValidate(formName);
+  if (document.getElementById('securityUserForm-password_enc').value !=
+      document.getElementById('securityUserForm-password_validate').value) {
+    alert('Please ensure the passwords match to continue');
     formValid = false;
   }
 
@@ -2234,75 +2294,94 @@ function validateSecurityUserForm() {
 //Top Level HTML Manip
 var SecurityUserprKey = {};
 function populateSecurityUserListTable(dataRows) {
-  var dataArray= new Array();
-  if (dataRows !=null)
-    for(var ndx = 0;ndx< dataRows.length;ndx++ ) {
+  var dataArray = new Array();
+  if (dataRows != null)
+    for (var ndx = 0; ndx < dataRows.length; ndx++) {
       dataArray[ndx] = buildSecurityUserListTableRow(dataRows[ndx]);
       SecurityUserprKey[dataRows[ndx].security_user_id] = ndx;
     }
   $('#securityUserListTable').dataTable().fnClearTable();
-  $('#securityUserListTable').dataTable().fnAddData( dataArray, true );
+  $('#securityUserListTable').dataTable().fnAddData(dataArray, true);
 }
 
 function buildSecurityUserListTableRow(data) {
-  var dataHash= {};
-  var links ='';
-  dataHash["user_id"] = data.user_id;
+  var dataHash = {};
+  var links = '';
+  dataHash['user_id'] = data.user_id;
   if (isUserAuthorized('UPDATE_SECURITY_USER', false)) {
-    links += "<a class='alink' onclick='editSecurityUser(" + data.security_user_id + ")'>Edit</a> ";
-    links += " &nbsp; &nbsp;";
+    links += '<a class = "alink" onclick = "editSecurityUser(';
+     links += data.security_user_id + ')">Edit</a> ';
+    links += ' &nbsp; &nbsp;';
   }else if (isUserAuthorized('SELECT_SECURITY_USER', false)) {
-    links += "<a class='alink' onclick='editSecurityUser(" + data.security_user_id + ")'>View</a> ";
-    links += " &nbsp; &nbsp;";
+    links += '<a class = "alink" onclick = "editSecurityUser(';
+     links += data.security_user_id + ')">View</a> ';
+    links += ' &nbsp; &nbsp;';
 
   }
   if (isUserAuthorized('DELETE_SECURITY_USER', false)) {
-    links += "<a class='alink' onclick=\"deleteSecurityUser(" + data.security_user_id + ", '" + data.last_update + "')\">Delete</a>";
+    links += '<a class = "alink" onclick = "deleteSecurityUser(';
+    links += data.security_user_id + ', \'' + data.last_update;
+    links += '\')">Delete</a>';
   }
-  dataHash["links"] =links; 
-  dataHash["DT_RowId"] = "SecurityUserListTableTR-" + data.security_user_id;
+  dataHash['links'] = links;
+  dataHash['DT_RowId'] = 'SecurityUserListTableTR-' + data.security_user_id;
 
   return dataHash;
 }
 
 function replaceSecurityUserListTableRow(row) {
-  $("#securityUserListTable").dataTable().fnUpdate(buildSecurityUserListTableRow(row), SecurityUserprKey[row.security_user_id] );
+  $('#securityUserListTable').dataTable().fnUpdate(
+      buildSecurityUserListTableRow(row),
+      SecurityUserprKey[row.security_user_id]
+      );
 }
 function addNewSecurityUserListTableRow(row) {
-  $("#securityUserListTable").dataTable().fnAddData(buildSecurityUserListTableRow(row));
+  $('#securityUserListTable').dataTable().fnAddData(
+      buildSecurityUserListTableRow(row)
+      );
 }
 function removeSecurityUserListTableRow(securityUserId_) {
-  $("#securityUserListTable").dataTable().fnDeleteRow(SecurityUserprKey[securityUserId_] );
+  $('#securityUserListTable').dataTable().fnDeleteRow(
+      SecurityUserprKey[securityUserId_]
+      );
 }
 
 //Div Access and App Layout Calls
 function showSecurityUser() {
-  statusMsg("Navigated to Security Users");
-  if (!isUserAuthorized('SELECT_SECURITY_USER', true, "showSecurityUser" )) return false; 
+  statusMsg('Navigated to Security Users');
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+       true,
+       'showSecurityUser')) {
+         return false;
+       }
 
-  retrieveSecurityUserList(); 
+  retrieveSecurityUserList();
   hideCurrentContentPane();
-  $("#securityUser").fadeIn();
-  currentContentPane="securityUser";
-  if ( isFormEmpty('securityUserForm')) toggleSaveMode('securityUserForm', false);
+  $('#securityUser').fadeIn();
+  currentContentPane = 'securityUser';
+  if (isFormEmpty('securityUserForm')) {
+    toggleSaveMode('securityUserForm', false);
+  }
   showPasswordFields(true);
 }
 function clearSecurityUserForm() {
   clearForm('securityUserForm');
   showPasswordFields(true);
-  (isUserAuthorized('INSERT_SECURITY_USER', false)) ? securityLockForm('securityUserForm', false) : securityLockForm('securityUserForm', true);
+  (isUserAuthorized('INSERT_SECURITY_USER', false)) ?
+    securityLockForm('securityUserForm', false) :
+      securityLockForm('securityUserForm', true);
 
 }
 
 
 //After complete Load setup
 $(document).ready(function() {
-    $("#securityUserListTable").dataTable( {
-      "aoColumns" : [
-       { 'mData': "user_id" }, 
-       { 'mData': "links", asSorting : "none" }
-      ], 
-      'sPaginationType' : 'two_button'
+    $('#securityUserListTable').dataTable({
+      'aoColumns': [
+       {'mData': 'user_id' },
+       {'mData': 'links', asSorting: 'none' }
+      ],
+      'sPaginationType': 'two_button'
       }
       );
 
@@ -2312,43 +2391,45 @@ $(document).ready(function() {
 
 function showPasswordFields(show) {
   if (show) {
-    $("#securityUserForm-password_encDivId").fadeIn();
-    $("#securityUserForm-password_validateDivId").fadeIn();
+    $('#securityUserForm-password_encDivId').fadeIn();
+    $('#securityUserForm-password_validateDivId').fadeIn();
   }else {
-    $("#securityUserForm-password_encDivId").fadeOut();
-    $("#securityUserForm-password_validateDivId").fadeOut();
+    $('#securityUserForm-password_encDivId').fadeOut();
+    $('#securityUserForm-password_validateDivId').fadeOut();
   }
 }
 function initiateChangePassword() {
-  showChangePasswordDialog($("#securityUserForm-edit_user_id").val());
+  showChangePasswordDialog($('#securityUserForm-edit_user_id').val());
 }
 
 function imposeSecurityUserSecurityUIRestrictions() {
   var divIdToSecure;
-  divIdToSecure ='#securityUserFormSave';
-  (isUserAuthorized('UPDATE_SECURITY_USER', false)) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  divIdToSecure = '#securityUserFormSave';
+  (isUserAuthorized('UPDATE_SECURITY_USER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-  divIdToSecure ='#securityUserFormAdd';
-  (isUserAuthorized('INSERT_SECURITY_USER', false)) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  divIdToSecure = '#securityUserFormAdd';
+  (isUserAuthorized('INSERT_SECURITY_USER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-  divIdToSecure ='#securityUserEntryDivId';
-  (isUserAuthorized('UPDATE_SECURITY_USER', false) || isUserAuthorized('INSERT_SECURITY_USER', false)) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  divIdToSecure = '#securityUserEntryDivId';
+  (isUserAuthorized('UPDATE_SECURITY_USER', false) ||
+   isUserAuthorized('INSERT_SECURITY_USER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-  if (!isUserAuthorized('INSERT_SECURITY_USER', false) && !isUserAuthorized('UPDATE_SECURITY_USER', false)) {
+  if (!isUserAuthorized('INSERT_SECURITY_USER', false) &&
+      !isUserAuthorized('UPDATE_SECURITY_USER', false)) {
     securityLockForm('securityUserForm', true);
   }
-  divIdToSecure ="#securityUserChangeOthersPassword";
-  (isUserAuthorized("CHANGE_OTHERS_PWD", false)) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  divIdToSecure = '#securityUserChangeOthersPassword';
+  (isUserAuthorized('CHANGE_OTHERS_PWD', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-  if (!isUserAuthorized('INSERT_SECURITY_USER', false) && isFormEmpty('securityUserForm')) {
+  if (!isUserAuthorized('INSERT_SECURITY_USER', false) &&
+      isFormEmpty('securityUserForm')) {
     securityLockForm('securityUserForm', true);
   }
-
-
-
 }
-
-
 
 
 
@@ -2356,7 +2437,7 @@ function imposeSecurityUserSecurityUIRestrictions() {
 //server calls
 function submitChangePasswordDialog(params) {
   params = prepParams(params, 'SECURITY_CHANGE_PASSWORD', 'CHANGE');
-  var successf=function(rslt) {
+  var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
 
       if (rslt.rows[0].change_password == '1') {
@@ -2382,20 +2463,29 @@ function submitChangePasswordDialogForm() {
     submitChangePasswordDialog(params);
     $('#changePasswordDialog').dialog('close');
   } else {
-    briefNotify('Please Correct Form Validation Errors To Continue', 'WARNING');
+    briefNotify(
+        'Please Correct Form Validation Errors To Continue',
+        'WARNING'
+        );
   }
 }
 
 //validation
 function validateChangePasswordDialogForm() {
-  var formName='changePasswordDialogForm';
-  var formValid  = standardValidate(formName);
-  if ($('#changePasswordDialogForm-new_password').val() != $('#changePasswordDialogForm-confirm_password').val()) {
-    appendValidationMsg(formName, 'changePasswordDialogForm-confirm_password', 
+  var formName = 'changePasswordDialogForm';
+  var formValid = standardValidate(formName);
+  if ($('#changePasswordDialogForm-new_password').val() !=
+          $('#changePasswordDialogForm-confirm_password').val()) {
+    appendValidationMsg(
+        formName,
+        'changePasswordDialogForm-confirm_password',
         'Passwords do not match'
         );
-    highlightFieldError(formName, 'changePasswordDialogForm-confirm_password', true);
-    formValid =false;
+    highlightFieldError(formName,
+        'changePasswordDialogForm-confirm_password',
+        true
+        );
+    formValid = false;
   }
   return formValid;
 }
@@ -2410,28 +2500,29 @@ function showChangePasswordDialog(userId_) {
   statusMsg('Navigated to Change Password Dialog');
   var params = {};
   if (userId_ == null) {
-    userId_ =$('form#loginHolder #user_id').val() ;
+    userId_ = $('form#loginHolder #user_id').val();
   }
   $('#changePasswordDialogForm-user_to_update').val(userId_);
   $('#changePasswordDialog').dialog('destroy');
 
-  $('#changePasswordDialog').dialog(
-       {
-resizable: false, 
-height: 400, 
-width: 600, 
-modal: true, 
-buttons: {
-'Submit': function() { submitChangePasswordDialogForm(); }, 
-Cancel: function() { $( this ).dialog('close');clearForm('changePasswordDialogForm'); }
-}
-});
+  $('#changePasswordDialog').dialog({
+        resizable: false,
+    height: 400,
+    width: 600,
+    modal: true,
+    buttons: {
+      'Submit': function() { submitChangePasswordDialogForm(); },
+    Cancel: function() {
+      $(this).dialog('close');clearForm('changePasswordDialogForm');
+    }
+    }
+      });
 
 
 }
 
 $(document).ready(function() {
-    });
+});
 
 
 
@@ -2447,21 +2538,31 @@ $(document).ready(function() {
 
 //Server Calls
 function retrieveSupportRequestList() {
-  if (!isUserAuthorized('SELECT_SUPPORT_REQUEST', true, 'retrieveSupportRequestList')) return false; 
+  if (!isUserAuthorized('SELECT_SUPPORT_REQUEST',
+        true,
+        'retrieveSupportRequestList')) {
+          return false;
+        }
 
-  var params =prepParams(params, 'support_request' , 'select' );
+  var params = prepParams(params, 'support_request' , 'select');
   //params['orderby_clause'] =" order by game_dt desc"
-  var successf = function (rslt) {
+  var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
-      populateSupportRequestListTable(rslt.rows)
+      populateSupportRequestListTable(rslt.rows);
     }else {
-      briefNotify('There was a problem communicating with the Server.', 'ERROR');
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
     }
   };
   serverCall(params, successf, FAILF);
 }
 function retrieveSupportRequest(params) {
-  if (!isUserAuthorized('SELECT_SUPPORT_REQUEST', true, "retrieveSupportRequest" )) return false; 
+  if (!isUserAuthorized('SELECT_SUPPORT_REQUEST',
+        true, 'retrieveSupportRequest')) {
+          return false;
+        }
 
   params = prepParams(params, 'support_request', 'SELECT');
   var successf = function(rslt) {
@@ -2469,27 +2570,38 @@ function retrieveSupportRequest(params) {
       rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
       bindToForm('supportRequestForm', rslt.rows[0]);
       toggleSaveMode('supportRequestForm', true);
-    }else {
-      briefNotify('There was a problem communicating with the Server.', 'ERROR')
+    } else {
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
+
     }
 
-  }
+  };
   serverCall(params, successf, FAILF);
 }
 
 
 
 function deleteSupportRequest(supportRequestId_, lastUpdate_) {
-  if (!isUserAuthorized('DELETE_SUPPORT_REQUEST', true, "deleteSupportRequest" )) return false;
-  var params =prepParams(params, 'support_request' , "delete" );
+  if (!isUserAuthorized('DELETE_SUPPORT_REQUEST',
+        true,
+        'deleteSupportRequest')) {
+          return false;
+        }
+  var params = prepParams(params, 'support_request' , 'delete');
   params['support_request_id'] = supportRequestId_;
   params['last_update'] = lastUpdate_;
-  var successf = function (rslt) {
+  var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
       removeSupportRequestListTableRow(rslt.support_request_id);
-      briefNotify("Support Request Deleted Successfully", 'INFO');
+      briefNotify('Support Request Deleted Successfully', 'INFO');
     }else {
-      briefNotify('There was a problem communicating with the Server.', 'ERROR')
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
     }
 
   };
@@ -2497,26 +2609,29 @@ function deleteSupportRequest(supportRequestId_, lastUpdate_) {
 }
 
 function saveSupportRequest(params) {
-  if (!isUserAuthorized('UPDATE_SUPPORT_REQUEST', false) && !isUserAuthorized('INSERT_SUPPORT_REQUEST', false)) {
-    briefNotify("Access Violation : saveSupportRequest ", 'ERROR');
-    return false;
-  }
+  if (!isUserAuthorized('UPDATE_SUPPORT_REQUEST', false) &&
+      !isUserAuthorized('INSERT_SUPPORT_REQUEST', false)) {
+        briefNotify('Access Violation : saveSupportRequest',
+            'ERROR'
+            );
+        return false;
+      }
 
   params = prepParams(params, 'support_request', insertUpdateChoose);
-  var successf=function(rslt) {
+  var successf = function(rslt) {
     clearForm('supportRequestForm');
     if (!rslt[SERVER_SIDE_FAIL]) {
-      if (rslt.spwfAction == "UPDATE") {
+      if (rslt.spwfAction == 'UPDATE') {
         replaceSupportRequestListTableRow(rslt.rows[0]);
       }else if (rslt.spwfAction == 'INSERT') {
         addNewSupportRequestListTableRow(rslt.rows[0]);
       }
-      briefNotify("Support Request Successfully Saved", 'INFO');
+      briefNotify('Support Request Successfully Saved', 'INFO');
       clearSupportRequestForm();
 
     }
     else {
-      briefNotify("Support Request Score Saved Failed", 'ERROR');
+      briefNotify('Support Request Score Saved Failed', 'ERROR');
 
     }
   };
@@ -2525,29 +2640,33 @@ function saveSupportRequest(params) {
 
 //ServerCall Wrappers
 function editSupportRequest(supportRequestId_) {
-  showSupportRequestDialog();  
-  if ( !isUserAuthorized('SELECT_SUPPORT_REQUEST', true, "editSupportRequest")) return false; 
+  showSupportRequestDialog();
+  if (!isUserAuthorized('SELECT_SUPPORT_REQUEST',
+        true, 'editSupportRequest')) {
+          return false;
+        }
   if (isUserAuthorized('UPDATE_SUPPORT_REQUEST', false)) {
     securityLockForm('supportRequestForm', false);
-  }else {securityLockForm('supportRequestForm', true);}
+  } else {securityLockForm('supportRequestForm', true);}
 
 
 
 
   if (supportRequestId_) {
-    var params = {"where_clause" : "support_request_id=" + supportRequestId_};
+    var params = {'where_clause': 'support_request_id= ' + supportRequestId_};
     retrieveSupportRequest(params);
   }
 }
 
 function saveSupportRequestForm() {
-  if (!isUserAuthorized('UPDATE_SUPPORT_REQUEST') && !isUserAuthorized('SELECT_SUPPORT_REQUEST')) {
-    briefNotify("Access Violation : save Support Request", 'ERROR');
-    return false;
-  }
+  if (!isUserAuthorized('UPDATE_SUPPORT_REQUEST') &&
+      !isUserAuthorized('SELECT_SUPPORT_REQUEST')) {
+        briefNotify('Access Violation : save Support Request', 'ERROR');
+        return false;
+      }
 
   if (validateSupportRequestForm()) {
-    $("#supportRequestFormHolder").dialog("close");
+    $('#supportRequestFormHolder').dialog('close');
     var params = bindForm('supportRequestForm');
     saveSupportRequest(params);
   }
@@ -2555,150 +2674,186 @@ function saveSupportRequestForm() {
 
 //validation
 function validateSupportRequestForm() {
-  var formName='supportRequestForm';
-  var formValid  = standardValidate(formName);
+  var formName = 'supportRequestForm';
+  var formValid = standardValidate(formName);
   return formValid;
 }
 
 //Top Level HTML Manip
 var SupportRequestprKey = {};
 function populateSupportRequestListTable(dataRows) {
-  var dataArray= new Array();
-  for(var ndx = 0;ndx< dataRows.length;ndx++ ) {
+  var dataArray = new Array();
+  for (var ndx = 0; ndx < dataRows.length; ndx++) {
     dataArray[ndx] = buildSupportRequestListTableRow(dataRows[ndx]);
     SupportRequestprKey[dataRows[ndx].support_request_id] = ndx;
   }
   $('#supportRequestListTable').dataTable().fnClearTable();
-  $('#supportRequestListTable').dataTable().fnAddData( dataArray, true );
+  $('#supportRequestListTable').dataTable().fnAddData(dataArray, true);
 }
 
 function buildSupportRequestListTableRow(data) {
-  var dataHash= {};
-  var links ='';
-  dataHash["details"] = "<span class='sprite16Icon smallPlusIcon expanderClass'></span>" ;
-
-  dataHash["support_request_id"] = data.support_request_id ;
-  dataHash["summary"] =  data.summary;
-  dataHash["detailed_description"] = data.detailed_description;
-  dataHash["log_details"] = data.log_details;
-  dataHash["solution_description"] = data.solution_description;
-  dataHash["last_update"] = pgDate(data.last_update);
-  dataHash["updated_by"] = data.updated_by;
+  var dataHash = {};
+  var links = '';
+  dataHash['details'] = '<span class="sprite16Icon smallPlusIcon ';
+  dataHash['details'] += 'expanderClass"></span>';
+  dataHash['support_request_id'] = data.support_request_id;
+  dataHash['summary'] = data.summary;
+  dataHash['detailed_description'] = data.detailed_description;
+  dataHash['log_details'] = data.log_details;
+  dataHash['solution_description'] = data.solution_description;
+  dataHash['last_update'] = pgDate(data.last_update);
+  dataHash['updated_by'] = data.updated_by;
 
   if (isUserAuthorized('UPDATE_SUPPORT_REQUEST', false)) {
-    links += "  <a class='alink' onclick='editSupportRequest(" + data.support_request_id + ")'>Edit</a> ";
-    links += " &nbsp; &nbsp ";
+    links += '  <a class="alink" onclick="editSupportRequest(';
+    links += data.support_request_id + ')">Edit</a> ';
+    links += ' &nbsp; &nbsp ';
   }else if (isUserAuthorized('SELECT_SUPPORT_REQUEST', false)) {
-    links += "<a class='alink' onclick='editSupportRequest(" + data.support_request_id + ")'>View</a> ";
-    links += " &nbsp; &nbsp;";
+    links += '<a class="alink" onclick="editSupportRequest(';
+    links += data.support_request_id + ')">View</a> ';
+    links += ' &nbsp; &nbsp;';
 
   }
 
   if (isUserAuthorized('DELETE_SUPPORT_REQUEST', false)) {
-    links += "<a class='alink' onclick=\"deleteSupportRequest(" + data.support_request_id + ", '" + data.last_update + "')\">Delete</a>  ";
+    links += '<a class="alink" onclick="deleteSupportRequest(';
+    links += data.support_request_id + ', "' + data.last_update;
+     links += '")">Delete</a> ';
   }
-  dataHash["links"] =links; 
-  dataHash["DT_RowId"] = "SupportRequestListTableTR-" + data.support_request_id;
+  dataHash['links'] = links;
+  dataHash['DT_RowId'] = 'SupportRequestListTableTR-';
+   dataHash['DT_RowId'] += data.support_request_id;
 
   return dataHash;
 }
 
 function replaceSupportRequestListTableRow(row) {
-  $("#supportRequestListTable").dataTable().fnUpdate(buildSupportRequestListTableRow(row), SupportRequestprKey[row.support_request_id] );
+  $('#supportRequestListTable').dataTable().fnUpdate(
+      buildSupportRequestListTableRow(row),
+      SupportRequestprKey[row.support_request_id]
+      );
 }
 function addNewSupportRequestListTableRow(row) {
-  $("#supportRequestListTable").dataTable().fnAddData(buildSupportRequestListTableRow(row));
+  $('#supportRequestListTable').dataTable().fnAddData(
+      buildSupportRequestListTableRow(row)
+      );
 }
 function removeSupportRequestListTableRow(supportRequestId_) {
-  $("#supportRequestListTable").dataTable().fnDeleteRow(SupportRequestprKey[supportRequestId_] );
+  $('#supportRequestListTable').dataTable().fnDeleteRow(
+      SupportRequestprKey[supportRequestId_]
+      );
 }
 
 //Div Access and App Layout Calls
 function showSupportRequest() {
-  statusMsg("Navigated to Support Request");
-  retrieveSupportRequestList(); 
+  statusMsg('Navigated to Support Request');
+  retrieveSupportRequestList();
   hideCurrentContentPane();
-  $("#supportRequest").fadeIn();
-  currentContentPane="supportRequest";
-  if ( isFormEmpty('supportRequestForm')) toggleSaveMode('supportRequestForm', false);
+  $('#supportRequest').fadeIn();
+  currentContentPane = 'supportRequest';
+  if (isFormEmpty('supportRequestForm')) {
+    toggleSaveMode('supportRequestForm', false);
+  }
 
 }
 
 function clearSupportRequestForm() {
-  $("#supportRequestFormHolder").dialog("close");
+  $('#supportRequestFormHolder').dialog('close');
   clearForm('supportRequestForm');
-  (isUserAuthorized('INSERT_SUPPORT_REQUEST', false)) ? securityLockForm('supportRequestForm', false) : securityLockForm('supportRequestForm', true);
+  (isUserAuthorized('INSERT_SUPPORT_REQUEST', false)) ?
+    securityLockForm('supportRequestForm', false) :
+    securityLockForm('supportRequestForm', true);
 }
 
 
 //After complete Load setup
 $(document).ready(function() {
-  $("#supportRequestListTable").dataTable( {
-    "aoColumns" : [
-  { 'mData': "details" , bSortable : false, "sWidth" : "10"}, 
-  { 'mData': "support_request_id", "sWidth" : "10" }, 
-  { 'mData': "summary"  , "sClass" : "textAlignLeft"}, 
-  { 'mData': "detailed_description", bVisible : false }, 
-  // { 'mData': "log_details" }, 
-  // { 'mData': "solution_description" }, 
-  { 'mData': "last_update",  bVisible : false}, 
-  // { 'mData': "updated_by" }, 
-  { 'mData': "links", asSorting : "none", "sWidth" : "10em" }
-  ], 
-  'sPaginationType' : 'two_button'
+  $('#supportRequestListTable').dataTable({
+    'aoColumns': [
+  { 'mData': 'details', bSortable: false, 'sWidth': '10'},
+  { 'mData': 'support_request_id', 'sWidth': '10' },
+  { 'mData': 'summary', 'sClass': 'textAlignLeft'},
+  { 'mData': 'detailed_description', bVisible: false },
+  // { 'mData': 'log_details' },
+  // { 'mData': 'solution_description' },
+  { 'mData': 'last_update', bVisible: false},
+  // { 'mData': 'updated_by' },
+  { 'mData': 'links', asSorting: 'none', 'sWidth': '10em' }
+  ],
+  'sPaginationType': 'two_button'
   }
   );
 
 
-  $('#supportRequestListTable tbody td span.expanderClass').live('click', function () {
-    var nTr = $(this).parents('tr')[0];
-    var oTable = $("#supportRequestListTable").dataTable();
-    if ( oTable.fnIsOpen(nTr)) { /* This row is already open - close it */
-      $(this).replaceWith( "<span class='sprite16Icon smallPlusIcon expanderClass'></span>") ;
-      oTable.fnClose( nTr );
+  $('#supportRequestListTable tbody td span.expanderClass').live(
+    'click',
+    function() {
+      var nTr = $(this).parents('tr')[0];
+      var oTable = $('#supportRequestListTable').dataTable();
+      if (oTable.fnIsOpen(nTr)) { /* This row is already open - close it */
+        $(this).replaceWith(
+          '<span class="sprite16Icon smallPlusIcon expanderClass"></span>'
+          );
+        oTable.fnClose(nTr);
+      } else { /* Open this row */
+        $(this).replaceWith(
+          '<span class="sprite16Icon smallCancelIcon expanderClass"></span>'
+          );
+        oTable.fnOpen(nTr,
+          fnFormatSupportRequestExpansion(oTable, nTr),
+          'details'
+          );
+      }
     }
-    else { /* Open this row */
-      $(this).replaceWith( "<span class='sprite16Icon smallCancelIcon expanderClass'></span>") ;
-      oTable.fnOpen( nTr, fnFormatSupportRequestExpansion(oTable, nTr), 'details' );
-    }
-  } );
+    );
 
 
 });
 
-
-
-
-function fnFormatSupportRequestExpansion ( oTable, nTr )
-{
-  var aData = oTable.fnGetData( nTr );
-  var sOut = '<div style="padding-left : 50px;">';
-  var divStyle= ''
-    sOut += ''
-    sOut += '<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Detailed Description : </span><span>' + aData.detailed_description + '</span></div>';
-  sOut += '<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Solution Description : </span><span>' + aData.solution_description + '</span></div>';
-  sOut += '<div class="supportRequestAdditionalInfo"><span class="supportRequestAdditionalInfoTitle">Log Details : </span><span>' + aData.log_details + '</span></div>';
+function fnFormatSupportRequestExpansion(oTable, nTr) {
+  var aData = oTable.fnGetData(nTr);
+  var sOut = '<div style="padding-left: 50px;">';
+  var divStyle = '';
+    sOut += '';
+    sOut += '<div class="supportRequestAdditionalInfo">';
+  sOut += '<span class="supportRequestAdditionalInfoTitle">';
+  sOut += 'Detailed Description : </span>';
+  sOut += '<span>' + aData.detailed_description + '</span>';
+  sOut += '</div>';
+  sOut += '<div class="supportRequestAdditionalInfo">';
+  sOut += '<span class="supportRequestAdditionalInfoTitle">';
+  sOut += 'Solution Description : </span>';
+  sOut += '<span>' + aData.solution_description + '</span></div>';
+  sOut += '<div class="supportRequestAdditionalInfo">';
+  sOut += '<span class="supportRequestAdditionalInfoTitle">';
+  sOut += 'Log Details : </span><span>' + aData.log_details + '</span>';
+  sOut += '</div>';
   sOut += '';
   sOut += '</div>';
-  //var sOut = "<span id='SupportRequestExpansion'></span>";  
+  //var sOut = "<span id= 'SupportRequestExpansion'></span>";
   return sOut;
 }
 //page specific functions
 function imposeSupportRequestSecurityUIRestrictions() {
   var divIdToSecure;
-  divIdToSecure ='#supportRequestFormSave';
-  (isUserAuthorized('UPDATE_SUPPORT_REQUEST', false)) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  divIdToSecure = '#supportRequestFormSave';
+  (isUserAuthorized('UPDATE_SUPPORT_REQUEST', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-  divIdToSecure ='#supportRequestFormAdd';
-  (isUserAuthorized('INSERT_SUPPORT_REQUEST', false)) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  divIdToSecure = '#supportRequestFormAdd';
+  (isUserAuthorized('INSERT_SUPPORT_REQUEST', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-  divIdToSecure ='#supportRequestEntryDivId';
-  (isUserAuthorized('UPDATE_SUPPORT_REQUEST', false) || isUserAuthorized('INSERT_SUPPORT_REQUEST', false)) ? securityshow(divIdToSecure) : securityHide(divIdToSecure);
-  if (!isUserAuthorized('INSERT_SUPPORT_REQUEST', false ) && !isUserAuthorized('UPDATE_SUPPORT_REQUEST', false)) {
-    securityLockForm('supportRequestForm', true);
+  divIdToSecure = '#supportRequestEntryDivId';
+  (isUserAuthorized('UPDATE_SUPPORT_REQUEST', false) ||
+   isUserAuthorized('INSERT_SUPPORT_REQUEST', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  if (!isUserAuthorized('INSERT_SUPPORT_REQUEST', false) &&
+       !isUserAuthorized('UPDATE_SUPPORT_REQUEST', false)) {
+        securityLockForm('supportRequestForm', true);
 
-  }
-  if (!isUserAuthorized('INSERT_SUPPORT_REQUEST', false) && 
+      }
+  if (!isUserAuthorized('INSERT_SUPPORT_REQUEST', false) &&
       isFormEmpty('supportRequestForm')) {
         securityLockForm('supportRequestForm', true);
       }
@@ -2709,7 +2864,7 @@ function addNewSupportRequest() {
   var logText = '';
   clearSupportRequestForm();
   showSupportRequestDialog();
-  for (var ndx = 0; ndx < clientLog.length; ndx++ ) {
+  for (var ndx = 0; ndx < clientLog.length; ndx++) {
     logText += clientLog[ndx].logDt + '|' + clientLog[ndx].msg + '\n';
   }
 
