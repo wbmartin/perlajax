@@ -18,7 +18,7 @@ function retrieve[%ucfirst(divId)%]List() {
 			}
 
 	var params = prepParams(params, '[%spwfResource%]' , 'select');
-	var successf = function (rslt) {
+	var successf = function(rslt) {
 		if (rslt[SERVER_SIDE_FAIL]) {
 			briefNotify(
 					'There was a problem retrieving the [%prettyName%] Listing',
