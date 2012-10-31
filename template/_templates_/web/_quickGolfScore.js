@@ -10,15 +10,23 @@
 
 //Server Calls
 function retrieve[%ucfirst(divId)%]List() {
-	if (!isUserAuthorized('[%SELECT_GRANT%]', true, "retrieve[%ucfirst(divId)%]List")) return false;
+	if (!isUserAuthorized(
+				'[%SELECT_GRANT%]',
+				true,
+				'retrieve[%ucfirst(divId)%]List')) {
+				 	return false;
+				}
 
-	var params =prepParams(params, '[%spwfResource%]' , "select" );
-	params['orderby_clause'] =" order by game_dt desc"
-		var successf = function (rslt) {
+	var params = prepParams(params, '[%spwfResource%]' , 'select');
+	params['orderby_clause'] = ' order by game_dt desc';
+		var successf = function(rslt) {
 			if (!rslt[SERVER_SIDE_FAIL]) {
-				populate[%ucfirst(divId)%]ListTable(rslt.rows)
+				populate[%ucfirst(divId)%]ListTable(rslt.rows);
 			}else {
-				briefNotify('There was a problem communicating with the Server.', 'ERROR');
+				briefNotify(
+						'There was a problem communicating with the Server.',
+						'ERROR'
+						);
 			}
 		};
 	serverCall(params, successf, FAILF);
@@ -27,7 +35,7 @@ function retrieve[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized(
 				'[%SELECT_GRANT%]',
 				true,
-				'retrieve[%ucfirst(divId)%]' )) {
+				'retrieve[%ucfirst(divId)%]')) {
 					return false;
 				}
 
@@ -44,7 +52,7 @@ function retrieve[%ucfirst(divId)%](params) {
 					);
 		}
 
-	}
+	};
 	serverCall(params, successf, FAILF);
 }
 
@@ -54,19 +62,19 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	if (!isUserAuthorized(
 				'[%DELETE_GRANT%]',
 				true,
-				'delete[%ucfirst(divId)%]')){
+				'delete[%ucfirst(divId)%]')) {
 	 	return false;
 }
 
 
-	var params = prepParams(params, '[%spwfResource%]' , 'delete' );
+	var params = prepParams(params, '[%spwfResource%]' , 'delete');
 	params['[%prkey%]'] = [%toCC(prkey)%]_;
 	params['last_update'] = lastUpdate_;
 	var successf = function(rslt) {
 		if (!rslt[SERVER_SIDE_FAIL]) {
 			remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
 			briefNotify('Golf Score Deleted Successfully', 'INFO');
-		}else {
+		} else {
 			briefNotify(
 					'There was a problem communicating with the Server.',
 					'ERROR'
@@ -81,7 +89,7 @@ function save[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]', false) &&
 			!isUserAuthorized('[%INSERT_GRANT%]', false)) {
 		briefNotify(
-				"Access Violation : save[%ucfirst(divId)%] ",
+				'Access Violation : save[%ucfirst(divId)%] ',
 				'ERROR'
 				);
 		return false;
@@ -91,17 +99,17 @@ function save[%ucfirst(divId)%](params) {
 	var successf = function(rslt) {
 		clearForm('[%divId%]Form');
 		if (!rslt[SERVER_SIDE_FAIL]) {
-			if (rslt.spwfAction == "UPDATE") {
+			if (rslt.spwfAction == 'UPDATE') {
 				replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
 			}else if (rslt.spwfAction == 'INSERT') {
 				addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
 			}
-			briefNotify("Golf Score Successfully Saved", 'INFO');
+			briefNotify('Golf Score Successfully Saved', 'INFO');
 			clear[%ucfirst(divId)%]Form();
 
 		}
 		else {
-			briefNotify("Golf Score Saved Failed", 'ERROR');
+			briefNotify('Golf Score Saved Failed', 'ERROR');
 
 		}
 	};
@@ -110,10 +118,10 @@ function save[%ucfirst(divId)%](params) {
 
 //ServerCall Wrappers
 function edit[%ucfirst(divId)%]([%divId%]Id_) {
-	if ( !isUserAuthorized(
+	if (!isUserAuthorized(
 				'[%SELECT_GRANT%]',
 				true,
-				"edit[%ucfirst(divId)%]")){
+				'edit[%ucfirst(divId)%]')) {
 				 	return false;
 				}
 	if (isUserAuthorized('[%UPDATE_GRANT%]', false)) {
@@ -122,7 +130,7 @@ function edit[%ucfirst(divId)%]([%divId%]Id_) {
 
 
 	if ([%divId%]Id_) {
-		var params = {"where_clause" : "[%prkey%]=" + [%divId%]Id_};
+		var params = {'where_clause' : '[%prkey%]=' + [%divId%]Id_};
 		retrieve[%ucfirst(divId)%](params);
 	}
 }
@@ -130,7 +138,7 @@ function edit[%ucfirst(divId)%]([%divId%]Id_) {
 function save[%ucfirst(divId)%]Form() {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]') &&
 			!isUserAuthorized('[%SELECT_GRANT%]')) {
-		briefNotify("Access Violation : save", 'ERROR');
+		briefNotify('Access Violation : save', 'ERROR');
 		return false;
 	}
 
@@ -142,41 +150,44 @@ function save[%ucfirst(divId)%]Form() {
 
 //validation
 function validate[%ucfirst(divId)%]Form() {
-	var formName='[%divId%]Form';
-	var formValid  = standardValidate(formName);
+	var formName = '[%divId%]Form';
+	var formValid = standardValidate(formName);
 	return formValid;
 }
 
 //Top Level HTML Manip
 var [%ucfirst(divId)%]prKey = {};
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
-	var dataArray= new Array();
-	for(var ndx = 0;ndx< dataRows.length;ndx++ ) {
+	var dataArray = new Array();
+	for (var ndx = 0; ndx < dataRows.length; ndx++) {
 		dataArray[ndx] = build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
 		[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
 	}
 	$('#[%divId%]ListTable').dataTable().fnClearTable();
-	$('#[%divId%]ListTable').dataTable().fnAddData( dataArray, true );
+	$('#[%divId%]ListTable').dataTable().fnAddData(dataArray, true);
 }
 
 function build[%ucfirst(divId)%]ListTableRow(data) {
-	var dataHash= {};
-	var links ='';
+	var dataHash = {};
+	var links = '';
 	dataHash['golfer_name'] = GOLFER_CACHE[data.golfer_id];
 	dataHash['golf_score'] = formatNumber(data.golf_score, 0, true, false, true);
 	dataHash['game_dt'] = pgDate(data.game_dt);
 	if (isUserAuthorized('[%UPDATE_GRANT%]', false)) {
-		links += '	<a class="alink" onclick="edit[%ucfirst(divId)%](' + data.[%prkey%] + ')">Edit</a> ';
+		links += '	<a class="alink" onclick="edit[%ucfirst(divId)%](';
+	  links += data.[%prkey%] + ')">Edit</a> ';
 		links += ' &nbsp; &nbsp ';
 	}else if (isUserAuthorized('[%SELECT_GRANT%]', false)) {
-		links += '<a class="alink" onclick="edit[%ucfirst(divId)%](' + data.[%prkey%] + ')">View</a> ';
+		links += '<a class="alink" onclick="edit[%ucfirst(divId)%](';
+	  links += data.[%prkey%] + ')">View</a> ';
 		links += ' &nbsp; &nbsp;';
 
 	}
 
 	if (isUserAuthorized('[%DELETE_GRANT%]', false)) {
 		links += '<a class="alink" onclick="delete[%ucfirst(divId)%](';
-		links += data.[%prkey%] + ', \'' + data.last_update + '\')">Delete</a>  ';
+		links += data.[%prkey%] + ', \'' + data.last_update;
+	  links += '\')">Delete</a>  ';
 	}
 		dataHash['links'] = links;
 	dataHash['DT_RowId'] = '[%ucfirst(divId)%]ListTableTR-' + data.[%prkey%];

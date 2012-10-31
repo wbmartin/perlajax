@@ -15,14 +15,16 @@ function retrieve[%ucfirst(divId)%]List(golferId_, selectedKey_) {
 		return false;
 	}
 
-	var params =prepParams(params, '[%spwfResource%]' , 'select' );
+	var params = prepParams(params, '[%spwfResource%]' , 'select');
 	params['where_clause'] = 'golfer_id =' + golferId_;
-	var successf = function (rslt) {
+	var successf = function(rslt) {
 		if (!rslt[SERVER_SIDE_FAIL]) {
-			populate[%ucfirst(divId)%]ListTable(rslt.rows)
-			
+			populate[%ucfirst(divId)%]ListTable(rslt.rows);
 		} else {
-			briefNotify('There was a problem communicating with the Server.', 'ERROR');
+			briefNotify(
+					'There was a problem communicating with the Server.',
+					'ERROR'
+					);
 		}
 	};
 	serverCall(params, successf, FAILF);
@@ -40,10 +42,13 @@ function retrieve[%ucfirst(divId)%](params) {
 			bindToForm('[%divId%]Form', rslt.rows[0]);
 			toggleSaveMode('[%divId%]Form', true);
 		} else {
-			briefNotify('There was a problem communicating with the Server.', 'ERROR')
+			briefNotify(
+					'There was a problem communicating with the Server.',
+					'ERROR'
+					);
 		}
 
-	}
+	};
 	serverCall(params, successf, FAILF);
 }
 
@@ -55,15 +60,18 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 		return false;
 	}
 
-	var params =prepParams(params, '[%spwfResource%]' , 'delete' );
+	var params = prepParams(params, '[%spwfResource%]' , 'delete');
 	params['[%prkey%]'] = [%toCC(prkey)%]_;
 	params['last_update'] = lastUpdate_;
-	var successf = function (rslt) {
+	var successf = function(rslt) {
 		if (!rslt[SERVER_SIDE_FAIL]) {
 			remove[%ucfirst(divId)%]ListTableRow(rslt.[%prkey%]);
 			briefNotify('Golf Score Deleted Successfully', 'INFO');
 		}else {
-			briefNotify('There was a problem communicating with the Server.', 'ERROR')
+			briefNotify(
+					'There was a problem communicating with the Server.',
+					'ERROR'
+					);
 		}
 
 	};
@@ -71,27 +79,30 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 }
 
 function save[%ucfirst(divId)%](params) {
-	if (!isUserAuthorized('[%UPDATE_GRANT%]') && 
+	if (!isUserAuthorized('[%UPDATE_GRANT%]') &&
 			!isUserAuthorized('[%INSERT_GRANT%]')) {
 		briefNotify('Access Violation', 'ERROR');
 		return false;
 	}
 
 	params = prepParams(params, '[%spwfResource%]', insertUpdateChoose);
-	var successf=function(rslt) {
+	var successf = function(rslt) {
 		if (!rslt[SERVER_SIDE_FAIL]) {
-			if (rslt.spwfAction == "UPDATE") {
+			if (rslt.spwfAction == 'UPDATE') {
 				replace[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
 			} else if (rslt.spwfAction == 'INSERT') {
 				addNew[%ucfirst(divId)%]ListTableRow(rslt.rows[0]);
 			}
-			briefNotify("Golf Score Successfully Saved", 'INFO');
-			var tempGolferId = $("#[%divId%]Form-golfer_id").val();
+			briefNotify('Golf Score Successfully Saved', 'INFO');
+			var tempGolferId = $('#[%divId%]Form-golfer_id').val();
 			clear[%ucfirst(divId)%]Form();
-			$("#[%divId%]Form-golfer_id").val(tempGolferId);
+			$('#[%divId%]Form-golfer_id').val(tempGolferId);
 
 		} else {
-			briefNotify('There was a problem communicating with the Server.', 'ERROR')
+			briefNotify(
+					'There was a problem communicating with the Server.',
+					'ERROR'
+					);
 		}
 
 	};
@@ -118,9 +129,9 @@ function edit[%ucfirst(divId)%]([%divId%]Id_) {
 
 function save[%ucfirst(divId)%]Form() {
 
-	if (!isUserAuthorized('[%UPDATE_GRANT%]') && 
+	if (!isUserAuthorized('[%UPDATE_GRANT%]') &&
 			!isUserAuthorized('[%INSERT_GRANT%]')) {
-		briefNotify("Access Violation", 'ERROR');
+		briefNotify('Access Violation', 'ERROR');
 		return false;
 	}
 
@@ -140,26 +151,24 @@ function validate[%ucfirst(divId)%]Form() {
 //Top Level HTML Manip
 var [%ucfirst(divId)%]prKey = {};
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
- var dataArray= new Array();
-	for(var ndx = 0;ndx< dataRows.length;ndx++ ) {
+ var dataArray = new Array();
+	for (var ndx = 0; ndx < dataRows.length; ndx++) {
 		dataArray[ndx] = build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
 		[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
 
 	}
   $('#[%divId%]ListTable').dataTable().fnClearTable();
-	$('#[%divId%]ListTable').dataTable().fnAddData( dataArray, true );
-	
+	$('#[%divId%]ListTable').dataTable().fnAddData(dataArray, true);
 }
 
 function build[%ucfirst(divId)%]ListTableRow(data) {
-	var dataHash= {};
-	var links ='';
+	var dataHash = {};
+	var links = '';
 	dataHash['golf_score'] = formatNumber(data.golf_score, 0, true, false, true);
-	dataHash['game_dt'] = pgDate(data.game_dt)
-		
+	dataHash['game_dt'] = pgDate(data.game_dt);
 	if (isUserAuthorized('[%UPDATE_GRANT%]')) {
 		links += '<a class="alink" onclick="edit[%ucfirst(divId)%](';
-	  links +=	data.[%prkey%] + ')">Edit</a> ';
+	  links += data.[%prkey%] + ')">Edit</a> ';
 		links += '&nbsp; &nbsp;';
 	} else if (isUserAuthorized('[%SELECT_GRANT%]')) {
 	  links += '<a class="alink" onclick="edit[%ucfirst(divId)%](';
@@ -169,18 +178,18 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 	}
 	if (isUserAuthorized('[%DELETE_GRANT%]')) {
 		links += '<a class="alink" onclick="delete[%ucfirst(divId)%](';
-	  links +=	data.[%prkey%] + ', "' + data.last_update + '")>Delete</a> ';
+	  links += data.[%prkey%] + ', "' + data.last_update + '")>Delete</a> ';
 		links += '&nbsp; &nbsp;';
 	}
 
-		dataHash['links'] =links; 
+		dataHash['links'] = links;
 	dataHash['DT_RowId'] = '[%ucfirst(divId)%]ListTableTR-' + data.[%prkey%];
 	return dataHash;
 }
 
 function replace[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnUpdate(
-			build[%ucfirst(divId)%]ListTableRow(row), 
+			build[%ucfirst(divId)%]ListTableRow(row),
 			[%ucfirst(divId)%]prKey[row.[%prkey%]]
 			);
 }
@@ -191,51 +200,54 @@ function addNew[%ucfirst(divId)%]ListTableRow(row) {
 }
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 	$('#[%divId%]ListTable').dataTable().fnDeleteRow(
-			[%ucfirst(divId)%]prKey[[%toCC(prkey)%]_] 
+			[%ucfirst(divId)%]prKey[[%toCC(prkey)%]_]
 			);
 }
 
 //Div Access and App Layout Calls
 function show[%ucfirst(divId)%](golferId_) {
-	if (!isUserAuthorized('[%SELECT_GRANT%]', 
-				true,	'show[%ucfirst(divId)%]')) 
-		return false; 
+	if (!isUserAuthorized(
+				'[%SELECT_GRANT%]',
+				true,
+				'show[%ucfirst(divId)%]')) {
+		return false;
+				}
   statusMsg('Navigated to Golf Score View');
-	retrieve[%ucfirst(divId)%]List(golferId_); 
+	retrieve[%ucfirst(divId)%]List(golferId_);
 	retrieveGolferNameForGolfScore(golferId_);
 	hideCurrentContentPane();
 	$('#[%divId%]').fadeIn();
-	currentContentPane='[%divId%]';
-	if ( isFormEmpty('[%divId%]Form')) toggleSaveMode('[%divId%]Form', false);
+	currentContentPane = '[%divId%]';
+	if (isFormEmpty('[%divId%]Form')) toggleSaveMode('[%divId%]Form', false);
 	if ($('#[%divId%]Form-golfer_id').val() != golferId_) {
 		clear[%ucfirst(divId)%]Form();
 	}
 	$('#[%divId%]Form-golfer_id').val(golferId_);
 	$('#[%divId%]GolferNameId').html(GOLFER_CACHE[golferId_] + ' Golf Scores ');
-	
 	impose[%ucfirst(divId)%]SecurityUIRestrictions();
 }
 
 
 function clear[%ucfirst(divId)%]Form() {
-	var golferId =	$('#[%divId%]Form-golfer_id').val();
+	var golferId = $('#[%divId%]Form-golfer_id').val();
 	clearForm('[%divId%]Form');
 	$('#[%divId%]Form-golfer_id').val(golferId);
-	(isUserAuthorized('[%INSERT_GRANT%]', false)) ? 
-		securityLockForm('[%divId%]Form', false) : securityLockForm('[%divId%]Form', true);
+	(isUserAuthorized('[%INSERT_GRANT%]', false)) ?
+		securityLockForm('[%divId%]Form', false) :
+		securityLockForm('[%divId%]Form', true);
 }
 
 //After complete Load setup
 $(document).ready(function() {
 		$('#[%divId%]Form-game_dt').datepicker();
 
-		$('#[%divId%]ListTable').dataTable( {
+		$('#[%divId%]ListTable').dataTable({
 			'aoColumns': [
-			 {'mData': 'golf_score'}, 
-			 {'mData': 'game_dt'}, 
+			 {'mData': 'golf_score'},
+			 {'mData': 'game_dt'},
 			 {'mData': 'links', asSorting: 'none'}
-			], 
-			'sPaginationType':'two_button'
+			],
+			'sPaginationType': 'two_button'
 			}
 		 	);
 		});
@@ -252,29 +264,29 @@ function retrieveGolferNameForGolfScore(golferId_) {
 	params['where_clause'] = 'golfer_id =' + golferId_;
 	var successf = function(rslt) {
 		$('#[%divId%]GolferNameId').html(rslt.rows[0].name);
-	}
+	};
 	serverCall(params, successf, FAILF);
 }
 
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	var divIdToSecure;
-	divIdToSecure ='#[%divId%]FormSave';
-	(isUserAuthorized('[%UPDATE_GRANT%]')) ? 
+	divIdToSecure = '#[%divId%]FormSave';
+	(isUserAuthorized('[%UPDATE_GRANT%]')) ?
 		securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-	divIdToSecure ='#[%divId%]FormAdd';
-	(isUserAuthorized('[%INSERT_GRANT%]')) ? 
+	divIdToSecure = '#[%divId%]FormAdd';
+	(isUserAuthorized('[%INSERT_GRANT%]')) ?
 		securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-	divIdToSecure ='#[%divId%]EntryDivId';
-	(isUserAuthorized('[%UPDATE_GRANT%]') || 
-	 isUserAuthorized('[%INSERT_GRANT%]')) ? 
+	divIdToSecure = '#[%divId%]EntryDivId';
+	(isUserAuthorized('[%UPDATE_GRANT%]') ||
+	 isUserAuthorized('[%INSERT_GRANT%]')) ?
 		securityshow(divIdToSecure) : securityHide(divIdToSecure);
-	if (!isUserAuthorized('[%INSERT_GRANT%]') && 
+	if (!isUserAuthorized('[%INSERT_GRANT%]') &&
 			!isUserAuthorized('[%UPDATE_GRANT%]')) {
 	  securityLockForm('[%divId%]Form', true);
 	}
-  if (!isUserAuthorized('[%INSERT_GRANT%]', false) && 
+  if (!isUserAuthorized('[%INSERT_GRANT%]', false) &&
 			isFormEmpty('[%divId%]Form')) {
 		securityLockForm('[%divId%]Form', true);
 	}

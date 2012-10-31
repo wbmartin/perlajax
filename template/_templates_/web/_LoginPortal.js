@@ -4,26 +4,33 @@
 
 function loginCall(action) {
 	var params = bindForm('[%divId%]Form');
-	[%#prepParams will not work here %]
-		params['spwfResource'] = "security_user";
+[%#prepParams will not work here %]
+		params['spwfResource'] = 'security_user';
 	params['spwfAction'] = action;
-	var successf = function (rslt) {
+	var successf = function(rslt) {
 		if (!rslt[SERVER_SIDE_FAIL]) {
 			var r = rslt.rows[0];
-			if (r.session_id =='') {
-				showDialog("Sorry, I Couldn't validate those Credentials");
-				$("#password").val('');
-			}else {
-				statusMsg("Successfully Authenticated User : " + r.user_id );
+			if (r.session_id == '') {
+				showDialog('Sorry, I Couldn\'t validate those Credentials');
+				$('#password').val('');
+			} else {
+				statusMsg('Successfully Authenticated User : ' + r.user_id);
 				usrSessionId = r.session_id;
 				usrLoginId = r.user_id;
 				onSuccessfulLogin();
-				if (rslt.spwfAction=="ONE_TIME") {
-				 showDialog("You just completed a one time logon.  You password has not been changed, please change your password for your next visit if you have forgotten it. ");
+				if (rslt.spwfAction == 'ONE_TIME') {
+					var msg = 'You just completed a one time logon. ';
+					msg += 'You password has not been changed, ';
+					msg += 'please change your password for your next visit ';
+					msg += 'if you have forgotten it. ';
+					showDialog(msg);
 				}
 			}
-		}else {
-			briefNotify('There was a problem communicating with the Server.', 'ERROR')
+		} else {
+			briefNotify(
+					'There was a problem communicating with the Server.',
+					'ERROR'
+					);
 		}
 
 	};
@@ -33,121 +40,160 @@ function loginCall(action) {
 
 
 
-function validate[%divId%]Form () {
-	var formValid  = standardValidate('[%divId%]Form');
-	if (($("#[%divId%]Form-password").val() == '' || $("#[%divId%]Form-password").val() == null ) &&$("#[%divId%]Form-password").is(" : visible")) {
-		showDialog ("Please enter your password");
-		 formValid = false;
+function validate[%divId%]Form() {
+	var formValid = standardValidate('[%divId%]Form');
+	if (($('#[%divId%]Form-password').val() == '' ||
+				$('#[%divId%]Form-password').val() == null) &&
+			$('#[%divId%]Form-password').is(' : visible')) {
+		showDialog('Please enter your password');
+		formValid = false;
 	}
 	return formValid;
 }
 
 function onSuccessfulLogin() {
-	$("#password").val('');
+	$('#password').val('');
 	displayMainLayout(true);
-	$("#topMenuBar").show();
+	$('#topMenuBar').show();
 	registerAction();
 	timeoutIfNoAction();
 	changePage(function() {showLaunchPane()});
 	retrieveCache();
 }
 function logOutUser() {
-	usrSessionId='';
-	usrLoginId='';
-	$("#[%divId%]Form-user_id").val('');
-	$("#[%divId%]Form-password").val('');
+	usrSessionId = '';
+	usrLoginId = '';
+	$('#[%divId%]Form-user_id').val('');
+	$('#[%divId%]Form-password').val('');
 	displayMainLayout(false);
-	$("#topMenuBar").hide();
+	$('#topMenuBar').hide();
 	hideMainContent();
 	return;
 }
 
 
 $(document).ready(function() {
-		$("#[%divId%]Form-user_id").val("golfscore");
-		$("#[%divId%]Form-password").val("golfscore");
-		changePage(function() {showLoginPortal()});
-		});
+	$('#[%divId%]Form-user_id').val('golfscore');
+	$('#[%divId%]Form-password').val('golfscore');
+	changePage(function() {showLoginPortal()});
+});
 
 function showLoginPortal() {
 	$(document).keypress(function(e) {
-			if (e.keyCode == 13) {//enter
+		if (e.keyCode == 13) {//enter
 			loginCall('authenticate');
-			}
-			});
+		}
+	});
 
 }
 function initPasswordReset() {
-	var params= {};
-	params['user_id'] = $("#[%divId%]Form-user_id").val();
-	if (params['user_id'] ==null || params['user_id'] =='') {
-		showDialog("Please enter your User Id to initiate your password reset.");
+	var params = {};
+	params['user_id'] = $('#[%divId%]Form-user_id').val();
+	if (params['user_id'] == null || params['user_id'] == '') {
+		showDialog('Please enter your User Id to initiate your password reset.');
 		return false;
 	}
 	var successCallback = function(rslt) {
-		if (rslt.success =="true") {
-			showDialog("Your password reset is in process.  Do not close this page, but check your email for the code to enter to gain one-time access in order to change your password." );
+		if (rslt.success == 'true') {
+			var msg = 'Your password reset is in process.  Do not close this page,';
+			msg += 'but check your email for the code to enter to gain one-time ';
+			msg += 'access in order to change your password.';
+			showDialog(msg);
 		}
-		prepForOneTimeEntry()
-	
+		prepForOneTimeEntry();
+
 	};
-	$.ajax( {type : "POST", url : passwordResetUrlTarget, dataType : "json", data : params, 
-			success : successCallback, error : FAILF });
+	$.ajax({type: 'POST',
+		url: passwordResetUrlTarget,
+		dataType: 'json',
+		data: params,
+		success: successCallback,
+		error: FAILF
+	});
 }
 
 function initForgottenUserName() {
-	
-	showDialog("Please Enter your email address below.  Instructions will be mailed to this address.  <br/><input type='text' style='width : 400px;'size='90' id='forgottenUserIdEmail'/><br/> ", "300", "600", true, {"Ok" : function() {if ($("#forgottenUserIdEmail").val() !='') {emailUserName(); $( this ).dialog( "close" );} }, "Cancel" : function() {$( this ).dialog( "close" )}}, "Email User Name...");
-		 
+	var msg = 'Please Enter your email address below.  ';
+	msg += 'Instructions will be mailed to this address.  ';
+	mst += '<br/><input type="text"';
+	msg += ' style="width: 400px;" size="90" id="forgottenUserIdEmail"/><br/> ';
+	showDialog(
+			msg, '300', '600', true,
+			{'Ok': function() {
+													if ($('#forgottenUserIdEmail').val() != '') {
+														emailUserName();
+														$(this).dialog('close');
+													}
+												},
+				'Cancel': function() {
+						$(this).dialog('close');
+				}
+			}, 'Email User Name...');
+
 }
 //
 function emailUserName() {
-	var params= {};
-	params['email_addr'] = $("#forgottenUserIdEmail").val();
+	var params = {};
+	params['email_addr'] = $('#forgottenUserIdEmail').val();
 	var successCallback = function(rslt) {
-		if (rslt.success =="true") {
-			showDialog("Your username has been mailed to your email address.  Do not close this page, but check your email for the username and reset code to enter to gain one-time access. You can change your password when you log in if desired" );
+		if (rslt.success == 'true') {
+			var msg = 'Your username has been mailed to your email address. ';
+			msg += 'Do not close this page, but check your email for the username ';
+			msg += ' and reset code to enter to gain one-time access. ';
+			msg += ' You can change your password when you log in if desired';
+			showDialog(msg);
 		}
-		prepForOneTimeEntry()
-	
+		prepForOneTimeEntry();
 	};
-	$.ajax( {type : "POST", url : passwordResetUrlTarget, dataType : "json", data : params, 
-			success : successCallback, error : FAILF });
-
-
+	$.ajax({type: 'POST',
+		url: passwordResetUrlTarget,
+		dataType: 'json',
+		data: params,
+		success: successCallback,
+		error: FAILF
+	});
 }
 
-
-
-
 function prepForOneTimeEntry() {
-$("#[%divId%]Form-password_reset_codeDivId").show();
-		$("#[%divId%]Form-passwordDivId").hide();
-		$("#[%divId%]Form-password").val('');
-		$("#cmdlogin").hide();
-		$("#cmdOneTimelogin").show();
+	$('#[%divId%]Form-password_reset_codeDivId').show();
+	$('#[%divId%]Form-passwordDivId').hide();
+	$('#[%divId%]Form-password').val('');
+	$('#cmdlogin').hide();
+	$('#cmdOneTimelogin').show();
 
 }
 
 function onetimeLogin() {
-	var params= {};
-	params['user_id'] = $("#[%divId%]Form-user_id").val();
-	params['password_reset_code'] = $("#[%divId%]Form-password_reset_code").val();
-	if (params['user_id'] ==null || params['user_id'] =='' || params['password_reset_code'] ==null || params['password_reset_code'] =='') {
-		showDialog("Please enter your User Id  and Password Reset Code to initiate your password reset.");
-		return false;
-	}
+	var params = {};
+	params['user_id'] = $('#[%divId%]Form-user_id').val();
+	params['password_reset_code'] =
+		$('#[%divId%]Form-password_reset_code').val();
+	if (params['user_id'] == null ||
+			params['user_id'] == '' ||
+			params['password_reset_code'] == null ||
+			params['password_reset_code'] == '') {
+				var msg = 'Please enter your User Id and Password';
+				msg += 'Reset Code to initiate your password reset.';
+				showDialog(msg);
+				return false;
+			}
 	var successCallback = function(rslt) {
-		if (rslt.success =="true") {
-			showDialog ("Your password reset is in process.  Do not close this page, but check your email for the code to enter to gain one-time access in order to change your password." );
+		if (rslt.success == 'true') {
+			var msg = 'Your password reset is in process.  ';
+			mst += 'Do not close this page, but check your email ';
+			msg += 'for the code to enter to gain one-time access ';
+			msg += 'in order to change your password.';
+			showDialog(msg);
 		}
-		$("#[%divId%]Form-password_reset_codeDivId").show();
-		$("#cmdlogin").hide();
-		$("#cmdOneTimelogin").show();
+		$('#[%divId%]Form-password_reset_codeDivId').show();
+		$('#cmdlogin').hide();
+		$('#cmdOneTimelogin').show();
 
 	};
-	$.ajax( {type : "POST", url : passwordResetUrlTarget, dataType : "json", data : params, 
-			success : successCallback, error : FAILF });
+	$.ajax({type: 'POST', url: passwordResetUrlTarget,
+		dataType: 'json', data: params,
+		success: successCallback, error: FAILF
+	});
 }
 
 

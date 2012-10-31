@@ -7,79 +7,79 @@
 
 //header1.js
 //shared variables
-var usrSessionId = "";
-var usrLoginId = "";
+var usrSessionId = '';
+var usrLoginId = '';
 var usrLastAction = new Date();
 var usrLogoutScheduled = false;
 var usrTimeOutDuration = 20*60*1000;
 var clientLog = new Array();
-var insertUpdateChoose = "INSERTUPDATE";
-var FAILF = function(){alert("FAIL");}
-var currentContentPane = "";
+var insertUpdateChoose = 'INSERTUPDATE';
+var FAILF = function(){alert('FAIL');}
+var currentContentPane = '';
 var SERVER_SIDE_FAIL = 'serverSideFail';
 var OUTSTANDING_SERVER_CALLS = 0;
 var PAGINATION_ROW_LIMIT = 10;
-var CURRENT_PAGE = "";
+var CURRENT_PAGE = '';
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Form Functions
 function appendValidationMsg(formId,fieldId, msg){
-  var fullyQName = "form#"+formId+" #" + fieldId;
-  if($("form#"+formId).find("#"+fieldId+"Error").attr("id") == undefined) {
-    $(fullyQName).after("<span id='" +fieldId + "Error' class='ValidationMsg'></span>");
+  var fullyQName = 'form#'+formId+' #' + fieldId;
+  if ($('form#'+formId).find('#'+fieldId+'Error').attr('id') == undefined) {
+    $(fullyQName).after('<span id='' +fieldId + 'Error' class="ValidationMsg"></span>');
   }
-  if( $(fullyQName+"Error").html().length ==0) {
-    $(fullyQName+"Error").append("*");
+  if ( $(fullyQName+'Error').html().length ==0) {
+    $(fullyQName+'Error').append('*');
   }
-  $(fullyQName+"Error").append(" " + msg);
-  $(fullyQName).addClass("invalid");
+  $(fullyQName+'Error').append(' ' + msg);
+  $(fullyQName).addClass('invalid');
 }
 
 function highlightFieldError(formId, fieldId, yesNo) {
-  var bordercolor="black";
-  if  (yesNo) bordercolor="red"
-    $("form#"+formId+" #"+fieldId).css("border-color:"+bordercolor);
+  var bordercolor='black';
+  if (yesNo) bordercolor='red'
+    $('form#'+formId+' #'+fieldId).css('border-color:'+bordercolor);
 
 }
 
 function bindForm(formName) {
   var rslt = {};
-  var fieldId = "";
-  $.each($("form#"+formName+" :input"), 
+  var fieldId = '';
+  $.each($('form#'+formName+' :input'),
       function(key, field){
-        fieldId = field.id.replace(formName+"-","");
-        if(field.type != 'button') rslt[fieldId] = field.value
+        fieldId = field.id.replace(formName+'-','');
+        if (field.type != 'button') rslt[fieldId] = field.value
       });
   return rslt;
 }
 
 function bindToForm(formName, obj){
-  var fieldId = "";
-  $.each($("form#"+formName+" :input"), 
+  var fieldId = '';
+  $.each($('form#'+formName+' :input'),
       function(key, field){
-        fieldId = field.id.replace(formName+"-","");
-        if(field.type != 'button')  field.value = obj[fieldId];
+        fieldId = field.id.replace(formName+'-','');
+        if (field.type != 'button')  field.value = obj[fieldId];
       });
 }
 
 function clearForm(formName){
-  var fieldId = "";
-  $.each($("form#"+formName+" :input"), 
+  var fieldId = '';
+  $.each($('form#'+formName+' :input'),
       function(key, field){
-        fieldId = field.id.replace(formName+"-","");
+        fieldId = field.id.replace(formName+'-','');
         if (field.type == 'checkbox') {
-          field.checked=false;
-        }else if(field.type != 'button') field.value = "";
+          field.checked = false;
+        } else if (field.type != 'button') field.value = '';
       }
       );
   toggleSaveMode(formName, false);
 }
 
 function toggleSaveMode(formName, saveMode){
-  var buttonToShow = (saveMode)?"Save":"Add";
-  var buttonToHide = (!saveMode)?"Save":"Add";
-  $("form#"+formName+" #" +formName +buttonToHide).addClass("LogicDisabled");
-  $("form#"+formName+" #" +formName +buttonToShow).removeClass("LogicDisabled");
+  var buttonToShow = (saveMode)?'Save':'Add';
+  var buttonToHide = (!saveMode)?'Save':'Add';
+  $('form#'+formName+' #' +formName +buttonToHide).addClass('LogicDisabled');
+  $('form#'+formName+' #' +formName +buttonToShow).removeClass('LogicDisabled');
 
 
 
@@ -89,30 +89,30 @@ function toggleSaveMode(formName, saveMode){
 
 function standardValidate(formName){
   var formValid = true;
-  if($("#"+formName).length==0) formValid=false;
-  $.each($("form#"+formName + " span.ValidationMsg"),function (ndx,span){
-    span.innerHTML="";
+  if ($('#'+formName).length==0) formValid=false;
+  $.each($('form#'+formName + ' span.ValidationMsg'),function (ndx,span){
+    span.innerHTML='';
   });
-  $.each($("form#"+formName + " .invalid"),function (ndx,field){
-    $("form#"+formName +" #"+field.id).removeClass("invalid");
+  $.each($('form#'+formName + ' .invalid'),function (ndx,field){
+    $('form#'+formName +' #'+field.id).removeClass('invalid');
   });
-  $.each($("form#" +formName + " .VALIDATErequired"),function (ndx,field){
-    if(field.value == null || field.value==""){
-      appendValidationMsg(formName,field.id, "Required");
+  $.each($('form#' +formName + ' .VALIDATErequired'),function (ndx,field){
+    if (field.value == null || field.value==''){
+      appendValidationMsg(formName,field.id, 'Required');
       highlightFieldError(formName,field.id,true);
       formValid =false;
     }
   });
-  $.each($("form#" +formName + " .VALIDATEinteger"),function (ndx,field){
-    if(field.value != null && !isInteger(field.value)){
-      appendValidationMsg(formName,field.id, "Integer Input Required");
+  $.each($('form#' +formName + ' .VALIDATEinteger'),function (ndx,field){
+    if (field.value != null && !isInteger(field.value)){
+      appendValidationMsg(formName,field.id, 'Integer Input Required');
       highlightFieldError(formName,field.id,true);
       formValid =false;
     }
   });
-  $.each($("form#" +formName + " .VALIDATEmmddyyyydate"),function (ndx,field){
-    if(field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)){
-      appendValidationMsg(formName,field.id, "MM/DD/YYYY Required");
+  $.each($('form#' +formName + ' .VALIDATEmmddyyyydate'),function (ndx,field){
+    if (field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)){
+      appendValidationMsg(formName,field.id, 'MM/DD/YYYY Required');
       highlightFieldError(formName,field.id,true);
       formValid =false;
     }
@@ -127,22 +127,22 @@ function isFieldIdEmpty(fieldId_){
   if (document.getElementById(fieldId_) == undefined) return true;
   if (document.getElementById(fieldId_).value == undefined) return true;
   if (document.getElementById(fieldId_).value == null) return true;
-  if (document.getElementById(fieldId_).value == "") return true;
+  if (document.getElementById(fieldId_).value == '') return true;
   return false;
 }
 
 function isEmpty(val){
-  if (typeof(val) == "undefined")return true;
-  if (val == null || val =="") return true;
+  if (typeof(val) == 'undefined')return true;
+  if (val == null || val =='') return true;
   return false;
 }
 
-function isInteger(value){ 
-  if((parseFloat(value) == parseInt(value)) && !isNaN(value)){
+function isInteger(value){
+  if ((parseFloat(value) == parseInt(value)) && !isNaN(value)){
     return true;
-  } else { 
+  } else {
     return false;
-  } 
+  }
 }
 
 
@@ -150,16 +150,16 @@ function isInteger(value){
 //Formatting Functions
 function pgDate(val){
   var rslt;
-  if (val !=null){
-    rslt = val.substring(5,7)+"/"+val.substring(8,10) +"/"+ val.substring(0,4);
-  }else{
-    rslt= "";
+  if (val !=null) {
+    rslt = val.substring(5,7) + '/'+val.substring(8,10) + '/' + val.substring(0,4);
+  } else {
+    rslt= '';
   }
   return rslt;
 }
 
-function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){ 
-  if (isNaN(parseInt(num))) return "---";
+function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas) {
+  if (isNaN(parseInt(num))) return '---';
   var tmpNum = num;
   var iSign = num < 0 ? -1 : 1;    // Get sign of number
   tmpNum *= Math.pow(10,decimalNum);
@@ -171,28 +171,28 @@ function formatNumber(num,decimalNum,bolLeadingZero,bolParens,bolCommas){
   // See if we need to strip out the leading zero or not.
   if (!bolLeadingZero && num < 1 && num > -1 && num != 0)
     if (num > 0)tmpNumStr = tmpNumStr.substring(1,tmpNumStr.length);
-    else tmpNumStr = "-" + tmpNumStr.substring(2,tmpNumStr.length);
+    else tmpNumStr = '-' + tmpNumStr.substring(2,tmpNumStr.length);
 
   // See if we need to put in the commas
   if (bolCommas && (num >= 1000 || num <= -1000)) {
-    var iStart = tmpNumStr.indexOf(".");
+    var iStart = tmpNumStr.indexOf('.');
     if (iStart < 0)  iStart = tmpNumStr.length;
 
     iStart -= 3;
     while (iStart >= 1) {
-      tmpNumStr = tmpNumStr.substring(0,iStart) + "," + tmpNumStr.substring(iStart,tmpNumStr.length)
+      tmpNumStr = tmpNumStr.substring(0,iStart) + ',' + tmpNumStr.substring(iStart,tmpNumStr.length)
         iStart -= 3;
     }    
   }
 
   // See if we need to use parenthesis
-  if (bolParens && num < 0) tmpNumStr = "(" + tmpNumStr.substring(1,tmpNumStr.length) + ")";
+  if (bolParens && num < 0) tmpNumStr = '(' + tmpNumStr.substring(1,tmpNumStr.length) + ')';
 
-  if(tmpNumStr.indexOf(".")<0 && decimalNum >0){
-    tmpNumStr += ".";
+  if (tmpNumStr.indexOf('.')<0 && decimalNum >0) {
+    tmpNumStr += '.';
   }
-  while((tmpNumStr.length -tmpNumStr.indexOf(".")) <= decimalNum){
-    tmpNumStr += "0";
+  while ((tmpNumStr.length -tmpNumStr.indexOf('.')) <= decimalNum) {
+    tmpNumStr += '0';
 
   }
 
@@ -218,15 +218,18 @@ String.prototype.ucfirst = function () {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //js Utility Functions
-function filterCacheArrayByVal ( cacheArray, idToSet){
-  for(var i=0;i<cacheArray.length;i++){
-    if(cacheArray[i].val == idToSet)return cacheArray[i];
+function filterCacheArrayByVal (cacheArray, idToSet) {
+  for (var i = 0; i < cacheArray.length; i++) {
+    if (cacheArray[i].val == idToSet)return cacheArray[i];
   }
   return {};
 }
 
 function digest(er, ee) {
-  if (null == ee || "object" != typeof ee || null == er || "object" != typeof er ) return er;
+  if (null == ee ||
+      'object' != typeof ee ||
+      null == er ||
+      'object' != typeof er) return er;
   for (var attr in ee) {
     er[attr] = ee[attr];
   }
@@ -234,14 +237,14 @@ function digest(er, ee) {
 }
 
 
-function deepCopy(obj){
+function deepCopy(obj) {
   return $.extend(true, [], obj);
 }
 
-function setSelectOptions(selectId, obj){
-  var newhtml="<option value=''></option>";
-  $.each(obj,function(key,val){
-    newhtml += "<option value='" + key + "'>"+val +"</option>";
+function setSelectOptions(selectId, obj) {
+  var newhtml='<option value=""></option>';
+  $.each(obj,function(key, val) {
+    newhtml += '<option value="' + key + '">' + val +'</option>';
   });
   $(selectId).html(newhtml);
 
@@ -250,63 +253,65 @@ function setSelectOptions(selectId, obj){
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Content Functions
-function timeoutIfNoAction(){ "use strict";
+function timeoutIfNoAction() { 'use strict';
   var timeSince = new Date().getTime() - usrLastAction.getTime() ;
-  if(usrLoginId !="" && timeSince >usrTimeOutDuration ){
+  if (usrLoginId !='' && timeSince >usrTimeOutDuration ) {
     usrLogoutScheduled = true;
-    statusMsg("Logging Out User in 1 minute");
-    window.setTimeout(function(){if (usrLogoutScheduled){logOutUser();}},60000);
-  }else{
+    statusMsg('Logging Out User in 1 minute');
+    window.setTimeout(function(){if (usrLogoutScheduled) {logOutUser();}},60000);
+  } else {
     window.setTimeout(timeoutIfNoAction, usrTimeOutDuration +1000  );
   }
 
 }
 
 
-function hideCurrentContentPane(){
-  if(document.getElementById(currentContentPane)!= undefined){
-    document.getElementById(currentContentPane).style.display="none";
+function hideCurrentContentPane() {
+  if (document.getElementById(currentContentPane) != undefined) {
+    document.getElementById(currentContentPane).style.display = 'none';
   }
-  $(document).unbind("keypress");
+  $(document).unbind('keypress');
 }
 
 
-function standardShowContentPane(name){
+function standardShowContentPane(name) {
   hideCurrentContentPane();
-  $("#"+name).fadeIn();
-  currentContentPane= name;
+  $('#' + name).fadeIn();
+  currentContentPane = name;
 }
 
-function hideMainContent(){
-  return "";
+function hideMainContent() {
+  return '';
 }
 
-function registerAction(){
-  usrLastAction= new Date();
+function registerAction() {
+  usrLastAction = new Date();
   usrLogoutScheduled = false;
 }
 
 window.onbeforeunload = function () {
-  if(usrSessionId !=""){
-    return "If you click OK and continue to refresh this page, you will lose any data that has not been saved"
+  if (usrSessionId !='') {
+    var msg = 'If you click OK and continue to refresh this page, ';
+    msg += ' you will lose any data that has not been saved';
+    return msg;
   }
 }
 
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Log Msg Functions
-function statusMsg(msg){
-  $("#statusMsg").html(msg);
-  logMsg("Console Msg:" +msg);
+function statusMsg(msg) {
+  $('#statusMsg').html(msg);
+  logMsg('Console Msg:' +msg);
 }
-function logMsg(msg,requestId){
-  var timingInfo="";
+function logMsg(msg,requestId) {
+  var timingInfo='';
   var logId = clientLog.length;
-  if (requestId != null && requestId != "NEW"){ logId = requestId; }
-  if( logId == clientLog.length){ 
-    clientLog[logId] = {logDt: new Date()}; 
-  }else{
-    timingInfo = " | timing: " + (new Date() -  clientLog[logId].logDt) + "ms.";
+  if (requestId != null && requestId != 'NEW') { logId = requestId; }
+  if (logId == clientLog.length) {
+    clientLog[logId] = {logDt: new Date()};
+  } else {
+    timingInfo = ' | timing: ' + (new Date() -  clientLog[logId].logDt) + 'ms.';
   }
   clientLog[logId].msg= msg+timingInfo;
   return logId;
@@ -314,120 +319,142 @@ function logMsg(msg,requestId){
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Server Call Functions
-function serverCall(params, successCallback, failCallback){
-  var resourceActionInfo = "Server Call Resource: " + params['spwfResource'] + " Action: " + params['spwfAction'];
-  params['requestId'] =logMsg(resourceActionInfo + " Started");
-  var successCallbackMod = function(rslt){
+function serverCall(params, successCallback, failCallback) {
+  var resourceActionInfo = 'Server Call Resource: ';
+   resourceActionInfo += params['spwfResource'] + ' Action: ';
+  resourceActionInfo += params['spwfAction'];
+  params['requestId'] = logMsg(resourceActionInfo + ' Started');
+  var successCallbackMod = function(rslt) {
     decrementServerCalls();
-    logMsg(resourceActionInfo + " Responded", rslt.requestId);
-    if(!validateServerResponse(rslt)){
-      logMsg(resourceActionInfo + " Failed to validate the server response - " +  rslt['errorMsg']);
+    logMsg(resourceActionInfo + ' Responded', rslt.requestId);
+    if (!validateServerResponse(rslt)) {
+      var msg = resourceActionInfo + ' Failed to validate the server response - ';
+      msg += rslt['errorMsg'];
+      logMsg(msg);
       rslt[SERVER_SIDE_FAIL] = true;
-    }else{
+    } else {
       rslt[SERVER_SIDE_FAIL] = false;
-    }    
+    }   
     successCallback(rslt);
   }
   incrementServerCalls();
-  $.ajax({type: "POST", url: urlTarget, dataType: "json", data: params, 
-    success: successCallbackMod, error: failCallback });
+  $.ajax({type: 'POST',
+    url: urlTarget,
+    dataType: 'json',
+    data: params,
+    success: successCallbackMod,
+    error: failCallback 
+  });
 }
 
-function incrementServerCalls(){
-  $("#outstandingServerCalls").html("Open Requests: " + ++OUTSTANDING_SERVER_CALLS)
+function incrementServerCalls() {
+  var msg = 'Open Requests: ' + ++OUTSTANDING_SERVER_CALLS;
+  $('#outstandingServerCalls').html(msg);
 }
 
-function decrementServerCalls(){
-  OUTSTANDING_SERVER_CALLS = (--OUTSTANDING_SERVER_CALLS <0)?0:OUTSTANDING_SERVER_CALLS;
-  $("#outstandingServerCalls").html("Open Requests: " +OUTSTANDING_SERVER_CALLS);
+function decrementServerCalls() {
+  OUTSTANDING_SERVER_CALLS = (--OUTSTANDING_SERVER_CALLS <0) ?
+    0:OUTSTANDING_SERVER_CALLS;
+  var msg = 'Open Requests: ' + OUTSTANDING_SERVER_CALLS;
+  $('#outstandingServerCalls').html(msg);
 }
 
 
-function handleServerResponse(msg, startTime, data){
-  if(!validateServerResponse(data)){
-    alert("Sorry, there was a problem communicating with the server.");
-    statusMsg("Server Communication Error");
+function handleServerResponse(msg, startTime, data) {
+  if (!validateServerResponse(data)) {
+    alert('Sorry, there was a problem communicating with the server.');
+    statusMsg('Server Communication Error');
     return false;
   }
-  statusMsg( msg +" in " + (new Date().getTime()-startTime.getTime())/1000 + "s" );
+  var timing = (new Date().getTime()-startTime.getTime())/1000;
+  statusMsg( msg + ' in ' + timing + 's' );
   return true;
 }
 
-function prepParams(params, resource, action){
-  if(params == null){ params = {}; }
+function prepParams(params, resource, action) {
+  if (params == null) { params = {}; }
   params['spwfResource'] = resource;
   params['user_id'] = usrLoginId;
   params['session_id'] = usrSessionId;
-  if (action ==insertUpdateChoose){
-    if(params['last_update']!= null && params['last_update']!= ""){
-      action = "update";
-    }else{
-      action= "insert";
+  if (action == insertUpdateChoose) {
+    if (params['last_update']!= null && params['last_update'] != '') {
+      action = 'update';
+    } else {
+      action = 'insert';
     }
   }
   params['spwfAction'] = action;
   return params;
 }
 
-function validateServerResponse(responseTxt){
-  if(responseTxt == undefined ||responseTxt==null ){
-    logMsg("validateServerResponse - undefined response");
-    alert("Sorry, there was an unexpected error communicating with the server.");
+function validateServerResponse(responseTxt) {
+  if (responseTxt == undefined || responseTxt == null ) {
+    logMsg('validateServerResponse - undefined response');
+    var msg = 'Sorry, there was an unexpected error ';
+    msg += 'communicating with the server.';
+    alert(msg);
     return false;
-  }else if(responseTxt.errorMsg != undefined){
-    if(responseTxt.errorMsg.indexOf('Session Invalid')>-1 ){
-      alert("Sorry, the session has expired and you will be logged out");
-      usrSessionId="";
+  } else if (responseTxt.errorMsg != undefined) {
+    if (responseTxt.errorMsg.indexOf('Session Invalid') > -1 ) {
+      alert('Sorry, the session has expired and you will be logged out');
+      usrSessionId = '';
     }
-    logMsg ("validateServerResponse - Error Msg: " + responseTxt.errorMsg);
+    logMsg ('validateServerResponse - Error Msg: ' + responseTxt.errorMsg);
     return false;
   }
   registerAction();
   return true;
 }
 
-function isUserAuthorized(request, notifyUser, caller){
-  var result= false;
-  var msg="";
+function isUserAuthorized(request, notifyUser, caller) {
+  var result = false;
+  var msg = '';
   request = request.toUpperCase();
-  for (var i=0;i<SECURITY_GRANT.length;i++){
-    if(SECURITY_GRANT[i] == request){
-      result=true;
+  for (var i = 0; i < SECURITY_GRANT.length; i++) {
+    if (SECURITY_GRANT[i] == request) {
+      result = true;
       break;
     }
   }
-  if (  notifyUser && !result ){
-    msg = "Access Violation (" + request + " is required)";
-    if(caller) msg+=" from " + caller;
-    briefNotify(msg ,"ERROR");
-
+  if (notifyUser && !result) {
+    msg = 'Access Violation (' + request + ' is required)';
+    if (caller) {
+      msg += ' from ' + caller;
+    }
+    briefNotify(msg, 'ERROR');
   }
   return result;
 }
 
-
-
-function securityshow(divIdToSecure){
-  $(divIdToSecure).removeClass("SecurityDisabled");
+function securityshow(divIdToSecure) {
+  $(divIdToSecure).removeClass('SecurityDisabled');
 }
 
-function securityHide(divIdToSecure){
-  $(divIdToSecure).addClass ("SecurityDisabled");
+function securityHide(divIdToSecure) {
+  $(divIdToSecure).addClass('SecurityDisabled');
 }
 
-function securityLockForm(formName,lock){
+function securityLockForm(formName, lock) {
   var disableStatus;
-  if($("#"+formName).length==0) briefNotify("Attempt to Lockdown Empty Form:" + formName, "ERROR");
-  if (lock == undefined)lock=true;
+  if ($('#' + formName).length == 0) {
+    briefNotify('Attempt to Lockdown Empty Form:' + formName, 'ERROR');
+  }
+  if (lock == undefined) {
+    lock = true;
+  }
 
-  $.each($("form#"+formName + "> input, >select"),function (ndx,field){
-    if(lock)  $("form#"+formName +" #"+field.id).attr('disabled','disabled' );
-    else $("form#"+formName +" #"+field.id).removeAttr('disabled');
+  $.each($('form#' + formName + '> input, >select'),
+      function(ndx, field) {
+        if (lock) {
+           $('form#' + formName + ' #' + field.id).attr('disabled', 'disabled');
+        } else {
+          $('form#' + formName + ' #' + field.id).removeAttr('disabled');
+        }
   });
 }
 
-function isFormEmpty(formName){
-  if ($("#"+formName+"-last_update").val()=="")return true;
+function isFormEmpty(formName) {
+  if ($('#' + formName + '-last_update').val() == '')return true;
   return false;
 }
 
@@ -445,7 +472,7 @@ function onRefreshCache(data) {
   GOLFER_CACHE = {};
   SECURITY_PROFILE_CACHE = {};
   SECURITY_GRANT = new Array();
-  for (var i = 0; i < data.length; i++ ) {
+  for (var i = 0; i < data.length; i++) {
     if (data[i].tp === 'golfer') {
       GOLFER_CACHE[data[i].val] = data[i].lbl;
     } else if (data[i].tp === 'securityProfile') {
@@ -455,7 +482,7 @@ function onRefreshCache(data) {
     }
   }
 
-  setSelectOptions('#quickGolfScoreForm select[name=golfer_id]', 
+  setSelectOptions('#quickGolfScoreForm select[name=golfer_id]',
                     GOLFER_CACHE
                   );
   setSelectOptions('#securityUserForm select[name=securityProfileId]',
@@ -474,8 +501,8 @@ function onRefreshCache(data) {
 
 
 function retrieveCache() {
-  var params = prepParams (params, 'cross_table_cache', 'select');
-  var successf = function (rslt) {
+  var params = prepParams(params, 'cross_table_cache', 'select');
+  var successf = function(rslt) {
     onRefreshCache(rslt.rows);
   };
   serverCall(params, successf, FAILF);
@@ -483,7 +510,7 @@ function retrieveCache() {
 
 //function getLbl4Val(val, type) {
 //  var lbl;
-//  if (type ==="golfer") { lbl=GOLFER_CACHE.val; 
+//  if (type ==="golfer") { lbl=GOLFER_CACHE.val;
 //  }else if ( type=='') {
 //  }else {
 //    return "INVALID CACHE REQUESTED";
@@ -503,26 +530,33 @@ function retrieveCache() {
 
 function loginCall(action) {
   var params = bindForm('LoginPortalForm');
-  
-    params['spwfResource'] = "security_user";
+
+    params['spwfResource'] = 'security_user';
   params['spwfAction'] = action;
-  var successf = function (rslt) {
+  var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
       var r = rslt.rows[0];
-      if (r.session_id =='') {
-        showDialog("Sorry, I Couldn't validate those Credentials");
-        $("#password").val('');
-      }else {
-        statusMsg("Successfully Authenticated User : " + r.user_id );
+      if (r.session_id == '') {
+        showDialog('Sorry, I Couldn\'t validate those Credentials');
+        $('#password').val('');
+      } else {
+        statusMsg('Successfully Authenticated User : ' + r.user_id);
         usrSessionId = r.session_id;
         usrLoginId = r.user_id;
         onSuccessfulLogin();
-        if (rslt.spwfAction=="ONE_TIME") {
-         showDialog("You just completed a one time logon.  You password has not been changed, please change your password for your next visit if you have forgotten it. ");
+        if (rslt.spwfAction == 'ONE_TIME') {
+          var msg = 'You just completed a one time logon. ';
+          msg += 'You password has not been changed, ';
+          msg += 'please change your password for your next visit ';
+          msg += 'if you have forgotten it. ';
+          showDialog(msg);
         }
       }
-    }else {
-      briefNotify('There was a problem communicating with the Server.', 'ERROR')
+    } else {
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
     }
 
   };
@@ -532,121 +566,160 @@ function loginCall(action) {
 
 
 
-function validateLoginPortalForm () {
-  var formValid  = standardValidate('LoginPortalForm');
-  if (($("#LoginPortalForm-password").val() == '' || $("#LoginPortalForm-password").val() == null ) &&$("#LoginPortalForm-password").is(" : visible")) {
-    showDialog ("Please enter your password");
-     formValid = false;
+function validateLoginPortalForm() {
+  var formValid = standardValidate('LoginPortalForm');
+  if (($('#LoginPortalForm-password').val() == '' ||
+        $('#LoginPortalForm-password').val() == null) &&
+      $('#LoginPortalForm-password').is(' : visible')) {
+    showDialog('Please enter your password');
+    formValid = false;
   }
   return formValid;
 }
 
 function onSuccessfulLogin() {
-  $("#password").val('');
+  $('#password').val('');
   displayMainLayout(true);
-  $("#topMenuBar").show();
+  $('#topMenuBar').show();
   registerAction();
   timeoutIfNoAction();
   changePage(function() {showLaunchPane()});
   retrieveCache();
 }
 function logOutUser() {
-  usrSessionId='';
-  usrLoginId='';
-  $("#LoginPortalForm-user_id").val('');
-  $("#LoginPortalForm-password").val('');
+  usrSessionId = '';
+  usrLoginId = '';
+  $('#LoginPortalForm-user_id').val('');
+  $('#LoginPortalForm-password').val('');
   displayMainLayout(false);
-  $("#topMenuBar").hide();
+  $('#topMenuBar').hide();
   hideMainContent();
   return;
 }
 
 
 $(document).ready(function() {
-    $("#LoginPortalForm-user_id").val("golfscore");
-    $("#LoginPortalForm-password").val("golfscore");
-    changePage(function() {showLoginPortal()});
-    });
+  $('#LoginPortalForm-user_id').val('golfscore');
+  $('#LoginPortalForm-password').val('golfscore');
+  changePage(function() {showLoginPortal()});
+});
 
 function showLoginPortal() {
   $(document).keypress(function(e) {
-      if (e.keyCode == 13) {//enter
+    if (e.keyCode == 13) {//enter
       loginCall('authenticate');
-      }
-      });
+    }
+  });
 
 }
 function initPasswordReset() {
-  var params= {};
-  params['user_id'] = $("#LoginPortalForm-user_id").val();
-  if (params['user_id'] ==null || params['user_id'] =='') {
-    showDialog("Please enter your User Id to initiate your password reset.");
+  var params = {};
+  params['user_id'] = $('#LoginPortalForm-user_id').val();
+  if (params['user_id'] == null || params['user_id'] == '') {
+    showDialog('Please enter your User Id to initiate your password reset.');
     return false;
   }
   var successCallback = function(rslt) {
-    if (rslt.success =="true") {
-      showDialog("Your password reset is in process.  Do not close this page, but check your email for the code to enter to gain one-time access in order to change your password." );
+    if (rslt.success == 'true') {
+      var msg = 'Your password reset is in process.  Do not close this page,';
+      msg += 'but check your email for the code to enter to gain one-time ';
+      msg += 'access in order to change your password.';
+      showDialog(msg);
     }
-    prepForOneTimeEntry()
-  
+    prepForOneTimeEntry();
+
   };
-  $.ajax( {type : "POST", url : passwordResetUrlTarget, dataType : "json", data : params, 
-      success : successCallback, error : FAILF });
+  $.ajax({type: 'POST',
+    url: passwordResetUrlTarget,
+    dataType: 'json',
+    data: params,
+    success: successCallback,
+    error: FAILF
+  });
 }
 
 function initForgottenUserName() {
-  
-  showDialog("Please Enter your email address below.  Instructions will be mailed to this address.  <br/><input type='text' style='width : 400px;'size='90' id='forgottenUserIdEmail'/><br/> ", "300", "600", true, {"Ok" : function() {if ($("#forgottenUserIdEmail").val() !='') {emailUserName(); $( this ).dialog( "close" );} }, "Cancel" : function() {$( this ).dialog( "close" )}}, "Email User Name...");
-     
+  var msg = 'Please Enter your email address below.  ';
+  msg += 'Instructions will be mailed to this address.  ';
+  mst += '<br/><input type="text"';
+  msg += ' style="width: 400px;" size="90" id="forgottenUserIdEmail"/><br/> ';
+  showDialog(
+      msg, '300', '600', true,
+      {'Ok': function() {
+                          if ($('#forgottenUserIdEmail').val() != '') {
+                            emailUserName();
+                            $(this).dialog('close');
+                          }
+                        },
+        'Cancel': function() {
+            $(this).dialog('close');
+        }
+      }, 'Email User Name...');
+
 }
 //
 function emailUserName() {
-  var params= {};
-  params['email_addr'] = $("#forgottenUserIdEmail").val();
+  var params = {};
+  params['email_addr'] = $('#forgottenUserIdEmail').val();
   var successCallback = function(rslt) {
-    if (rslt.success =="true") {
-      showDialog("Your username has been mailed to your email address.  Do not close this page, but check your email for the username and reset code to enter to gain one-time access. You can change your password when you log in if desired" );
+    if (rslt.success == 'true') {
+      var msg = 'Your username has been mailed to your email address. ';
+      msg += 'Do not close this page, but check your email for the username ';
+      msg += ' and reset code to enter to gain one-time access. ';
+      msg += ' You can change your password when you log in if desired';
+      showDialog(msg);
     }
-    prepForOneTimeEntry()
-  
+    prepForOneTimeEntry();
   };
-  $.ajax( {type : "POST", url : passwordResetUrlTarget, dataType : "json", data : params, 
-      success : successCallback, error : FAILF });
-
-
+  $.ajax({type: 'POST',
+    url: passwordResetUrlTarget,
+    dataType: 'json',
+    data: params,
+    success: successCallback,
+    error: FAILF
+  });
 }
 
-
-
-
 function prepForOneTimeEntry() {
-$("#LoginPortalForm-password_reset_codeDivId").show();
-    $("#LoginPortalForm-passwordDivId").hide();
-    $("#LoginPortalForm-password").val('');
-    $("#cmdlogin").hide();
-    $("#cmdOneTimelogin").show();
+  $('#LoginPortalForm-password_reset_codeDivId').show();
+  $('#LoginPortalForm-passwordDivId').hide();
+  $('#LoginPortalForm-password').val('');
+  $('#cmdlogin').hide();
+  $('#cmdOneTimelogin').show();
 
 }
 
 function onetimeLogin() {
-  var params= {};
-  params['user_id'] = $("#LoginPortalForm-user_id").val();
-  params['password_reset_code'] = $("#LoginPortalForm-password_reset_code").val();
-  if (params['user_id'] ==null || params['user_id'] =='' || params['password_reset_code'] ==null || params['password_reset_code'] =='') {
-    showDialog("Please enter your User Id  and Password Reset Code to initiate your password reset.");
-    return false;
-  }
+  var params = {};
+  params['user_id'] = $('#LoginPortalForm-user_id').val();
+  params['password_reset_code'] =
+    $('#LoginPortalForm-password_reset_code').val();
+  if (params['user_id'] == null ||
+      params['user_id'] == '' ||
+      params['password_reset_code'] == null ||
+      params['password_reset_code'] == '') {
+        var msg = 'Please enter your User Id and Password';
+        msg += 'Reset Code to initiate your password reset.';
+        showDialog(msg);
+        return false;
+      }
   var successCallback = function(rslt) {
-    if (rslt.success =="true") {
-      showDialog ("Your password reset is in process.  Do not close this page, but check your email for the code to enter to gain one-time access in order to change your password." );
+    if (rslt.success == 'true') {
+      var msg = 'Your password reset is in process.  ';
+      mst += 'Do not close this page, but check your email ';
+      msg += 'for the code to enter to gain one-time access ';
+      msg += 'in order to change your password.';
+      showDialog(msg);
     }
-    $("#LoginPortalForm-password_reset_codeDivId").show();
-    $("#cmdlogin").hide();
-    $("#cmdOneTimelogin").show();
+    $('#LoginPortalForm-password_reset_codeDivId').show();
+    $('#cmdlogin').hide();
+    $('#cmdOneTimelogin').show();
 
   };
-  $.ajax( {type : "POST", url : passwordResetUrlTarget, dataType : "json", data : params, 
-      success : successCallback, error : FAILF });
+  $.ajax({type: 'POST', url: passwordResetUrlTarget,
+    dataType: 'json', data: params,
+    success: successCallback, error: FAILF
+  });
 }
 
 
@@ -654,79 +727,79 @@ function onetimeLogin() {
 
 //LayoutComponents.js
 function sizeLeftNav() {
-  
-    
-    // document.getElementById('leftnav').style.height= (window.innerHeight-60) + "px";
-    document.getElementById('mainContent').style.top="100px";
-  document.getElementById('mainContent').style.left="0px";
-  document.getElementById('mainContent').style.height=(window.innerHeight - 135 ) + "px";
-  document.getElementById('mainContent').style.width=(window.innerWidth- 20 ) + "px";
+
+
+    document.getElementById('mainContent').style.top =
+    '100px';
+  document.getElementById('mainContent').style.left = '0px';
+  document.getElementById('mainContent').style.height =
+    (window.innerHeight - 135) + 'px';
+  document.getElementById('mainContent').style.width =
+    (window.innerWidth - 20) + 'px';
 }
 function displayMainLayout(showHide) {
-  var display = (showHide) ? "block" : "none";
+  var display = (showHide) ? 'block' : 'none';
   //document.getElementById('leftnav').style.display=display;
-  document.getElementById('header').style.display=display;
-  document.getElementById('footer').style.display=display;
-  document.getElementById('mainContent').style.display=display;
-  display = (showHide) ? "none" : "block";
-  document.getElementById('LoginPortal').style.display=display;
+  document.getElementById('header').style.display = display;
+  document.getElementById('footer').style.display = display;
+  document.getElementById('mainContent').style.display = display;
+  display = (showHide) ? 'none' : 'block';
+  document.getElementById('LoginPortal').style.display = display;
   if (!showHide)showLoginPortal();
 }
 
-$(document).ready( function() {
+$(document).ready(function() {
+  var tblClasses = $.fn.dataTableExt.oStdClasses;
+  tblClasses.sPagePrevDisabled = ' smallButton LogicDisabled';
+  tblClasses.sPagePrevEnabled = ' smallButton';
+  tblClasses.sPageNextDisabled = ' smallButton LogicDisabled';
+  tblClasses.sPageNextEnabled = ' smallButton';
+  tblClasses.sWrapper = 'prettyWrapper dataTables_wrapper';
 
-    $.fn.dataTableExt.oStdClasses.sPagePrevDisabled =" smallButton LogicDisabled";
-    $.fn.dataTableExt.oStdClasses.sPagePrevEnabled =" smallButton";
-    $.fn.dataTableExt.oStdClasses.sPageNextDisabled =" smallButton LogicDisabled";
-    $.fn.dataTableExt.oStdClasses.sPageNextEnabled =" smallButton";
-
-    $.fn.dataTableExt.oStdClasses.sWrapper="prettyWrapper dataTables_wrapper";
-
-    });
+});
 
 function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
-  $("#genericDialogDivId").dialog( "destroy" );
-
-  msg_ =msg_ || "No message Defined";
-  height_ = height_|| 300;
-  width_=width_ || 400;
+  $('#genericDialogDivId').dialog('destroy');
+  msg_ = msg_ || 'No message Defined';
+  height_ = height_ || 300;
+  width_ = width_ || 400;
   modal_ = (modal_ === undefined) ? true : modal_;
-  buttons_=buttons_|| {"Ok" : function() {$( this ).dialog( "close" );}};
+  buttons_ = buttons_ || {'Ok': function() {$(this).dialog('close');}};
   title_ = title_ || '';
-  $("#genericDialogDivId").attr("title", title_);
-  $("#dialogMsgSpanId").html(msg_);
-  $("#genericDialogDivId").dialog(
-       {
-resizable : false, 
-height : height_, 
-width : width_, 
-modal : modal_, 
-buttons : buttons_
-});
-if (title_ ==='') {
-  $("#genericDialogDivId").siblings(".ui-dialog-titlebar").hide();
-}else {
-  $("#genericDialogDivId").siblings(".ui-dialog-titlebar").show();
+  $('#genericDialogDivId').attr('title', title_);
+  $('#dialogMsgSpanId').html(msg_);
+  $('#genericDialogDivId').dialog(
+      {
+        resizable: false,
+    height: height_,
+    width: width_,
+    modal: modal_,
+    buttons: buttons_
+      });
+  if (title_ === '') {
+    $('#genericDialogDivId').siblings('.ui-dialog-titlebar').hide();
+  }else {
+    $('#genericDialogDivId').siblings('.ui-dialog-titlebar').show();
 
-}
+  }
 
 }
 
 
 function briefNotify(msg, type) {
   var color;
-  if (type== null || type=='INFO') {
-    color="green";
-  }else if (type=='WARNING') {
-    color="yellow";
-  }else if (type=='ERROR') {
-    color="red";
+  if (type == null || type == 'INFO') {
+    color = 'green';
+  }else if (type == 'WARNING') {
+    color = 'yellow';
+  }else if (type == 'ERROR') {
+    color = 'red';
   }else {
-    color="black";
+    color = 'black';
   }
-  $("#briefNoticeMsg").css("border-color", color);
-  $("#briefNoticeMsg").css("color", color);
-  $("#briefNoticeMsg").html(msg);
+  $('#briefNoticeMsg').css('border-color', color);
+  $('#briefNoticeMsg').css('color', color);
+  $('#briefNoticeMsg').html(msg);
   $('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
   statusMsg(msg);
 }
@@ -743,39 +816,40 @@ function briefNotify(msg, type) {
 
 function retrieveGolfScoreSummaryList() {
     if (!isUserAuthorized('SELECT_GOLFER_HANDICAP')) {
-      briefNotify("Access Violation", 'ERROR');
+      briefNotify('Access Violation', 'ERROR');
       return false;
     }
 
-    var params =prepParams(params, 'golf_score_summary' , "select" );
-    var successf = function (rslt) {
+    var params = prepParams(params, 'golf_score_summary' , 'select');
+    var successf = function(rslt) {
       if (!rslt[SERVER_SIDE_FAIL]) {
         populateGolfScoreSummaryListTable(rslt.rows);
       }else {
-        briefNotify('There was a problem communicating with the Server.', 
-            'ERROR')
+        briefNotify(
+            'There was a problem communicating with the Server.',
+            'ERROR');
       }
 
     };
-    var failf = function() {alert('failed');}
+    var failf = function() {alert('failed');};
     serverCall(params, successf, failf);
 
   }
 //var GolfScoreSummaryprKey = {};
 function populateGolfScoreSummaryListTable(dataRows) {
-  var dataArray= new Array();
-  for(var ndx = 0; ndx < dataRows.length; ndx++) {
+  var dataArray = new Array();
+  for (var ndx = 0; ndx < dataRows.length; ndx++) {
     dataArray[ndx] = buildGolfScoreSummaryListTableRow(dataRows[ndx]);
     //GolfScoreSummaryprKey[dataRows[ndx].] = ndx;
   }
   $('#golfScoreSummaryListTable').dataTable().fnClearTable();
-  $('#golfScoreSummaryListTable').dataTable().fnAddData( dataArray, true );
+  $('#golfScoreSummaryListTable').dataTable().fnAddData(dataArray, true);
 
 }
 
 function buildGolfScoreSummaryListTableRow(gs) {
-  var dataHash= {};
-  var links='';
+  var dataHash = {};
+  var links = '';
   dataHash['golfer_name'] = gs.golfer_name;
   dataHash['handicap'] = formatNumber(gs.golf_score, 2, true, false, true);
   dataHash['date_range'] = pgDate(gs.first_date) + ' - ' + pgDate(gs.last_date);
@@ -785,11 +859,11 @@ function buildGolfScoreSummaryListTableRow(gs) {
      links += gs.golfer_id + ')})">View Scores</a>  ';
     links += '&nbsp; &nbsp;';
   }
-  if (isUserAuthorized("SELECT_GOLFER")) {
+  if (isUserAuthorized('SELECT_GOLFER')) {
     links += ' <a href="" onclick="changePage(function() {showGolfer(';
      links += gs.golfer_id + ')})">View Golfer</a>';
   }
-  dataHash['links'] =links; 
+  dataHash['links'] = links;
   //dataHash["DT_RowId"] = "GolfScoreSummaryListTableTR-" + data.;
 
   return dataHash;
@@ -809,14 +883,14 @@ function imposeGolfScoreSummarySecurityUIRestrictions() {
 
 //After complete Load setup
 $(document).ready(function() {
-    $('#golfScoreSummaryListTable').dataTable( 
+    $('#golfScoreSummaryListTable').dataTable(
        {
       'aoColumns' : [
-       {'mData': 'golfer_name' }, 
-       {'mData': 'handicap' }, 
-       {'mData': 'date_range' }, 
+       {'mData': 'golfer_name' },
+       {'mData': 'handicap' },
+       {'mData': 'date_range' },
        {'mData': 'links', asSorting: 'none' }
-      ], 
+      ],
       'sPaginationType': 'two_button'
       });
     });
@@ -840,14 +914,16 @@ function retrieveGolfScoreList(golferId_, selectedKey_) {
     return false;
   }
 
-  var params =prepParams(params, 'golf_score' , 'select' );
+  var params = prepParams(params, 'golf_score' , 'select');
   params['where_clause'] = 'golfer_id =' + golferId_;
-  var successf = function (rslt) {
+  var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
-      populateGolfScoreListTable(rslt.rows)
-      
+      populateGolfScoreListTable(rslt.rows);
     } else {
-      briefNotify('There was a problem communicating with the Server.', 'ERROR');
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
     }
   };
   serverCall(params, successf, FAILF);
@@ -865,10 +941,13 @@ function retrieveGolfScore(params) {
       bindToForm('golfScoreForm', rslt.rows[0]);
       toggleSaveMode('golfScoreForm', true);
     } else {
-      briefNotify('There was a problem communicating with the Server.', 'ERROR')
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
     }
 
-  }
+  };
   serverCall(params, successf, FAILF);
 }
 
@@ -880,15 +959,18 @@ function deleteGolfScore(golfScoreId_, lastUpdate_) {
     return false;
   }
 
-  var params =prepParams(params, 'golf_score' , 'delete' );
+  var params = prepParams(params, 'golf_score' , 'delete');
   params['golf_score_id'] = golfScoreId_;
   params['last_update'] = lastUpdate_;
-  var successf = function (rslt) {
+  var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
       removeGolfScoreListTableRow(rslt.golf_score_id);
       briefNotify('Golf Score Deleted Successfully', 'INFO');
     }else {
-      briefNotify('There was a problem communicating with the Server.', 'ERROR')
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
     }
 
   };
@@ -896,27 +978,30 @@ function deleteGolfScore(golfScoreId_, lastUpdate_) {
 }
 
 function saveGolfScore(params) {
-  if (!isUserAuthorized('UPDATE_GOLF_SCORE') && 
+  if (!isUserAuthorized('UPDATE_GOLF_SCORE') &&
       !isUserAuthorized('INSERT_GOLF_SCORE')) {
     briefNotify('Access Violation', 'ERROR');
     return false;
   }
 
   params = prepParams(params, 'golf_score', insertUpdateChoose);
-  var successf=function(rslt) {
+  var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
-      if (rslt.spwfAction == "UPDATE") {
+      if (rslt.spwfAction == 'UPDATE') {
         replaceGolfScoreListTableRow(rslt.rows[0]);
       } else if (rslt.spwfAction == 'INSERT') {
         addNewGolfScoreListTableRow(rslt.rows[0]);
       }
-      briefNotify("Golf Score Successfully Saved", 'INFO');
-      var tempGolferId = $("#golfScoreForm-golfer_id").val();
+      briefNotify('Golf Score Successfully Saved', 'INFO');
+      var tempGolferId = $('#golfScoreForm-golfer_id').val();
       clearGolfScoreForm();
-      $("#golfScoreForm-golfer_id").val(tempGolferId);
+      $('#golfScoreForm-golfer_id').val(tempGolferId);
 
     } else {
-      briefNotify('There was a problem communicating with the Server.', 'ERROR')
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
     }
 
   };
@@ -943,9 +1028,9 @@ function editGolfScore(golfScoreId_) {
 
 function saveGolfScoreForm() {
 
-  if (!isUserAuthorized('UPDATE_GOLF_SCORE') && 
+  if (!isUserAuthorized('UPDATE_GOLF_SCORE') &&
       !isUserAuthorized('INSERT_GOLF_SCORE')) {
-    briefNotify("Access Violation", 'ERROR');
+    briefNotify('Access Violation', 'ERROR');
     return false;
   }
 
@@ -965,26 +1050,24 @@ function validateGolfScoreForm() {
 //Top Level HTML Manip
 var GolfScoreprKey = {};
 function populateGolfScoreListTable(dataRows) {
- var dataArray= new Array();
-  for(var ndx = 0;ndx< dataRows.length;ndx++ ) {
+ var dataArray = new Array();
+  for (var ndx = 0; ndx < dataRows.length; ndx++) {
     dataArray[ndx] = buildGolfScoreListTableRow(dataRows[ndx]);
     GolfScoreprKey[dataRows[ndx].golf_score_id] = ndx;
 
   }
   $('#golfScoreListTable').dataTable().fnClearTable();
-  $('#golfScoreListTable').dataTable().fnAddData( dataArray, true );
-  
+  $('#golfScoreListTable').dataTable().fnAddData(dataArray, true);
 }
 
 function buildGolfScoreListTableRow(data) {
-  var dataHash= {};
-  var links ='';
+  var dataHash = {};
+  var links = '';
   dataHash['golf_score'] = formatNumber(data.golf_score, 0, true, false, true);
-  dataHash['game_dt'] = pgDate(data.game_dt)
-    
+  dataHash['game_dt'] = pgDate(data.game_dt);
   if (isUserAuthorized('UPDATE_GOLF_SCORE')) {
     links += '<a class="alink" onclick="editGolfScore(';
-    links +=  data.golf_score_id + ')">Edit</a> ';
+    links += data.golf_score_id + ')">Edit</a> ';
     links += '&nbsp; &nbsp;';
   } else if (isUserAuthorized('SELECT_GOLF_SCORE')) {
     links += '<a class="alink" onclick="editGolfScore(';
@@ -994,18 +1077,18 @@ function buildGolfScoreListTableRow(data) {
   }
   if (isUserAuthorized('DELETE_GOLF_SCORE')) {
     links += '<a class="alink" onclick="deleteGolfScore(';
-    links +=  data.golf_score_id + ', "' + data.last_update + '")>Delete</a> ';
+    links += data.golf_score_id + ', "' + data.last_update + '")>Delete</a> ';
     links += '&nbsp; &nbsp;';
   }
 
-    dataHash['links'] =links; 
+    dataHash['links'] = links;
   dataHash['DT_RowId'] = 'GolfScoreListTableTR-' + data.golf_score_id;
   return dataHash;
 }
 
 function replaceGolfScoreListTableRow(row) {
   $('#golfScoreListTable').dataTable().fnUpdate(
-      buildGolfScoreListTableRow(row), 
+      buildGolfScoreListTableRow(row),
       GolfScoreprKey[row.golf_score_id]
       );
 }
@@ -1016,51 +1099,54 @@ function addNewGolfScoreListTableRow(row) {
 }
 function removeGolfScoreListTableRow(golfScoreId_) {
   $('#golfScoreListTable').dataTable().fnDeleteRow(
-      GolfScoreprKey[golfScoreId_] 
+      GolfScoreprKey[golfScoreId_]
       );
 }
 
 //Div Access and App Layout Calls
 function showGolfScore(golferId_) {
-  if (!isUserAuthorized('SELECT_GOLF_SCORE', 
-        true,  'showGolfScore')) 
-    return false; 
+  if (!isUserAuthorized(
+        'SELECT_GOLF_SCORE',
+        true,
+        'showGolfScore')) {
+    return false;
+        }
   statusMsg('Navigated to Golf Score View');
-  retrieveGolfScoreList(golferId_); 
+  retrieveGolfScoreList(golferId_);
   retrieveGolferNameForGolfScore(golferId_);
   hideCurrentContentPane();
   $('#golfScore').fadeIn();
-  currentContentPane='golfScore';
-  if ( isFormEmpty('golfScoreForm')) toggleSaveMode('golfScoreForm', false);
+  currentContentPane = 'golfScore';
+  if (isFormEmpty('golfScoreForm')) toggleSaveMode('golfScoreForm', false);
   if ($('#golfScoreForm-golfer_id').val() != golferId_) {
     clearGolfScoreForm();
   }
   $('#golfScoreForm-golfer_id').val(golferId_);
   $('#golfScoreGolferNameId').html(GOLFER_CACHE[golferId_] + ' Golf Scores ');
-  
   imposeGolfScoreSecurityUIRestrictions();
 }
 
 
 function clearGolfScoreForm() {
-  var golferId =  $('#golfScoreForm-golfer_id').val();
+  var golferId = $('#golfScoreForm-golfer_id').val();
   clearForm('golfScoreForm');
   $('#golfScoreForm-golfer_id').val(golferId);
-  (isUserAuthorized('INSERT_GOLF_SCORE', false)) ? 
-    securityLockForm('golfScoreForm', false) : securityLockForm('golfScoreForm', true);
+  (isUserAuthorized('INSERT_GOLF_SCORE', false)) ?
+    securityLockForm('golfScoreForm', false) :
+    securityLockForm('golfScoreForm', true);
 }
 
 //After complete Load setup
 $(document).ready(function() {
     $('#golfScoreForm-game_dt').datepicker();
 
-    $('#golfScoreListTable').dataTable( {
+    $('#golfScoreListTable').dataTable({
       'aoColumns': [
-       {'mData': 'golf_score'}, 
-       {'mData': 'game_dt'}, 
+       {'mData': 'golf_score'},
+       {'mData': 'game_dt'},
        {'mData': 'links', asSorting: 'none'}
-      ], 
-      'sPaginationType':'two_button'
+      ],
+      'sPaginationType': 'two_button'
       }
        );
     });
@@ -1077,29 +1163,29 @@ function retrieveGolferNameForGolfScore(golferId_) {
   params['where_clause'] = 'golfer_id =' + golferId_;
   var successf = function(rslt) {
     $('#golfScoreGolferNameId').html(rslt.rows[0].name);
-  }
+  };
   serverCall(params, successf, FAILF);
 }
 
 function imposeGolfScoreSecurityUIRestrictions() {
   var divIdToSecure;
-  divIdToSecure ='#golfScoreFormSave';
-  (isUserAuthorized('UPDATE_GOLF_SCORE')) ? 
+  divIdToSecure = '#golfScoreFormSave';
+  (isUserAuthorized('UPDATE_GOLF_SCORE')) ?
     securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-  divIdToSecure ='#golfScoreFormAdd';
-  (isUserAuthorized('INSERT_GOLF_SCORE')) ? 
+  divIdToSecure = '#golfScoreFormAdd';
+  (isUserAuthorized('INSERT_GOLF_SCORE')) ?
     securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
-  divIdToSecure ='#golfScoreEntryDivId';
-  (isUserAuthorized('UPDATE_GOLF_SCORE') || 
-   isUserAuthorized('INSERT_GOLF_SCORE')) ? 
+  divIdToSecure = '#golfScoreEntryDivId';
+  (isUserAuthorized('UPDATE_GOLF_SCORE') ||
+   isUserAuthorized('INSERT_GOLF_SCORE')) ?
     securityshow(divIdToSecure) : securityHide(divIdToSecure);
-  if (!isUserAuthorized('INSERT_GOLF_SCORE') && 
+  if (!isUserAuthorized('INSERT_GOLF_SCORE') &&
       !isUserAuthorized('UPDATE_GOLF_SCORE')) {
     securityLockForm('golfScoreForm', true);
   }
-  if (!isUserAuthorized('INSERT_GOLF_SCORE', false) && 
+  if (!isUserAuthorized('INSERT_GOLF_SCORE', false) &&
       isFormEmpty('golfScoreForm')) {
     securityLockForm('golfScoreForm', true);
   }
@@ -1120,15 +1206,23 @@ function imposeGolfScoreSecurityUIRestrictions() {
 
 //Server Calls
 function retrieveQuickGolfScoreList() {
-  if (!isUserAuthorized('SELECT_GOLF_SCORE', true, "retrieveQuickGolfScoreList")) return false;
+  if (!isUserAuthorized(
+        'SELECT_GOLF_SCORE',
+        true,
+        'retrieveQuickGolfScoreList')) {
+           return false;
+        }
 
-  var params =prepParams(params, 'golf_score' , "select" );
-  params['orderby_clause'] =" order by game_dt desc"
-    var successf = function (rslt) {
+  var params = prepParams(params, 'golf_score' , 'select');
+  params['orderby_clause'] = ' order by game_dt desc';
+    var successf = function(rslt) {
       if (!rslt[SERVER_SIDE_FAIL]) {
-        populateQuickGolfScoreListTable(rslt.rows)
+        populateQuickGolfScoreListTable(rslt.rows);
       }else {
-        briefNotify('There was a problem communicating with the Server.', 'ERROR');
+        briefNotify(
+            'There was a problem communicating with the Server.',
+            'ERROR'
+            );
       }
     };
   serverCall(params, successf, FAILF);
@@ -1137,7 +1231,7 @@ function retrieveQuickGolfScore(params) {
   if (!isUserAuthorized(
         'SELECT_GOLF_SCORE',
         true,
-        'retrieveQuickGolfScore' )) {
+        'retrieveQuickGolfScore')) {
           return false;
         }
 
@@ -1154,7 +1248,7 @@ function retrieveQuickGolfScore(params) {
           );
     }
 
-  }
+  };
   serverCall(params, successf, FAILF);
 }
 
@@ -1164,19 +1258,19 @@ function deleteQuickGolfScore(golfScoreId_, lastUpdate_) {
   if (!isUserAuthorized(
         'DELETE_GOLF_SCORE',
         true,
-        'deleteQuickGolfScore')){
+        'deleteQuickGolfScore')) {
      return false;
 }
 
 
-  var params = prepParams(params, 'golf_score' , 'delete' );
+  var params = prepParams(params, 'golf_score' , 'delete');
   params['golf_score_id'] = golfScoreId_;
   params['last_update'] = lastUpdate_;
   var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
       removeQuickGolfScoreListTableRow(rslt.golf_score_id);
       briefNotify('Golf Score Deleted Successfully', 'INFO');
-    }else {
+    } else {
       briefNotify(
           'There was a problem communicating with the Server.',
           'ERROR'
@@ -1191,7 +1285,7 @@ function saveQuickGolfScore(params) {
   if (!isUserAuthorized('UPDATE_GOLF_SCORE', false) &&
       !isUserAuthorized('INSERT_GOLF_SCORE', false)) {
     briefNotify(
-        "Access Violation : saveQuickGolfScore ",
+        'Access Violation : saveQuickGolfScore ',
         'ERROR'
         );
     return false;
@@ -1201,17 +1295,17 @@ function saveQuickGolfScore(params) {
   var successf = function(rslt) {
     clearForm('quickGolfScoreForm');
     if (!rslt[SERVER_SIDE_FAIL]) {
-      if (rslt.spwfAction == "UPDATE") {
+      if (rslt.spwfAction == 'UPDATE') {
         replaceQuickGolfScoreListTableRow(rslt.rows[0]);
       }else if (rslt.spwfAction == 'INSERT') {
         addNewQuickGolfScoreListTableRow(rslt.rows[0]);
       }
-      briefNotify("Golf Score Successfully Saved", 'INFO');
+      briefNotify('Golf Score Successfully Saved', 'INFO');
       clearQuickGolfScoreForm();
 
     }
     else {
-      briefNotify("Golf Score Saved Failed", 'ERROR');
+      briefNotify('Golf Score Saved Failed', 'ERROR');
 
     }
   };
@@ -1220,10 +1314,10 @@ function saveQuickGolfScore(params) {
 
 //ServerCall Wrappers
 function editQuickGolfScore(quickGolfScoreId_) {
-  if ( !isUserAuthorized(
+  if (!isUserAuthorized(
         'SELECT_GOLF_SCORE',
         true,
-        "editQuickGolfScore")){
+        'editQuickGolfScore')) {
            return false;
         }
   if (isUserAuthorized('UPDATE_GOLF_SCORE', false)) {
@@ -1232,7 +1326,7 @@ function editQuickGolfScore(quickGolfScoreId_) {
 
 
   if (quickGolfScoreId_) {
-    var params = {"where_clause" : "golf_score_id=" + quickGolfScoreId_};
+    var params = {'where_clause' : 'golf_score_id=' + quickGolfScoreId_};
     retrieveQuickGolfScore(params);
   }
 }
@@ -1240,7 +1334,7 @@ function editQuickGolfScore(quickGolfScoreId_) {
 function saveQuickGolfScoreForm() {
   if (!isUserAuthorized('UPDATE_GOLF_SCORE') &&
       !isUserAuthorized('SELECT_GOLF_SCORE')) {
-    briefNotify("Access Violation : save", 'ERROR');
+    briefNotify('Access Violation : save', 'ERROR');
     return false;
   }
 
@@ -1252,41 +1346,44 @@ function saveQuickGolfScoreForm() {
 
 //validation
 function validateQuickGolfScoreForm() {
-  var formName='quickGolfScoreForm';
-  var formValid  = standardValidate(formName);
+  var formName = 'quickGolfScoreForm';
+  var formValid = standardValidate(formName);
   return formValid;
 }
 
 //Top Level HTML Manip
 var QuickGolfScoreprKey = {};
 function populateQuickGolfScoreListTable(dataRows) {
-  var dataArray= new Array();
-  for(var ndx = 0;ndx< dataRows.length;ndx++ ) {
+  var dataArray = new Array();
+  for (var ndx = 0; ndx < dataRows.length; ndx++) {
     dataArray[ndx] = buildQuickGolfScoreListTableRow(dataRows[ndx]);
     QuickGolfScoreprKey[dataRows[ndx].golf_score_id] = ndx;
   }
   $('#quickGolfScoreListTable').dataTable().fnClearTable();
-  $('#quickGolfScoreListTable').dataTable().fnAddData( dataArray, true );
+  $('#quickGolfScoreListTable').dataTable().fnAddData(dataArray, true);
 }
 
 function buildQuickGolfScoreListTableRow(data) {
-  var dataHash= {};
-  var links ='';
+  var dataHash = {};
+  var links = '';
   dataHash['golfer_name'] = GOLFER_CACHE[data.golfer_id];
   dataHash['golf_score'] = formatNumber(data.golf_score, 0, true, false, true);
   dataHash['game_dt'] = pgDate(data.game_dt);
   if (isUserAuthorized('UPDATE_GOLF_SCORE', false)) {
-    links += '  <a class="alink" onclick="editQuickGolfScore(' + data.golf_score_id + ')">Edit</a> ';
+    links += '  <a class="alink" onclick="editQuickGolfScore(';
+    links += data.golf_score_id + ')">Edit</a> ';
     links += ' &nbsp; &nbsp ';
   }else if (isUserAuthorized('SELECT_GOLF_SCORE', false)) {
-    links += '<a class="alink" onclick="editQuickGolfScore(' + data.golf_score_id + ')">View</a> ';
+    links += '<a class="alink" onclick="editQuickGolfScore(';
+    links += data.golf_score_id + ')">View</a> ';
     links += ' &nbsp; &nbsp;';
 
   }
 
   if (isUserAuthorized('DELETE_GOLF_SCORE', false)) {
     links += '<a class="alink" onclick="deleteQuickGolfScore(';
-    links += data.golf_score_id + ', \'' + data.last_update + '\')">Delete</a>  ';
+    links += data.golf_score_id + ', \'' + data.last_update;
+    links += '\')">Delete</a>  ';
   }
     dataHash['links'] = links;
   dataHash['DT_RowId'] = 'QuickGolfScoreListTableTR-' + data.golf_score_id;
