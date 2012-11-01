@@ -2,8 +2,8 @@
 [%- serverErrorMsg_Communication ='Sorry, there was a problem communicating with the server.' -%]
 'use strict';
     var urlTarget = 'cgi-bin/server.pl';
-    var passwordResetUrlTarget='cgi-bin/pwdreset.pl';
-    var VIEW_ID=0;
+    var passwordResetUrlTarget = 'cgi-bin/pwdreset.pl';
+    var VIEW_ID = 0;
     var PAGE_CALLS = new Array();
 
 
