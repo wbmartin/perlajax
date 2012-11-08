@@ -26,18 +26,21 @@ Main:{
   while(($key,$value) = each %tables){
 	  print "$key "
   }
+	print "\n";
   foreach(@templates){
     next if /swp/;
      $templateName = $_;
-	  print "\nBegin template: $templateName | ";
+	  print "Begin template: $templateName | ";
 	  $tt = Template->new(RELATIVE=>1,ABSOLUTE=>1, OUTPUT_PATH=>$outputPath, INCLUDE_PATH=>"$templatePath");
 	  $tt->process(("${templatePath}$templateName"),$var ) || die $tt->error(); 
-	  print "End template $templateName";
+	  print "End template $templateName\n";
   }
   $dbh->disconnect();
 
 	#Post Processing
   `perl -p -i -e 's/\t/  /g' $outputPath/app.js`;
+	#`gjslint $outputPath/app.js > $outputPath/linter.txt`;
+	print `gjslint $outputPath/app.js`;
 
 	#File Copies
   `cp $outputPath/index.html $absoluteSrcPath/deploy/`; # copy the generated index.html

@@ -164,7 +164,7 @@ function validate[%ucfirst(divId)%]Form() {
 	var formValid = standardValidate(formName);
 	if (document.getElementById('[%divId%]Form-password_enc').value !=
 			document.getElementById('[%divId%]Form-password_validate').value) {
-		alert('Please ensure the passwords match to continue');
+		showDialog('Please ensure the passwords match to continue');
 		formValid = false;
 	}
 

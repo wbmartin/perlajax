@@ -6,7 +6,6 @@ function show[%ucfirst(divId)%]() {
 	$('#[%divId%]').fadeIn();
 	currentContentPane = '[%divId%]';
 	$(document).keypress(function(e) {
-		//alert(e.which);
 		switch (e.which) {
 			case 103 : showSecurityGrants(); break;
 			case 113 : showQuickGolfScore(); break;

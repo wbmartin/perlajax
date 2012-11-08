@@ -4,7 +4,7 @@
 
 function loginCall(action) {
 	var params = bindForm('[%divId%]Form');
-[%#prepParams will not work here %]
+	[%#prepParams will not work here %]
 		params['spwfResource'] = 'security_user';
 	params['spwfAction'] = action;
 	var successf = function(rslt) {
@@ -45,9 +45,9 @@ function validate[%divId%]Form() {
 	if (($('#[%divId%]Form-password').val() == '' ||
 				$('#[%divId%]Form-password').val() == null) &&
 			$('#[%divId%]Form-password').is(' : visible')) {
-		showDialog('Please enter your password');
-		formValid = false;
-	}
+				showDialog('Please enter your password');
+				formValid = false;
+			}
 	return formValid;
 }
 
@@ -125,9 +125,9 @@ function initForgottenUserName() {
 														$(this).dialog('close');
 													}
 												},
-				'Cancel': function() {
-						$(this).dialog('close');
-				}
+		'Cancel': function() {
+			$(this).dialog('close');
+		}
 			}, 'Email User Name...');
 
 }

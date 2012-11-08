@@ -311,6 +311,9 @@ function logMsg(msg, requestId) {
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Server Call Functions
 function serverCall(params, successCallback, failCallback) {
+	if (usrSessionId == '' && params['spwfAction'] != 'authenticate') {
+		return false; 
+	}//if session is cleared, don't make a new call
 	var resourceActionInfo = 'Server Call Resource: ';
  	resourceActionInfo += params['spwfResource'] + ' Action: ';
   resourceActionInfo += params['spwfAction'];
@@ -329,13 +332,17 @@ function serverCall(params, successCallback, failCallback) {
 		}
 		successCallback(rslt);
 	};
+	var failCallbackMod = function() {
+		decrementServerCalls();
+	  failCallback();
+	};
 	incrementServerCalls();
 	$.ajax({type: 'POST',
 		url: urlTarget,
 		dataType: 'json',
 		data: params,
 		success: successCallbackMod,
-		error: failCallback
+		error: failCallbackMod
 	});
 }
 

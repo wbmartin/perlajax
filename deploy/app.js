@@ -319,6 +319,9 @@ function logMsg(msg, requestId) {
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Server Call Functions
 function serverCall(params, successCallback, failCallback) {
+  if (usrSessionId == '' && params['spwfAction'] != 'authenticate') {
+    return false; 
+  }//if session is cleared, don't make a new call
   var resourceActionInfo = 'Server Call Resource: ';
    resourceActionInfo += params['spwfResource'] + ' Action: ';
   resourceActionInfo += params['spwfAction'];
@@ -337,13 +340,17 @@ function serverCall(params, successCallback, failCallback) {
     }
     successCallback(rslt);
   };
+  var failCallbackMod = function(){
+    decrementServerCalls();
+    failCallback();
+  }
   incrementServerCalls();
   $.ajax({type: 'POST',
     url: urlTarget,
     dataType: 'json',
     data: params,
     success: successCallbackMod,
-    error: failCallback
+    error: failCallbackMod
   });
 }
 
@@ -530,7 +537,7 @@ function retrieveCache() {
 
 function loginCall(action) {
   var params = bindForm('LoginPortalForm');
-
+  
     params['spwfResource'] = 'security_user';
   params['spwfAction'] = action;
   var successf = function(rslt) {
@@ -571,9 +578,9 @@ function validateLoginPortalForm() {
   if (($('#LoginPortalForm-password').val() == '' ||
         $('#LoginPortalForm-password').val() == null) &&
       $('#LoginPortalForm-password').is(' : visible')) {
-    showDialog('Please enter your password');
-    formValid = false;
-  }
+        showDialog('Please enter your password');
+        formValid = false;
+      }
   return formValid;
 }
 
@@ -651,9 +658,9 @@ function initForgottenUserName() {
                             $(this).dialog('close');
                           }
                         },
-        'Cancel': function() {
-            $(this).dialog('close');
-        }
+    'Cancel': function() {
+      $(this).dialog('close');
+    }
       }, 'Email User Name...');
 
 }
@@ -1785,7 +1792,6 @@ function showLaunchPane() {
   $('#launchPane').fadeIn();
   currentContentPane = 'launchPane';
   $(document).keypress(function(e) {
-    //alert(e.which);
     switch (e.which) {
       case 103 : showSecurityGrants(); break;
       case 113 : showQuickGolfScore(); break;
@@ -2535,7 +2541,7 @@ function validateSecurityUserForm() {
   var formValid = standardValidate(formName);
   if (document.getElementById('securityUserForm-password_enc').value !=
       document.getElementById('securityUserForm-password_validate').value) {
-    alert('Please ensure the passwords match to continue');
+    showDialog('Please ensure the passwords match to continue');
     formValid = false;
   }
 

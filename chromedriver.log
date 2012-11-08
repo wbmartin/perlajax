@@ -1,0 +1,98 @@
+[0.000][INFO]:      ChromeDriver 23.0.1240.0 /home/wbmartin/bin/chromedriver
+[0.266][FINE]:      Initializing session with capabilities {
+   "browserName": "chrome",
+   "chrome.detach": true,
+   "chromeOptions": {
+      "detach": true
+   },
+   "cssSelectorsEnabled": true,
+   "javascriptEnabled": true,
+   "nativeEvents": false,
+   "platform": "ANY",
+   "rotatable": false,
+   "takesScreenshot": false,
+   "version": ""
+}
+
+[0.267][INFO]:      Using named testing interface
+[1.173][INFO]:      Connected to Chrome successfully. Version: 21.0.1180.81
+[1.208][FINE]:      Command received (/session/4463362fa39929476e9a706b5143284d)
+[1.209][FINE]:      Command finished (/session/4463362fa39929476e9a706b5143284d) with response {
+   "sessionId": "4463362fa39929476e9a706b5143284d",
+   "status": 0,
+   "value": {
+      "acceptSslCerts": false,
+      "applicationCacheEnabled": false,
+      "browserConnectionEnabled": false,
+      "browserName": "chrome",
+      "chrome.chromedriverVersion": "23.0.1240.0",
+      "chrome.nativeEvents": false,
+      "cssSelectorsEnabled": true,
+      "databaseEnabled": false,
+      "handlesAlerts": true,
+      "javascriptEnabled": true,
+      "locationContextEnabled": false,
+      "nativeEvents": true,
+      "platform": "linux",
+      "rotatable": false,
+      "takesScreenshot": true,
+      "version": "21.0.1180.81",
+      "webStorageEnabled": true
+   }
+}
+
+[1.218][FINE]:      Command received (/session/4463362fa39929476e9a706b5143284d/url) with params {
+   "url": "http://localhost/firstapp"
+}
+
+[1.218][FINER]:     Waiting for all views to stop loading...
+[1.246][FINER]:     Done waiting for all views to stop loading
+[3.075][FINER]:     Waiting for all views to stop loading...
+[3.101][FINER]:     Done waiting for all views to stop loading
+[3.101][FINE]:      Command finished (/session/4463362fa39929476e9a706b5143284d/url) with response {
+   "sessionId": "4463362fa39929476e9a706b5143284d",
+   "status": 0,
+   "value": {
+
+   }
+}
+
+[3.104][FINE]:      Command received (/session/4463362fa39929476e9a706b5143284d/url)
+[3.104][FINER]:     Waiting for all views to stop loading...
+[3.104][FINER]:     Done waiting for all views to stop loading
+[3.131][FINER]:     Waiting for all views to stop loading...
+[3.132][FINER]:     Done waiting for all views to stop loading
+[3.132][FINE]:      Command finished (/session/4463362fa39929476e9a706b5143284d/url) with response {
+   "sessionId": "4463362fa39929476e9a706b5143284d",
+   "status": 0,
+   "value": "http://localhost/firstapp/#0"
+}
+
+[3.134][FINE]:      Command received (/session/4463362fa39929476e9a706b5143284d/element) with params {
+   "using": "tag name",
+   "value": "body"
+}
+
+[3.134][FINER]:     Waiting for all views to stop loading...
+[3.135][FINER]:     Done waiting for all views to stop loading
+[3.167][FINER]:     Waiting for all views to stop loading...
+[3.168][FINER]:     Done waiting for all views to stop loading
+[3.168][FINE]:      Command finished (/session/4463362fa39929476e9a706b5143284d/element) with response {
+   "sessionId": "4463362fa39929476e9a706b5143284d",
+   "status": 0,
+   "value": {
+      "ELEMENT": ":wdc:1351944288667"
+   }
+}
+
+[3.170][FINE]:      Command received (/session/4463362fa39929476e9a706b5143284d/element/:wdc:1351944288667/text)
+[3.170][FINER]:     Waiting for all views to stop loading...
+[3.172][FINER]:     Done waiting for all views to stop loading
+[3.366][FINER]:     Waiting for all views to stop loading...
+[3.366][FINER]:     Done waiting for all views to stop loading
+[3.367][FINE]:      Command finished (/session/4463362fa39929476e9a706b5143284d/element/:wdc:1351944288667/text) with response {
+   "sessionId": "4463362fa39929476e9a706b5143284d",
+   "status": 0,
+   "value": "golfscore\nkeepin' it honest...\n\n\n\n\n\n\n\n\n\n\n\n\nLogin\nPlease enter your login credentials\nUser ID\nPass..."
+}
+
