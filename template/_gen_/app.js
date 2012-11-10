@@ -25,7 +25,7 @@ var CURRENT_PAGE = '';
 //Form Functions
 function appendValidationMsg(formId, fieldId, msg) {
   var fullyQName = 'form#' + formId + ' #' + fieldId;
-  if ($('form#' + formId).find('#' + fieldId + 'Error').attr('id') == undefined) {
+  if ($('form#' + formId + ' #' + fieldId + 'Error').length == 0) {
     var tmpSpan = '<span id = "' + fieldId;
      tmpSpan += 'Error" class = "ValidationMsg"></span>';
     $(fullyQName).after(tmpSpan);
@@ -148,7 +148,8 @@ function isInteger(value) {
 function pgDate(val) {
   var rslt;
   if (val != null) {
-    rslt = val.substring(5, 7) + '/' + val.substring(8, 10) + '/' + val.substring(0, 4);
+    rslt = val.substring(5, 7) + '/';
+    rslt += val.substring(8, 10) + '/' + val.substring(0, 4);
   } else {
     rslt = '';
   }
@@ -177,13 +178,16 @@ function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
 
     iStart -= 3;
     while (iStart >= 1) {
-      tmpNumStr = tmpNumStr.substring(0, iStart) + ',' + tmpNumStr.substring(iStart, tmpNumStr.length);
+      tmpNumStr = tmpNumStr.substring(0, iStart) + ',';
+      tmpNumStr += tmpNumStr.substring(iStart, tmpNumStr.length);
         iStart -= 3;
     }
   }
 
   // See if we need to use parenthesis
-  if (bolParens && num < 0) tmpNumStr = '(' + tmpNumStr.substring(1, tmpNumStr.length) + ')';
+  if (bolParens && num < 0) {
+     tmpNumStr = '(' + tmpNumStr.substring(1, tmpNumStr.length) + ')';
+  }
 
   if (tmpNumStr.indexOf('.') < 0 && decimalNum > 0) {
     tmpNumStr += '.';
@@ -320,7 +324,7 @@ function logMsg(msg, requestId) {
 //Server Call Functions
 function serverCall(params, successCallback, failCallback) {
   if (usrSessionId == '' && params['spwfAction'] != 'authenticate') {
-    return false; 
+    return false;
   }//if session is cleared, don't make a new call
   var resourceActionInfo = 'Server Call Resource: ';
    resourceActionInfo += params['spwfResource'] + ' Action: ';
@@ -340,10 +344,10 @@ function serverCall(params, successCallback, failCallback) {
     }
     successCallback(rslt);
   };
-  var failCallbackMod = function(){
+  var failCallbackMod = function() {
     decrementServerCalls();
     failCallback();
-  }
+  };
   incrementServerCalls();
   $.ajax({type: 'POST',
     url: urlTarget,
@@ -537,7 +541,7 @@ function retrieveCache() {
 
 function loginCall(action) {
   var params = bindForm('LoginPortalForm');
-  
+
     params['spwfResource'] = 'security_user';
   params['spwfAction'] = action;
   var successf = function(rslt) {
@@ -575,12 +579,12 @@ function loginCall(action) {
 
 function validateLoginPortalForm() {
   var formValid = standardValidate('LoginPortalForm');
-  if (($('#LoginPortalForm-password').val() == '' ||
-        $('#LoginPortalForm-password').val() == null) &&
-      $('#LoginPortalForm-password').is(' : visible')) {
-        showDialog('Please enter your password');
-        formValid = false;
-      }
+//  if (($('#LoginPortalForm-password').val() == '' ||
+//        $('#LoginPortalForm-password').val() == null) &&
+//      $('#LoginPortalForm-password').is(' : visible')) {
+//        showDialog('Please enter your password');
+//        formValid = false;
+//      }
   return formValid;
 }
 
@@ -648,7 +652,7 @@ function initPasswordReset() {
 function initForgottenUserName() {
   var msg = 'Please Enter your email address below.  ';
   msg += 'Instructions will be mailed to this address.  ';
-  mst += '<br/><input type="text"';
+  msg += '<br/><input type="text"';
   msg += ' style="width: 400px;" size="90" id="forgottenUserIdEmail"/><br/> ';
   showDialog(
       msg, '300', '600', true,
@@ -1514,7 +1518,6 @@ function retrieveGolfer(params, selectedKey_) {
     return false;
 
   params = prepParams(params, 'golfer', 'SELECT');
-  //params['spwfPagination']=true;
   if (selectedKey_) {
     params['passThru'] = 'SELECTED_KEY~' + selectedKey_ + ';';
   }
@@ -1523,9 +1526,9 @@ function retrieveGolfer(params, selectedKey_) {
       if (rslt.rowCount == 1) {
         bindToForm('golferForm', rslt.rows[0]);
         toggleSaveMode('golferForm', true);
-      }else {
-        populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
       }
+        populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
+
     }else {
       briefNotify(
           'There was a problem communicating with the Server.',
@@ -1667,10 +1670,10 @@ function buildGolferListTableRow(data) {
   }
 
   if (isUserAuthorized('DELETE_GOLFER', false)) {
-    htmlRow += '<a href="#" class="deleteGolferLink" ';
+    htmlRow += '<a class="deleteGolferLink" ';
      htmlRow += ' onclick="deleteGolfer(';
-    htmlRow += data.golfer_id + ', "' + data.last_update;
-     htmlRow += '")>Delete</a>';
+    htmlRow += data.golfer_id + ', \'' + data.last_update;
+     htmlRow += '\')">Delete</a>';
   }
   dataHash['links'] = htmlRow;
   dataHash['DT_RowId'] = 'GolferListTableTR-' + data.golfer_id;

@@ -42,12 +42,12 @@ function loginCall(action) {
 
 function validate[%divId%]Form() {
 	var formValid = standardValidate('[%divId%]Form');
-	if (($('#[%divId%]Form-password').val() == '' ||
-				$('#[%divId%]Form-password').val() == null) &&
-			$('#[%divId%]Form-password').is(' : visible')) {
-				showDialog('Please enter your password');
-				formValid = false;
-			}
+//	if (($('#[%divId%]Form-password').val() == '' ||
+//				$('#[%divId%]Form-password').val() == null) &&
+//			$('#[%divId%]Form-password').is(' : visible')) {
+//				showDialog('Please enter your password');
+//				formValid = false;
+//			}
 	return formValid;
 }
 
@@ -115,7 +115,7 @@ function initPasswordReset() {
 function initForgottenUserName() {
 	var msg = 'Please Enter your email address below.  ';
 	msg += 'Instructions will be mailed to this address.  ';
-	mst += '<br/><input type="text"';
+	msg += '<br/><input type="text"';
 	msg += ' style="width: 400px;" size="90" id="forgottenUserIdEmail"/><br/> ';
 	showDialog(
 			msg, '300', '600', true,

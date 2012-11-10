@@ -1,1 +1,8 @@
-require './golf_score_login'
+require './golfscore_login_test'
+require './golfer_test'
+	
+
+
+
+
+

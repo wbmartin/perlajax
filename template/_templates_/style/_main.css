@@ -227,7 +227,7 @@ Form Layout styles
 
   .formLayout_Standard .ValidationMsg{
     display:inline-block;
-    width:15em;
+    [%#width:15em; %]
     padding:0;
     margin:0;
     color:red;
@@ -363,6 +363,7 @@ Form Layout styles
   table.dataTable{
     border-style:none;
     border-spacing:0;
+		width: 100%;
   }
   .dataTable th{
     border-top-style:double;

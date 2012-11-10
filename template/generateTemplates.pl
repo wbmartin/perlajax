@@ -38,9 +38,11 @@ Main:{
   $dbh->disconnect();
 
 	#Post Processing
+	print "replacing Tabs\n";
   `perl -p -i -e 's/\t/  /g' $outputPath/app.js`;
-	#`gjslint $outputPath/app.js > $outputPath/linter.txt`;
-	print `gjslint $outputPath/app.js`;
+	print "replacing EOL whitespace\n";
+  `perl -p -i -e 's/[ \t]+\$//g' $outputPath/app.js`;
+	#print `gjslint $outputPath/app.js`;
 
 	#File Copies
   `cp $outputPath/index.html $absoluteSrcPath/deploy/`; # copy the generated index.html

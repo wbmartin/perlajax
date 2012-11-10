@@ -17,7 +17,7 @@ var CURRENT_PAGE = '';
 //Form Functions
 function appendValidationMsg(formId, fieldId, msg) {
 	var fullyQName = 'form#' + formId + ' #' + fieldId;
-	if ($('form#' + formId).find('#' + fieldId + 'Error').attr('id') == undefined) {
+	if ($('form#' + formId + ' #' + fieldId + 'Error').length == 0) {
 		var tmpSpan = '<span id = "' + fieldId;
 	 	tmpSpan += 'Error" class = "ValidationMsg"></span>';
 		$(fullyQName).after(tmpSpan);
@@ -140,7 +140,8 @@ function isInteger(value) {
 function pgDate(val) {
 	var rslt;
 	if (val != null) {
-		rslt = val.substring(5, 7) + '/' + val.substring(8, 10) + '/' + val.substring(0, 4);
+		rslt = val.substring(5, 7) + '/';
+	  rslt += val.substring(8, 10) + '/' + val.substring(0, 4);
 	} else {
 		rslt = '';
 	}
@@ -169,13 +170,16 @@ function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
 
 		iStart -= 3;
 		while (iStart >= 1) {
-			tmpNumStr = tmpNumStr.substring(0, iStart) + ',' + tmpNumStr.substring(iStart, tmpNumStr.length);
+			tmpNumStr = tmpNumStr.substring(0, iStart) + ',';
+		  tmpNumStr += tmpNumStr.substring(iStart, tmpNumStr.length);
 				iStart -= 3;
 		}
 	}
 
 	// See if we need to use parenthesis
-	if (bolParens && num < 0) tmpNumStr = '(' + tmpNumStr.substring(1, tmpNumStr.length) + ')';
+	if (bolParens && num < 0) {
+	 	tmpNumStr = '(' + tmpNumStr.substring(1, tmpNumStr.length) + ')';
+	}
 
 	if (tmpNumStr.indexOf('.') < 0 && decimalNum > 0) {
 		tmpNumStr += '.';

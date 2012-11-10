@@ -17,8 +17,8 @@ describe "A golf score login" do
 	end
 
 	it "should logout when asked" do
-		@app.logout()
-		@app.browser.button(:id, 'cmdlogin').should be_visible
+	  @app.logout()
+	  @app.browser.button(:id, 'cmdlogin').should be_visible
 	end
 
 	it "should deny entry for incorrect password" do
@@ -29,7 +29,7 @@ describe "A golf score login" do
 	end
 
 	it "should complain if user name is not entered" do 
-		@app.login('','bad password')
+	  @app.login('','bad password')
 		@app.browser.span(:id, 'LoginPortalForm-user_idError').text.include? 'Required'
 	end
 
@@ -38,13 +38,11 @@ describe "A golf score login" do
 		@app.browser.span(:id, 'LoginPortalForm-passwordError').text.include? 'Required'
 	end
 
-	# it "should allow a logout to complete Login testing" do
-	#  @app.logout()
-	#	  @app.browser.button(:id, 'cmdlogin').should be_visible
 
 
-after :each do
-end
-after :all do
-end
+	after :each do
+	end
+	after :all do
+		@app.logout()
+	end
 end

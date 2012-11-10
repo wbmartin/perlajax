@@ -19,7 +19,6 @@ Main:{
 	$params = Vars;
 	$params = &UTL::parseParams($params);# export form values ensures that you also get multi-value <select>s as separate values. too.
 	&UTL::dbConnect(\$dbh);
-print STDERR "$params->{'user_id'}";
 if($params->{'user_id'}){
 	$sth= $dbh->prepare("select  pwd_reset_cd, email_addr from init_passwd_reset('',?) ;");
 	$sth->bind_param(1,$params->{"user_id"});

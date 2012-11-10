@@ -83,6 +83,7 @@ $sth->execute();
 #print "\nclient Type: $tables->{'client'}->{'type'}\n";
 #print "\nclient.client_id prkey : $tables->{'client'}->{'columns'}->{'client_id'}->{'prkey'}\n";
 #print "\nclient.client_id name : $tables->{'client'}->{'columns'}->{'client_id'}->{'column_name'}\n";
+	$sth->finish;
 }
 
 ############################################################
@@ -133,6 +134,7 @@ sub getFields{
 #print "DEBUG: in getfields datatype- $columns->{'client_id'}->{'data_type'}\n";
       }
 
+	$sth->finish;
 
 return;
 }

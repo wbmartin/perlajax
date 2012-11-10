@@ -15,7 +15,6 @@ function retrieve[%ucfirst(divId)%](params, selectedKey_) {
 		return false;
 
 	params = prepParams(params, 'golfer', 'SELECT');
-	//params['spwfPagination']=true;
 	if (selectedKey_) {
 		params['passThru'] = 'SELECTED_KEY~' + selectedKey_ + ';';
 	}
@@ -24,9 +23,9 @@ function retrieve[%ucfirst(divId)%](params, selectedKey_) {
 			if (rslt.rowCount == 1) {
 				bindToForm('[%divId%]Form', rslt.rows[0]);
 				toggleSaveMode('[%divId%]Form', true);
-			}else {
-				populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
 			}
+				populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
+			
 		}else {
 			briefNotify(
 					'There was a problem communicating with the Server.',
@@ -168,10 +167,10 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 	}
 
 	if (isUserAuthorized('[%DELETE_GRANT%]', false)) {
-		htmlRow += '<a href="#" class="delete[%ucfirst(divId)%]Link" ';
+		htmlRow += '<a class="delete[%ucfirst(divId)%]Link" ';
 	 	htmlRow += ' onclick="delete[%ucfirst(divId)%](';
-		htmlRow += data.[%prkey%] + ', "' + data.last_update;
-	 	htmlRow += '")>Delete</a>';
+		htmlRow += data.[%prkey%] + ', \'' + data.last_update;
+	 	htmlRow += '\')">Delete</a>';
 	}
 	dataHash['links'] = htmlRow;
 	dataHash['DT_RowId'] = '[%ucfirst(divId)%]ListTableTR-' + data.[%prkey%];
