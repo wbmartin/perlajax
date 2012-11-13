@@ -72,13 +72,27 @@ class App
 		end
 		#rescue Watir::Exception::UnknownObjectException =>e
 		divId_.each do |d|
+			begin
 			grantDivId = 'securityGrant' + d.to_s + 'Id'
 			@b.browser.div(:id,parentdiv).div(:id,grantDivId).fire_event('ondblclick')
+			rescue => e
+	  	#ignore exceptions - most likely priv is already revoked
+	    end
+
 		end
 		letDustSettle
 		@b.browser.link(:id,'SummaryPage').click
-
+		refreshCache
+		
 	end
 
+	def refreshCache
+		letDustSettle
+		@b.browser.link(:id,'SummaryPage').click
+		@b.browser.link(:id,'launcherShowHelp').click
+		@b.browser.link(:id,'launcherRefreshCache').click
+		@b.browser.link(:id,'SummaryPage').click
+		letDustSettle
+	end
 	
 end

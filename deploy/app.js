@@ -1821,6 +1821,9 @@ function imposeLauncherSecurityUIRestrictions() {
   divIdToSecure = '#launcherShowGrantsSpanId';
   (isUserAuthorized('SELECT_SECURITY_PROFILE')) ?
     securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  divIdToSecure = '#launcherShowGolfersSpanId';
+  (isUserAuthorized('SELECT_GOLFER')) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
 }
 

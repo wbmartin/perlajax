@@ -11,6 +11,7 @@ describe "A golfer" do
 
 	it "can be reached from the launcher" do
 		@app.goodlogin()
+		@app.setSecurityPrivilegeStatus('G',[1,2,3,4])
 		@app.browser.link(:id,'launcherShowGolfer').click
 		@app.letDustSettle
 		@app.browser.text.should match /Golfers/
@@ -36,17 +37,17 @@ describe "A golfer" do
 
 	it "will allow deletion of all golfers" do
 		@app.browser.links.each do |l|
-			if l.text == "Delete" then 
+			if l.text == 'Delete' then 
 				l.click
 			end
 		end
 		@app.browser.text.should match /No data available in table/
-			@app.browser.links.each do |l|
-			if l.text =="Delete" then 
+			@app.browser.table(:id,'quickGolfScoreListTable').links.each do |l|
+			if l.text =='Delete' then 
 				l.click
+			end
+			end
 				@app.letDustSettle
-			end
-			end
 		@app.browser.text.should match /No data available in table/
 
 	end
@@ -73,16 +74,20 @@ describe "A golfer" do
 	end
 
 	it 'cant be edited, added, or deleted if security is not granted' do
-	@app.setSecurityPrivilegeStatus('R',[2,3,4])
-	@app.logout
-	@app.letDustSettle
-	@app.goodlogin
-	@app.browser.link(:id,'launcherShowGolfer' ).click
-	
-	
-	#@app.setSecurityPrivilegeStatus('G',[2,3,4])	
-
+		@app.setSecurityPrivilegeStatus('R',[2,3,4])
+		@app.browser.link(:id,'launcherShowGolfer' ).click
+		@app.letDustSettle
+		@app.browser.table(:id,'golferListTable').text.should_not match /Edit|Delete/
+		@app.setSecurityPrivilegeStatus('G',[2,3,4])	
 	end
+
+	it 'cant be accessed if security is not granted' do
+		@app.setSecurityPrivilegeStatus('R',[1])
+		@app.browser.link(:id,'launcherShowGolfer' ).should_not be_visible
+		@app.setSecurityPrivilegeStatus('G',[1])	
+	end
+
+
 
 	after :each do
 		@app.letDustSettle
