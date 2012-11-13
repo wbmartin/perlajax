@@ -166,17 +166,13 @@ function validate[%ucfirst(divId)%]Form() {
 }
 
 //Top Level HTML Manip
-var [%ucfirst(divId)%]prKey = {};
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
 	for (var ndx = 0; ndx < dataRows.length; ndx++) {
 		dataArray[ndx] = build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
-		[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
 	}
 	$('#[%divId%]ListTable').dataTable().fnClearTable();
 	$('#[%divId%]ListTable').dataTable().fnAddData(dataArray, true);
-
-
 }
 
 function build[%ucfirst(divId)%]ListTableRow(data) {
@@ -207,7 +203,7 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 function replace[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnUpdate(
 			build[%ucfirst(divId)%]ListTableRow(row),
-			[%ucfirst(divId)%]prKey[row.[%prkey%]]
+			$('#[%ucfirst(divId)%]ListTableTR-' + row.[%prkey%])[0]
 			);
 }
 function addNew[%ucfirst(divId)%]ListTableRow(row) {
@@ -217,7 +213,7 @@ function addNew[%ucfirst(divId)%]ListTableRow(row) {
 }
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 	$('#[%divId%]ListTable').dataTable().fnDeleteRow(
-			[%ucfirst(divId)%]prKey[[%toCC(prkey)%]_]
+			$('#[%ucfirst(divId)%]ListTableTR-' + [%toCC(prkey)%]_)[0]
 			);
 }
 
@@ -296,7 +292,7 @@ function populateAvailableGrantsWithAll() {
 	for (var ndx = 0; ndx < allAvailablePrivilegeList.length; ndx++) {
 		newOptions += '<div class="securityGrant" id="securityGrant';
 		newOptions += allAvailablePrivilegeList[ndx].security_privilege_id;
-		newOptions += 'Id"><span class="securityGrantName"> ';
+		newOptions += 'Id")"><span class="securityGrantName"> ';
 		newOptions += allAvailablePrivilegeList[ndx].priv_name;
 		newOptions += '</span> <span class="securityGrantDescription">';
 		newOptions += allAvailablePrivilegeList[ndx].description + '</span></div>';
@@ -321,12 +317,9 @@ function makeDragable(identifierTodraggable_) {
 	scroll: false,
 	helper: 'clone'
 	});
-	if ($(identifierTodraggable_).parent().attr('id') ===
-			'availableGrantsId') {
 				$(identifierTodraggable_).dblclick(function() {
-					attemptSecurityGrantRevoke('GRANT', $(this).attr('id'));
+					attemptSecurityGrantRevoke('SWAP', $(this).attr('id'));
 				});
-			}
 }
 
 function retrieveAllGrantedPrivilegesList(profileId_) {
@@ -370,6 +363,11 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
 				'ERROR'
 				);
 		return false;
+	}
+	if(grantOrRevoke_ === 'SWAP'	&& $('#'+divId_).parent().attr('id') === 'availableGrantsId') {
+		grantOrRevoke_ = 'GRANT';
+	} else {
+		grantOrRevoke_ = 'REVOKE';
 	}
 
 

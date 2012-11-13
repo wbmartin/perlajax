@@ -519,19 +519,6 @@ function retrieveCache() {
   serverCall(params, successf, FAILF);
 }
 
-//function getLbl4Val(val, type) {
-//  var lbl;
-//  if (type ==="golfer") { lbl=GOLFER_CACHE.val;
-//  }else if ( type=='') {
-//  }else {
-//    return "INVALID CACHE REQUESTED";
-//  }
-//  if (isEmpty(lbl)) {
-//    lbl ="--";
-//  }
-//  return lbl;
-//}
-
 
 
 //loginportal.js
@@ -846,12 +833,10 @@ function retrieveGolfScoreSummaryList() {
     serverCall(params, successf, failf);
 
   }
-//var GolfScoreSummaryprKey = {};
 function populateGolfScoreSummaryListTable(dataRows) {
   var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
     dataArray[ndx] = buildGolfScoreSummaryListTableRow(dataRows[ndx]);
-    //GolfScoreSummaryprKey[dataRows[ndx].] = ndx;
   }
   $('#golfScoreSummaryListTable').dataTable().fnClearTable();
   $('#golfScoreSummaryListTable').dataTable().fnAddData(dataArray, true);
@@ -1059,13 +1044,10 @@ function validateGolfScoreForm() {
 }
 
 //Top Level HTML Manip
-var GolfScoreprKey = {};
 function populateGolfScoreListTable(dataRows) {
  var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
     dataArray[ndx] = buildGolfScoreListTableRow(dataRows[ndx]);
-    GolfScoreprKey[dataRows[ndx].golf_score_id] = ndx;
-
   }
   $('#golfScoreListTable').dataTable().fnClearTable();
   $('#golfScoreListTable').dataTable().fnAddData(dataArray, true);
@@ -1100,7 +1082,7 @@ function buildGolfScoreListTableRow(data) {
 function replaceGolfScoreListTableRow(row) {
   $('#golfScoreListTable').dataTable().fnUpdate(
       buildGolfScoreListTableRow(row),
-      GolfScoreprKey[row.golf_score_id]
+      $('#GolfScoreListTableTR-' + row.golf_score_id)[0]
       );
 }
 function addNewGolfScoreListTableRow(row) {
@@ -1110,7 +1092,7 @@ function addNewGolfScoreListTableRow(row) {
 }
 function removeGolfScoreListTableRow(golfScoreId_) {
   $('#golfScoreListTable').dataTable().fnDeleteRow(
-      GolfScoreprKey[golfScoreId_]
+      $('#GolfScoreListTableTR-' + golfScoreId_)[0]
       );
 }
 
@@ -1363,12 +1345,10 @@ function validateQuickGolfScoreForm() {
 }
 
 //Top Level HTML Manip
-var QuickGolfScoreprKey = {};
 function populateQuickGolfScoreListTable(dataRows) {
   var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
     dataArray[ndx] = buildQuickGolfScoreListTableRow(dataRows[ndx]);
-    QuickGolfScoreprKey[dataRows[ndx].golf_score_id] = ndx;
   }
   $('#quickGolfScoreListTable').dataTable().fnClearTable();
   $('#quickGolfScoreListTable').dataTable().fnAddData(dataArray, true);
@@ -1405,7 +1385,7 @@ function buildQuickGolfScoreListTableRow(data) {
 function replaceQuickGolfScoreListTableRow(row) {
   $('#quickGolfScoreListTable').dataTable().fnUpdate(
       buildQuickGolfScoreListTableRow(row),
-      QuickGolfScoreprKey[row.golf_score_id]
+      $('#QuickGolfScoreListTableTR-' + row.golf_score_id)[0]
       );
 }
 function addNewQuickGolfScoreListTableRow(row) {
@@ -1415,7 +1395,7 @@ function addNewQuickGolfScoreListTableRow(row) {
 }
 function removeQuickGolfScoreListTableRow(golfScoreId_) {
   $('#quickGolfScoreListTable').dataTable().fnDeleteRow(
-      QuickGolfScoreprKey[golfScoreId_]
+      $('#QuickGolfScoreListTableTR-' + golfScoreId_)[0]
       );
 }
 
@@ -1513,32 +1493,53 @@ function imposeQuickGolfScoreSecurityUIRestrictions() {
 //----------------------------------------------------
 
 //server calls
-function retrieveGolfer(params, selectedKey_) {
-  if (!isUserAuthorized('SELECT_GOLFER', true, 'retrieveGolfer'))
-    return false;
+
+function retrieveGolferList() {
+  if (!isUserAuthorized(
+        'SELECT_GOLFER',
+        true,
+        'retrieveGolferList')) {
+           return false;
+        }
+
+  var params = prepParams(params, 'golfer' , 'select');
+  params['orderby_clause'] = ' ';
+    var successf = function(rslt) {
+      if (!rslt[SERVER_SIDE_FAIL]) {
+        populateGolferListTable(rslt.rows);
+      }else {
+        briefNotify(
+            'There was a problem communicating with the Server.',
+            'ERROR'
+            );
+      }
+    };
+  serverCall(params, successf, FAILF);
+}
+function retrieveGolfer(params) {
+  if (!isUserAuthorized(
+        'SELECT_GOLFER',
+        true,
+        'retrieveGolfer')) {
+          return false;
+        }
 
   params = prepParams(params, 'golfer', 'SELECT');
-  if (selectedKey_) {
-    params['passThru'] = 'SELECTED_KEY~' + selectedKey_ + ';';
-  }
   var successf = function(rslt) {
     if (!rslt[SERVER_SIDE_FAIL]) {
-      if (rslt.rowCount == 1) {
-        bindToForm('golferForm', rslt.rows[0]);
-        toggleSaveMode('golferForm', true);
-      }
-        populateGolferListTable(rslt.rows, rslt.PT_SELECTED_KEY);
-
+      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+      bindToForm('golferForm', rslt.rows[0]);
+      toggleSaveMode('golferForm', true);
     }else {
-      briefNotify(
-          'There was a problem communicating with the Server.',
-           'ERROR'
+      briefNotify('There was a problem communicating with the Server.',
+          'ERROR'
           );
     }
 
   };
   serverCall(params, successf, FAILF);
 }
+
 
 
 function saveGolfer(params) {
@@ -1639,12 +1640,10 @@ function validateGolferForm() {
 //----------------------------------------------------
 //html building functions
 
-var GolferprKey = {};
 function populateGolferListTable(dataRows, selectedKey_) {
   var dataArray = new Array();
   for (var i = 0; i < dataRows.length; i++) {
     dataArray[i] = buildGolferListTableRow(dataRows[i]);
-    GolferprKey[dataRows[i].golfer_id] = i;
     if (dataRows[i].golfer_id == selectedKey_) {
       bindToForm('golferForm', dataRows[i]);
       toggleSaveMode('golferForm', true);
@@ -1683,17 +1682,17 @@ function buildGolferListTableRow(data) {
 function replaceRowGolferListTable(row) {
   $('#golferListTable').dataTable().fnUpdate(
       buildGolferListTableRow(row),
-       GolferprKey[row.golfer_id]
+      $('#GolferListTableTR-' + row.golfer_id)[0]
       );
 }
 function addNewRowGolferListTable(row) {
-  $('#golferListTable').dataTable().fnAddData(
+  var newNdx =  $('#golferListTable').dataTable().fnAddData(
       buildGolferListTableRow(row)
       );
 }
 function removeGolferListTableRow(golferId_) {
   $('#golferListTable').dataTable().fnDeleteRow(
-      GolferprKey[golferId_]
+      $('#GolferListTableTR-' + golferId_)[0]
        );
 }
 
@@ -1730,15 +1729,15 @@ function showGolfer(golferId_) {
   $('#golfer').fadeIn();
   currentContentPane = 'golfer';
   if (golferId_) {
-    retrieveGolfer(params, golferId_);
+    params['where_clause']= 'golfer_id=' + golferId_;
+    retrieveGolfer(params );
   } else {
     if (isFormEmpty('golferForm')) {
       toggleSaveMode('golferForm', false);
     }
     clearForm('golferForm');
-    //retrieveGolferListTablePagination(1, PAGINATION_ROW_LIMIT);
-    retrieveGolfer();
   }
+    retrieveGolferList();
   imposeGolferSecurityUIRestrictions();
 
 }
@@ -2012,17 +2011,13 @@ function validateSecurityGrantsForm() {
 }
 
 //Top Level HTML Manip
-var SecurityGrantsprKey = {};
 function populateSecurityGrantsListTable(dataRows) {
   var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
     dataArray[ndx] = buildSecurityGrantsListTableRow(dataRows[ndx]);
-    SecurityGrantsprKey[dataRows[ndx].security_profile_id] = ndx;
   }
   $('#securityGrantsListTable').dataTable().fnClearTable();
   $('#securityGrantsListTable').dataTable().fnAddData(dataArray, true);
-
-
 }
 
 function buildSecurityGrantsListTableRow(data) {
@@ -2053,7 +2048,7 @@ function buildSecurityGrantsListTableRow(data) {
 function replaceSecurityGrantsListTableRow(row) {
   $('#securityGrantsListTable').dataTable().fnUpdate(
       buildSecurityGrantsListTableRow(row),
-      SecurityGrantsprKey[row.security_profile_id]
+      $('#SecurityGrantsListTableTR-' + row.security_profile_id)[0]
       );
 }
 function addNewSecurityGrantsListTableRow(row) {
@@ -2063,7 +2058,7 @@ function addNewSecurityGrantsListTableRow(row) {
 }
 function removeSecurityGrantsListTableRow(securityProfileId_) {
   $('#securityGrantsListTable').dataTable().fnDeleteRow(
-      SecurityGrantsprKey[securityProfileId_]
+      $('#SecurityGrantsListTableTR-' + securityProfileId_)[0]
       );
 }
 
@@ -2142,7 +2137,7 @@ function populateAvailableGrantsWithAll() {
   for (var ndx = 0; ndx < allAvailablePrivilegeList.length; ndx++) {
     newOptions += '<div class="securityGrant" id="securityGrant';
     newOptions += allAvailablePrivilegeList[ndx].security_privilege_id;
-    newOptions += 'Id"><span class="securityGrantName"> ';
+    newOptions += 'Id")"><span class="securityGrantName"> ';
     newOptions += allAvailablePrivilegeList[ndx].priv_name;
     newOptions += '</span> <span class="securityGrantDescription">';
     newOptions += allAvailablePrivilegeList[ndx].description + '</span></div>';
@@ -2167,12 +2162,9 @@ function makeDragable(identifierTodraggable_) {
   scroll: false,
   helper: 'clone'
   });
-  if ($(identifierTodraggable_).parent().attr('id') ===
-      'availableGrantsId') {
         $(identifierTodraggable_).dblclick(function() {
-          attemptSecurityGrantRevoke('GRANT', $(this).attr('id'));
+          attemptSecurityGrantRevoke('SWAP', $(this).attr('id'));
         });
-      }
 }
 
 function retrieveAllGrantedPrivilegesList(profileId_) {
@@ -2216,6 +2208,11 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
         'ERROR'
         );
     return false;
+  }
+  if(grantOrRevoke_ === 'SWAP'  && $('#'+divId_).parent().attr('id') === 'availableGrantsId') {
+    grantOrRevoke_ = 'GRANT';
+  } else {
+    grantOrRevoke_ = 'REVOKE';
   }
 
 
@@ -2552,13 +2549,11 @@ function validateSecurityUserForm() {
 }
 
 //Top Level HTML Manip
-var SecurityUserprKey = {};
 function populateSecurityUserListTable(dataRows) {
   var dataArray = new Array();
   if (dataRows != null)
     for (var ndx = 0; ndx < dataRows.length; ndx++) {
       dataArray[ndx] = buildSecurityUserListTableRow(dataRows[ndx]);
-      SecurityUserprKey[dataRows[ndx].security_user_id] = ndx;
     }
   $('#securityUserListTable').dataTable().fnClearTable();
   $('#securityUserListTable').dataTable().fnAddData(dataArray, true);
@@ -2592,7 +2587,7 @@ function buildSecurityUserListTableRow(data) {
 function replaceSecurityUserListTableRow(row) {
   $('#securityUserListTable').dataTable().fnUpdate(
       buildSecurityUserListTableRow(row),
-      SecurityUserprKey[row.security_user_id]
+      $('#SecurityUserListTableTR-' + row.security_user_id)[0]
       );
 }
 function addNewSecurityUserListTableRow(row) {
@@ -2602,7 +2597,7 @@ function addNewSecurityUserListTableRow(row) {
 }
 function removeSecurityUserListTableRow(securityUserId_) {
   $('#securityUserListTable').dataTable().fnDeleteRow(
-      SecurityUserprKey[securityUserId_]
+      $('#SecurityUserListTableTR-' + securityUserId_)[0]
       );
 }
 
@@ -2940,12 +2935,10 @@ function validateSupportRequestForm() {
 }
 
 //Top Level HTML Manip
-var SupportRequestprKey = {};
 function populateSupportRequestListTable(dataRows) {
   var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
     dataArray[ndx] = buildSupportRequestListTableRow(dataRows[ndx]);
-    SupportRequestprKey[dataRows[ndx].support_request_id] = ndx;
   }
   $('#supportRequestListTable').dataTable().fnClearTable();
   $('#supportRequestListTable').dataTable().fnAddData(dataArray, true);
@@ -2990,7 +2983,7 @@ function buildSupportRequestListTableRow(data) {
 function replaceSupportRequestListTableRow(row) {
   $('#supportRequestListTable').dataTable().fnUpdate(
       buildSupportRequestListTableRow(row),
-      SupportRequestprKey[row.support_request_id]
+      $('#SupportRequestListTableTR-' + row.support_request_id)[0]
       );
 }
 function addNewSupportRequestListTableRow(row) {
@@ -3000,7 +2993,7 @@ function addNewSupportRequestListTableRow(row) {
 }
 function removeSupportRequestListTableRow(supportRequestId_) {
   $('#supportRequestListTable').dataTable().fnDeleteRow(
-      SupportRequestprKey[supportRequestId_]
+      $('#SupportRequestListTableTR-' + supportRequestId_)[0]
       );
 }
 

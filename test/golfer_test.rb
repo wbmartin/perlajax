@@ -22,7 +22,7 @@ describe "A golfer" do
 		@app.browser.link(:id,'launcherShowQuickGolfScore').click
 		@app.letDustSettle
 		@app.browser.links.each do |l|
-			if l.text =="Delete" then 
+			if l.text == 'Delete' then 
 				l.click
 				@app.letDustSettle
 			end
@@ -30,7 +30,7 @@ describe "A golfer" do
 		@app.browser.text.should match /No data available in table/
 			@app.browser.link(:id,'SummaryPage').click
 		@app.browser.link(:id,'launcherShowGolfer').click
-@app.letDustSettle
+		@app.letDustSettle
 
 	end
 
@@ -51,15 +51,36 @@ describe "A golfer" do
 
 	end
 
-	it "will allow addition of a new golfer" do
+	it "can be added" do
 		if @app.browser.button(:id,'golferFormClear').visible? then
 			@app.browser.button(:id,'golferFormClear').click
 			@app.letDustSettle
 		end
 		@app.browser.text_field(:id,'golferForm-name').set("New Golfer")
 		@app.browser.button(:id,'golferFormAdd').click
-		@app.letdustSettle
-		@app.browser.div(:id,'golferListTableDivId').text.should /New Golfer/
+		@app.letDustSettle
+		@app.browser.div(:id,'golferListTableDivId').text.should match /New Golfer/
+	end
+
+	it "can be updated" do
+		@app.browser.link(:text, 'Edit').click
+		@app.letDustSettle
+		@app.browser.text_field(:id, 'golferForm-name').value.should == "New Golfer"
+		@app.browser.text_field(:id, 'golferForm-name').set('New 1 Golfer')
+		@app.browser.button(:id, 'golferFormSave').click
+		@app.letDustSettle
+		@app.browser.div(:id,'golferListTableDivId').text.should match /New 1 Golfer/
+	end
+
+	it 'cant be edited, added, or deleted if security is not granted' do
+	@app.setSecurityPrivilegeStatus('R',[2,3,4])
+	@app.logout
+	@app.letDustSettle
+	@app.goodlogin
+	@app.browser.link(:id,'launcherShowGolfer' ).click
+	
+	
+	#@app.setSecurityPrivilegeStatus('G',[2,3,4])	
 
 	end
 

@@ -28,12 +28,10 @@ function retrieve[%ucfirst(divId)%]List() {
 		serverCall(params, successf, failf);
 
 	}
-//var [%ucfirst(divId)%]prKey = {};
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
 	for (var ndx = 0; ndx < dataRows.length; ndx++) {
 		dataArray[ndx] = build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
-		//[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
 	}
 	$('#[%divId%]ListTable').dataTable().fnClearTable();
 	$('#[%divId%]ListTable').dataTable().fnAddData(dataArray, true);

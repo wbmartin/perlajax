@@ -172,13 +172,11 @@ function validate[%ucfirst(divId)%]Form() {
 }
 
 //Top Level HTML Manip
-var [%ucfirst(divId)%]prKey = {};
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
 	if (dataRows != null)
 		for (var ndx = 0; ndx < dataRows.length; ndx++) {
 			dataArray[ndx] = build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
-			[%ucfirst(divId)%]prKey[dataRows[ndx].[%prkey%]] = ndx;
 		}
 	$('#[%divId%]ListTable').dataTable().fnClearTable();
 	$('#[%divId%]ListTable').dataTable().fnAddData(dataArray, true);
@@ -212,7 +210,7 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 function replace[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnUpdate(
 			build[%ucfirst(divId)%]ListTableRow(row),
-			[%ucfirst(divId)%]prKey[row.[%prkey%]]
+			$('#[%ucfirst(divId)%]ListTableTR-' + row.[%prkey%])[0]
 			);
 }
 function addNew[%ucfirst(divId)%]ListTableRow(row) {
@@ -222,7 +220,7 @@ function addNew[%ucfirst(divId)%]ListTableRow(row) {
 }
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 	$('#[%divId%]ListTable').dataTable().fnDeleteRow(
-			[%ucfirst(divId)%]prKey[[%toCC(prkey)%]_]
+			$('#[%ucfirst(divId)%]ListTableTR-' + [%toCC(prkey)%]_)[0]
 			);
 }
 

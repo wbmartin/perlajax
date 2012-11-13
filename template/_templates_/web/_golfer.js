@@ -10,32 +10,53 @@
 //----------------------------------------------------
 
 //server calls
-function retrieve[%ucfirst(divId)%](params, selectedKey_) {
-	if (!isUserAuthorized('[%SELECT_GRANT%]', true, 'retrieve[%ucfirst(divId)%]'))
-		return false;
 
-	params = prepParams(params, 'golfer', 'SELECT');
-	if (selectedKey_) {
-		params['passThru'] = 'SELECTED_KEY~' + selectedKey_ + ';';
-	}
+function retrieve[%ucfirst(divId)%]List() {
+	if (!isUserAuthorized(
+				'[%SELECT_GRANT%]',
+				true,
+				'retrieve[%ucfirst(divId)%]List')) {
+				 	return false;
+				}
+
+	var params = prepParams(params, '[%spwfResource%]' , 'select');
+	params['orderby_clause'] = ' ';
+		var successf = function(rslt) {
+			if (!rslt[SERVER_SIDE_FAIL]) {
+				populate[%ucfirst(divId)%]ListTable(rslt.rows);
+			}else {
+				briefNotify(
+						'There was a problem communicating with the Server.',
+						'ERROR'
+						);
+			}
+		};
+	serverCall(params, successf, FAILF);
+}
+function retrieve[%ucfirst(divId)%](params) {
+	if (!isUserAuthorized(
+				'[%SELECT_GRANT%]',
+				true,
+				'retrieve[%ucfirst(divId)%]')) {
+					return false;
+				}
+
+	params = prepParams(params, '[%spwfResource%]', 'SELECT');
 	var successf = function(rslt) {
 		if (!rslt[SERVER_SIDE_FAIL]) {
-			if (rslt.rowCount == 1) {
-				bindToForm('[%divId%]Form', rslt.rows[0]);
-				toggleSaveMode('[%divId%]Form', true);
-			}
-				populate[%ucfirst(divId)%]ListTable(rslt.rows, rslt.PT_SELECTED_KEY);
-			
+			rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+			bindToForm('[%divId%]Form', rslt.rows[0]);
+			toggleSaveMode('[%divId%]Form', true);
 		}else {
-			briefNotify(
-					'There was a problem communicating with the Server.',
-				 	'ERROR'
+			briefNotify('There was a problem communicating with the Server.',
+					'ERROR'
 					);
 		}
 
 	};
 	serverCall(params, successf, FAILF);
 }
+
 
 
 function save[%ucfirst(divId)%](params) {
@@ -136,12 +157,10 @@ function validate[%ucfirst(divId)%]Form() {
 //----------------------------------------------------
 //html building functions
 
-var [%ucfirst(divId)%]prKey = {};
 function populate[%ucfirst(divId)%]ListTable(dataRows, selectedKey_) {
 	var dataArray = new Array();
 	for (var i = 0; i < dataRows.length; i++) {
 		dataArray[i] = build[%ucfirst(divId)%]ListTableRow(dataRows[i]);
-		[%ucfirst(divId)%]prKey[dataRows[i].[%prkey%]] = i;
 		if (dataRows[i].[%prkey%] == selectedKey_) {
 			bindToForm('[%divId%]Form', dataRows[i]);
 			toggleSaveMode('[%divId%]Form', true);
@@ -180,17 +199,17 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 function replaceRow[%ucfirst(divId)%]ListTable(row) {
 	$('#[%divId%]ListTable').dataTable().fnUpdate(
 			build[%ucfirst(divId)%]ListTableRow(row),
-		 	[%ucfirst(divId)%]prKey[row.[%prkey%]]
+			$('#[%ucfirst(divId)%]ListTableTR-' + row.[%prkey%])[0]
 			);
 }
 function addNewRow[%ucfirst(divId)%]ListTable(row) {
-	$('#[%divId%]ListTable').dataTable().fnAddData(
+	var newNdx =	$('#[%divId%]ListTable').dataTable().fnAddData(
 			build[%ucfirst(divId)%]ListTableRow(row)
 			);
 }
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 	$('#[%divId%]ListTable').dataTable().fnDeleteRow(
-			[%ucfirst(divId)%]prKey[[%toCC(prkey)%]_]
+			$('#[%ucfirst(divId)%]ListTableTR-' + [%toCC(prkey)%]_)[0]
 		 	);
 }
 
@@ -227,15 +246,15 @@ function show[%ucfirst(divId)%](golferId_) {
 	$('#[%divId%]').fadeIn();
 	currentContentPane = '[%divId%]';
 	if (golferId_) {
-		retrieve[%ucfirst(divId)%](params, golferId_);
+		params['where_clause']= '[%prkey%]=' + [%divId%]Id_;
+		retrieve[%ucfirst(divId)%](params );
 	} else {
 		if (isFormEmpty('[%divId%]Form')) {
 			toggleSaveMode('[%divId%]Form', false);
 		}
 		clearForm('[%divId%]Form');
-		//retrieve[%ucfirst(divId)%]ListTablePagination(1, PAGINATION_ROW_LIMIT);
-		retrieve[%ucfirst(divId)%]();
 	}
+		retrieve[%ucfirst(divId)%]List();
 	impose[%ucfirst(divId)%]SecurityUIRestrictions();
 
 }

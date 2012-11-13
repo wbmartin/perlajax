@@ -7,24 +7,24 @@ class App
 
 	def initialize
 		if RunHeadless then
-      @headless = Headless.new
-		  @headless.start
+			@headless = Headless.new
+			@headless.start
 		end
 		@b = Watir::Browser.new :chrome
 		@b.goto(Url)
 	end
-	
+
 	@@instance = App.new
 
 	def self.instance
-    return @@instance
-  end
+		return @@instance
+	end
 
 	def destroy
-	 @b.close
-	 if RunHeadless then
-	   @headless.destroy
-	 end
+		@b.close
+		if RunHeadless then
+			@headless.destroy
+		end
 	end
 
 	def browser
@@ -35,6 +35,7 @@ class App
 		while (	@b.span(:id,'outstandingServerCalls').html !~ /Open Requests: 0/) 
 			sleep 0.2
 		end
+		sleep 0.2
 	end
 
 	def goodlogin()
@@ -49,11 +50,35 @@ class App
 	def logout()
 		@b.link(:id,'logoutButtonId').click
 	end
-#>>>>>>>>>>>>>>>>>App specific Fields
-#	def golfer
-#		golfer
-#	end
+
+	def setSecurityPrivilegeStatus(grantOrRevoke, divId_)
+		parentDiv = ''
+		@b.browser.link(:id,'SummaryPage').click
+		letDustSettle
+		@b.browser.link(:id, 'launcherShowSecuritygrants').click
+		#@b.browser.div(:id =>'securityGrantsListTable_filter').text_field.set('admin')
+		letDustSettle
+		@b.browser.table(:id ,'securityGrantsListTable').rows.each do |r| 
+			if r.text =~/default/ then
+				r.link(:text,'Edit').click
+			end
+		end
+		letDustSettle
+		sleep 2
+		if grantOrRevoke == 'G' then
+			parentdiv = 'availableGrantsId'
+		else
+			parentdiv = 'grantedPrivilegesId'
+		end
+		#rescue Watir::Exception::UnknownObjectException =>e
+		divId_.each do |d|
+			grantDivId = 'securityGrant' + d.to_s + 'Id'
+			@b.browser.div(:id,parentdiv).div(:id,grantDivId).fire_event('ondblclick')
+		end
+		letDustSettle
+		@b.browser.link(:id,'SummaryPage').click
+
+	end
 
 	
-
 end
