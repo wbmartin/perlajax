@@ -32,7 +32,6 @@ describe "A golfer" do
 			@app.browser.link(:id,'SummaryPage').click
 		@app.browser.link(:id,'launcherShowGolfer').click
 		@app.letDustSettle
-
 	end
 
 	it "will allow deletion of all golfers" do
@@ -42,14 +41,13 @@ describe "A golfer" do
 			end
 		end
 		@app.browser.text.should match /No data available in table/
-			@app.browser.table(:id,'quickGolfScoreListTable').links.each do |l|
-			if l.text =='Delete' then 
-				l.click
-			end
-			end
-				@app.letDustSettle
-		@app.browser.text.should match /No data available in table/
-
+		#	@app.browser.table(:id,'quickGolfScoreListTable').links.each do |l|
+		#	if l.text =='Delete' then 
+		#		l.click
+		#	end
+		#	end
+		#		@app.letDustSettle
+		#@app.browser.text.should match /No data available in table/
 	end
 
 	it "can be added" do
@@ -61,6 +59,15 @@ describe "A golfer" do
 		@app.browser.button(:id,'golferFormAdd').click
 		@app.letDustSettle
 		@app.browser.div(:id,'golferListTableDivId').text.should match /New Golfer/
+	end
+
+	it 'can be reset to add mode while editing' do
+		@app.browser.link(:text, 'Edit').click
+		@app.letDustSettle
+		@app.browser.button(:id, 'golferFormAdd').should_not be_visible
+		@app.browser.button(:id, 'golferFormClear').click
+		@app.browser.text_field(:id,'golferForm-name').value.should == ''
+		@app.browser.button(:id, 'golferFormAdd').should be_visible
 	end
 
 	it "can be updated" do

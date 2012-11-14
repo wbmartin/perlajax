@@ -35,7 +35,8 @@ class App
 		while (	@b.span(:id,'outstandingServerCalls').html !~ /Open Requests: 0/) 
 			sleep 0.2
 		end
-		sleep 0.2
+		# this extra sleep is needed to let the js finish after the ajaxcalls finish
+		sleep 0.3 
 	end
 
 	def goodlogin()

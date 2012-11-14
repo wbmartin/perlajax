@@ -203,7 +203,7 @@ function replaceRow[%ucfirst(divId)%]ListTable(row) {
 			);
 }
 function addNewRow[%ucfirst(divId)%]ListTable(row) {
-	var newNdx =	$('#[%divId%]ListTable').dataTable().fnAddData(
+	var newNdx = $('#[%divId%]ListTable').dataTable().fnAddData(
 			build[%ucfirst(divId)%]ListTableRow(row)
 			);
 }
@@ -246,8 +246,8 @@ function show[%ucfirst(divId)%](golferId_) {
 	$('#[%divId%]').fadeIn();
 	currentContentPane = '[%divId%]';
 	if (golferId_) {
-		params['where_clause']= '[%prkey%]=' + [%divId%]Id_;
-		retrieve[%ucfirst(divId)%](params );
+		params['where_clause'] = '[%prkey%]=' + [%divId%]Id_;
+		retrieve[%ucfirst(divId)%](params);
 	} else {
 		if (isFormEmpty('[%divId%]Form')) {
 			toggleSaveMode('[%divId%]Form', false);

@@ -364,7 +364,8 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
 				);
 		return false;
 	}
-	if(grantOrRevoke_ === 'SWAP'	&& $('#'+divId_).parent().attr('id') === 'availableGrantsId') {
+	if(grantOrRevoke_ === 'SWAP' &&
+			$('#' + divId_).parent().attr('id') === 'availableGrantsId') {
 		grantOrRevoke_ = 'GRANT';
 	} else {
 		grantOrRevoke_ = 'REVOKE';
