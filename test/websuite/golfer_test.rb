@@ -18,7 +18,7 @@ describe "A golfer" do
 	end
 
 	it "is patient while all the golf scores are deleted" do
-		@app.browser.link(:id,'SummaryPage').click
+		@app.browser.link(:id,'launcherHome').click
 		@app.letDustSettle
 		@app.browser.link(:id,'launcherShowQuickGolfScore').click
 		@app.letDustSettle
@@ -29,7 +29,7 @@ describe "A golfer" do
 			end
 		end
 		@app.browser.text.should match /No data available in table/
-			@app.browser.link(:id,'SummaryPage').click
+			@app.browser.link(:id,'launcherHome').click
 		@app.browser.link(:id,'launcherShowGolfer').click
 		@app.letDustSettle
 	end

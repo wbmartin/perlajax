@@ -178,8 +178,7 @@ function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
 
     iStart -= 3;
     while (iStart >= 1) {
-      tmpNumStr = tmpNumStr.substring(0, iStart) + ',';
-      tmpNumStr += tmpNumStr.substring(iStart, tmpNumStr.length);
+      tmpNumStr = tmpNumStr.substring(0, iStart) + ',' + tmpNumStr.substring(iStart, tmpNumStr.length);
         iStart -= 3;
     }
   }
@@ -1686,7 +1685,7 @@ function replaceRowGolferListTable(row) {
       );
 }
 function addNewRowGolferListTable(row) {
-  var newNdx =  $('#golferListTable').dataTable().fnAddData(
+  var newNdx = $('#golferListTable').dataTable().fnAddData(
       buildGolferListTableRow(row)
       );
 }
@@ -1729,8 +1728,8 @@ function showGolfer(golferId_) {
   $('#golfer').fadeIn();
   currentContentPane = 'golfer';
   if (golferId_) {
-    params['where_clause']= 'golfer_id=' + golferId_;
-    retrieveGolfer(params );
+    params['where_clause'] = 'golfer_id=' + golferId_;
+    retrieveGolfer(params);
   } else {
     if (isFormEmpty('golferForm')) {
       toggleSaveMode('golferForm', false);
@@ -2212,7 +2211,8 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
         );
     return false;
   }
-  if(grantOrRevoke_ === 'SWAP'  && $('#'+divId_).parent().attr('id') === 'availableGrantsId') {
+  if(grantOrRevoke_ === 'SWAP' &&
+      $('#' + divId_).parent().attr('id') === 'availableGrantsId') {
     grantOrRevoke_ = 'GRANT';
   } else {
     grantOrRevoke_ = 'REVOKE';

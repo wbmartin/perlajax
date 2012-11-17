@@ -13,7 +13,7 @@ describe "A golf score login" do
 
 	it "should allow entry for correct password" do
 		@app.goodlogin()
-		@app.browser.link(:id,'SummaryPage').should be_visible
+		@app.browser.link(:id,'launcherHome').should be_visible
 	end
 
 	it "should logout when asked" do
@@ -23,7 +23,7 @@ describe "A golf score login" do
 
 	it "should deny entry for incorrect password" do
 		@app.login('badlogin','badpassword')
-		@app.browser.link(:id,'SummaryPage').should_not be_visible
+		@app.browser.link(:id,'launcherHome').should_not be_visible
 		@app.browser.text.include? 'Sorry'
 		@app.browser.button(:text, "Ok").click
 	end

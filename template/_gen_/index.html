@@ -2203,7 +2203,7 @@ text-align:left;
 		<div class="sixcol last" id= "topMenuBar" > 
 			<div class="center" style="width:25em;"> 
 				<ul class="buttonbar" style = "">
-					<li><a id="SummaryPage" onclick="changePage(function(){showLaunchPane()});">Home</a></li>
+					<li><a id="launcherHome" onclick="changePage(function(){showLaunchPane()});">Home</a></li>
 					<li><a id="aboutGolfScore" onclick="changePage(function(){showHelpPane()});">Help</a></li>
 					<li><a id="logoutButtonId" onclick="changePage(function(){logOutUser()});">Logout</a></li>			
 				</ul>
@@ -2241,15 +2241,13 @@ text-align:left;
 
 	<div id="golfScoreSummary" class="contentPane MainLayout"  >
 		<h1 id="golfScoreSummaryGolferNameId" class="pageTitle"> Handicap Summary</h1>
-		<div style="display:inline-block">
 			<table id="golfScoreSummaryListTable"  class='dataTable pretty' >
 				<thead>
 					<tr> <th>Golfer</th><th >Last 10 Avg</th><th>Period</th><th >I want to&hellip;</th></tr>
-				</thead>href='#'
+				</thead>
 				<tbody>
 				</tbody>
 			</table>
-		</div>
 	</div> 
 
 
@@ -2486,7 +2484,7 @@ text-align:left;
       <h1 id="launchPaneTitle" class="pageTitle" >I want to&hellip;</h1>
     </div>
     <div class="row">
-			<span class="twocol largeIconSpan" id="launcherShowViewAveragesSpanId"><a id="launcherShowGolfScore" onclick="changePage(function(){showGolfScoreSummary()});">
+			<span class="twocol largeIconSpan" id="launcherShowViewAveragesSpanId"><a id="launcherShowHandicaps" onclick="changePage(function(){showGolfScoreSummary()});">
 	  <span class="sprite64Icon kolfIcon"></span><br/>
 	  View Averages</a>
       </span>

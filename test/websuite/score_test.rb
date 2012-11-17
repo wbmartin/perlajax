@@ -19,10 +19,12 @@ describe "A quick golf score" do
 	
 	it "can be deleted" do
 		@app.letDustSettle
+		@app.browser.div(:id,'quickGolfScoreListTable_length').select_list.select 100
+@app.letDustSettle
 		@app.browser.table(:id,'quickGolfScoreListTable').links.each do |l|
 			if l.text == 'Delete' then 
 				l.click
-				#@app.letDustSettle
+				@app.letDustSettle
 			end
 		end
 				@app.letDustSettle
@@ -99,6 +101,60 @@ describe "A quick golf score" do
 		@app.browser.text.should match /No data available in table/
 	end
 
+	it 'will result in a correct average' do
+		addGolfScore('New 1 Golfer', '10', '12/10/2012')
+		addGolfScore('New 1 Golfer', '11', '12/11/2012')
+		addGolfScore('New 1 Golfer', '12', '12/12/2012')
+		addGolfScore('New 1 Golfer', '13', '12/13/2012')
+		addGolfScore('New 1 Golfer', '14', '12/14/2012')
+		addGolfScore('New 1 Golfer', '15', '12/15/2012')
+		addGolfScore('New 1 Golfer', '16', '12/16/2012')
+		addGolfScore('New 1 Golfer', '17', '12/17/2012')
+		addGolfScore('New 1 Golfer', '18', '12/18/2012')
+		addGolfScore('New 1 Golfer', '19', '12/19/2012')
+		addGolfScore('New 1 Golfer', '20', '12/20/2012')
+	  swapToHandicap
+		@app.browser.table(:id,'golfScoreSummaryListTable').rows.each do |r|
+		 if (r.text=~ /New 1 Golfer/) then
+			 r.text.should match /15.5/
+		 end
+		end
+		swapToScore
+
+	end
+
+	it 'will not effect the average when it is old' do
+	addGolfScore('New 1 Golfer', '1000', '12/10/2011')
+	swapToHandicap
+		@app.browser.table(:id,'golfScoreSummaryListTable').rows.each do |r|
+		 if (r.text=~ /New 1 Golfer/) then
+			 r.text.should match /15.5/
+		 end
+		end
+		swapToScore
+
+	end
+
+		it 'will not effect the average when it is new' do
+	addGolfScore('New 1 Golfer', '30', '12/21/2012')
+	swapToHandicap
+		@app.browser.table(:id,'golfScoreSummaryListTable').rows.each do |r|
+		 if (r.text=~ /New 1 Golfer/) then
+			 puts r.text
+			 r.text.should match /17.4/
+		 end
+		end
+		swapToScore
+
+	end
+
+
+
+	
+
+
+
+
 =begin
 	it 'cant be edited, added, or deleted if security is not granted' do
 		@app.setSecurityPrivilegeStatus('R',[2,3,4])
@@ -119,6 +175,36 @@ describe "A quick golf score" do
 	after :each do
 		@app.letDustSettle
 	end
+	
 	after :all do
 	end
+
+  def addGolfScore(golfer_, score_, date_)
+    if @app.browser.button(:id,'quickGolfScoreFormClear').visible? then
+			@app.browser.button(:id,'quickGolfScoreFormClear').click
+			@app.letDustSettle
+		end
+		@app.browser.select_list(:id,'quickGolfScoreForm-golfer_id').select(golfer_)
+		@app.browser.text_field(:id,'quickGolfScoreForm-golf_score').set(score_)
+		@app.browser.text_field(:id,'quickGolfScoreForm-game_dt').set(date_)
+		@app.browser.send_keys :enter
+		@app.letDustSettle
+		@app.browser.button(:id,'quickGolfScoreFormAdd').click
+	end
+	
+	def swapToHandicap
+		@app.browser.link(:id,'launcherHome').click
+		@app.letDustSettle
+	  @app.browser.link(:id,'launcherShowHandicaps').click
+		@app.letDustSettle
+	end
+
+	def swapToScore
+    @app.browser.link(:id,'launcherHome').click
+		@app.letDustSettle
+	  @app.browser.link(:id,'launcherShowQuickGolfScore').click
+		@app.letDustSettle
+	end
+
+
 end

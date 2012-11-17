@@ -54,7 +54,7 @@ class App
 
 	def setSecurityPrivilegeStatus(grantOrRevoke, divId_)
 		parentDiv = ''
-		@b.browser.link(:id,'SummaryPage').click
+		@b.browser.link(:id,'launcherHome').click
 		letDustSettle
 		@b.browser.link(:id, 'launcherShowSecuritygrants').click
 		#@b.browser.div(:id =>'securityGrantsListTable_filter').text_field.set('admin')
@@ -82,17 +82,17 @@ class App
 
 		end
 		letDustSettle
-		@b.browser.link(:id,'SummaryPage').click
+		@b.browser.link(:id,'launcherHome').click
 		refreshCache
 		
 	end
 
 	def refreshCache
 		letDustSettle
-		@b.browser.link(:id,'SummaryPage').click
+		@b.browser.link(:id,'launcherHome').click
 		@b.browser.link(:id,'launcherShowHelp').click
 		@b.browser.link(:id,'launcherRefreshCache').click
-		@b.browser.link(:id,'SummaryPage').click
+		@b.browser.link(:id,'launcherHome').click
 		letDustSettle
 	end
 	

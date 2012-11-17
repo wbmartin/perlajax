@@ -12,7 +12,7 @@ $BODY$
     select golfers.golfer_id, golfers.name,  avg(golf_score) as avg_score, 
       max(game_dt) as last_date, min(game_dt) as first_date  into result from (
 	select golf_score, game_dt from golf_score
-	where golfer_id =golfers.golfer_id order by last_update desc limit 10) as temp1 ; 
+	where golfer_id =golfers.golfer_id order by game_dt desc limit 10) as temp1 ; 
 	 return next result;
   end loop;
   return;

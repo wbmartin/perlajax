@@ -198,8 +198,7 @@ function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
 
 		iStart -= 3;
 		while (iStart >= 1) {
-			tmpNumStr = tmpNumStr.substring(0, iStart) + ',';
-		  tmpNumStr += tmpNumStr.substring(iStart, tmpNumStr.length);
+			tmpNumStr = tmpNumStr.substring(0, iStart) + ',' + tmpNumStr.substring(iStart, tmpNumStr.length);
 				iStart -= 3;
 		}
 	}
