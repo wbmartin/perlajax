@@ -1,0 +1,47 @@
+[%- FILTER redirect('/appmobile.js') -%]
+[%- serverErrorMsg_Communication ='Sorry, there was a problem communicating with the server.' -%]
+'use strict';
+    var urlTarget = 'cgi-bin/server.pl';
+    var passwordResetUrlTarget = 'cgi-bin/pwdreset.pl';
+    var VIEW_ID = 0;
+    var PAGE_CALLS = new Array();
+
+
+
+[% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
+//header1.js
+[%INCLUDE core/_header1.js%]
+//cache.js
+[%#INCLUDE common/_cache.js%]
+//loginportal.js
+[%INCLUDE common/_loginPortal.js%]
+[%INCLUDE mobile/_loginPortal.js%]
+//LayoutComponents.js
+[%#INCLUDE common/_layoutComponents.js%]
+[%INCLUDE mobile/_layoutComponents.js%]
+[%#INCLUDE common/_golfScoreSummary.js%]
+[%#INCLUDE mobile/_golfScoreSummary.js%]
+[%#INCLUDE common/_golfScore.js%]
+[%#INCLUDE mobile/_golfScore.js%]
+[%#INCLUDE common/_quickGolfScore.js%]
+[%#INCLUDE mobile/_quickGolfScore.js%]
+[%#INCLUDE common/_golfer.js%]
+[%#INCLUDE mobile/_golfer.js%]
+[%#INCLUDE common/_about.js%]
+[%#INCLUDE mobile/_about.js%]
+[%#INCLUDE common/_help.js%]
+[%#INCLUDE mobile/_help.js%]
+[%#INCLUDE common/_launch.js%]
+[%#INCLUDE mobile/_launch.js%]
+[%#INCLUDE core/_clientLog.js%]
+[%#INCLUDE common/_securityGrants.js%]
+[%#INCLUDE mobile/_securityGrants.js%]
+[%#INCLUDE common/_securityUser.js%]
+[%#INCLUDE mobile/_securityUser.js%]
+[%#INCLUDE common/_changePasswordDialog.js%]
+[%#INCLUDE mobile/_changePasswordDialog.js%]
+[%#INCLUDE common/_supportRequest.js%]
+[%#INCLUDE mobile/_supportRequest.js%]
+[% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
+
+[%- END #filter -%]

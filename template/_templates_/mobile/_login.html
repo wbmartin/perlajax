@@ -1,6 +1,5 @@
-[%divId = "loginPage"%]
+[%divId = "LoginPortal"%]
 [%spwfResource="security_user"%]
-<script>[%+ INCLUDE mobile/_login.js +%] </script>
 <div data-role="page" id="[%divId%]DivId">
 	<div data-role="header" data-position="fixed" >
 		<h1>Golf Score</h1>
@@ -12,7 +11,7 @@
 			<br/>
 			<input type="password"  id="[%divId%]Form-password" placeholder="Password"/>
 			<br/>
-			<button type="button" id="cmd[%ucFirst(divId)%]LoginId" onclick="javascript:loginCall('AUTHENTICATE');">Login</button>
+			<button type="button" id="cmd[%ucFirst(divId)%]LoginId" onclick="javascript:loginCall('authenticate');">Login</button>
 		</form>
 	</div>
 </div>

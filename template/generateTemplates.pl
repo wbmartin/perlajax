@@ -46,8 +46,9 @@ Main:{
 
 	#File Copies
   `cp $outputPath/index.html $absoluteSrcPath/deploy/`; # copy the generated index.html
-  `cp $outputPath/*.js $absoluteSrcPath/deploy/`; # copy the generated app.js
+  `cp $outputPath/app.js $absoluteSrcPath/deploy/`; # copy the generated app.js
   `cp $outputPath/mobile.html $absoluteSrcPath/deploy/mobile/index.html`; # copy the generated mobile
+  `cp $outputPath/appmobile.js $absoluteSrcPath/deploy/mobile/`; # copy the generated mobile
 		#print "\n\n";
 
 

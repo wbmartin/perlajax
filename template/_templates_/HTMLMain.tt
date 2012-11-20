@@ -7,7 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 [%INCLUDE web/_header.html%]
 <body  onload='bodyOnLoad();' onresize="bodyOnResize();" > 
-[%INCLUDE web/_LayoutComponents.html%]
+[%INCLUDE web/_layoutComponents.html%]
 
 <div id="mainContent" class="container MainLayout"  >
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
@@ -25,7 +25,7 @@
 [%INCLUDE web/_supportRequest.html%]
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 </div><!--End Main Content-->
-[%INCLUDE web/_LoginPortal.html%]
+[%INCLUDE web/_loginPortal.html%]
 [%INCLUDE core/_msgBox.html%]
 </body>
 </html>

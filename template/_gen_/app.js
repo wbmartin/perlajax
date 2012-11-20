@@ -521,7 +521,7 @@ function retrieveCache() {
 
 
 //loginportal.js
-<!--Begin LoginPortal-->
+//Begin LoginPortal
 
 
 
@@ -563,26 +563,7 @@ function loginCall(action) {
 
 
 
-function validateLoginPortalForm() {
-  var formValid = standardValidate('LoginPortalForm');
-//  if (($('#LoginPortalForm-password').val() == '' ||
-//        $('#LoginPortalForm-password').val() == null) &&
-//      $('#LoginPortalForm-password').is(' : visible')) {
-//        showDialog('Please enter your password');
-//        formValid = false;
-//      }
-  return formValid;
-}
 
-function onSuccessfulLogin() {
-  $('#password').val('');
-  displayMainLayout(true);
-  $('#topMenuBar').show();
-  registerAction();
-  timeoutIfNoAction();
-  changePage(function() {showLaunchPane()});
-  retrieveCache();
-}
 function logOutUser() {
   usrSessionId = '';
   usrLoginId = '';
@@ -598,7 +579,6 @@ function logOutUser() {
 $(document).ready(function() {
   $('#LoginPortalForm-user_id').val('golfscore');
   $('#LoginPortalForm-password').val('golfscore');
-  changePage(function() {showLoginPortal()});
 });
 
 function showLoginPortal() {
@@ -722,6 +702,32 @@ function onetimeLogin() {
 
 
 
+
+
+
+
+function onSuccessfulLogin() {
+  $('#password').val('');
+  displayMainLayout(true);
+  $('#topMenuBar').show();
+  registerAction();
+  timeoutIfNoAction();
+  changePage(function() {showLaunchPane()});
+  retrieveCache();
+}
+
+$(document).ready(function() {
+  changePage(function() {showLoginPortal()});
+});
+
+function validateLoginPortalForm() {
+  var formValid = standardValidate('LoginPortalForm');
+  return formValid;
+}
+
+
+
+
 //LayoutComponents.js
 function sizeLeftNav() {
 
@@ -755,6 +761,27 @@ $(document).ready(function() {
 
 });
 
+
+
+function briefNotify(msg, type) {
+  var color;
+  if (type == null || type == 'INFO') {
+    color = 'green';
+  }else if (type == 'WARNING') {
+    color = 'yellow';
+  }else if (type == 'ERROR') {
+    color = 'red';
+  }else {
+    color = 'black';
+  }
+  $('#briefNoticeMsg').css('border-color', color);
+  $('#briefNoticeMsg').css('color', color);
+  $('#briefNoticeMsg').html(msg);
+  $('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
+  statusMsg(msg);
+}
+
+
 function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
   $('#genericDialogDivId').dialog('destroy');
   msg_ = msg_ || 'No message Defined';
@@ -780,25 +807,6 @@ function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
 
   }
 
-}
-
-
-function briefNotify(msg, type) {
-  var color;
-  if (type == null || type == 'INFO') {
-    color = 'green';
-  }else if (type == 'WARNING') {
-    color = 'yellow';
-  }else if (type == 'ERROR') {
-    color = 'red';
-  }else {
-    color = 'black';
-  }
-  $('#briefNoticeMsg').css('border-color', color);
-  $('#briefNoticeMsg').css('color', color);
-  $('#briefNoticeMsg').html(msg);
-  $('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
-  statusMsg(msg);
 }
 
 
@@ -889,6 +897,7 @@ $(document).ready(function() {
       'sPaginationType': 'two_button'
       });
     });
+
 
 
 
@@ -1196,6 +1205,7 @@ function imposeGolfScoreSecurityUIRestrictions() {
 
 
 
+
 //Server Calls
 function retrieveQuickGolfScoreList() {
   if (!isUserAuthorized(
@@ -1489,6 +1499,7 @@ function imposeQuickGolfScoreSecurityUIRestrictions() {
 
 
 
+
 //----------------------------------------------------
 
 //server calls
@@ -1763,6 +1774,7 @@ $(document).ready(function() {
 
 
 
+
 function showAboutPane() {
   hideCurrentContentPane();
   statusMsg('Navigated to About');
@@ -1775,6 +1787,7 @@ function showAboutPane() {
 
 
 
+
   function showHelpPane() {
     statusMsg('Navigated to Help Portal');
     hideCurrentContentPane();
@@ -1782,6 +1795,7 @@ function showAboutPane() {
     currentContentPane = 'helpPane';
     return 'helpPane';
   }
+
 
 
 
@@ -1825,6 +1839,7 @@ function imposeLauncherSecurityUIRestrictions() {
     securityshow(divIdToSecure) : securityHide(divIdToSecure);
 
 }
+
 
 
 
@@ -2389,6 +2404,7 @@ function clearSecurityGrantsForm() {
 
 
 
+
 //Server Calls
 function retrieveSecurityUserList() {
   if (!isUserAuthorized('SELECT_SECURITY_USER',
@@ -2691,6 +2707,7 @@ function imposeSecurityUserSecurityUIRestrictions() {
 
 
 
+
 //----------------------------------------------------
 //server calls
 function submitChangePasswordDialog(params) {
@@ -2781,6 +2798,7 @@ function showChangePasswordDialog(userId_) {
 
 $(document).ready(function() {
 });
+
 
 
 
@@ -3130,6 +3148,7 @@ function addNewSupportRequest() {
 function showSupportRequestDialog() {
   $('#supportRequestFormHolder').dialog({modal: true, width: '90%' });
 }
+
 
 
 

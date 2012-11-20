@@ -6,7 +6,13 @@
 <!DOCType html>
 <html> 
 <head> 	
-<style> [%INCLUDE "style/reset-min.css"%]</style>
+<style type="text/css"> 
+/* reset*/
+[%INCLUDE "style/reset-min.css"%]
+/*jquery*/
+[%INCLUDE "includes/jquery.mobile-1.2.0.min.css"%]
+
+</style>
 
   <meta name=viewport content="user-scalable=no,width=device-width" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -14,16 +20,20 @@
   <link rel="apple-touch-icon" sizes="114x114" href="../images/touch-icon-iphone-114.png" />[%# Retina iPhone   %]
   <link rel="apple-touch-icon" sizes="72x72" href="../images/touch-icon-ipad-144.png" />[%# Standard iPad   %]
   <link rel="apple-touch-icon" sizes="144x144" href="../images/touch-icon-ipad-144.png" />[%# Retina iPad  %]
-  <link rel=stylesheet href=http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css />
-  <script src=http://code.jquery.com/jquery-1.6.min.js></script>
-  <script src=http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js> </script>
-  <script type="text/JavaScript">
-		var urlTarget = "../cgi-bin/server.pl";
-    var passwordResetUrlTarget="../cgi-bin/pwdreset.pl";
 
-[%INCLUDE core/_header1.js %]
-  </script>
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 
+  <script>
+	//jquery
+	[%#INCLUDE "includes/jquery-1.8.3.min.js" +%]
+	//jquery mobile
+	[%#INCLUDE "includes/jquery.mobile-1.2.0.min.js" +%]
+	//jqueryui
+	[%#+INCLUDE "includes/jquery-ui-1.8.18.custom.min.js" +%]
+	
+	 </script>
+	<script src="./appmobile.js"></script>
 
 </head> 
 <body > 

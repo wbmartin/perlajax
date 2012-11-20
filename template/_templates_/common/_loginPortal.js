@@ -1,4 +1,4 @@
-<!--Begin LoginPortal-->
+//Begin LoginPortal
 [% divId = 'LoginPortal' %]
 [% spwfResource = 'security_user' %]
 
@@ -40,26 +40,7 @@ function loginCall(action) {
 
 
 
-function validate[%divId%]Form() {
-	var formValid = standardValidate('[%divId%]Form');
-//	if (($('#[%divId%]Form-password').val() == '' ||
-//				$('#[%divId%]Form-password').val() == null) &&
-//			$('#[%divId%]Form-password').is(' : visible')) {
-//				showDialog('Please enter your password');
-//				formValid = false;
-//			}
-	return formValid;
-}
 
-function onSuccessfulLogin() {
-	$('#password').val('');
-	displayMainLayout(true);
-	$('#topMenuBar').show();
-	registerAction();
-	timeoutIfNoAction();
-	changePage(function() {showLaunchPane()});
-	retrieveCache();
-}
 function logOutUser() {
 	usrSessionId = '';
 	usrLoginId = '';
@@ -75,7 +56,6 @@ function logOutUser() {
 $(document).ready(function() {
 	$('#[%divId%]Form-user_id').val('golfscore');
 	$('#[%divId%]Form-password').val('golfscore');
-	changePage(function() {showLoginPortal()});
 });
 
 function showLoginPortal() {
