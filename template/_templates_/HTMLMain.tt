@@ -1,3 +1,14 @@
+[%FOREACH tPath = appTemplates%]
+  [%-IF  tPath.match('Web')-%]
+	  [%-IF tPath.match('js'); NEXT; END;-%]
+	  [%-IF tPath.match('LayoutComponents'); NEXT; END;-%]
+	  [%-IF tPath.match('Header'); NEXT; END;-%]
+<!-- From: [%tPath%] -->
+		[%#INCLUDE $tPath%]
+	[%-END-%]
+[%-END-%]
+
+
 [%- FILTER redirect("/index.html") -%]
 [%- serverErrorMsg_Communication ="Sorry, there was a problem communicating with the server." -%]
 [%buttonClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"%]
@@ -5,27 +16,29 @@
 
 <!DOCType html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
-[%INCLUDE web/_header.html%]
+[%INCLUDE app/Header/_headerWeb.html%]
 <body  onload='bodyOnLoad();' onresize="bodyOnResize();" > 
-[%INCLUDE web/_layoutComponents.html%]
+[%INCLUDE app/LayoutComponents/_layoutComponentsWeb.html%]
 
 <div id="mainContent" class="container MainLayout"  >
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
-[%INCLUDE web/_golfScoreSummary.html%]
-[%INCLUDE web/_golfScore.html%]
-[%INCLUDE web/_quickGolfScore.html%]
-[%INCLUDE web/_golfer.html%]
-[%INCLUDE web/_about.html%]
-[%INCLUDE web/_help.html%]
-[%INCLUDE web/_launch.html%]
 [%INCLUDE core/_clientLog.html%]
-[%INCLUDE web/_securityGrants.html%]
-[%INCLUDE web/_securityUser.html%]
-[%INCLUDE web/_changePasswordDialog.html%]
-[%INCLUDE web/_supportRequest.html%]
+
+
+[%INCLUDE app/GolfScoreSummary/_golfScoreSummaryWeb.html%]
+[%INCLUDE app/GolfScore/_golfScoreWeb.html%]
+[%INCLUDE app/QuickGolfScore/_quickGolfScoreWeb.html%]
+[%INCLUDE app/Golfer/_golferWeb.html%]
+[%INCLUDE app/About/_aboutWeb.html%]
+[%INCLUDE app/Help/_helpWeb.html%]
+[%INCLUDE app/Launcher/_launchWeb.html%]
+[%INCLUDE app/SecurityGrants/_securityGrantsWeb.html%]
+[%INCLUDE app/SecurityUser/_securityUserWeb.html%]
+[%INCLUDE app/ChangePassword/_changePasswordDialogWeb.html%]
+[%INCLUDE app/SupportRequest/_supportRequestWeb.html%]
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 </div><!--End Main Content-->
-[%INCLUDE web/_loginPortal.html%]
+[%INCLUDE app/LoginPortal/_loginPortalWeb.html%]
 [%INCLUDE core/_msgBox.html%]
 </body>
 </html>

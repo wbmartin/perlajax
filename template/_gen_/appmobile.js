@@ -475,6 +475,8 @@ function isFormEmpty(formName) {
 
 
 
+//ClientLog.js
+
 //cache.js
 
 //loginportal.js
@@ -679,6 +681,70 @@ alert(msg);
 }
 
 
+
+
+
+
+
+
+
+
+function retrieveGolfScoreSummaryList() {
+		if (!isUserAuthorized('SELECT_GOLFER_HANDICAP')) {
+			briefNotify('Access Violation', 'ERROR');
+			return false;
+		}
+
+		var params = prepParams(params, 'golf_score_summary' , 'select');
+		var successf = function(rslt) {
+			if (!rslt[SERVER_SIDE_FAIL]) {
+				populateGolfScoreSummaryListTable(rslt.rows);
+			}else {
+				briefNotify(
+						'There was a problem communicating with the Server.',
+						'ERROR');
+			}
+
+		};
+		var failf = function() {alert('failed');};
+		serverCall(params, successf, failf);
+
+	}
+
+function showGolfScoreSummary() {
+	statusMsg('Navigated to Golf Score Summary View');
+	retrieveGolfScoreSummaryList();
+	standardShowContentPane('golfScoreSummary');
+}
+
+function imposeGolfScoreSummarySecurityUIRestrictions() {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//After complete Load setup
+$(document).ready(function() {
+		
+});
+
+
+function populateGolfScoreSummaryListTable(dataRows) {
+
+}
+
+function buildGolfScoreSummaryListTableRow(gs){
+
+}
 
 
 

@@ -474,6 +474,24 @@ function isFormEmpty(formName) {
 
 
 
+//client1.js
+
+
+function showClientLogViewer() {
+  hideCurrentContentPane();
+  statusMsg('Navigated to Log Viewer');
+  var newHTML = '';
+  $('#clientLogViewer').fadeIn();
+  $('ul#clientLogView').find('li').remove();
+   logMsg('Log Viewed');
+  for (var ndx = 0; ndx < clientLog.length; ndx++) {
+  newHTML += '<li>' + clientLog[ndx].logDt + '|';
+   newHTML += clientLog[ndx].msg + '</li>';
+  }
+  $('ul#clientLogView').html(newHTML);
+  currentContentPane = 'clientLogViewer';
+}
+
 //cache.js
 var GOLFER_CACHE;
 var SECURITY_PROFILE_CACHE;
@@ -840,6 +858,43 @@ function retrieveGolfScoreSummaryList() {
     serverCall(params, successf, failf);
 
   }
+
+function showGolfScoreSummary() {
+  statusMsg('Navigated to Golf Score Summary View');
+  retrieveGolfScoreSummaryList();
+  standardShowContentPane('golfScoreSummary');
+}
+
+function imposeGolfScoreSummarySecurityUIRestrictions() {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+$(document).ready(function() {
+    $('#golfScoreSummaryListTable').dataTable(
+       {
+      'aoColumns' : [
+       {'mData': 'golfer_name' },
+       {'mData': 'handicap' },
+       {'mData': 'date_range' },
+       {'mData': 'links', asSorting: 'none' }
+      ],
+      'sPaginationType': 'two_button'
+      });
+    });
+
+
 function populateGolfScoreSummaryListTable(dataRows) {
   var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -872,33 +927,6 @@ function buildGolfScoreSummaryListTableRow(gs) {
   return dataHash;
 
 }
-
-function showGolfScoreSummary() {
-  statusMsg('Navigated to Golf Score Summary View');
-  retrieveGolfScoreSummaryList();
-  standardShowContentPane('golfScoreSummary');
-}
-
-function imposeGolfScoreSummarySecurityUIRestrictions() {
-
-}
-
-
-//After complete Load setup
-$(document).ready(function() {
-    $('#golfScoreSummaryListTable').dataTable(
-       {
-      'aoColumns' : [
-       {'mData': 'golfer_name' },
-       {'mData': 'handicap' },
-       {'mData': 'date_range' },
-       {'mData': 'links', asSorting: 'none' }
-      ],
-      'sPaginationType': 'two_button'
-      });
-    });
-
-
 
 
 
@@ -1842,23 +1870,6 @@ function imposeLauncherSecurityUIRestrictions() {
 
 
 
-
-
-
-function showClientLogViewer() {
-  hideCurrentContentPane();
-  statusMsg('Navigated to Log Viewer');
-  var newHTML = '';
-  $('#clientLogViewer').fadeIn();
-  $('ul#clientLogView').find('li').remove();
-   logMsg('Log Viewed');
-  for (var ndx = 0; ndx < clientLog.length; ndx++) {
-  newHTML += '<li>' + clientLog[ndx].logDt + '|';
-   newHTML += clientLog[ndx].msg + '</li>';
-  }
-  $('ul#clientLogView').html(newHTML);
-  currentContentPane = 'clientLogViewer';
-}
 
 
 

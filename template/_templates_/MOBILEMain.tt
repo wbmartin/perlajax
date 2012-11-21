@@ -38,11 +38,9 @@
 </head> 
 <body > 
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
-[%INCLUDE mobile/_login.html%]
-[%INCLUDE mobile/_summary.html%]
-
- 
-[%INCLUDE mobile/_LayoutComponents.html%]
+[%INCLUDE app/LoginPortal/_loginPortalMobile.html%]
+[%INCLUDE app/GolfScoreSummary/_golfScoreSummaryMobile.html%]
+[%INCLUDE app/LayoutComponents/_layoutComponentsMobile.html%]
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 </body>
 </html>
