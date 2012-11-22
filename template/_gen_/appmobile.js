@@ -1,6 +1,6 @@
 'use strict';
-    var urlTarget = 'cgi-bin/server.pl';
-    var passwordResetUrlTarget = 'cgi-bin/pwdreset.pl';
+    var urlTarget = '../cgi-bin/server.pl';
+    var passwordResetUrlTarget = '../cgi-bin/pwdreset.pl';
     var VIEW_ID = 0;
     var PAGE_CALLS = new Array();
 
@@ -478,6 +478,44 @@ function isFormEmpty(formName) {
 //ClientLog.js
 
 //cache.js
+var GOLFER_CACHE;
+var SECURITY_PROFILE_CACHE;
+var SECURITY_GRANT;
+function onRefreshCache(data) {
+	GOLFER_CACHE = {};
+	SECURITY_PROFILE_CACHE = {};
+	SECURITY_GRANT = new Array();
+	for (var i = 0; i < data.length; i++) {
+		if (data[i].tp === 'golfer') {
+			GOLFER_CACHE[data[i].val] = data[i].lbl;
+		} else if (data[i].tp === 'securityProfile') {
+			SECURITY_PROFILE_CACHE[data[i].val] = data[i].lbl;
+		} else if (data[i].tp === 'securityGrant') {
+			SECURITY_GRANT.push(data[i].lbl);
+		}
+	}
+  populateAppSelectOptions;
+  imposeApplicationSecurityRestrictions;	
+	}
+
+
+
+function retrieveCache() {
+	var params = prepParams(params, 'cross_table_cache', 'select');
+	var successf = function(rslt) {
+		onRefreshCache(rslt.rows);
+	};
+	serverCall(params, successf, FAILF);
+}
+
+
+
+function populateAppSelectOptions(){
+
+}
+function imposeApplicationSecurityRestrictions(){
+
+}
 
 //loginportal.js
 //Begin LoginPortal
@@ -663,13 +701,13 @@ function onetimeLogin() {
 
 
 
-
 function onSuccessfulLogin(){
-  $.mobile.changePage("#summaryDivId");
+	retrieveCache();
+	showLaunchPane();
 }
 
 function validateLoginPortalForm(){
-return true;
+  return true;
 }
 
 
@@ -711,11 +749,7 @@ function retrieveGolfScoreSummaryList() {
 
 	}
 
-function showGolfScoreSummary() {
-	statusMsg('Navigated to Golf Score Summary View');
-	retrieveGolfScoreSummaryList();
-	standardShowContentPane('golfScoreSummary');
-}
+
 
 function imposeGolfScoreSummarySecurityUIRestrictions() {
 
@@ -739,10 +773,30 @@ $(document).ready(function() {
 
 
 function populateGolfScoreSummaryListTable(dataRows) {
+	var dataArray = new Array();
+	var newRow = '<div class = "ui-block-a"><b>Golfer</b></div>';
+	newRow += '<div class = "ui-block-b"><b>Handicap</b></div>';
+	var newTable = newRow;
+
+	for (var ndx = 0; ndx < dataRows.length; ndx++) {
+		newTable += buildGolfScoreSummaryListTableRow(dataRows[ndx]);
+	}
+	$('#golfScoreSummaryTableId').html(newTable);
+
+
 
 }
 
 function buildGolfScoreSummaryListTableRow(gs){
+	var newRow = '<div class = "ui-block-a">' + gs.golfer_name + '</div>';
+	newRow += '<div class = "ui-block-b">';
+  newRow +=	formatNumber(gs.golf_score, 2, true, false, true);
+  newRow +=	'</div>';
+	return newRow;
+}
+function showGolfScoreSummary(){
+	retrieveGolfScoreSummaryList();
+	$.mobile.changePage("#golfScoreSummaryDivId");
 
 }
 
@@ -757,6 +811,241 @@ function buildGolfScoreSummaryListTableRow(gs){
 
 
 
+
+
+//Server Calls
+function retrieveQuickGolfScoreList() {
+	if (!isUserAuthorized(
+				'SELECT_GOLF_SCORE',
+				true,
+				'retrieveQuickGolfScoreList')) {
+				 	return false;
+				}
+
+	var params = prepParams(params, 'golf_score' , 'select');
+	params['orderby_clause'] = ' order by game_dt desc';
+		var successf = function(rslt) {
+			if (!rslt[SERVER_SIDE_FAIL]) {
+				populateQuickGolfScoreListTable(rslt.rows);
+			}else {
+				briefNotify(
+						'There was a problem communicating with the Server.',
+						'ERROR'
+						);
+			}
+		};
+	serverCall(params, successf, FAILF);
+}
+function retrieveQuickGolfScore(params) {
+	if (!isUserAuthorized(
+				'SELECT_GOLF_SCORE',
+				true,
+				'retrieveQuickGolfScore')) {
+					return false;
+				}
+
+	params = prepParams(params, 'golf_score', 'SELECT');
+	var successf = function(rslt) {
+		if (!rslt[SERVER_SIDE_FAIL]) {
+			rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+			bindToForm('quickGolfScoreForm', rslt.rows[0]);
+			toggleSaveMode('quickGolfScoreForm', true);
+		}else {
+			briefNotify(
+					'There was a problem communicating with the Server.',
+					'ERROR'
+					);
+		}
+
+	};
+	serverCall(params, successf, FAILF);
+}
+
+
+
+function deleteQuickGolfScore(golfScoreId_, lastUpdate_) {
+	if (!isUserAuthorized(
+				'DELETE_GOLF_SCORE',
+				true,
+				'deleteQuickGolfScore')) {
+	 	return false;
+}
+	var params = prepParams(params, 'golf_score' , 'delete');
+	params['golf_score_id'] = golfScoreId_;
+	params['last_update'] = lastUpdate_;
+	var successf = function(rslt) {
+		if (!rslt[SERVER_SIDE_FAIL]) {
+			removeQuickGolfScoreListTableRow(rslt.golf_score_id);
+			briefNotify('Golf Score Deleted Successfully', 'INFO');
+		} else {
+			briefNotify(
+					'There was a problem communicating with the Server.',
+					'ERROR'
+					);
+		}
+
+	};
+	serverCall(params, successf, FAILF);
+}
+
+function saveQuickGolfScore(params) {
+	if (!isUserAuthorized('UPDATE_GOLF_SCORE', false) &&
+			!isUserAuthorized('INSERT_GOLF_SCORE', false)) {
+		briefNotify(
+				'Access Violation : saveQuickGolfScore ',
+				'ERROR'
+				);
+		return false;
+	}
+
+	params = prepParams(params, 'golf_score', insertUpdateChoose);
+	var successf = function(rslt) {
+		clearForm('quickGolfScoreForm');
+		if (!rslt[SERVER_SIDE_FAIL]) {
+			if (rslt.spwfAction == 'UPDATE') {
+				replaceQuickGolfScoreListTableRow(rslt.rows[0]);
+			}else if (rslt.spwfAction == 'INSERT') {
+				addNewQuickGolfScoreListTableRow(rslt.rows[0]);
+			}
+			briefNotify('Golf Score Successfully Saved', 'INFO');
+			clearQuickGolfScoreForm();
+
+		}
+		else {
+			briefNotify('Golf Score Saved Failed', 'ERROR');
+
+		}
+	};
+	serverCall(params, successf, FAILF);
+}
+
+//ServerCall Wrappers
+function editQuickGolfScore(quickGolfScoreId_) {
+	if (!isUserAuthorized(
+				'SELECT_GOLF_SCORE',
+				true,
+				'editQuickGolfScore')) {
+				 	return false;
+				}
+	if (isUserAuthorized('UPDATE_GOLF_SCORE', false)) {
+		securityLockForm('quickGolfScoreForm', false);
+	}else {securityLockForm('quickGolfScoreForm', true);}
+
+
+	if (quickGolfScoreId_) {
+		var params = {'where_clause' : 'golf_score_id=' + quickGolfScoreId_};
+		retrieveQuickGolfScore(params);
+	}
+}
+
+function saveQuickGolfScoreForm() {
+	if (!isUserAuthorized('UPDATE_GOLF_SCORE') &&
+			!isUserAuthorized('SELECT_GOLF_SCORE')) {
+		briefNotify('Access Violation : save', 'ERROR');
+		return false;
+	}
+
+	if (validateQuickGolfScoreForm()) {
+		var params = bindForm('quickGolfScoreForm');
+		saveQuickGolfScore(params);
+	}
+}
+
+
+
+function clearQuickGolfScoreForm() {
+	clearForm('quickGolfScoreForm');
+	(isUserAuthorized('INSERT_GOLF_SCORE', false)) ?
+		securityLockForm('quickGolfScoreForm', false) :
+		securityLockForm('quickGolfScoreForm', true);
+}
+
+
+//After complete Load setup
+$(document).ready(function() {
+		$('#quickGolfScoreForm-game_dt').datepicker();
+
+		});
+
+//page specific functions
+function retrieveGolferNameForGolfScore(golferId_) {
+	if (!isUserAuthorized(
+				'SELECT_GOLF_SCORE',
+				true,
+				'retrieveGolferNameForGolfScore')) {
+					return false;
+				}
+
+	var params = prepParams(params, 'GOLFER', 'SELECT');
+	params['where_clause'] = 'golfer_id =' + golferId_;
+	var successf = function(rslt) {
+		$('#quickGolfScoreGolferNameId').html(rslt.rows[0].name);
+	};
+	serverCall(params, successf, FAILF);
+}
+
+
+
+
+
+
+
+
+
+
+
+//validation
+function validateQuickGolfScoreForm() {
+	var formName = 'quickGolfScoreForm';
+	var formValid = standardValidate(formName);
+	return true;
+}
+
+//Top Level HTML Manip
+function populateQuickGolfScoreListTable(dataRows) {
+	
+}
+
+function buildQuickGolfScoreListTableRow(data) {
+}
+
+function replaceQuickGolfScoreListTableRow(row) {
+}
+function addNewQuickGolfScoreListTableRow(row) {
+}
+function removeQuickGolfScoreListTableRow(golfScoreId_) {
+}
+
+//Div Access and App Layout Calls
+function showQuickGolfScore() {
+  $.mobile.changePage("#quickGolfScoreDivId");
+}
+
+function imposeQuickGolfScoreSecurityUIRestrictions() {
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function showLaunchPane(){
+	$.mobile.changePage("#launchPaneDivId");
+}
+function imposeLauncherSecurityUIRestrictions() {
+
+}
 
 
 

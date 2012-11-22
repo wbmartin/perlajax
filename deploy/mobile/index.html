@@ -29,16 +29,7 @@ html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pr
 
 	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
   <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-
-  <script>
-	//jquery
-	
-	//jquery mobile
-	
-	//jqueryui
-	
-	
-	 </script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
 	<script src="./appmobile.js"></script>
 
 </head> 
@@ -64,22 +55,20 @@ html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pr
 
 
 
-
-
-<script> </script>
-<div data-role="page" id="golfScoreSummaryDivId">
+<div data-role="page" id="golfScoreSummaryDivId" data-add-back-btn="true">
 	<div data-role="header" data-position="fixed" >
 		<h1>Golf Score - Handicaps</h1>
 	</div>
 
 	<div data-role="content" style="margin-top: 10%">
+		<div id = "golfScoreSummaryTableId" class = "ui-grid-a">
+			
+		</div>
 		<form id ="golfScoreSummaryForm">
-			Summary
-						<button type="button" id="cmdLoginId" onclick="javascript:briefNotify('title','Message');">msg</button>
+			
 		</form>
 	</div>
 </div>
-
 
 <div data-role="dialog" id="userMsgDialog" data-add-back-btn=true>
   <div data-role=header>
@@ -130,6 +119,18 @@ function briefNotify(msg,type) {
 }
 
 </script>
+
+
+<!--MainLayout MainContentPaneStyle -->
+<div id="launchPaneDivId" data-role="page" class="">
+	<div data-role ="content">
+		<ul data-role="listview">
+			<li> <a href="#" onclick="showGolfScoreSummary()">Handicaps</a></li>
+	</ul>	
+</div>
+</div>
+
+
 
 </body>
 </html>

@@ -1,14 +1,3 @@
-[%FOREACH tPath = appTemplates%]
-  [%-IF  tPath.match('Web')-%]
-	  [%-IF tPath.match('js'); NEXT; END;-%]
-	  [%-IF tPath.match('LayoutComponents'); NEXT; END;-%]
-	  [%-IF tPath.match('Header'); NEXT; END;-%]
-<!-- From: [%tPath%] -->
-		[%#INCLUDE $tPath%]
-	[%-END-%]
-[%-END-%]
-
-
 [%- FILTER redirect("/index.html") -%]
 [%- serverErrorMsg_Communication ="Sorry, there was a problem communicating with the server." -%]
 [%buttonClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"%]
@@ -23,23 +12,24 @@
 <div id="mainContent" class="container MainLayout"  >
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
 [%INCLUDE core/_clientLog.html%]
+[%INCLUDE core/_msgBox.html%]
 
+[%FOREACH tPath = appTemplates%]
+  [%-IF  tPath.match('Web')-%]
+	  [%-IF tPath.match('js'); NEXT; END;-%]
+	  [%-IF tPath.match('LayoutComponents'); NEXT; END;-%]
+	  [%-IF tPath.match('Header'); NEXT; END;-%]
+	  [%-IF tPath.match('LoginPortal'); NEXT; END;-%]
+		<!-- From: [%tPath%] -->
+		[%INCLUDE $tPath%]
+	[%-END-%]
+[%-END-%]
 
-[%INCLUDE app/GolfScoreSummary/_golfScoreSummaryWeb.html%]
-[%INCLUDE app/GolfScore/_golfScoreWeb.html%]
-[%INCLUDE app/QuickGolfScore/_quickGolfScoreWeb.html%]
-[%INCLUDE app/Golfer/_golferWeb.html%]
-[%INCLUDE app/About/_aboutWeb.html%]
-[%INCLUDE app/Help/_helpWeb.html%]
-[%INCLUDE app/Launcher/_launchWeb.html%]
-[%INCLUDE app/SecurityGrants/_securityGrantsWeb.html%]
-[%INCLUDE app/SecurityUser/_securityUserWeb.html%]
-[%INCLUDE app/ChangePassword/_changePasswordDialogWeb.html%]
-[%INCLUDE app/SupportRequest/_supportRequestWeb.html%]
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 </div><!--End Main Content-->
+<!-- From: LoginPortal -->
 [%INCLUDE app/LoginPortal/_loginPortalWeb.html%]
-[%INCLUDE core/_msgBox.html%]
+<!-- From: msgBox.html -->
 </body>
 </html>
 [%- END #filter -%]

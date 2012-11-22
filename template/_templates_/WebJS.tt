@@ -12,36 +12,16 @@
 [%INCLUDE core/_header1.js%]
 //client1.js
 [%INCLUDE core/_clientLog.js%]
-//cache.js
-[%INCLUDE app/Cache/_cacheCommon.js%]
-//loginportal.js
-[%INCLUDE app/LoginPortal/_loginPortalCommon.js%]
-[%INCLUDE app/LoginPortal/_loginPortalWeb.js%]
-//LayoutComponents.js
-[%INCLUDE app/LayoutComponents/_layoutComponentsCommon.js%]
-[%INCLUDE app/LayoutComponents/_layoutComponentsWeb.js%]
-[%INCLUDE app/GolfScoreSummary/_golfScoreSummaryCommon.js%]
-[%INCLUDE app/GolfScoreSummary/_golfScoreSummaryWeb.js%]
-[%INCLUDE app/GolfScore/_golfScoreCommon.js%]
-[%INCLUDE app/GolfScore/_golfScoreWeb.js%]
-[%INCLUDE app/QuickGolfScore/_quickGolfScoreCommon.js%]
-[%INCLUDE app/QuickGolfScore/_quickGolfScoreWeb.js%]
-[%INCLUDE app/Golfer/_golferCommon.js%]
-[%INCLUDE app/Golfer/_golferWeb.js%]
-[%INCLUDE app/About/_aboutCommon.js%]
-[%INCLUDE app/About/_aboutWeb.js%]
-[%INCLUDE app/Help/_helpCommon.js%]
-[%INCLUDE app/Help/_helpWeb.js%]
-[%INCLUDE app/Launcher/_launchCommon.js%]
-[%INCLUDE app/Launcher/_launchWeb.js%]
-[%INCLUDE app/SecurityGrants/_securityGrantsCommon.js%]
-[%INCLUDE app/SecurityGrants/_securityGrantsWeb.js%]
-[%INCLUDE app/SecurityUser/_securityUserCommon.js%]
-[%INCLUDE app/SecurityUser/_securityUserWeb.js%]
-[%INCLUDE app/ChangePassword/_changePasswordDialogCommon.js%]
-[%INCLUDE app/ChangePassword/_changePasswordDialogWeb.js%]
-[%INCLUDE app/SupportRequest/_supportRequestCommon.js%]
-[%INCLUDE app/SupportRequest/_supportRequestWeb.js%]
+
+[%FOREACH tPath = appTemplates%]
+  [%-IF  tPath.match('Web') or tPath.match('Common')-%]
+	  [%-IF tPath.match('html'); NEXT; END;-%]
+		// From: [%tPath%] 
+		[%INCLUDE $tPath%]
+	[%-END-%]
+[%-END-%]
+
+
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
 
 function bodyOnLoad() {

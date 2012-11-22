@@ -1,8 +1,8 @@
 [%- FILTER redirect('/appmobile.js') -%]
 [%- serverErrorMsg_Communication ='Sorry, there was a problem communicating with the server.' -%]
 'use strict';
-    var urlTarget = 'cgi-bin/server.pl';
-    var passwordResetUrlTarget = 'cgi-bin/pwdreset.pl';
+    var urlTarget = '../cgi-bin/server.pl';
+    var passwordResetUrlTarget = '../cgi-bin/pwdreset.pl';
     var VIEW_ID = 0;
     var PAGE_CALLS = new Array();
 
@@ -14,7 +14,8 @@
 //ClientLog.js
 [%#INCLUDE core/_clientLog.js%]
 //cache.js
-[%#INCLUDE app/Cache/_cacheCommon.js%]
+[%INCLUDE app/Cache/_cacheCommon.js%]
+[%INCLUDE app/Cache/_cacheMobile.js%]
 //loginportal.js
 [%INCLUDE app/LoginPortal/_loginPortalCommon.js%]
 [%INCLUDE app/LoginPortal/_loginPortalMobile.js%]
@@ -25,15 +26,16 @@
 [%INCLUDE app/GolfScoreSummary/_golfScoreSummaryMobile.js%]
 [%#INCLUDE app/GolfScore/_golfScoreCommon.js%]
 [%#INCLUDE app/GolfScore/_golfScoreMobile.js%]
-[%#INCLUDE app/QuickGolfScore/_quickGolfScoreCommon.js%]
-[%#INCLUDE app/QuickGolfScore/_quickGolfScoreMobile.js%]
+[%INCLUDE app/QuickGolfScore/_quickGolfScoreCommon.js%]
+[%INCLUDE app/QuickGolfScore/_quickGolfScoreMobile.js%]
 [%#INCLUDE app/Golfer/_golferCommon.js%]
 [%#INCLUDE app/Golfer/_golferMobile.js%]
 [%#INCLUDE app/About/_aboutCommon.js%]
 [%#INCLUDE app/About/_aboutMobile.js%]
 [%#INCLUDE app/Help/_helpCommon.js%]
 [%#INCLUDE app/Help/_helpMobile.js%]
-[%#INCLUDE app/Launcher/_launchCommon.js%]
+[%INCLUDE app/Launcher/_launchCommon.js%]
+[%INCLUDE app/Launcher/_launchMobile.js%]
 [%#INCLUDE app/Launcher/_launchMobile.js%]
 [%#INCLUDE app/SecurityGrants/_securityGrantsCommon.js%]
 [%#INCLUDE app/SecurityGrants/_securityGrantsMobile.js%]

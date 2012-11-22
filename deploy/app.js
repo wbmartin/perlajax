@@ -492,8 +492,321 @@ function showClientLogViewer() {
   currentContentPane = 'clientLogViewer';
 }
 
-//cache.js
-var GOLFER_CACHE;
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityUser/_securityUserCommon.js
+
+
+
+
+
+
+
+
+
+
+
+//Server Calls
+function retrieveSecurityUserList() {
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+        true,
+        'retrieveSecurityUserList')) {
+           return false;
+      }
+
+  var params = prepParams(params, 'security_user' , 'select');
+  var successf = function(rslt) {
+    if (rslt[SERVER_SIDE_FAIL]) {
+      briefNotify(
+          'There was a problem retrieving the User Listing',
+          'ERROR'
+          );
+    }else {
+      populateSecurityUserListTable(rslt.rows);
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+function retrieveSecurityUser(params) {
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+        true,
+        'retrieveSecurityUser')) {
+           return false;
+        }
+
+  params = prepParams(params, 'security_user', 'SELECT');
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      bindToForm('securityUserForm', rslt.rows[0]);
+      $('#securityUserForm-edit_user_id').val(rslt.rows[0].user_id);
+      if (rslt.rows[0].active_yn == 'Y') {
+        document.getElementById('securityUserForm-active_yn').checked = true;
+      }else {
+        document.getElementById('securityUserForm-active_yn').checked = false;
+      }
+      toggleSaveMode('securityUserForm', true);
+      showPasswordFields(false);
+    }else {
+      briefNotify(
+          'There was a problem retrieving the User.',
+          'ERROR'
+          );
+    }
+  };
+  serverCall(params, successf, FAILF);
+}
+
+
+
+function deleteSecurityUser(securityUserId_, lastUpdate_) {
+  if (!isUserAuthorized('DELETE_SECURITY_USER',
+        true,
+        'deleteSecurityUser')) {
+           return false;
+        }
+
+  var params = prepParams(params, 'security_user' , 'delete');
+  params['security_user_id'] = securityUserId_;
+  params['last_update'] = lastUpdate_;
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      removeSecurityUserListTableRow(rslt.security_user_id);
+      briefNotify('User Deleted Successfully', 'INFO');
+    }else {
+      briefNotify('There was a problem communicating with the Server.',
+          'ERROR'
+          );
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+
+function saveSecurityUser(params) {
+  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
+      !isUserAuthorized('INSERT_SECURITY_USER', false)) {
+    briefNotify('Access Violation', 'ERROR');
+    return false;
+  }
+
+  params = prepParams(params, 'security_user', insertUpdateChoose);
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+
+      clearForm('securityUserForm');
+      showPasswordFields(true);
+      if (rslt.spwfAction == 'UPDATE') {
+        replaceSecurityUserListTableRow(rslt.rows[0]);
+      }else if (rslt.spwfAction == 'INSERT') {
+        addNewSecurityUserListTableRow(rslt.rows[0]);
+      }
+      briefNotify('User Successfully Saved',
+          'INFO'
+          );
+      clearSecurityUserForm();
+
+    }else {
+      briefNotify('There was a problem communicating with the Server.',
+         'ERROR'
+         );
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+
+//ServerCall Wrappers
+function editSecurityUser(securityUserId_) {
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+        true,
+        'editSecurityUser')) {
+          return false;
+        }
+  if (isUserAuthorized('UPDATE_SECURITY_USER', false)) {
+    securityLockForm('securityUserForm', false);
+  }else {securityLockForm('securityUserForm', true);}
+
+
+
+  if (securityUserId_) {
+    var params = {'where_clause': 'security_user_id=' + securityUserId_};
+    retrieveSecurityUser(params);
+  }
+}
+
+function saveSecurityUserForm() {
+  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
+      !isUserAuthorized('INSERT_SECURITY_USER', false)) {
+    briefNotify('Access Violation: saveSecurityUserForm',
+       'ERROR'
+       );
+      return false;
+  }
+
+  if (validateSecurityUserForm()) {
+    var params = bindForm('securityUserForm');
+    if (document.getElementById('securityUserForm-active_yn').checked) {
+      params['active_yn'] = 'Y';
+    }else {
+      params['active_yn'] = 'N';
+    }
+    saveSecurityUser(params);
+  }
+}
+
+//validation
+function validateSecurityUserForm() {
+  var formName = 'securityUserForm';
+  var formValid = standardValidate(formName);
+  if (document.getElementById('securityUserForm-password_enc').value !=
+      document.getElementById('securityUserForm-password_validate').value) {
+    showDialog('Please ensure the passwords match to continue');
+    formValid = false;
+  }
+
+  return formValid;
+}
+
+//Top Level HTML Manip
+function populateSecurityUserListTable(dataRows) {
+  var dataArray = new Array();
+  if (dataRows != null)
+    for (var ndx = 0; ndx < dataRows.length; ndx++) {
+      dataArray[ndx] = buildSecurityUserListTableRow(dataRows[ndx]);
+    }
+  $('#securityUserListTable').dataTable().fnClearTable();
+  $('#securityUserListTable').dataTable().fnAddData(dataArray, true);
+}
+
+function buildSecurityUserListTableRow(data) {
+  var dataHash = {};
+  var links = '';
+  dataHash['user_id'] = data.user_id;
+  if (isUserAuthorized('UPDATE_SECURITY_USER', false)) {
+    links += '<a class = "alink" onclick = "editSecurityUser(';
+     links += data.security_user_id + ')">Edit</a> ';
+    links += ' &nbsp; &nbsp;';
+  }else if (isUserAuthorized('SELECT_SECURITY_USER', false)) {
+    links += '<a class = "alink" onclick = "editSecurityUser(';
+     links += data.security_user_id + ')">View</a> ';
+    links += ' &nbsp; &nbsp;';
+
+  }
+  if (isUserAuthorized('DELETE_SECURITY_USER', false)) {
+    links += '<a class = "alink" onclick = "deleteSecurityUser(';
+    links += data.security_user_id + ', \'' + data.last_update;
+    links += '\')">Delete</a>';
+  }
+  dataHash['links'] = links;
+  dataHash['DT_RowId'] = 'SecurityUserListTableTR-' + data.security_user_id;
+
+  return dataHash;
+}
+
+function replaceSecurityUserListTableRow(row) {
+  $('#securityUserListTable').dataTable().fnUpdate(
+      buildSecurityUserListTableRow(row),
+      $('#SecurityUserListTableTR-' + row.security_user_id)[0]
+      );
+}
+function addNewSecurityUserListTableRow(row) {
+  $('#securityUserListTable').dataTable().fnAddData(
+      buildSecurityUserListTableRow(row)
+      );
+}
+function removeSecurityUserListTableRow(securityUserId_) {
+  $('#securityUserListTable').dataTable().fnDeleteRow(
+      $('#SecurityUserListTableTR-' + securityUserId_)[0]
+      );
+}
+
+//Div Access and App Layout Calls
+function showSecurityUser() {
+  statusMsg('Navigated to Security Users');
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+       true,
+       'showSecurityUser')) {
+         return false;
+       }
+
+  retrieveSecurityUserList();
+  hideCurrentContentPane();
+  $('#securityUser').fadeIn();
+  currentContentPane = 'securityUser';
+  if (isFormEmpty('securityUserForm')) {
+    toggleSaveMode('securityUserForm', false);
+  }
+  showPasswordFields(true);
+}
+function clearSecurityUserForm() {
+  clearForm('securityUserForm');
+  showPasswordFields(true);
+  (isUserAuthorized('INSERT_SECURITY_USER', false)) ?
+    securityLockForm('securityUserForm', false) :
+      securityLockForm('securityUserForm', true);
+
+}
+
+
+//After complete Load setup
+$(document).ready(function() {
+    $('#securityUserListTable').dataTable({
+      'aoColumns': [
+       {'mData': 'user_id' },
+       {'mData': 'links', asSorting: 'none' }
+      ],
+      'sPaginationType': 'two_button'
+      }
+      );
+
+    });
+
+//page specific functions
+
+function showPasswordFields(show) {
+  if (show) {
+    $('#securityUserForm-password_encDivId').fadeIn();
+    $('#securityUserForm-password_validateDivId').fadeIn();
+  }else {
+    $('#securityUserForm-password_encDivId').fadeOut();
+    $('#securityUserForm-password_validateDivId').fadeOut();
+  }
+}
+function initiateChangePassword() {
+  showChangePasswordDialog($('#securityUserForm-edit_user_id').val());
+}
+
+function imposeSecurityUserSecurityUIRestrictions() {
+  var divIdToSecure;
+  divIdToSecure = '#securityUserFormSave';
+  (isUserAuthorized('UPDATE_SECURITY_USER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#securityUserFormAdd';
+  (isUserAuthorized('INSERT_SECURITY_USER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#securityUserEntryDivId';
+  (isUserAuthorized('UPDATE_SECURITY_USER', false) ||
+   isUserAuthorized('INSERT_SECURITY_USER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  if (!isUserAuthorized('INSERT_SECURITY_USER', false) &&
+      !isUserAuthorized('UPDATE_SECURITY_USER', false)) {
+    securityLockForm('securityUserForm', true);
+  }
+  divIdToSecure = '#securityUserChangeOthersPassword';
+  (isUserAuthorized('CHANGE_OTHERS_PWD', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  if (!isUserAuthorized('INSERT_SECURITY_USER', false) &&
+      isFormEmpty('securityUserForm')) {
+    securityLockForm('securityUserForm', true);
+  }
+}
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityUser/_securityUserWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Cache/_cacheCommon.js
+    var GOLFER_CACHE;
 var SECURITY_PROFILE_CACHE;
 var SECURITY_GRANT;
 function onRefreshCache(data) {
@@ -509,22 +822,9 @@ function onRefreshCache(data) {
       SECURITY_GRANT.push(data[i].lbl);
     }
   }
-
-  setSelectOptions('#quickGolfScoreForm select[name=golfer_id]',
-                    GOLFER_CACHE
-                  );
-  setSelectOptions('#securityUserForm select[name=securityProfileId]',
-                     SECURITY_PROFILE_CACHE
-                  );
-
-  imposeGolferSecurityUIRestrictions();
-  imposeGolfScoreSecurityUIRestrictions();
-  imposeLauncherSecurityUIRestrictions();
-  imposeGolfScoreSummarySecurityUIRestrictions();
-  imposeSecurityUserSecurityUIRestrictions();
-  imposeSecurityGrantsSecurityUIRestrictions();
-  imposeQuickGolfScoreSecurityUIRestrictions();
-}
+  populateAppSelectOptions;
+  imposeApplicationSecurityRestrictions;
+  }
 
 
 
@@ -537,217 +837,42 @@ function retrieveCache() {
 }
 
 
-
-//loginportal.js
-//Begin LoginPortal
-
-
-
-function loginCall(action) {
-  var params = bindForm('LoginPortalForm');
-
-    params['spwfResource'] = 'security_user';
-  params['spwfAction'] = action;
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      var r = rslt.rows[0];
-      if (r.session_id == '') {
-        showDialog('Sorry, I Couldn\'t validate those Credentials');
-        $('#password').val('');
-      } else {
-        statusMsg('Successfully Authenticated User : ' + r.user_id);
-        usrSessionId = r.session_id;
-        usrLoginId = r.user_id;
-        onSuccessfulLogin();
-        if (rslt.spwfAction == 'ONE_TIME') {
-          var msg = 'You just completed a one time logon. ';
-          msg += 'You password has not been changed, ';
-          msg += 'please change your password for your next visit ';
-          msg += 'if you have forgotten it. ';
-          showDialog(msg);
-        }
-      }
-    } else {
-      briefNotify(
-          'There was a problem communicating with the Server.',
-          'ERROR'
-          );
-    }
-
-  };
-  if (validateLoginPortalForm())serverCall(params, successf, FAILF);
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Cache/_cacheWeb.js
+    function populateAppSelectOptions() {
+  setSelectOptions('#quickGolfScoreForm select[name=golfer_id]',
+                    GOLFER_CACHE
+                  );
+  setSelectOptions('#securityUserForm select[name=securityProfileId]',
+                     SECURITY_PROFILE_CACHE
+                  );
 }
 
-
-
-
-
-function logOutUser() {
-  usrSessionId = '';
-  usrLoginId = '';
-  $('#LoginPortalForm-user_id').val('');
-  $('#LoginPortalForm-password').val('');
-  displayMainLayout(false);
-  $('#topMenuBar').hide();
-  hideMainContent();
-  return;
-}
-
-
-$(document).ready(function() {
-  $('#LoginPortalForm-user_id').val('golfscore');
-  $('#LoginPortalForm-password').val('golfscore');
-});
-
-function showLoginPortal() {
-  $(document).keypress(function(e) {
-    if (e.keyCode == 13) {//enter
-      loginCall('authenticate');
-    }
-  });
+function imposeApplicationSecurityRestrictions() {
+  imposeGolferSecurityUIRestrictions();
+  imposeGolfScoreSecurityUIRestrictions();
+  imposeLauncherSecurityUIRestrictions();
+  imposeGolfScoreSummarySecurityUIRestrictions();
+  imposeSecurityUserSecurityUIRestrictions();
+  imposeSecurityGrantsSecurityUIRestrictions();
+  imposeQuickGolfScoreSecurityUIRestrictions();
 
 }
-function initPasswordReset() {
-  var params = {};
-  params['user_id'] = $('#LoginPortalForm-user_id').val();
-  if (params['user_id'] == null || params['user_id'] == '') {
-    showDialog('Please enter your User Id to initiate your password reset.');
-    return false;
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Help/_helpWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Help/_helpCommon.js
+
+
+  function showHelpPane() {
+    statusMsg('Navigated to Help Portal');
+    hideCurrentContentPane();
+    $('#helpPane').fadeIn();
+    currentContentPane = 'helpPane';
+    return 'helpPane';
   }
-  var successCallback = function(rslt) {
-    if (rslt.success == 'true') {
-      var msg = 'Your password reset is in process.  Do not close this page,';
-      msg += 'but check your email for the code to enter to gain one-time ';
-      msg += 'access in order to change your password.';
-      showDialog(msg);
-    }
-    prepForOneTimeEntry();
-
-  };
-  $.ajax({type: 'POST',
-    url: passwordResetUrlTarget,
-    dataType: 'json',
-    data: params,
-    success: successCallback,
-    error: FAILF
-  });
-}
-
-function initForgottenUserName() {
-  var msg = 'Please Enter your email address below.  ';
-  msg += 'Instructions will be mailed to this address.  ';
-  msg += '<br/><input type="text"';
-  msg += ' style="width: 400px;" size="90" id="forgottenUserIdEmail"/><br/> ';
-  showDialog(
-      msg, '300', '600', true,
-      {'Ok': function() {
-                          if ($('#forgottenUserIdEmail').val() != '') {
-                            emailUserName();
-                            $(this).dialog('close');
-                          }
-                        },
-    'Cancel': function() {
-      $(this).dialog('close');
-    }
-      }, 'Email User Name...');
-
-}
-//
-function emailUserName() {
-  var params = {};
-  params['email_addr'] = $('#forgottenUserIdEmail').val();
-  var successCallback = function(rslt) {
-    if (rslt.success == 'true') {
-      var msg = 'Your username has been mailed to your email address. ';
-      msg += 'Do not close this page, but check your email for the username ';
-      msg += ' and reset code to enter to gain one-time access. ';
-      msg += ' You can change your password when you log in if desired';
-      showDialog(msg);
-    }
-    prepForOneTimeEntry();
-  };
-  $.ajax({type: 'POST',
-    url: passwordResetUrlTarget,
-    dataType: 'json',
-    data: params,
-    success: successCallback,
-    error: FAILF
-  });
-}
-
-function prepForOneTimeEntry() {
-  $('#LoginPortalForm-password_reset_codeDivId').show();
-  $('#LoginPortalForm-passwordDivId').hide();
-  $('#LoginPortalForm-password').val('');
-  $('#cmdlogin').hide();
-  $('#cmdOneTimelogin').show();
-
-}
-
-function onetimeLogin() {
-  var params = {};
-  params['user_id'] = $('#LoginPortalForm-user_id').val();
-  params['password_reset_code'] =
-    $('#LoginPortalForm-password_reset_code').val();
-  if (params['user_id'] == null ||
-      params['user_id'] == '' ||
-      params['password_reset_code'] == null ||
-      params['password_reset_code'] == '') {
-        var msg = 'Please enter your User Id and Password';
-        msg += 'Reset Code to initiate your password reset.';
-        showDialog(msg);
-        return false;
-      }
-  var successCallback = function(rslt) {
-    if (rslt.success == 'true') {
-      var msg = 'Your password reset is in process.  ';
-      mst += 'Do not close this page, but check your email ';
-      msg += 'for the code to enter to gain one-time access ';
-      msg += 'in order to change your password.';
-      showDialog(msg);
-    }
-    $('#LoginPortalForm-password_reset_codeDivId').show();
-    $('#cmdlogin').hide();
-    $('#cmdOneTimelogin').show();
-
-  };
-  $.ajax({type: 'POST', url: passwordResetUrlTarget,
-    dataType: 'json', data: params,
-    success: successCallback, error: FAILF
-  });
-}
 
 
-
-
-
-
-
-
-function onSuccessfulLogin() {
-  $('#password').val('');
-  displayMainLayout(true);
-  $('#topMenuBar').show();
-  registerAction();
-  timeoutIfNoAction();
-  changePage(function() {showLaunchPane()});
-  retrieveCache();
-}
-
-$(document).ready(function() {
-  changePage(function() {showLoginPortal()});
-});
-
-function validateLoginPortalForm() {
-  var formValid = standardValidate('LoginPortalForm');
-  return formValid;
-}
-
-
-
-
-//LayoutComponents.js
-function sizeLeftNav() {
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/LayoutComponents/_layoutComponentsCommon.js
+    function sizeLeftNav() {
 
 
     document.getElementById('mainContent').style.top =
@@ -799,8 +924,8 @@ function briefNotify(msg, type) {
   statusMsg(msg);
 }
 
-
-function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/LayoutComponents/_layoutComponentsWeb.js
+    function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
   $('#genericDialogDivId').dialog('destroy');
   msg_ = msg_ || 'No message Defined';
   height_ = height_ || 300;
@@ -827,108 +952,380 @@ function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
 
 }
 
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Launcher/_launchWeb.js
 
 
-
-
-
-
-
-
-
-
-function retrieveGolfScoreSummaryList() {
-    if (!isUserAuthorized('SELECT_GOLFER_HANDICAP')) {
-      briefNotify('Access Violation', 'ERROR');
-      return false;
+function showLaunchPane() {
+  statusMsg('Navigated to Main Portal');
+  hideCurrentContentPane();
+  $('#launchPane').fadeIn();
+  currentContentPane = 'launchPane';
+  $(document).keypress(function(e) {
+    switch (e.which) {
+      case 103 : showSecurityGrants(); break;
+      case 113 : showQuickGolfScore(); break;
+      case 112 : showSecurityUser(); break;
     }
+  });
+  return 'launchPane';
+}
 
-    var params = prepParams(params, 'golf_score_summary' , 'select');
+function imposeLauncherSecurityUIRestrictions() {
+  var divIdToSecure;
+  divIdToSecure = '#launcherShowSecurityUserSpanId';
+  (isUserAuthorized('SELECT_SECURITY_USER')) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#launcherShowViewAveragesSpanId';
+  (isUserAuthorized('SELECT_GOLFER_HANDICAP')) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#launcherShowQuickEntrySpanId';
+  (isUserAuthorized('SELECT_GOLF_SCORE')) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#launcherShowGrantsSpanId';
+  (isUserAuthorized('SELECT_SECURITY_PROFILE')) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+  divIdToSecure = '#launcherShowGolfersSpanId';
+  (isUserAuthorized('SELECT_GOLFER')) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+}
+
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Launcher/_launchCommon.js
+
+
+
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/About/_aboutWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/About/_aboutCommon.js
+
+
+function showAboutPane() {
+  hideCurrentContentPane();
+  statusMsg('Navigated to About');
+  $('#aboutPane').fadeIn();
+  currentContentPane = 'aboutPane';
+  return 'aboutPane';
+}
+
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/QuickGolfScore/_quickGolfScoreWeb.js
+
+
+
+
+
+
+
+
+
+//After complete Load setup
+$(document).ready(function() {
+
+    $('#quickGolfScoreListTable').dataTable({
+      'aoColumns' : [
+       { 'mData': 'golfer_name' },
+       { 'mData': 'golf_score' },
+       { 'mData': 'game_dt' },
+       { 'mData': 'links', asSorting: 'none' }
+      ],
+      'sPaginationType' : 'two_button'
+      }
+       );
+});
+
+//validation
+function validateQuickGolfScoreForm() {
+  var formName = 'quickGolfScoreForm';
+  var formValid = standardValidate(formName);
+  return formValid;
+}
+
+
+//Top Level HTML Manip
+function populateQuickGolfScoreListTable(dataRows) {
+  var dataArray = new Array();
+  for (var ndx = 0; ndx < dataRows.length; ndx++) {
+    dataArray[ndx] = buildQuickGolfScoreListTableRow(dataRows[ndx]);
+  }
+  $('#quickGolfScoreListTable').dataTable().fnClearTable();
+  $('#quickGolfScoreListTable').dataTable().fnAddData(dataArray, true);
+}
+
+function buildQuickGolfScoreListTableRow(data) {
+  var dataHash = {};
+  var links = '';
+  dataHash['golfer_name'] = GOLFER_CACHE[data.golfer_id];
+  dataHash['golf_score'] = formatNumber(data.golf_score, 0, true, false, true);
+  dataHash['game_dt'] = pgDate(data.game_dt);
+  if (isUserAuthorized('UPDATE_GOLF_SCORE', false)) {
+    links += '  <a class="alink" onclick="editQuickGolfScore(';
+    links += data.golf_score_id + ')">Edit</a> ';
+    links += ' &nbsp; &nbsp ';
+  }else if (isUserAuthorized('SELECT_GOLF_SCORE', false)) {
+    links += '<a class="alink" onclick="editQuickGolfScore(';
+    links += data.golf_score_id + ')">View</a> ';
+    links += ' &nbsp; &nbsp;';
+
+  }
+
+  if (isUserAuthorized('DELETE_GOLF_SCORE', false)) {
+    links += '<a class="alink" onclick="deleteQuickGolfScore(';
+    links += data.golf_score_id + ', \'' + data.last_update;
+    links += '\')">Delete</a>  ';
+  }
+    dataHash['links'] = links;
+  dataHash['DT_RowId'] = 'QuickGolfScoreListTableTR-' + data.golf_score_id;
+
+  return dataHash;
+}
+
+function replaceQuickGolfScoreListTableRow(row) {
+  $('#quickGolfScoreListTable').dataTable().fnUpdate(
+      buildQuickGolfScoreListTableRow(row),
+      $('#QuickGolfScoreListTableTR-' + row.golf_score_id)[0]
+      );
+}
+function addNewQuickGolfScoreListTableRow(row) {
+  $('#quickGolfScoreListTable').dataTable().fnAddData(
+      buildQuickGolfScoreListTableRow(row)
+      );
+}
+function removeQuickGolfScoreListTableRow(golfScoreId_) {
+  $('#quickGolfScoreListTable').dataTable().fnDeleteRow(
+      $('#QuickGolfScoreListTableTR-' + golfScoreId_)[0]
+      );
+}
+
+//Div Access and App Layout Calls
+function showQuickGolfScore() {
+  statusMsg('Navigated to Quick Golf Score Entry');
+  retrieveQuickGolfScoreList();
+  hideCurrentContentPane();
+  $('#quickGolfScore').fadeIn();
+  currentContentPane = 'quickGolfScore';
+  if (isFormEmpty('quickGolfScoreForm')) {
+     toggleSaveMode('quickGolfScoreForm', false);
+  }
+
+}
+
+function imposeQuickGolfScoreSecurityUIRestrictions() {
+  var divIdToSecure;
+  divIdToSecure = '#quickGolfScoreFormSave';
+  (isUserAuthorized('UPDATE_GOLF_SCORE', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#quickGolfScoreFormAdd';
+  (isUserAuthorized('INSERT_GOLF_SCORE', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#quickGolfScoreEntryDivId';
+  (isUserAuthorized('UPDATE_GOLF_SCORE', false) ||
+   isUserAuthorized('INSERT_GOLF_SCORE', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  if (!isUserAuthorized('INSERT_GOLF_SCORE', false) &&
+      !isUserAuthorized('UPDATE_GOLF_SCORE', false)) {
+    securityLockForm('quickGolfScoreForm', true);
+
+  }
+  if (!isUserAuthorized('INSERT_GOLF_SCORE', false) &&
+      isFormEmpty('quickGolfScoreForm')) {
+    securityLockForm('quickGolfScoreForm', true);
+  }
+
+}
+
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/QuickGolfScore/_quickGolfScoreCommon.js
+
+
+
+
+
+
+
+
+
+
+//Server Calls
+function retrieveQuickGolfScoreList() {
+  if (!isUserAuthorized(
+        'SELECT_GOLF_SCORE',
+        true,
+        'retrieveQuickGolfScoreList')) {
+           return false;
+        }
+
+  var params = prepParams(params, 'golf_score' , 'select');
+  params['orderby_clause'] = ' order by game_dt desc';
     var successf = function(rslt) {
       if (!rslt[SERVER_SIDE_FAIL]) {
-        populateGolfScoreSummaryListTable(rslt.rows);
+        populateQuickGolfScoreListTable(rslt.rows);
       }else {
         briefNotify(
             'There was a problem communicating with the Server.',
-            'ERROR');
+            'ERROR'
+            );
       }
-
     };
-    var failf = function() {alert('failed');};
-    serverCall(params, successf, failf);
+  serverCall(params, successf, FAILF);
+}
+function retrieveQuickGolfScore(params) {
+  if (!isUserAuthorized(
+        'SELECT_GOLF_SCORE',
+        true,
+        'retrieveQuickGolfScore')) {
+          return false;
+        }
 
+  params = prepParams(params, 'golf_score', 'SELECT');
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+      bindToForm('quickGolfScoreForm', rslt.rows[0]);
+      toggleSaveMode('quickGolfScoreForm', true);
+    }else {
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+
+
+
+function deleteQuickGolfScore(golfScoreId_, lastUpdate_) {
+  if (!isUserAuthorized(
+        'DELETE_GOLF_SCORE',
+        true,
+        'deleteQuickGolfScore')) {
+     return false;
+}
+  var params = prepParams(params, 'golf_score' , 'delete');
+  params['golf_score_id'] = golfScoreId_;
+  params['last_update'] = lastUpdate_;
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      removeQuickGolfScoreListTableRow(rslt.golf_score_id);
+      briefNotify('Golf Score Deleted Successfully', 'INFO');
+    } else {
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+
+function saveQuickGolfScore(params) {
+  if (!isUserAuthorized('UPDATE_GOLF_SCORE', false) &&
+      !isUserAuthorized('INSERT_GOLF_SCORE', false)) {
+    briefNotify(
+        'Access Violation : saveQuickGolfScore ',
+        'ERROR'
+        );
+    return false;
   }
 
-function showGolfScoreSummary() {
-  statusMsg('Navigated to Golf Score Summary View');
-  retrieveGolfScoreSummaryList();
-  standardShowContentPane('golfScoreSummary');
+  params = prepParams(params, 'golf_score', insertUpdateChoose);
+  var successf = function(rslt) {
+    clearForm('quickGolfScoreForm');
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      if (rslt.spwfAction == 'UPDATE') {
+        replaceQuickGolfScoreListTableRow(rslt.rows[0]);
+      }else if (rslt.spwfAction == 'INSERT') {
+        addNewQuickGolfScoreListTableRow(rslt.rows[0]);
+      }
+      briefNotify('Golf Score Successfully Saved', 'INFO');
+      clearQuickGolfScoreForm();
+
+    }
+    else {
+      briefNotify('Golf Score Saved Failed', 'ERROR');
+
+    }
+  };
+  serverCall(params, successf, FAILF);
 }
 
-function imposeGolfScoreSummarySecurityUIRestrictions() {
+//ServerCall Wrappers
+function editQuickGolfScore(quickGolfScoreId_) {
+  if (!isUserAuthorized(
+        'SELECT_GOLF_SCORE',
+        true,
+        'editQuickGolfScore')) {
+           return false;
+        }
+  if (isUserAuthorized('UPDATE_GOLF_SCORE', false)) {
+    securityLockForm('quickGolfScoreForm', false);
+  }else {securityLockForm('quickGolfScoreForm', true);}
 
+
+  if (quickGolfScoreId_) {
+    var params = {'where_clause' : 'golf_score_id=' + quickGolfScoreId_};
+    retrieveQuickGolfScore(params);
+  }
+}
+
+function saveQuickGolfScoreForm() {
+  if (!isUserAuthorized('UPDATE_GOLF_SCORE') &&
+      !isUserAuthorized('SELECT_GOLF_SCORE')) {
+    briefNotify('Access Violation : save', 'ERROR');
+    return false;
+  }
+
+  if (validateQuickGolfScoreForm()) {
+    var params = bindForm('quickGolfScoreForm');
+    saveQuickGolfScore(params);
+  }
 }
 
 
 
+function clearQuickGolfScoreForm() {
+  clearForm('quickGolfScoreForm');
+  (isUserAuthorized('INSERT_GOLF_SCORE', false)) ?
+    securityLockForm('quickGolfScoreForm', false) :
+    securityLockForm('quickGolfScoreForm', true);
+}
 
 
-
-
-
-
-
-
-
-
+//After complete Load setup
 $(document).ready(function() {
-    $('#golfScoreSummaryListTable').dataTable(
-       {
-      'aoColumns' : [
-       {'mData': 'golfer_name' },
-       {'mData': 'handicap' },
-       {'mData': 'date_range' },
-       {'mData': 'links', asSorting: 'none' }
-      ],
-      'sPaginationType': 'two_button'
-      });
+    $('#quickGolfScoreForm-game_dt').datepicker();
+
     });
 
+//page specific functions
+function retrieveGolferNameForGolfScore(golferId_) {
+  if (!isUserAuthorized(
+        'SELECT_GOLF_SCORE',
+        true,
+        'retrieveGolferNameForGolfScore')) {
+          return false;
+        }
 
-function populateGolfScoreSummaryListTable(dataRows) {
-  var dataArray = new Array();
-  for (var ndx = 0; ndx < dataRows.length; ndx++) {
-    dataArray[ndx] = buildGolfScoreSummaryListTableRow(dataRows[ndx]);
-  }
-  $('#golfScoreSummaryListTable').dataTable().fnClearTable();
-  $('#golfScoreSummaryListTable').dataTable().fnAddData(dataArray, true);
-
-}
-
-function buildGolfScoreSummaryListTableRow(gs) {
-  var dataHash = {};
-  var links = '';
-  dataHash['golfer_name'] = gs.golfer_name;
-  dataHash['handicap'] = formatNumber(gs.golf_score, 2, true, false, true);
-  dataHash['date_range'] = pgDate(gs.first_date) + ' - ' + pgDate(gs.last_date);
-
-  if (isUserAuthorized('SELECT_GOLF_SCORE')) {
-    links += '<a class="alink" onclick="changePage(function() {showGolfScore(';
-     links += gs.golfer_id + ')})">View Scores</a>  ';
-    links += '&nbsp; &nbsp;';
-  }
-  if (isUserAuthorized('SELECT_GOLFER')) {
-    links += ' <a href="" onclick="changePage(function() {showGolfer(';
-     links += gs.golfer_id + ')})">View Golfer</a>';
-  }
-  dataHash['links'] = links;
-  //dataHash["DT_RowId"] = "GolfScoreSummaryListTableTR-" + data.;
-
-  return dataHash;
-
+  var params = prepParams(params, 'GOLFER', 'SELECT');
+  params['where_clause'] = 'golfer_id =' + golferId_;
+  var successf = function(rslt) {
+    $('#quickGolfScoreGolferNameId').html(rslt.rows[0].name);
+  };
+  serverCall(params, successf, FAILF);
 }
 
 
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScore/_golfScoreWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScore/_golfScoreCommon.js
 
 
 
@@ -1222,655 +1619,7 @@ function imposeGolfScoreSecurityUIRestrictions() {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-//Server Calls
-function retrieveQuickGolfScoreList() {
-  if (!isUserAuthorized(
-        'SELECT_GOLF_SCORE',
-        true,
-        'retrieveQuickGolfScoreList')) {
-           return false;
-        }
-
-  var params = prepParams(params, 'golf_score' , 'select');
-  params['orderby_clause'] = ' order by game_dt desc';
-    var successf = function(rslt) {
-      if (!rslt[SERVER_SIDE_FAIL]) {
-        populateQuickGolfScoreListTable(rslt.rows);
-      }else {
-        briefNotify(
-            'There was a problem communicating with the Server.',
-            'ERROR'
-            );
-      }
-    };
-  serverCall(params, successf, FAILF);
-}
-function retrieveQuickGolfScore(params) {
-  if (!isUserAuthorized(
-        'SELECT_GOLF_SCORE',
-        true,
-        'retrieveQuickGolfScore')) {
-          return false;
-        }
-
-  params = prepParams(params, 'golf_score', 'SELECT');
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-      bindToForm('quickGolfScoreForm', rslt.rows[0]);
-      toggleSaveMode('quickGolfScoreForm', true);
-    }else {
-      briefNotify(
-          'There was a problem communicating with the Server.',
-          'ERROR'
-          );
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-
-
-
-function deleteQuickGolfScore(golfScoreId_, lastUpdate_) {
-  if (!isUserAuthorized(
-        'DELETE_GOLF_SCORE',
-        true,
-        'deleteQuickGolfScore')) {
-     return false;
-}
-
-
-  var params = prepParams(params, 'golf_score' , 'delete');
-  params['golf_score_id'] = golfScoreId_;
-  params['last_update'] = lastUpdate_;
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      removeQuickGolfScoreListTableRow(rslt.golf_score_id);
-      briefNotify('Golf Score Deleted Successfully', 'INFO');
-    } else {
-      briefNotify(
-          'There was a problem communicating with the Server.',
-          'ERROR'
-          );
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-
-function saveQuickGolfScore(params) {
-  if (!isUserAuthorized('UPDATE_GOLF_SCORE', false) &&
-      !isUserAuthorized('INSERT_GOLF_SCORE', false)) {
-    briefNotify(
-        'Access Violation : saveQuickGolfScore ',
-        'ERROR'
-        );
-    return false;
-  }
-
-  params = prepParams(params, 'golf_score', insertUpdateChoose);
-  var successf = function(rslt) {
-    clearForm('quickGolfScoreForm');
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      if (rslt.spwfAction == 'UPDATE') {
-        replaceQuickGolfScoreListTableRow(rslt.rows[0]);
-      }else if (rslt.spwfAction == 'INSERT') {
-        addNewQuickGolfScoreListTableRow(rslt.rows[0]);
-      }
-      briefNotify('Golf Score Successfully Saved', 'INFO');
-      clearQuickGolfScoreForm();
-
-    }
-    else {
-      briefNotify('Golf Score Saved Failed', 'ERROR');
-
-    }
-  };
-  serverCall(params, successf, FAILF);
-}
-
-//ServerCall Wrappers
-function editQuickGolfScore(quickGolfScoreId_) {
-  if (!isUserAuthorized(
-        'SELECT_GOLF_SCORE',
-        true,
-        'editQuickGolfScore')) {
-           return false;
-        }
-  if (isUserAuthorized('UPDATE_GOLF_SCORE', false)) {
-    securityLockForm('quickGolfScoreForm', false);
-  }else {securityLockForm('quickGolfScoreForm', true);}
-
-
-  if (quickGolfScoreId_) {
-    var params = {'where_clause' : 'golf_score_id=' + quickGolfScoreId_};
-    retrieveQuickGolfScore(params);
-  }
-}
-
-function saveQuickGolfScoreForm() {
-  if (!isUserAuthorized('UPDATE_GOLF_SCORE') &&
-      !isUserAuthorized('SELECT_GOLF_SCORE')) {
-    briefNotify('Access Violation : save', 'ERROR');
-    return false;
-  }
-
-  if (validateQuickGolfScoreForm()) {
-    var params = bindForm('quickGolfScoreForm');
-    saveQuickGolfScore(params);
-  }
-}
-
-//validation
-function validateQuickGolfScoreForm() {
-  var formName = 'quickGolfScoreForm';
-  var formValid = standardValidate(formName);
-  return formValid;
-}
-
-//Top Level HTML Manip
-function populateQuickGolfScoreListTable(dataRows) {
-  var dataArray = new Array();
-  for (var ndx = 0; ndx < dataRows.length; ndx++) {
-    dataArray[ndx] = buildQuickGolfScoreListTableRow(dataRows[ndx]);
-  }
-  $('#quickGolfScoreListTable').dataTable().fnClearTable();
-  $('#quickGolfScoreListTable').dataTable().fnAddData(dataArray, true);
-}
-
-function buildQuickGolfScoreListTableRow(data) {
-  var dataHash = {};
-  var links = '';
-  dataHash['golfer_name'] = GOLFER_CACHE[data.golfer_id];
-  dataHash['golf_score'] = formatNumber(data.golf_score, 0, true, false, true);
-  dataHash['game_dt'] = pgDate(data.game_dt);
-  if (isUserAuthorized('UPDATE_GOLF_SCORE', false)) {
-    links += '  <a class="alink" onclick="editQuickGolfScore(';
-    links += data.golf_score_id + ')">Edit</a> ';
-    links += ' &nbsp; &nbsp ';
-  }else if (isUserAuthorized('SELECT_GOLF_SCORE', false)) {
-    links += '<a class="alink" onclick="editQuickGolfScore(';
-    links += data.golf_score_id + ')">View</a> ';
-    links += ' &nbsp; &nbsp;';
-
-  }
-
-  if (isUserAuthorized('DELETE_GOLF_SCORE', false)) {
-    links += '<a class="alink" onclick="deleteQuickGolfScore(';
-    links += data.golf_score_id + ', \'' + data.last_update;
-    links += '\')">Delete</a>  ';
-  }
-    dataHash['links'] = links;
-  dataHash['DT_RowId'] = 'QuickGolfScoreListTableTR-' + data.golf_score_id;
-
-  return dataHash;
-}
-
-function replaceQuickGolfScoreListTableRow(row) {
-  $('#quickGolfScoreListTable').dataTable().fnUpdate(
-      buildQuickGolfScoreListTableRow(row),
-      $('#QuickGolfScoreListTableTR-' + row.golf_score_id)[0]
-      );
-}
-function addNewQuickGolfScoreListTableRow(row) {
-  $('#quickGolfScoreListTable').dataTable().fnAddData(
-      buildQuickGolfScoreListTableRow(row)
-      );
-}
-function removeQuickGolfScoreListTableRow(golfScoreId_) {
-  $('#quickGolfScoreListTable').dataTable().fnDeleteRow(
-      $('#QuickGolfScoreListTableTR-' + golfScoreId_)[0]
-      );
-}
-
-//Div Access and App Layout Calls
-function showQuickGolfScore() {
-  statusMsg('Navigated to Quick Golf Score Entry');
-  retrieveQuickGolfScoreList();
-  hideCurrentContentPane();
-  $('#quickGolfScore').fadeIn();
-  currentContentPane = 'quickGolfScore';
-  if (isFormEmpty('quickGolfScoreForm')) {
-     toggleSaveMode('quickGolfScoreForm', false);
-  }
-
-}
-
-function clearQuickGolfScoreForm() {
-  clearForm('quickGolfScoreForm');
-  (isUserAuthorized('INSERT_GOLF_SCORE', false)) ?
-    securityLockForm('quickGolfScoreForm', false) :
-    securityLockForm('quickGolfScoreForm', true);
-}
-
-
-//After complete Load setup
-$(document).ready(function() {
-    $('#quickGolfScoreForm-game_dt').datepicker();
-
-    $('#quickGolfScoreListTable').dataTable({
-      'aoColumns' : [
-       { 'mData': 'golfer_name' },
-       { 'mData': 'golf_score' },
-       { 'mData': 'game_dt' },
-       { 'mData': 'links', asSorting: 'none' }
-      ],
-      'sPaginationType' : 'two_button'
-      }
-       );
-});
-
-//page specific functions
-function retrieveGolferNameForGolfScore(golferId_) {
-  if (!isUserAuthorized(
-        'SELECT_GOLF_SCORE',
-        true,
-        'retrieveGolferNameForGolfScore')) {
-          return false;
-        }
-
-  var params = prepParams(params, 'GOLFER', 'SELECT');
-  params['where_clause'] = 'golfer_id =' + golferId_;
-  var successf = function(rslt) {
-    $('#quickGolfScoreGolferNameId').html(rslt.rows[0].name);
-  };
-  serverCall(params, successf, FAILF);
-}
-function imposeQuickGolfScoreSecurityUIRestrictions() {
-  var divIdToSecure;
-  divIdToSecure = '#quickGolfScoreFormSave';
-  (isUserAuthorized('UPDATE_GOLF_SCORE', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#quickGolfScoreFormAdd';
-  (isUserAuthorized('INSERT_GOLF_SCORE', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#quickGolfScoreEntryDivId';
-  (isUserAuthorized('UPDATE_GOLF_SCORE', false) ||
-   isUserAuthorized('INSERT_GOLF_SCORE', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  if (!isUserAuthorized('INSERT_GOLF_SCORE', false) &&
-      !isUserAuthorized('UPDATE_GOLF_SCORE', false)) {
-    securityLockForm('quickGolfScoreForm', true);
-
-  }
-  if (!isUserAuthorized('INSERT_GOLF_SCORE', false) &&
-      isFormEmpty('quickGolfScoreForm')) {
-    securityLockForm('quickGolfScoreForm', true);
-  }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-//----------------------------------------------------
-
-//server calls
-
-function retrieveGolferList() {
-  if (!isUserAuthorized(
-        'SELECT_GOLFER',
-        true,
-        'retrieveGolferList')) {
-           return false;
-        }
-
-  var params = prepParams(params, 'golfer' , 'select');
-  params['orderby_clause'] = ' ';
-    var successf = function(rslt) {
-      if (!rslt[SERVER_SIDE_FAIL]) {
-        populateGolferListTable(rslt.rows);
-      }else {
-        briefNotify(
-            'There was a problem communicating with the Server.',
-            'ERROR'
-            );
-      }
-    };
-  serverCall(params, successf, FAILF);
-}
-function retrieveGolfer(params) {
-  if (!isUserAuthorized(
-        'SELECT_GOLFER',
-        true,
-        'retrieveGolfer')) {
-          return false;
-        }
-
-  params = prepParams(params, 'golfer', 'SELECT');
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
-      bindToForm('golferForm', rslt.rows[0]);
-      toggleSaveMode('golferForm', true);
-    }else {
-      briefNotify('There was a problem communicating with the Server.',
-          'ERROR'
-          );
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-
-
-
-function saveGolfer(params) {
-  if (!isUserAuthorized('UPDATE_GOLFER', false) &&
-      !isUserAuthorized('INSERT_GOLFER', false)) {
-    briefNotify('Access Violation', 'ERROR');
-    return false;
-  }
-  params = prepParams(params, 'golfer', insertUpdateChoose);
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      bindToForm('golferForm', rslt.rows[0]);
-      if (rslt.spwfAction == 'UPDATE') {
-        replaceRowGolferListTable(rslt.rows[0]);
-      }else if (rslt.spwfAction == 'INSERT') {
-        addNewRowGolferListTable(rslt.rows[0]);
-      }
-      briefNotify('Golfer Saved Successfully', 'INFO');
-      clearGolferForm();
-    }else {
-      briefNotify(
-          'There was a problem communicating with the Server.',
-          'ERROR'
-          );
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-
-
-
-function deleteGolfer(golferId_, lastUpdate_) {
-  if (!isUserAuthorized('DELETE_GOLFER', true, 'deleteGolfer'))
-    return false;
-
-  var params = prepParams(params, 'golfer' , 'delete');
-  params['golfer_id'] = golferId_;
-  params['last_update'] = lastUpdate_;
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      removeGolferListTableRow(rslt.golfer_id);
-      briefNotify('Golfer Deleted Successfully', 'INFO');
-    }else {
-      briefNotify(
-          'There was a problem communicating with the Server.',
-          'ERROR'
-          );
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-
-
-//-----------------------
-//Server Call Wrappers
-function editGolfer(rowId_) {
-  if (!isUserAuthorized('SELECT_GOLFER',
-                        true,
-                        'editGolfer'))
-    return false;
-
-  if (isUserAuthorized('UPDATE_GOLFER', false)) {
-    securityLockForm('golferForm', false);
-  }else {securityLockForm('golferForm', true);}
-
-  if (rowId_) {
-    var params = {'where_clause': 'golfer_id=' + rowId_};
-    retrieveGolfer(params);
-  }
-}
-
-function saveGolferForm() {
-  if (!isUserAuthorized('UPDATE_GOLFER', false) &&
-      !isUserAuthorized('INSERT_GOLFER', false)) {
-    briefNotify('Access Violation saveGolferForm', 'ERROR');
-    return false;
-  }
-
-  if (validateGolferForm()) {
-    var params = bindForm('golferForm');
-    saveGolfer(params);
-  }else {
-    briefNotify('Please Correct Form Validation Errors To Continue',
-                'WARNING'
-                );
-  }
-}
-
-//validation
-function validateGolferForm() {
-  var formName = 'golferForm';
-  var formValid = standardValidate(formName);
-  return formValid;
-}
-
-//----------------------------------------------------
-//html building functions
-
-function populateGolferListTable(dataRows, selectedKey_) {
-  var dataArray = new Array();
-  for (var i = 0; i < dataRows.length; i++) {
-    dataArray[i] = buildGolferListTableRow(dataRows[i]);
-    if (dataRows[i].golfer_id == selectedKey_) {
-      bindToForm('golferForm', dataRows[i]);
-      toggleSaveMode('golferForm', true);
-    }
-  }
-  $('#golferListTable').dataTable().fnClearTable();
-  $('#golferListTable').dataTable().fnAddData(dataArray, true);
-}
-
-function buildGolferListTableRow(data) {
-  var dataHash = {};
-  var htmlRow = '';
-  dataHash['name'] = data.name;
-  if (isUserAuthorized('UPDATE_GOLFER', false)) {
-    htmlRow += '<a class="editGolferLink" ';
-    htmlRow += ' onclick="editGolfer(';
-    htmlRow += data.golfer_id + ')">Edit</a>';
-    htmlRow += ' &nbsp; &nbsp; ';
-  }else if (isUserAuthorized('SELECT_GOLFER', false)) {
-    htmlRow += '<a class="alink" onclick="editGolfer(';
-    htmlRow += data.golfer_id + ')">View</a> ';
-    htmlRow += ' &nbsp; &nbsp;';
-  }
-
-  if (isUserAuthorized('DELETE_GOLFER', false)) {
-    htmlRow += '<a class="deleteGolferLink" ';
-     htmlRow += ' onclick="deleteGolfer(';
-    htmlRow += data.golfer_id + ', \'' + data.last_update;
-     htmlRow += '\')">Delete</a>';
-  }
-  dataHash['links'] = htmlRow;
-  dataHash['DT_RowId'] = 'GolferListTableTR-' + data.golfer_id;
-  return dataHash;
-}
-
-function replaceRowGolferListTable(row) {
-  $('#golferListTable').dataTable().fnUpdate(
-      buildGolferListTableRow(row),
-      $('#GolferListTableTR-' + row.golfer_id)[0]
-      );
-}
-function addNewRowGolferListTable(row) {
-  var newNdx = $('#golferListTable').dataTable().fnAddData(
-      buildGolferListTableRow(row)
-      );
-}
-function removeGolferListTableRow(golferId_) {
-  $('#golferListTable').dataTable().fnDeleteRow(
-      $('#GolferListTableTR-' + golferId_)[0]
-       );
-}
-
-function imposeGolferSecurityUIRestrictions() {
-  var divIdToSecure;
-  divIdToSecure = '#golferFormSave';
-  (isUserAuthorized('UPDATE_GOLFER', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#golferFormAdd';
-  (isUserAuthorized('INSERT_GOLFER', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#golferEntryDivId';
-  if (!isUserAuthorized('INSERT_GOLFER', false) &&
-      !isUserAuthorized('UPDATE_GOLFER', false)) {
-      securityLockForm('golferForm', true);
-  }
-  if (!isUserAuthorized('INSERT_GOLFER', false) &&
-      isFormEmpty('golferForm')) {
-      securityLockForm('golferForm', true);
-  }
-
-
-}
-
-
-//-------------------------------------------------
-//Div Access and App Layout Calls
-function showGolfer(golferId_) {
-  statusMsg('Navigated to Golfer View');
-  var params = {};
-  hideCurrentContentPane();
-  $('#golfer').fadeIn();
-  currentContentPane = 'golfer';
-  if (golferId_) {
-    params['where_clause'] = 'golfer_id=' + golferId_;
-    retrieveGolfer(params);
-  } else {
-    if (isFormEmpty('golferForm')) {
-      toggleSaveMode('golferForm', false);
-    }
-    clearForm('golferForm');
-  }
-    retrieveGolferList();
-  imposeGolferSecurityUIRestrictions();
-
-}
-
-function clearGolferForm() {
-  clearForm('golferForm');
-  (isUserAuthorized('INSERT_GOLFER', false)) ?
-    securityLockForm('golferForm', false) :
-    securityLockForm('golferForm', true);
-}
-
-
-$(document).ready(function() {
-    $('#golferListTable').dataTable({
-      'aoColumns' : [
-       { 'mData': 'name' },
-       { 'mData': 'links', asSorting: 'none' }
-      ],
-      'sPaginationType' : 'two_button'
-      }
-      );
-    });
-
-
-
-
-
-function showAboutPane() {
-  hideCurrentContentPane();
-  statusMsg('Navigated to About');
-  $('#aboutPane').fadeIn();
-  currentContentPane = 'aboutPane';
-  return 'aboutPane';
-}
-
-
-
-
-
-
-  function showHelpPane() {
-    statusMsg('Navigated to Help Portal');
-    hideCurrentContentPane();
-    $('#helpPane').fadeIn();
-    currentContentPane = 'helpPane';
-    return 'helpPane';
-  }
-
-
-
-
-
-
-function showLaunchPane() {
-  statusMsg('Navigated to Main Portal');
-  hideCurrentContentPane();
-  $('#launchPane').fadeIn();
-  currentContentPane = 'launchPane';
-  $(document).keypress(function(e) {
-    switch (e.which) {
-      case 103 : showSecurityGrants(); break;
-      case 113 : showQuickGolfScore(); break;
-      case 112 : showSecurityUser(); break;
-
-
-    }
-  });
-  return 'launchPane';
-}
-function imposeLauncherSecurityUIRestrictions() {
-  var divIdToSecure;
-  divIdToSecure = '#launcherShowSecurityUserSpanId';
-  (isUserAuthorized('SELECT_SECURITY_USER')) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#launcherShowViewAveragesSpanId';
-  (isUserAuthorized('SELECT_GOLFER_HANDICAP')) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#launcherShowQuickEntrySpanId';
-  (isUserAuthorized('SELECT_GOLF_SCORE')) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#launcherShowGrantsSpanId';
-  (isUserAuthorized('SELECT_SECURITY_PROFILE')) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-  divIdToSecure = '#launcherShowGolfersSpanId';
-  (isUserAuthorized('SELECT_GOLFER')) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-}
-
-
-
-
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityGrants/_securityGrantsCommon.js
 
 
 
@@ -2403,320 +2152,9 @@ function clearSecurityGrantsForm() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Server Calls
-function retrieveSecurityUserList() {
-  if (!isUserAuthorized('SELECT_SECURITY_USER',
-        true,
-        'retrieveSecurityUserList')) {
-           return false;
-      }
-
-  var params = prepParams(params, 'security_user' , 'select');
-  var successf = function(rslt) {
-    if (rslt[SERVER_SIDE_FAIL]) {
-      briefNotify(
-          'There was a problem retrieving the User Listing',
-          'ERROR'
-          );
-    }else {
-      populateSecurityUserListTable(rslt.rows);
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-function retrieveSecurityUser(params) {
-  if (!isUserAuthorized('SELECT_SECURITY_USER',
-        true,
-        'retrieveSecurityUser')) {
-           return false;
-        }
-
-  params = prepParams(params, 'security_user', 'SELECT');
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      bindToForm('securityUserForm', rslt.rows[0]);
-      $('#securityUserForm-edit_user_id').val(rslt.rows[0].user_id);
-      if (rslt.rows[0].active_yn == 'Y') {
-        document.getElementById('securityUserForm-active_yn').checked = true;
-      }else {
-        document.getElementById('securityUserForm-active_yn').checked = false;
-      }
-      toggleSaveMode('securityUserForm', true);
-      showPasswordFields(false);
-    }else {
-      briefNotify(
-          'There was a problem retrieving the User.',
-          'ERROR'
-          );
-    }
-  };
-  serverCall(params, successf, FAILF);
-}
-
-
-
-function deleteSecurityUser(securityUserId_, lastUpdate_) {
-  if (!isUserAuthorized('DELETE_SECURITY_USER',
-        true,
-        'deleteSecurityUser')) {
-           return false;
-        }
-
-  var params = prepParams(params, 'security_user' , 'delete');
-  params['security_user_id'] = securityUserId_;
-  params['last_update'] = lastUpdate_;
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      removeSecurityUserListTableRow(rslt.security_user_id);
-      briefNotify('User Deleted Successfully', 'INFO');
-    }else {
-      briefNotify('There was a problem communicating with the Server.',
-          'ERROR'
-          );
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-
-function saveSecurityUser(params) {
-  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
-      !isUserAuthorized('INSERT_SECURITY_USER', false)) {
-    briefNotify('Access Violation', 'ERROR');
-    return false;
-  }
-
-  params = prepParams(params, 'security_user', insertUpdateChoose);
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-
-      clearForm('securityUserForm');
-      showPasswordFields(true);
-      if (rslt.spwfAction == 'UPDATE') {
-        replaceSecurityUserListTableRow(rslt.rows[0]);
-      }else if (rslt.spwfAction == 'INSERT') {
-        addNewSecurityUserListTableRow(rslt.rows[0]);
-      }
-      briefNotify('User Successfully Saved',
-          'INFO'
-          );
-      clearSecurityUserForm();
-
-    }else {
-      briefNotify('There was a problem communicating with the Server.',
-         'ERROR'
-         );
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-
-//ServerCall Wrappers
-function editSecurityUser(securityUserId_) {
-  if (!isUserAuthorized('SELECT_SECURITY_USER',
-        true,
-        'editSecurityUser')) {
-          return false;
-        }
-  if (isUserAuthorized('UPDATE_SECURITY_USER', false)) {
-    securityLockForm('securityUserForm', false);
-  }else {securityLockForm('securityUserForm', true);}
-
-
-
-  if (securityUserId_) {
-    var params = {'where_clause': 'security_user_id=' + securityUserId_};
-    retrieveSecurityUser(params);
-  }
-}
-
-function saveSecurityUserForm() {
-  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
-      !isUserAuthorized('INSERT_SECURITY_USER', false)) {
-    briefNotify('Access Violation: saveSecurityUserForm',
-       'ERROR'
-       );
-      return false;
-  }
-
-  if (validateSecurityUserForm()) {
-    var params = bindForm('securityUserForm');
-    if (document.getElementById('securityUserForm-active_yn').checked) {
-      params['active_yn'] = 'Y';
-    }else {
-      params['active_yn'] = 'N';
-    }
-    saveSecurityUser(params);
-  }
-}
-
-//validation
-function validateSecurityUserForm() {
-  var formName = 'securityUserForm';
-  var formValid = standardValidate(formName);
-  if (document.getElementById('securityUserForm-password_enc').value !=
-      document.getElementById('securityUserForm-password_validate').value) {
-    showDialog('Please ensure the passwords match to continue');
-    formValid = false;
-  }
-
-  return formValid;
-}
-
-//Top Level HTML Manip
-function populateSecurityUserListTable(dataRows) {
-  var dataArray = new Array();
-  if (dataRows != null)
-    for (var ndx = 0; ndx < dataRows.length; ndx++) {
-      dataArray[ndx] = buildSecurityUserListTableRow(dataRows[ndx]);
-    }
-  $('#securityUserListTable').dataTable().fnClearTable();
-  $('#securityUserListTable').dataTable().fnAddData(dataArray, true);
-}
-
-function buildSecurityUserListTableRow(data) {
-  var dataHash = {};
-  var links = '';
-  dataHash['user_id'] = data.user_id;
-  if (isUserAuthorized('UPDATE_SECURITY_USER', false)) {
-    links += '<a class = "alink" onclick = "editSecurityUser(';
-     links += data.security_user_id + ')">Edit</a> ';
-    links += ' &nbsp; &nbsp;';
-  }else if (isUserAuthorized('SELECT_SECURITY_USER', false)) {
-    links += '<a class = "alink" onclick = "editSecurityUser(';
-     links += data.security_user_id + ')">View</a> ';
-    links += ' &nbsp; &nbsp;';
-
-  }
-  if (isUserAuthorized('DELETE_SECURITY_USER', false)) {
-    links += '<a class = "alink" onclick = "deleteSecurityUser(';
-    links += data.security_user_id + ', \'' + data.last_update;
-    links += '\')">Delete</a>';
-  }
-  dataHash['links'] = links;
-  dataHash['DT_RowId'] = 'SecurityUserListTableTR-' + data.security_user_id;
-
-  return dataHash;
-}
-
-function replaceSecurityUserListTableRow(row) {
-  $('#securityUserListTable').dataTable().fnUpdate(
-      buildSecurityUserListTableRow(row),
-      $('#SecurityUserListTableTR-' + row.security_user_id)[0]
-      );
-}
-function addNewSecurityUserListTableRow(row) {
-  $('#securityUserListTable').dataTable().fnAddData(
-      buildSecurityUserListTableRow(row)
-      );
-}
-function removeSecurityUserListTableRow(securityUserId_) {
-  $('#securityUserListTable').dataTable().fnDeleteRow(
-      $('#SecurityUserListTableTR-' + securityUserId_)[0]
-      );
-}
-
-//Div Access and App Layout Calls
-function showSecurityUser() {
-  statusMsg('Navigated to Security Users');
-  if (!isUserAuthorized('SELECT_SECURITY_USER',
-       true,
-       'showSecurityUser')) {
-         return false;
-       }
-
-  retrieveSecurityUserList();
-  hideCurrentContentPane();
-  $('#securityUser').fadeIn();
-  currentContentPane = 'securityUser';
-  if (isFormEmpty('securityUserForm')) {
-    toggleSaveMode('securityUserForm', false);
-  }
-  showPasswordFields(true);
-}
-function clearSecurityUserForm() {
-  clearForm('securityUserForm');
-  showPasswordFields(true);
-  (isUserAuthorized('INSERT_SECURITY_USER', false)) ?
-    securityLockForm('securityUserForm', false) :
-      securityLockForm('securityUserForm', true);
-
-}
-
-
-//After complete Load setup
-$(document).ready(function() {
-    $('#securityUserListTable').dataTable({
-      'aoColumns': [
-       {'mData': 'user_id' },
-       {'mData': 'links', asSorting: 'none' }
-      ],
-      'sPaginationType': 'two_button'
-      }
-      );
-
-    });
-
-//page specific functions
-
-function showPasswordFields(show) {
-  if (show) {
-    $('#securityUserForm-password_encDivId').fadeIn();
-    $('#securityUserForm-password_validateDivId').fadeIn();
-  }else {
-    $('#securityUserForm-password_encDivId').fadeOut();
-    $('#securityUserForm-password_validateDivId').fadeOut();
-  }
-}
-function initiateChangePassword() {
-  showChangePasswordDialog($('#securityUserForm-edit_user_id').val());
-}
-
-function imposeSecurityUserSecurityUIRestrictions() {
-  var divIdToSecure;
-  divIdToSecure = '#securityUserFormSave';
-  (isUserAuthorized('UPDATE_SECURITY_USER', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#securityUserFormAdd';
-  (isUserAuthorized('INSERT_SECURITY_USER', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#securityUserEntryDivId';
-  (isUserAuthorized('UPDATE_SECURITY_USER', false) ||
-   isUserAuthorized('INSERT_SECURITY_USER', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  if (!isUserAuthorized('INSERT_SECURITY_USER', false) &&
-      !isUserAuthorized('UPDATE_SECURITY_USER', false)) {
-    securityLockForm('securityUserForm', true);
-  }
-  divIdToSecure = '#securityUserChangeOthersPassword';
-  (isUserAuthorized('CHANGE_OTHERS_PWD', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  if (!isUserAuthorized('INSERT_SECURITY_USER', false) &&
-      isFormEmpty('securityUserForm')) {
-    securityLockForm('securityUserForm', true);
-  }
-}
-
-
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityGrants/_securityGrantsWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/ChangePassword/_changePasswordDialogWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/ChangePassword/_changePasswordDialogCommon.js
 
 
 //----------------------------------------------------
@@ -2810,8 +2248,110 @@ function showChangePasswordDialog(userId_) {
 $(document).ready(function() {
 });
 
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScoreSummary/_golfScoreSummaryCommon.js
 
 
+
+
+
+
+
+
+
+function retrieveGolfScoreSummaryList() {
+    if (!isUserAuthorized('SELECT_GOLFER_HANDICAP')) {
+      briefNotify('Access Violation', 'ERROR');
+      return false;
+    }
+
+    var params = prepParams(params, 'golf_score_summary' , 'select');
+    var successf = function(rslt) {
+      if (!rslt[SERVER_SIDE_FAIL]) {
+        populateGolfScoreSummaryListTable(rslt.rows);
+      }else {
+        briefNotify(
+            'There was a problem communicating with the Server.',
+            'ERROR');
+      }
+
+    };
+    var failf = function() {alert('failed');};
+    serverCall(params, successf, failf);
+
+  }
+
+
+
+function imposeGolfScoreSummarySecurityUIRestrictions() {
+
+}
+
+
+
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScoreSummary/_golfScoreSummaryWeb.js
+
+
+
+
+
+
+
+
+$(document).ready(function() {
+    $('#golfScoreSummaryListTable').dataTable(
+       {
+      'aoColumns' : [
+       {'mData': 'golfer_name' },
+       {'mData': 'handicap' },
+       {'mData': 'date_range' },
+       {'mData': 'links', asSorting: 'none' }
+      ],
+      'sPaginationType': 'two_button'
+      });
+    });
+
+
+function populateGolfScoreSummaryListTable(dataRows) {
+  var dataArray = new Array();
+  for (var ndx = 0; ndx < dataRows.length; ndx++) {
+    dataArray[ndx] = buildGolfScoreSummaryListTableRow(dataRows[ndx]);
+  }
+  $('#golfScoreSummaryListTable').dataTable().fnClearTable();
+  $('#golfScoreSummaryListTable').dataTable().fnAddData(dataArray, true);
+
+}
+
+function buildGolfScoreSummaryListTableRow(gs) {
+  var dataHash = {};
+  var links = '';
+  dataHash['golfer_name'] = gs.golfer_name;
+  dataHash['handicap'] = formatNumber(gs.golf_score, 2, true, false, true);
+  dataHash['date_range'] = pgDate(gs.first_date) + ' - ' + pgDate(gs.last_date);
+
+  if (isUserAuthorized('SELECT_GOLF_SCORE')) {
+    links += '<a class="alink" onclick="changePage(function() {showGolfScore(';
+     links += gs.golfer_id + ')})">View Scores</a>  ';
+    links += '&nbsp; &nbsp;';
+  }
+  if (isUserAuthorized('SELECT_GOLFER')) {
+    links += ' <a href="" onclick="changePage(function() {showGolfer(';
+     links += gs.golfer_id + ')})">View Golfer</a>';
+  }
+  dataHash['links'] = links;
+  //dataHash["DT_RowId"] = "GolfScoreSummaryListTableTR-" + data.;
+
+  return dataHash;
+
+}
+
+function showGolfScoreSummary() {
+  statusMsg('Navigated to Golf Score Summary View');
+  retrieveGolfScoreSummaryList();
+  standardShowContentPane('golfScoreSummary');
+}
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SupportRequest/_supportRequestCommon.js
 
 
 
@@ -3160,6 +2700,497 @@ function showSupportRequestDialog() {
   $('#supportRequestFormHolder').dialog({modal: true, width: '90%' });
 }
 
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SupportRequest/_supportRequestWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Header/_headerWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/LoginPortal/_loginPortalWeb.js
+
+
+
+
+function onSuccessfulLogin() {
+  $('#password').val('');
+  displayMainLayout(true);
+  $('#topMenuBar').show();
+  registerAction();
+  timeoutIfNoAction();
+  changePage(function() {showLaunchPane()});
+  retrieveCache();
+}
+
+$(document).ready(function() {
+  changePage(function() {showLoginPortal()});
+});
+
+function validateLoginPortalForm() {
+  var formValid = standardValidate('LoginPortalForm');
+  return formValid;
+}
+
+
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/LoginPortal/_loginPortalCommon.js
+    //Begin LoginPortal
+
+
+
+function loginCall(action) {
+  var params = bindForm('LoginPortalForm');
+
+    params['spwfResource'] = 'security_user';
+  params['spwfAction'] = action;
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      var r = rslt.rows[0];
+      if (r.session_id == '') {
+        showDialog('Sorry, I Couldn\'t validate those Credentials');
+        $('#password').val('');
+      } else {
+        statusMsg('Successfully Authenticated User : ' + r.user_id);
+        usrSessionId = r.session_id;
+        usrLoginId = r.user_id;
+        onSuccessfulLogin();
+        if (rslt.spwfAction == 'ONE_TIME') {
+          var msg = 'You just completed a one time logon. ';
+          msg += 'You password has not been changed, ';
+          msg += 'please change your password for your next visit ';
+          msg += 'if you have forgotten it. ';
+          showDialog(msg);
+        }
+      }
+    } else {
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
+    }
+
+  };
+  if (validateLoginPortalForm())serverCall(params, successf, FAILF);
+}
+
+
+
+
+
+function logOutUser() {
+  usrSessionId = '';
+  usrLoginId = '';
+  $('#LoginPortalForm-user_id').val('');
+  $('#LoginPortalForm-password').val('');
+  displayMainLayout(false);
+  $('#topMenuBar').hide();
+  hideMainContent();
+  return;
+}
+
+
+$(document).ready(function() {
+  $('#LoginPortalForm-user_id').val('golfscore');
+  $('#LoginPortalForm-password').val('golfscore');
+});
+
+function showLoginPortal() {
+  $(document).keypress(function(e) {
+    if (e.keyCode == 13) {//enter
+      loginCall('authenticate');
+    }
+  });
+
+}
+function initPasswordReset() {
+  var params = {};
+  params['user_id'] = $('#LoginPortalForm-user_id').val();
+  if (params['user_id'] == null || params['user_id'] == '') {
+    showDialog('Please enter your User Id to initiate your password reset.');
+    return false;
+  }
+  var successCallback = function(rslt) {
+    if (rslt.success == 'true') {
+      var msg = 'Your password reset is in process.  Do not close this page,';
+      msg += 'but check your email for the code to enter to gain one-time ';
+      msg += 'access in order to change your password.';
+      showDialog(msg);
+    }
+    prepForOneTimeEntry();
+
+  };
+  $.ajax({type: 'POST',
+    url: passwordResetUrlTarget,
+    dataType: 'json',
+    data: params,
+    success: successCallback,
+    error: FAILF
+  });
+}
+
+function initForgottenUserName() {
+  var msg = 'Please Enter your email address below.  ';
+  msg += 'Instructions will be mailed to this address.  ';
+  msg += '<br/><input type="text"';
+  msg += ' style="width: 400px;" size="90" id="forgottenUserIdEmail"/><br/> ';
+  showDialog(
+      msg, '300', '600', true,
+      {'Ok': function() {
+                          if ($('#forgottenUserIdEmail').val() != '') {
+                            emailUserName();
+                            $(this).dialog('close');
+                          }
+                        },
+    'Cancel': function() {
+      $(this).dialog('close');
+    }
+      }, 'Email User Name...');
+
+}
+//
+function emailUserName() {
+  var params = {};
+  params['email_addr'] = $('#forgottenUserIdEmail').val();
+  var successCallback = function(rslt) {
+    if (rslt.success == 'true') {
+      var msg = 'Your username has been mailed to your email address. ';
+      msg += 'Do not close this page, but check your email for the username ';
+      msg += ' and reset code to enter to gain one-time access. ';
+      msg += ' You can change your password when you log in if desired';
+      showDialog(msg);
+    }
+    prepForOneTimeEntry();
+  };
+  $.ajax({type: 'POST',
+    url: passwordResetUrlTarget,
+    dataType: 'json',
+    data: params,
+    success: successCallback,
+    error: FAILF
+  });
+}
+
+function prepForOneTimeEntry() {
+  $('#LoginPortalForm-password_reset_codeDivId').show();
+  $('#LoginPortalForm-passwordDivId').hide();
+  $('#LoginPortalForm-password').val('');
+  $('#cmdlogin').hide();
+  $('#cmdOneTimelogin').show();
+
+}
+
+function onetimeLogin() {
+  var params = {};
+  params['user_id'] = $('#LoginPortalForm-user_id').val();
+  params['password_reset_code'] =
+    $('#LoginPortalForm-password_reset_code').val();
+  if (params['user_id'] == null ||
+      params['user_id'] == '' ||
+      params['password_reset_code'] == null ||
+      params['password_reset_code'] == '') {
+        var msg = 'Please enter your User Id and Password';
+        msg += 'Reset Code to initiate your password reset.';
+        showDialog(msg);
+        return false;
+      }
+  var successCallback = function(rslt) {
+    if (rslt.success == 'true') {
+      var msg = 'Your password reset is in process.  ';
+      mst += 'Do not close this page, but check your email ';
+      msg += 'for the code to enter to gain one-time access ';
+      msg += 'in order to change your password.';
+      showDialog(msg);
+    }
+    $('#LoginPortalForm-password_reset_codeDivId').show();
+    $('#cmdlogin').hide();
+    $('#cmdOneTimelogin').show();
+
+  };
+  $.ajax({type: 'POST', url: passwordResetUrlTarget,
+    dataType: 'json', data: params,
+    success: successCallback, error: FAILF
+  });
+}
+
+
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Golfer/_golferWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Golfer/_golferCommon.js
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------
+
+//server calls
+
+function retrieveGolferList() {
+  if (!isUserAuthorized(
+        'SELECT_GOLFER',
+        true,
+        'retrieveGolferList')) {
+           return false;
+        }
+
+  var params = prepParams(params, 'golfer' , 'select');
+  params['orderby_clause'] = ' ';
+    var successf = function(rslt) {
+      if (!rslt[SERVER_SIDE_FAIL]) {
+        populateGolferListTable(rslt.rows);
+      }else {
+        briefNotify(
+            'There was a problem communicating with the Server.',
+            'ERROR'
+            );
+      }
+    };
+  serverCall(params, successf, FAILF);
+}
+function retrieveGolfer(params) {
+  if (!isUserAuthorized(
+        'SELECT_GOLFER',
+        true,
+        'retrieveGolfer')) {
+          return false;
+        }
+
+  params = prepParams(params, 'golfer', 'SELECT');
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      rslt.rows[0].game_dt = pgDate(rslt.rows[0].game_dt);
+      bindToForm('golferForm', rslt.rows[0]);
+      toggleSaveMode('golferForm', true);
+    }else {
+      briefNotify('There was a problem communicating with the Server.',
+          'ERROR'
+          );
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+
+
+
+function saveGolfer(params) {
+  if (!isUserAuthorized('UPDATE_GOLFER', false) &&
+      !isUserAuthorized('INSERT_GOLFER', false)) {
+    briefNotify('Access Violation', 'ERROR');
+    return false;
+  }
+  params = prepParams(params, 'golfer', insertUpdateChoose);
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      bindToForm('golferForm', rslt.rows[0]);
+      if (rslt.spwfAction == 'UPDATE') {
+        replaceRowGolferListTable(rslt.rows[0]);
+      }else if (rslt.spwfAction == 'INSERT') {
+        addNewRowGolferListTable(rslt.rows[0]);
+      }
+      briefNotify('Golfer Saved Successfully', 'INFO');
+      clearGolferForm();
+    }else {
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+
+
+
+function deleteGolfer(golferId_, lastUpdate_) {
+  if (!isUserAuthorized('DELETE_GOLFER', true, 'deleteGolfer'))
+    return false;
+
+  var params = prepParams(params, 'golfer' , 'delete');
+  params['golfer_id'] = golferId_;
+  params['last_update'] = lastUpdate_;
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      removeGolferListTableRow(rslt.golfer_id);
+      briefNotify('Golfer Deleted Successfully', 'INFO');
+    }else {
+      briefNotify(
+          'There was a problem communicating with the Server.',
+          'ERROR'
+          );
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+
+
+//-----------------------
+//Server Call Wrappers
+function editGolfer(rowId_) {
+  if (!isUserAuthorized('SELECT_GOLFER',
+                        true,
+                        'editGolfer'))
+    return false;
+
+  if (isUserAuthorized('UPDATE_GOLFER', false)) {
+    securityLockForm('golferForm', false);
+  }else {securityLockForm('golferForm', true);}
+
+  if (rowId_) {
+    var params = {'where_clause': 'golfer_id=' + rowId_};
+    retrieveGolfer(params);
+  }
+}
+
+function saveGolferForm() {
+  if (!isUserAuthorized('UPDATE_GOLFER', false) &&
+      !isUserAuthorized('INSERT_GOLFER', false)) {
+    briefNotify('Access Violation saveGolferForm', 'ERROR');
+    return false;
+  }
+
+  if (validateGolferForm()) {
+    var params = bindForm('golferForm');
+    saveGolfer(params);
+  }else {
+    briefNotify('Please Correct Form Validation Errors To Continue',
+                'WARNING'
+                );
+  }
+}
+
+//validation
+function validateGolferForm() {
+  var formName = 'golferForm';
+  var formValid = standardValidate(formName);
+  return formValid;
+}
+
+//----------------------------------------------------
+//html building functions
+
+function populateGolferListTable(dataRows, selectedKey_) {
+  var dataArray = new Array();
+  for (var i = 0; i < dataRows.length; i++) {
+    dataArray[i] = buildGolferListTableRow(dataRows[i]);
+    if (dataRows[i].golfer_id == selectedKey_) {
+      bindToForm('golferForm', dataRows[i]);
+      toggleSaveMode('golferForm', true);
+    }
+  }
+  $('#golferListTable').dataTable().fnClearTable();
+  $('#golferListTable').dataTable().fnAddData(dataArray, true);
+}
+
+function buildGolferListTableRow(data) {
+  var dataHash = {};
+  var htmlRow = '';
+  dataHash['name'] = data.name;
+  if (isUserAuthorized('UPDATE_GOLFER', false)) {
+    htmlRow += '<a class="editGolferLink" ';
+    htmlRow += ' onclick="editGolfer(';
+    htmlRow += data.golfer_id + ')">Edit</a>';
+    htmlRow += ' &nbsp; &nbsp; ';
+  }else if (isUserAuthorized('SELECT_GOLFER', false)) {
+    htmlRow += '<a class="alink" onclick="editGolfer(';
+    htmlRow += data.golfer_id + ')">View</a> ';
+    htmlRow += ' &nbsp; &nbsp;';
+  }
+
+  if (isUserAuthorized('DELETE_GOLFER', false)) {
+    htmlRow += '<a class="deleteGolferLink" ';
+     htmlRow += ' onclick="deleteGolfer(';
+    htmlRow += data.golfer_id + ', \'' + data.last_update;
+     htmlRow += '\')">Delete</a>';
+  }
+  dataHash['links'] = htmlRow;
+  dataHash['DT_RowId'] = 'GolferListTableTR-' + data.golfer_id;
+  return dataHash;
+}
+
+function replaceRowGolferListTable(row) {
+  $('#golferListTable').dataTable().fnUpdate(
+      buildGolferListTableRow(row),
+      $('#GolferListTableTR-' + row.golfer_id)[0]
+      );
+}
+function addNewRowGolferListTable(row) {
+  var newNdx = $('#golferListTable').dataTable().fnAddData(
+      buildGolferListTableRow(row)
+      );
+}
+function removeGolferListTableRow(golferId_) {
+  $('#golferListTable').dataTable().fnDeleteRow(
+      $('#GolferListTableTR-' + golferId_)[0]
+       );
+}
+
+function imposeGolferSecurityUIRestrictions() {
+  var divIdToSecure;
+  divIdToSecure = '#golferFormSave';
+  (isUserAuthorized('UPDATE_GOLFER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#golferFormAdd';
+  (isUserAuthorized('INSERT_GOLFER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#golferEntryDivId';
+  if (!isUserAuthorized('INSERT_GOLFER', false) &&
+      !isUserAuthorized('UPDATE_GOLFER', false)) {
+      securityLockForm('golferForm', true);
+  }
+  if (!isUserAuthorized('INSERT_GOLFER', false) &&
+      isFormEmpty('golferForm')) {
+      securityLockForm('golferForm', true);
+  }
+
+
+}
+
+
+//-------------------------------------------------
+//Div Access and App Layout Calls
+function showGolfer(golferId_) {
+  statusMsg('Navigated to Golfer View');
+  var params = {};
+  hideCurrentContentPane();
+  $('#golfer').fadeIn();
+  currentContentPane = 'golfer';
+  if (golferId_) {
+    params['where_clause'] = 'golfer_id=' + golferId_;
+    retrieveGolfer(params);
+  } else {
+    if (isFormEmpty('golferForm')) {
+      toggleSaveMode('golferForm', false);
+    }
+    clearForm('golferForm');
+  }
+    retrieveGolferList();
+  imposeGolferSecurityUIRestrictions();
+
+}
+
+function clearGolferForm() {
+  clearForm('golferForm');
+  (isUserAuthorized('INSERT_GOLFER', false)) ?
+    securityLockForm('golferForm', false) :
+    securityLockForm('golferForm', true);
+}
+
+
+$(document).ready(function() {
+    $('#golferListTable').dataTable({
+      'aoColumns' : [
+       { 'mData': 'name' },
+       { 'mData': 'links', asSorting: 'none' }
+      ],
+      'sPaginationType' : 'two_button'
+      }
+      );
+    });
 
 
 

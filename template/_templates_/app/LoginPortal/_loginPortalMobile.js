@@ -1,12 +1,12 @@
 [% divId = 'LoginPortal' %]
-[% spwfResource = 'security_user' %]
 
 function onSuccessfulLogin(){
-  $.mobile.changePage("#summaryDivId");
+	retrieveCache();
+	showLaunchPane();
 }
 
 function validate[%ucfirst(divId)%]Form(){
-return true;
+  return true;
 }
 
 

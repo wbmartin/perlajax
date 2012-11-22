@@ -53,3 +53,9 @@ function build[%ucfirst(divId)%]ListTableRow(gs) {
 
 }
 
+function show[%ucfirst(divId)%]() {
+	statusMsg('Navigated to Golf Score Summary View');
+	retrieve[%ucfirst(divId)%]List();
+	standardShowContentPane('[%divId%]');
+}
+

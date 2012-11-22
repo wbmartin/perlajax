@@ -1,18 +1,16 @@
 [%divId="golfScoreSummary"%]
 [%spwfResource="golf_score_summary"%]
-
-
-<script>[%# INCLUDE mobile/_login.js +%] </script>
-<div data-role="page" id="[%divId%]DivId">
+<div data-role="page" id="[%divId%]DivId" data-add-back-btn="true">
 	<div data-role="header" data-position="fixed" >
 		<h1>Golf Score - Handicaps</h1>
 	</div>
 
 	<div data-role="content" style="margin-top: 10%">
+		<div id = "[%divId%]TableId" class = "ui-grid-a">
+			
+		</div>
 		<form id ="[%divId%]Form">
-			Summary
-						<button type="button" id="cmd[%ucFirst(divId)%]LoginId" onclick="javascript:briefNotify('title','Message');">msg</button>
+			
 		</form>
 	</div>
 </div>
-

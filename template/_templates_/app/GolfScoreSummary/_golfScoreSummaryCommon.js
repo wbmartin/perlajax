@@ -29,11 +29,7 @@ function retrieve[%ucfirst(divId)%]List() {
 
 	}
 
-function show[%ucfirst(divId)%]() {
-	statusMsg('Navigated to Golf Score Summary View');
-	retrieve[%ucfirst(divId)%]List();
-	standardShowContentPane('[%divId%]');
-}
+
 
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 
