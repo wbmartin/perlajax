@@ -6,13 +6,20 @@
 <!DOCType html>
 <html> 
 <head> 	
-<style type="text/css"> 
-/* reset*/
-[%INCLUDE "style/reset-min.css"%]
-/*jquery*/
-[%INCLUDE "includes/jquery.mobile-1.2.0.min.css"%]
+<link rel="stylesheet"  href="http://yui.yahooapis.com/3.7.3/build/cssreset/cssreset-min.css" type="text/css"/>
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/ui-lightness/jquery-ui.css" type="text/css"/>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/ui-lightness/jquery.ui.theme.css" type="text/css"/>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" type="text/css"/>
 
+<style>
+/*jquery-ui vs jquery-mobile conflict overrides*/
+.ui-icon-circle-triangle-w { background-position: -80px -192px; background-color:transparent; }
+.ui-icon-circle-triangle-e { background-position: -48px -192px; background-color:transparent; }
 </style>
+
 
   <meta name=viewport content="user-scalable=no,width=device-width" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -21,9 +28,8 @@
   <link rel="apple-touch-icon" sizes="72x72" href="../images/touch-icon-ipad-144.png" />[%# Standard iPad   %]
   <link rel="apple-touch-icon" sizes="144x144" href="../images/touch-icon-ipad-144.png" />[%# Retina iPad  %]
 
-	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+	
+   
 	<script src="./appmobile.js"></script>
 
 </head> 

@@ -1017,9 +1017,13 @@ function removeQuickGolfScoreListTableRow(golfScoreId_) {
 }
 
 //Div Access and App Layout Calls
-function showQuickGolfScore() {
-  $.mobile.changePage("#quickGolfScoreDivId");
+function showQuickGolfScoreEntry() {
+  $.mobile.changePage("#quickGolfScoreEntryDivId");
 }
+function showQuickGolfScoreHistory() {
+  $.mobile.changePage("#quickGolfScorehistoryDivId");
+}
+
 
 function imposeQuickGolfScoreSecurityUIRestrictions() {
 	

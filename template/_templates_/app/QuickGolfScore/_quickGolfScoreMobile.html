@@ -1,0 +1,63 @@
+[%divId="quickGolfScore"%]
+[%spwfResource="golf_score_summary"%]
+<div data-role="page" id="[%divId%]EntryDivId" data-add-back-btn="true">
+	<div data-role="header" data-position="fixed" >
+		<h1>Golf Score - AddScore</h1>
+	</div>
+
+	<div data-role="content" style="margin-top: 10%">
+				<form id ="[%divId%]Form">
+			[%dbColumnName = 'golfer_id'%]
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Name</label>
+						<select style="width:15em"name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATErequired"></select>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
+					[%dbColumnName = 'golf_score'%]
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-[%dbColumnName%]">Score</label>
+						<input  type="text" class="VALIDATEinteger" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
+					[%dbColumnName = 'game_dt'%]
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
+						<label for ="[%divId%]Form-[%dbColumnName%]" id="[%divId%]FormLabel-name">Date</label>
+						<input type="text"  name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATEmmddyyyydate" readonly="true"/>
+						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
+					</div>
+
+
+
+					<div class="formButtons">
+
+						<button type="button" id="[%divId%]FormSave" class="[%buttonClass%]" value="Save" onclick="save[%ucfirst(divId)%]Form();" ><span class="[%buttonTextClass%]">Save</span></button>
+						<button type="button" id="[%divId%]FormAdd"  class="[%buttonClass%]" value="Add" onclick="save[%ucfirst(divId)%]Form();" ><span class="[%buttonTextClass%]">Add</span></button>
+							<button type="button" id="[%divId%]FormClear"  class="[%buttonClass%]" value="Clear" onclick="clear[%ucfirst(divId)%]Form();" ><span class="[%buttonTextClass%]">Clear</span></button>
+					</div>
+					<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
+					<input type="hidden" name="golfer_score_id" id="[%divId%]Form-golf_score_id">
+
+		</form>
+	</div>
+</div>
+
+[%#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>%]
+<div data-role="page" id="[%divId%]HistoryDivId" data-add-back-btn="true">
+	<div data-role="header" data-position="fixed" >
+		<h1>Golf Score - History</h1>
+	</div>
+
+	<div data-role="content" style="margin-top: 10%">
+		<div id = "[%divId%]TableId" class = "ui-grid-a">
+			
+		</div>
+		<form id ="[%divId%]Form">
+			
+		</form>
+	</div>
+</div>
+
+
+
+
+

@@ -29,9 +29,13 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 }
 
 //Div Access and App Layout Calls
-function show[%ucfirst(divId)%]() {
-  $.mobile.changePage("#[%divId%]DivId");
+function show[%ucfirst(divId)%]Entry() {
+  $.mobile.changePage("#[%divId%]EntryDivId");
 }
+function show[%ucfirst(divId)%]History() {
+  $.mobile.changePage("#[%divId%]historyDivId");
+}
+
 
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	
