@@ -1,0 +1,26 @@
+<head> 	
+[%- CDN_BASE_URL = 'http://code.jquery.com' -%]	
+[%- CDN_JQUERY_URL = '/jquery-1.8.0.min.js' -%]	
+[%- CDN_JQUI_URL = '/ui/1.9.1' -%]
+	<link rel="stylesheet"  href="http://yui.yahooapis.com/3.7.3/build/cssreset/cssreset-min.css" type="text/css"/>
+	<script src="[%-CDN_BASE_URL-%][%-CDN_JQUERY_URL-%]"></script>
+	<script src="[%-CDN_BASE_URL-%]/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script src="[%-CDN_BASE_URL-%][%-CDN_JQUI_URL-%]/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="[%-CDN_BASE_URL-%][%-CDN_JQUI_URL-%]/themes/ui-lightness/jquery-ui.css" type="text/css"/>
+	<link rel="stylesheet" href="[%-CDN_BASE_URL-%][%-CDN_JQUI_URL-%]/themes/ui-lightness/jquery.ui.theme.css" type="text/css"/>
+	<link rel="stylesheet" href="[%-CDN_BASE_URL-%]/mobile/1.2.0/jquery.mobile-1.2.0.min.css" type="text/css"/>
+
+  <style>
+  	/*jquery-ui vs jquery-mobile conflict overrides*/
+  	.ui-icon-circle-triangle-w { background-position: -80px -192px; background-color:transparent; }
+		.ui-icon-circle-triangle-e { background-position: -48px -192px; background-color:transparent; }
+	</style>
+
+  <meta name=viewport content="user-scalable=no,width=device-width" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="apple-touch-icon" sizes="57x57" href="../images/touch-icon-iphone-114.png" />[%#< Standard iPhone   %]
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/touch-icon-iphone-114.png" />[%# Retina iPhone   %]
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/touch-icon-ipad-144.png" />[%# Standard iPad   %]
+  <link rel="apple-touch-icon" sizes="144x144" href="../images/touch-icon-ipad-144.png" />[%# Retina iPad  %]
+	<script src="./appmobile.js"></script>
+</head> 

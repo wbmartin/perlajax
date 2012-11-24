@@ -1,14 +1,17 @@
-<head> 
+<head>
+[%- CDN_BASE_URL = 'http://code.jquery.com' -%]	
+[%- CDN_JQUERY_URL = '/jquery-1.8.0.min.js' -%]	
+[%- CDN_JQUI_URL = '/ui/1.9.1' -%]	
 	<title> Golf Score Tracker</title> 
 <link rel="stylesheet"  href="http://yui.yahooapis.com/3.7.3/build/cssreset/cssreset-min.css" type="text/css"/>
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<!-- 1140px Grid styles for IE -->
 	<!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
-	<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/ui-lightness/jquery-ui.css"  type="text/css"/>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/ui-lightness/jquery.ui.theme.css" type="text/css"/>
+	<script src="[%-CDN_BASE_URL-%][%-CDN_JQUERY_URL-%]"></script>
+	<script src="[%-CDN_BASE_URL-%][%-CDN_JQUI_URL-%]/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="[%-CDN_BASE_URL-%][%-CDN_JQUI_URL-%]/themes/ui-lightness/jquery-ui.css" type="text/css"/>
+<link rel="stylesheet" href="[%-CDN_BASE_URL-%][%-CDN_JQUI_URL-%]/themes/ui-lightness/jquery.ui.theme.css" type="text/css"/>
 
 	<script type="text/javascript"> 
 		//<![CDATA[

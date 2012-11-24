@@ -11,8 +11,6 @@
 
 <div id="mainContent" class="container MainLayout"  >
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
-[%INCLUDE core/_clientLog.html%]
-[%INCLUDE core/_msgBox.html%]
 
 [%FOREACH tPath = appTemplates%]
   [%-IF  tPath.match('Web')-%]
@@ -29,7 +27,6 @@
 </div><!--End Main Content-->
 <!-- From: LoginPortal -->
 [%INCLUDE app/LoginPortal/_loginPortalWeb.html%]
-<!-- From: msgBox.html -->
 </body>
 </html>
 [%- END #filter -%]

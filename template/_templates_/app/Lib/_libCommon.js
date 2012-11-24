@@ -63,7 +63,12 @@ function clearForm(formName) {
 				fieldId = field.id.replace(formName + '-', '');
 				if (field.type == 'checkbox') {
 					field.checked = false;
-				} else if (field.type != 'button') field.value = '';
+				} else if (field.type != 'button') {
+				 	field.value = '';
+					if (IS_MOBILE && field.type === 'select-one') {
+						$(field).selectmenu('refresh');
+					}
+				}
 			}
 			);
 	toggleSaveMode(formName, false);
@@ -85,16 +90,19 @@ function standardValidate(formName) {
 		span.innerHTML = '';
 	});
 	$.each($('form#' + formName + ' .invalid'), function(ndx, field) {
+		if (isEmpty(field.id)){return true;}//skip/continue if no ID
 		$('form#' + formName + ' #' + field.id).removeClass('invalid');
 	});
 	$.each($('form#' + formName + ' .VALIDATErequired'), function(ndx, field) {
-		if (field.value == null || field.value == '') {
+		if (isEmpty(field.id)){return true;}//skip/continue if no ID
+		if (isEmpty(field.value)) {
 			appendValidationMsg(formName, field.id, 'Required');
 			highlightFieldError(formName, field.id, true);
 			formValid = false;
 		}
 	});
 	$.each($('form#' + formName + ' .VALIDATEinteger'), function(ndx, field) {
+		if (isEmpty(field.id)){return true;}//skip/continue if no ID
 		if (field.value != null && !isInteger(field.value)) {
 			appendValidationMsg(formName, field.id, 'Integer Input Required');
 			highlightFieldError(formName, field.id, true);
@@ -103,6 +111,7 @@ function standardValidate(formName) {
 	});
 	$.each($('form#' + formName + ' .VALIDATEmmddyyyydate'),
 			function(ndx, field) {
+		if (isEmpty(field.id)){return true;}//skip/continue if no ID
 				if (field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)) {
 					appendValidationMsg(formName, field.id, 'MM/DD/YYYY Required');
 					highlightFieldError(formName, field.id, true);
@@ -121,9 +130,16 @@ function isFieldIdEmpty(fieldId_) {
 }
 
 function isEmpty(val) {
-	if (typeof(val) == 'undefined') return true;
-	if (val == null || val == '') return true;
-	return false;
+	return (!val || 0 === val.length);
+	[%# replacing isEmpty 2012-11-23 w/ cleaner function
+		from http://stackoverflow.com/questions/154059/what-is-the-best-way-to-check-for-an-empty-string-in-javascript
+	//if (typeof(val) == 'undefined') return true;
+	//if (val == null || val == '') return true;
+	//return false;a
+		%]
+}
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
 }
 
 function isInteger(value) {

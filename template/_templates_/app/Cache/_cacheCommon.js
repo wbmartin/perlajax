@@ -14,8 +14,8 @@ function onRefreshCache(data) {
 			SECURITY_GRANT.push(data[i].lbl);
 		}
 	}
-  populateAppSelectOptions;
-  imposeApplicationSecurityRestrictions;	
+  populateAppSelectOptions();
+  imposeApplicationSecurityRestrictions();	
 	}
 
 

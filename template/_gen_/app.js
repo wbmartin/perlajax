@@ -3,10 +3,475 @@
     var passwordResetUrlTarget = 'cgi-bin/pwdreset.pl';
     var VIEW_ID = 0;
     var PAGE_CALLS = new Array();
+    var IS_MOBILE = false;
 
 
-//header1.js
-//shared variables
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityUser/_securityUserCommon.js
+
+
+
+
+
+
+
+
+
+
+
+//Server Calls
+function retrieveSecurityUserList() {
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+        true,
+        'retrieveSecurityUserList')) {
+           return false;
+      }
+
+  var params = prepParams(params, 'security_user' , 'select');
+  var successf = function(rslt) {
+    if (rslt[SERVER_SIDE_FAIL]) {
+      briefNotify(
+          'There was a problem retrieving the User Listing',
+          'ERROR'
+          );
+    }else {
+      populateSecurityUserListTable(rslt.rows);
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+function retrieveSecurityUser(params) {
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+        true,
+        'retrieveSecurityUser')) {
+           return false;
+        }
+
+  params = prepParams(params, 'security_user', 'SELECT');
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      bindToForm('securityUserForm', rslt.rows[0]);
+      $('#securityUserForm-edit_user_id').val(rslt.rows[0].user_id);
+      if (rslt.rows[0].active_yn == 'Y') {
+        document.getElementById('securityUserForm-active_yn').checked = true;
+      }else {
+        document.getElementById('securityUserForm-active_yn').checked = false;
+      }
+      toggleSaveMode('securityUserForm', true);
+      showPasswordFields(false);
+    }else {
+      briefNotify(
+          'There was a problem retrieving the User.',
+          'ERROR'
+          );
+    }
+  };
+  serverCall(params, successf, FAILF);
+}
+
+
+
+function deleteSecurityUser(securityUserId_, lastUpdate_) {
+  if (!isUserAuthorized('DELETE_SECURITY_USER',
+        true,
+        'deleteSecurityUser')) {
+           return false;
+        }
+
+  var params = prepParams(params, 'security_user' , 'delete');
+  params['security_user_id'] = securityUserId_;
+  params['last_update'] = lastUpdate_;
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+      removeSecurityUserListTableRow(rslt.security_user_id);
+      briefNotify('User Deleted Successfully', 'INFO');
+    }else {
+      briefNotify('There was a problem communicating with the Server.',
+          'ERROR'
+          );
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+
+function saveSecurityUser(params) {
+  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
+      !isUserAuthorized('INSERT_SECURITY_USER', false)) {
+    briefNotify('Access Violation', 'ERROR');
+    return false;
+  }
+
+  params = prepParams(params, 'security_user', insertUpdateChoose);
+  var successf = function(rslt) {
+    if (!rslt[SERVER_SIDE_FAIL]) {
+
+      clearForm('securityUserForm');
+      showPasswordFields(true);
+      if (rslt.spwfAction == 'UPDATE') {
+        replaceSecurityUserListTableRow(rslt.rows[0]);
+      }else if (rslt.spwfAction == 'INSERT') {
+        addNewSecurityUserListTableRow(rslt.rows[0]);
+      }
+      briefNotify('User Successfully Saved',
+          'INFO'
+          );
+      clearSecurityUserForm();
+
+    }else {
+      briefNotify('There was a problem communicating with the Server.',
+         'ERROR'
+         );
+    }
+
+  };
+  serverCall(params, successf, FAILF);
+}
+
+//ServerCall Wrappers
+function editSecurityUser(securityUserId_) {
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+        true,
+        'editSecurityUser')) {
+          return false;
+        }
+  if (isUserAuthorized('UPDATE_SECURITY_USER', false)) {
+    securityLockForm('securityUserForm', false);
+  }else {securityLockForm('securityUserForm', true);}
+
+
+
+  if (securityUserId_) {
+    var params = {'where_clause': 'security_user_id=' + securityUserId_};
+    retrieveSecurityUser(params);
+  }
+}
+
+function saveSecurityUserForm() {
+  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
+      !isUserAuthorized('INSERT_SECURITY_USER', false)) {
+    briefNotify('Access Violation: saveSecurityUserForm',
+       'ERROR'
+       );
+      return false;
+  }
+
+  if (validateSecurityUserForm()) {
+    var params = bindForm('securityUserForm');
+    if (document.getElementById('securityUserForm-active_yn').checked) {
+      params['active_yn'] = 'Y';
+    }else {
+      params['active_yn'] = 'N';
+    }
+    saveSecurityUser(params);
+  }
+}
+
+//validation
+function validateSecurityUserForm() {
+  var formName = 'securityUserForm';
+  var formValid = standardValidate(formName);
+  if (document.getElementById('securityUserForm-password_enc').value !=
+      document.getElementById('securityUserForm-password_validate').value) {
+    showDialog('Please ensure the passwords match to continue');
+    formValid = false;
+  }
+
+  return formValid;
+}
+
+//Top Level HTML Manip
+function populateSecurityUserListTable(dataRows) {
+  var dataArray = new Array();
+  if (dataRows != null)
+    for (var ndx = 0; ndx < dataRows.length; ndx++) {
+      dataArray[ndx] = buildSecurityUserListTableRow(dataRows[ndx]);
+    }
+  $('#securityUserListTable').dataTable().fnClearTable();
+  $('#securityUserListTable').dataTable().fnAddData(dataArray, true);
+}
+
+function buildSecurityUserListTableRow(data) {
+  var dataHash = {};
+  var links = '';
+  dataHash['user_id'] = data.user_id;
+  if (isUserAuthorized('UPDATE_SECURITY_USER', false)) {
+    links += '<a class = "alink" onclick = "editSecurityUser(';
+     links += data.security_user_id + ')">Edit</a> ';
+    links += ' &nbsp; &nbsp;';
+  }else if (isUserAuthorized('SELECT_SECURITY_USER', false)) {
+    links += '<a class = "alink" onclick = "editSecurityUser(';
+     links += data.security_user_id + ')">View</a> ';
+    links += ' &nbsp; &nbsp;';
+
+  }
+  if (isUserAuthorized('DELETE_SECURITY_USER', false)) {
+    links += '<a class = "alink" onclick = "deleteSecurityUser(';
+    links += data.security_user_id + ', \'' + data.last_update;
+    links += '\')">Delete</a>';
+  }
+  dataHash['links'] = links;
+  dataHash['DT_RowId'] = 'SecurityUserListTableTR-' + data.security_user_id;
+
+  return dataHash;
+}
+
+function replaceSecurityUserListTableRow(row) {
+  $('#securityUserListTable').dataTable().fnUpdate(
+      buildSecurityUserListTableRow(row),
+      $('#SecurityUserListTableTR-' + row.security_user_id)[0]
+      );
+}
+function addNewSecurityUserListTableRow(row) {
+  $('#securityUserListTable').dataTable().fnAddData(
+      buildSecurityUserListTableRow(row)
+      );
+}
+function removeSecurityUserListTableRow(securityUserId_) {
+  $('#securityUserListTable').dataTable().fnDeleteRow(
+      $('#SecurityUserListTableTR-' + securityUserId_)[0]
+      );
+}
+
+//Div Access and App Layout Calls
+function showSecurityUser() {
+  statusMsg('Navigated to Security Users');
+  if (!isUserAuthorized('SELECT_SECURITY_USER',
+       true,
+       'showSecurityUser')) {
+         return false;
+       }
+
+  retrieveSecurityUserList();
+  hideCurrentContentPane();
+  $('#securityUser').fadeIn();
+  currentContentPane = 'securityUser';
+  if (isFormEmpty('securityUserForm')) {
+    toggleSaveMode('securityUserForm', false);
+  }
+  showPasswordFields(true);
+}
+function clearSecurityUserForm() {
+  clearForm('securityUserForm');
+  showPasswordFields(true);
+  (isUserAuthorized('INSERT_SECURITY_USER', false)) ?
+    securityLockForm('securityUserForm', false) :
+      securityLockForm('securityUserForm', true);
+
+}
+
+
+//After complete Load setup
+$(document).ready(function() {
+    $('#securityUserListTable').dataTable({
+      'aoColumns': [
+       {'mData': 'user_id' },
+       {'mData': 'links', asSorting: 'none' }
+      ],
+      'sPaginationType': 'two_button'
+      }
+      );
+
+    });
+
+//page specific functions
+
+function showPasswordFields(show) {
+  if (show) {
+    $('#securityUserForm-password_encDivId').fadeIn();
+    $('#securityUserForm-password_validateDivId').fadeIn();
+  }else {
+    $('#securityUserForm-password_encDivId').fadeOut();
+    $('#securityUserForm-password_validateDivId').fadeOut();
+  }
+}
+function initiateChangePassword() {
+  showChangePasswordDialog($('#securityUserForm-edit_user_id').val());
+}
+
+function imposeSecurityUserSecurityUIRestrictions() {
+  var divIdToSecure;
+  divIdToSecure = '#securityUserFormSave';
+  (isUserAuthorized('UPDATE_SECURITY_USER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#securityUserFormAdd';
+  (isUserAuthorized('INSERT_SECURITY_USER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  divIdToSecure = '#securityUserEntryDivId';
+  (isUserAuthorized('UPDATE_SECURITY_USER', false) ||
+   isUserAuthorized('INSERT_SECURITY_USER', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  if (!isUserAuthorized('INSERT_SECURITY_USER', false) &&
+      !isUserAuthorized('UPDATE_SECURITY_USER', false)) {
+    securityLockForm('securityUserForm', true);
+  }
+  divIdToSecure = '#securityUserChangeOthersPassword';
+  (isUserAuthorized('CHANGE_OTHERS_PWD', false)) ?
+    securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+  if (!isUserAuthorized('INSERT_SECURITY_USER', false) &&
+      isFormEmpty('securityUserForm')) {
+    securityLockForm('securityUserForm', true);
+  }
+}
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityUser/_securityUserWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Cache/_cacheCommon.js
+    var GOLFER_CACHE;
+var SECURITY_PROFILE_CACHE;
+var SECURITY_GRANT;
+function onRefreshCache(data) {
+  GOLFER_CACHE = {};
+  SECURITY_PROFILE_CACHE = {};
+  SECURITY_GRANT = new Array();
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].tp === 'golfer') {
+      GOLFER_CACHE[data[i].val] = data[i].lbl;
+    } else if (data[i].tp === 'securityProfile') {
+      SECURITY_PROFILE_CACHE[data[i].val] = data[i].lbl;
+    } else if (data[i].tp === 'securityGrant') {
+      SECURITY_GRANT.push(data[i].lbl);
+    }
+  }
+  populateAppSelectOptions();
+  imposeApplicationSecurityRestrictions();
+  }
+
+
+
+function retrieveCache() {
+  var params = prepParams(params, 'cross_table_cache', 'select');
+  var successf = function(rslt) {
+    onRefreshCache(rslt.rows);
+  };
+  serverCall(params, successf, FAILF);
+}
+
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Cache/_cacheWeb.js
+    function populateAppSelectOptions() {
+  setSelectOptions('#quickGolfScoreForm select[name=golfer_id]',
+                    GOLFER_CACHE
+                  );
+  setSelectOptions('#securityUserForm select[name=securityProfileId]',
+                     SECURITY_PROFILE_CACHE
+                  );
+}
+
+function imposeApplicationSecurityRestrictions() {
+  imposeGolferSecurityUIRestrictions();
+  imposeGolfScoreSecurityUIRestrictions();
+  imposeLauncherSecurityUIRestrictions();
+  imposeGolfScoreSummarySecurityUIRestrictions();
+  imposeSecurityUserSecurityUIRestrictions();
+  imposeSecurityGrantsSecurityUIRestrictions();
+  imposeQuickGolfScoreSecurityUIRestrictions();
+
+}
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Help/_helpWeb.js
+        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Help/_helpCommon.js
+
+
+  function showHelpPane() {
+    statusMsg('Navigated to Help Portal');
+    hideCurrentContentPane();
+    $('#helpPane').fadeIn();
+    currentContentPane = 'helpPane';
+    return 'helpPane';
+  }
+
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/LayoutComponents/_layoutComponentsCommon.js
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/LayoutComponents/_layoutComponentsWeb.js
+    function sizeLeftNav() {
+
+
+    document.getElementById('mainContent').style.top =
+    '100px';
+  document.getElementById('mainContent').style.left = '0px';
+  document.getElementById('mainContent').style.height =
+    (window.innerHeight - 135) + 'px';
+  document.getElementById('mainContent').style.width =
+    (window.innerWidth - 20) + 'px';
+}
+function displayMainLayout(showHide) {
+  var display = (showHide) ? 'block' : 'none';
+  //document.getElementById('leftnav').style.display=display;
+  document.getElementById('header').style.display = display;
+  document.getElementById('footer').style.display = display;
+  document.getElementById('mainContent').style.display = display;
+  display = (showHide) ? 'none' : 'block';
+  document.getElementById('LoginPortal').style.display = display;
+  if (!showHide)showLoginPortal();
+}
+
+$(document).ready(function() {
+  var tblClasses = $.fn.dataTableExt.oStdClasses;
+  tblClasses.sPagePrevDisabled = ' smallButton LogicDisabled';
+  tblClasses.sPagePrevEnabled = ' smallButton';
+  tblClasses.sPageNextDisabled = ' smallButton LogicDisabled';
+  tblClasses.sPageNextEnabled = ' smallButton';
+  tblClasses.sWrapper = 'prettyWrapper dataTables_wrapper';
+
+});
+
+
+
+function briefNotify(msg, type) {
+  var color;
+  if (type == null || type == 'INFO') {
+    color = 'green';
+  }else if (type == 'WARNING') {
+    color = 'yellow';
+  }else if (type == 'ERROR') {
+    color = 'red';
+  }else {
+    color = 'black';
+  }
+  $('#briefNoticeMsg').css('border-color', color);
+  $('#briefNoticeMsg').css('color', color);
+  $('#briefNoticeMsg').html(msg);
+  $('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
+  statusMsg(msg);
+}
+
+
+function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
+  if ($('#genericDialogDivId').is(':data(dialog)')) {
+    $('#genericDialogDivId').dialog('destroy');
+  }
+  msg_ = msg_ || 'No message Defined';
+  height_ = height_ || 300;
+  width_ = width_ || 400;
+  modal_ = (modal_ === undefined) ? true : modal_;
+  buttons_ = buttons_ || {'Ok': function() {$(this).dialog('close');}};
+  title_ = title_ || '';
+  $('#genericDialogDivId').attr('title', title_);
+  $('#dialogMsgSpanId').html(msg_);
+  $('#genericDialogDivId').dialog(
+      {
+        resizable: false,
+    height: height_,
+    width: width_,
+    modal: modal_,
+    buttons: buttons_
+      });
+  if (title_ === '') {
+    $('#genericDialogDivId').siblings('.ui-dialog-titlebar').hide();
+  }else {
+    $('#genericDialogDivId').siblings('.ui-dialog-titlebar').show();
+
+  }
+
+}
+
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Lib/_libCommon.js
+    //shared variables
 var usrSessionId = '';
 var usrLoginId = '';
 var usrLastAction = new Date();
@@ -71,7 +536,12 @@ function clearForm(formName) {
         fieldId = field.id.replace(formName + '-', '');
         if (field.type == 'checkbox') {
           field.checked = false;
-        } else if (field.type != 'button') field.value = '';
+        } else if (field.type != 'button') {
+           field.value = '';
+          if (IS_MOBILE && field.type === 'select-one') {
+            $(field).selectmenu('refresh');
+          }
+        }
       }
       );
   toggleSaveMode(formName, false);
@@ -93,16 +563,19 @@ function standardValidate(formName) {
     span.innerHTML = '';
   });
   $.each($('form#' + formName + ' .invalid'), function(ndx, field) {
+    if (isEmpty(field.id)){return true;}//skip/continue if no ID
     $('form#' + formName + ' #' + field.id).removeClass('invalid');
   });
   $.each($('form#' + formName + ' .VALIDATErequired'), function(ndx, field) {
-    if (field.value == null || field.value == '') {
+    if (isEmpty(field.id)){return true;}//skip/continue if no ID
+    if (isEmpty(field.value)) {
       appendValidationMsg(formName, field.id, 'Required');
       highlightFieldError(formName, field.id, true);
       formValid = false;
     }
   });
   $.each($('form#' + formName + ' .VALIDATEinteger'), function(ndx, field) {
+    if (isEmpty(field.id)){return true;}//skip/continue if no ID
     if (field.value != null && !isInteger(field.value)) {
       appendValidationMsg(formName, field.id, 'Integer Input Required');
       highlightFieldError(formName, field.id, true);
@@ -111,6 +584,7 @@ function standardValidate(formName) {
   });
   $.each($('form#' + formName + ' .VALIDATEmmddyyyydate'),
       function(ndx, field) {
+    if (isEmpty(field.id)){return true;}//skip/continue if no ID
         if (field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)) {
           appendValidationMsg(formName, field.id, 'MM/DD/YYYY Required');
           highlightFieldError(formName, field.id, true);
@@ -129,9 +603,11 @@ function isFieldIdEmpty(fieldId_) {
 }
 
 function isEmpty(val) {
-  if (typeof(val) == 'undefined') return true;
-  if (val == null || val == '') return true;
-  return false;
+  return (!val || 0 === val.length);
+
+}
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
 }
 
 function isInteger(value) {
@@ -472,485 +948,6 @@ function isFormEmpty(formName) {
 
 
 
-
-
-//client1.js
-
-
-function showClientLogViewer() {
-  hideCurrentContentPane();
-  statusMsg('Navigated to Log Viewer');
-  var newHTML = '';
-  $('#clientLogViewer').fadeIn();
-  $('ul#clientLogView').find('li').remove();
-   logMsg('Log Viewed');
-  for (var ndx = 0; ndx < clientLog.length; ndx++) {
-  newHTML += '<li>' + clientLog[ndx].logDt + '|';
-   newHTML += clientLog[ndx].msg + '</li>';
-  }
-  $('ul#clientLogView').html(newHTML);
-  currentContentPane = 'clientLogViewer';
-}
-
-
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityUser/_securityUserCommon.js
-
-
-
-
-
-
-
-
-
-
-
-//Server Calls
-function retrieveSecurityUserList() {
-  if (!isUserAuthorized('SELECT_SECURITY_USER',
-        true,
-        'retrieveSecurityUserList')) {
-           return false;
-      }
-
-  var params = prepParams(params, 'security_user' , 'select');
-  var successf = function(rslt) {
-    if (rslt[SERVER_SIDE_FAIL]) {
-      briefNotify(
-          'There was a problem retrieving the User Listing',
-          'ERROR'
-          );
-    }else {
-      populateSecurityUserListTable(rslt.rows);
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-function retrieveSecurityUser(params) {
-  if (!isUserAuthorized('SELECT_SECURITY_USER',
-        true,
-        'retrieveSecurityUser')) {
-           return false;
-        }
-
-  params = prepParams(params, 'security_user', 'SELECT');
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      bindToForm('securityUserForm', rslt.rows[0]);
-      $('#securityUserForm-edit_user_id').val(rslt.rows[0].user_id);
-      if (rslt.rows[0].active_yn == 'Y') {
-        document.getElementById('securityUserForm-active_yn').checked = true;
-      }else {
-        document.getElementById('securityUserForm-active_yn').checked = false;
-      }
-      toggleSaveMode('securityUserForm', true);
-      showPasswordFields(false);
-    }else {
-      briefNotify(
-          'There was a problem retrieving the User.',
-          'ERROR'
-          );
-    }
-  };
-  serverCall(params, successf, FAILF);
-}
-
-
-
-function deleteSecurityUser(securityUserId_, lastUpdate_) {
-  if (!isUserAuthorized('DELETE_SECURITY_USER',
-        true,
-        'deleteSecurityUser')) {
-           return false;
-        }
-
-  var params = prepParams(params, 'security_user' , 'delete');
-  params['security_user_id'] = securityUserId_;
-  params['last_update'] = lastUpdate_;
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-      removeSecurityUserListTableRow(rslt.security_user_id);
-      briefNotify('User Deleted Successfully', 'INFO');
-    }else {
-      briefNotify('There was a problem communicating with the Server.',
-          'ERROR'
-          );
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-
-function saveSecurityUser(params) {
-  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
-      !isUserAuthorized('INSERT_SECURITY_USER', false)) {
-    briefNotify('Access Violation', 'ERROR');
-    return false;
-  }
-
-  params = prepParams(params, 'security_user', insertUpdateChoose);
-  var successf = function(rslt) {
-    if (!rslt[SERVER_SIDE_FAIL]) {
-
-      clearForm('securityUserForm');
-      showPasswordFields(true);
-      if (rslt.spwfAction == 'UPDATE') {
-        replaceSecurityUserListTableRow(rslt.rows[0]);
-      }else if (rslt.spwfAction == 'INSERT') {
-        addNewSecurityUserListTableRow(rslt.rows[0]);
-      }
-      briefNotify('User Successfully Saved',
-          'INFO'
-          );
-      clearSecurityUserForm();
-
-    }else {
-      briefNotify('There was a problem communicating with the Server.',
-         'ERROR'
-         );
-    }
-
-  };
-  serverCall(params, successf, FAILF);
-}
-
-//ServerCall Wrappers
-function editSecurityUser(securityUserId_) {
-  if (!isUserAuthorized('SELECT_SECURITY_USER',
-        true,
-        'editSecurityUser')) {
-          return false;
-        }
-  if (isUserAuthorized('UPDATE_SECURITY_USER', false)) {
-    securityLockForm('securityUserForm', false);
-  }else {securityLockForm('securityUserForm', true);}
-
-
-
-  if (securityUserId_) {
-    var params = {'where_clause': 'security_user_id=' + securityUserId_};
-    retrieveSecurityUser(params);
-  }
-}
-
-function saveSecurityUserForm() {
-  if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
-      !isUserAuthorized('INSERT_SECURITY_USER', false)) {
-    briefNotify('Access Violation: saveSecurityUserForm',
-       'ERROR'
-       );
-      return false;
-  }
-
-  if (validateSecurityUserForm()) {
-    var params = bindForm('securityUserForm');
-    if (document.getElementById('securityUserForm-active_yn').checked) {
-      params['active_yn'] = 'Y';
-    }else {
-      params['active_yn'] = 'N';
-    }
-    saveSecurityUser(params);
-  }
-}
-
-//validation
-function validateSecurityUserForm() {
-  var formName = 'securityUserForm';
-  var formValid = standardValidate(formName);
-  if (document.getElementById('securityUserForm-password_enc').value !=
-      document.getElementById('securityUserForm-password_validate').value) {
-    showDialog('Please ensure the passwords match to continue');
-    formValid = false;
-  }
-
-  return formValid;
-}
-
-//Top Level HTML Manip
-function populateSecurityUserListTable(dataRows) {
-  var dataArray = new Array();
-  if (dataRows != null)
-    for (var ndx = 0; ndx < dataRows.length; ndx++) {
-      dataArray[ndx] = buildSecurityUserListTableRow(dataRows[ndx]);
-    }
-  $('#securityUserListTable').dataTable().fnClearTable();
-  $('#securityUserListTable').dataTable().fnAddData(dataArray, true);
-}
-
-function buildSecurityUserListTableRow(data) {
-  var dataHash = {};
-  var links = '';
-  dataHash['user_id'] = data.user_id;
-  if (isUserAuthorized('UPDATE_SECURITY_USER', false)) {
-    links += '<a class = "alink" onclick = "editSecurityUser(';
-     links += data.security_user_id + ')">Edit</a> ';
-    links += ' &nbsp; &nbsp;';
-  }else if (isUserAuthorized('SELECT_SECURITY_USER', false)) {
-    links += '<a class = "alink" onclick = "editSecurityUser(';
-     links += data.security_user_id + ')">View</a> ';
-    links += ' &nbsp; &nbsp;';
-
-  }
-  if (isUserAuthorized('DELETE_SECURITY_USER', false)) {
-    links += '<a class = "alink" onclick = "deleteSecurityUser(';
-    links += data.security_user_id + ', \'' + data.last_update;
-    links += '\')">Delete</a>';
-  }
-  dataHash['links'] = links;
-  dataHash['DT_RowId'] = 'SecurityUserListTableTR-' + data.security_user_id;
-
-  return dataHash;
-}
-
-function replaceSecurityUserListTableRow(row) {
-  $('#securityUserListTable').dataTable().fnUpdate(
-      buildSecurityUserListTableRow(row),
-      $('#SecurityUserListTableTR-' + row.security_user_id)[0]
-      );
-}
-function addNewSecurityUserListTableRow(row) {
-  $('#securityUserListTable').dataTable().fnAddData(
-      buildSecurityUserListTableRow(row)
-      );
-}
-function removeSecurityUserListTableRow(securityUserId_) {
-  $('#securityUserListTable').dataTable().fnDeleteRow(
-      $('#SecurityUserListTableTR-' + securityUserId_)[0]
-      );
-}
-
-//Div Access and App Layout Calls
-function showSecurityUser() {
-  statusMsg('Navigated to Security Users');
-  if (!isUserAuthorized('SELECT_SECURITY_USER',
-       true,
-       'showSecurityUser')) {
-         return false;
-       }
-
-  retrieveSecurityUserList();
-  hideCurrentContentPane();
-  $('#securityUser').fadeIn();
-  currentContentPane = 'securityUser';
-  if (isFormEmpty('securityUserForm')) {
-    toggleSaveMode('securityUserForm', false);
-  }
-  showPasswordFields(true);
-}
-function clearSecurityUserForm() {
-  clearForm('securityUserForm');
-  showPasswordFields(true);
-  (isUserAuthorized('INSERT_SECURITY_USER', false)) ?
-    securityLockForm('securityUserForm', false) :
-      securityLockForm('securityUserForm', true);
-
-}
-
-
-//After complete Load setup
-$(document).ready(function() {
-    $('#securityUserListTable').dataTable({
-      'aoColumns': [
-       {'mData': 'user_id' },
-       {'mData': 'links', asSorting: 'none' }
-      ],
-      'sPaginationType': 'two_button'
-      }
-      );
-
-    });
-
-//page specific functions
-
-function showPasswordFields(show) {
-  if (show) {
-    $('#securityUserForm-password_encDivId').fadeIn();
-    $('#securityUserForm-password_validateDivId').fadeIn();
-  }else {
-    $('#securityUserForm-password_encDivId').fadeOut();
-    $('#securityUserForm-password_validateDivId').fadeOut();
-  }
-}
-function initiateChangePassword() {
-  showChangePasswordDialog($('#securityUserForm-edit_user_id').val());
-}
-
-function imposeSecurityUserSecurityUIRestrictions() {
-  var divIdToSecure;
-  divIdToSecure = '#securityUserFormSave';
-  (isUserAuthorized('UPDATE_SECURITY_USER', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#securityUserFormAdd';
-  (isUserAuthorized('INSERT_SECURITY_USER', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  divIdToSecure = '#securityUserEntryDivId';
-  (isUserAuthorized('UPDATE_SECURITY_USER', false) ||
-   isUserAuthorized('INSERT_SECURITY_USER', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  if (!isUserAuthorized('INSERT_SECURITY_USER', false) &&
-      !isUserAuthorized('UPDATE_SECURITY_USER', false)) {
-    securityLockForm('securityUserForm', true);
-  }
-  divIdToSecure = '#securityUserChangeOthersPassword';
-  (isUserAuthorized('CHANGE_OTHERS_PWD', false)) ?
-    securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
-  if (!isUserAuthorized('INSERT_SECURITY_USER', false) &&
-      isFormEmpty('securityUserForm')) {
-    securityLockForm('securityUserForm', true);
-  }
-}
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityUser/_securityUserWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Cache/_cacheCommon.js
-    var GOLFER_CACHE;
-var SECURITY_PROFILE_CACHE;
-var SECURITY_GRANT;
-function onRefreshCache(data) {
-  GOLFER_CACHE = {};
-  SECURITY_PROFILE_CACHE = {};
-  SECURITY_GRANT = new Array();
-  for (var i = 0; i < data.length; i++) {
-    if (data[i].tp === 'golfer') {
-      GOLFER_CACHE[data[i].val] = data[i].lbl;
-    } else if (data[i].tp === 'securityProfile') {
-      SECURITY_PROFILE_CACHE[data[i].val] = data[i].lbl;
-    } else if (data[i].tp === 'securityGrant') {
-      SECURITY_GRANT.push(data[i].lbl);
-    }
-  }
-  populateAppSelectOptions;
-  imposeApplicationSecurityRestrictions;
-  }
-
-
-
-function retrieveCache() {
-  var params = prepParams(params, 'cross_table_cache', 'select');
-  var successf = function(rslt) {
-    onRefreshCache(rslt.rows);
-  };
-  serverCall(params, successf, FAILF);
-}
-
-
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Cache/_cacheWeb.js
-    function populateAppSelectOptions() {
-  setSelectOptions('#quickGolfScoreForm select[name=golfer_id]',
-                    GOLFER_CACHE
-                  );
-  setSelectOptions('#securityUserForm select[name=securityProfileId]',
-                     SECURITY_PROFILE_CACHE
-                  );
-}
-
-function imposeApplicationSecurityRestrictions() {
-  imposeGolferSecurityUIRestrictions();
-  imposeGolfScoreSecurityUIRestrictions();
-  imposeLauncherSecurityUIRestrictions();
-  imposeGolfScoreSummarySecurityUIRestrictions();
-  imposeSecurityUserSecurityUIRestrictions();
-  imposeSecurityGrantsSecurityUIRestrictions();
-  imposeQuickGolfScoreSecurityUIRestrictions();
-
-}
-
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Help/_helpWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Help/_helpCommon.js
-
-
-  function showHelpPane() {
-    statusMsg('Navigated to Help Portal');
-    hideCurrentContentPane();
-    $('#helpPane').fadeIn();
-    currentContentPane = 'helpPane';
-    return 'helpPane';
-  }
-
-
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/LayoutComponents/_layoutComponentsCommon.js
-    function sizeLeftNav() {
-
-
-    document.getElementById('mainContent').style.top =
-    '100px';
-  document.getElementById('mainContent').style.left = '0px';
-  document.getElementById('mainContent').style.height =
-    (window.innerHeight - 135) + 'px';
-  document.getElementById('mainContent').style.width =
-    (window.innerWidth - 20) + 'px';
-}
-function displayMainLayout(showHide) {
-  var display = (showHide) ? 'block' : 'none';
-  //document.getElementById('leftnav').style.display=display;
-  document.getElementById('header').style.display = display;
-  document.getElementById('footer').style.display = display;
-  document.getElementById('mainContent').style.display = display;
-  display = (showHide) ? 'none' : 'block';
-  document.getElementById('LoginPortal').style.display = display;
-  if (!showHide)showLoginPortal();
-}
-
-$(document).ready(function() {
-  var tblClasses = $.fn.dataTableExt.oStdClasses;
-  tblClasses.sPagePrevDisabled = ' smallButton LogicDisabled';
-  tblClasses.sPagePrevEnabled = ' smallButton';
-  tblClasses.sPageNextDisabled = ' smallButton LogicDisabled';
-  tblClasses.sPageNextEnabled = ' smallButton';
-  tblClasses.sWrapper = 'prettyWrapper dataTables_wrapper';
-
-});
-
-
-
-function briefNotify(msg, type) {
-  var color;
-  if (type == null || type == 'INFO') {
-    color = 'green';
-  }else if (type == 'WARNING') {
-    color = 'yellow';
-  }else if (type == 'ERROR') {
-    color = 'red';
-  }else {
-    color = 'black';
-  }
-  $('#briefNoticeMsg').css('border-color', color);
-  $('#briefNoticeMsg').css('color', color);
-  $('#briefNoticeMsg').html(msg);
-  $('#briefNotice').fadeIn(300).delay(1500).fadeOut(400);
-  statusMsg(msg);
-}
-
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/LayoutComponents/_layoutComponentsWeb.js
-    function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
-  $('#genericDialogDivId').dialog('destroy');
-  msg_ = msg_ || 'No message Defined';
-  height_ = height_ || 300;
-  width_ = width_ || 400;
-  modal_ = (modal_ === undefined) ? true : modal_;
-  buttons_ = buttons_ || {'Ok': function() {$(this).dialog('close');}};
-  title_ = title_ || '';
-  $('#genericDialogDivId').attr('title', title_);
-  $('#dialogMsgSpanId').html(msg_);
-  $('#genericDialogDivId').dialog(
-      {
-        resizable: false,
-    height: height_,
-    width: width_,
-    modal: modal_,
-    buttons: buttons_
-      });
-  if (title_ === '') {
-    $('#genericDialogDivId').siblings('.ui-dialog-titlebar').hide();
-  }else {
-    $('#genericDialogDivId').siblings('.ui-dialog-titlebar').show();
-
-  }
-
-}
 
     // From: /home/wbmartin/www/firstapp/template/_templates_/app/Launcher/_launchWeb.js
 
@@ -1324,6 +1321,23 @@ function retrieveGolferNameForGolfScore(golferId_) {
 }
 
 
+    // From: /home/wbmartin/www/firstapp/template/_templates_/app/ClientLog/_clientLogWeb.js
+
+
+function showClientLogViewer() {
+  hideCurrentContentPane();
+  statusMsg('Navigated to Log Viewer');
+  var newHTML = '';
+  $('#clientLogViewer').fadeIn();
+  $('ul#clientLogView').find('li').remove();
+   logMsg('Log Viewed');
+  for (var ndx = 0; ndx < clientLog.length; ndx++) {
+  newHTML += '<li>' + clientLog[ndx].logDt + '|';
+   newHTML += clientLog[ndx].msg + '</li>';
+  }
+  $('ul#clientLogView').html(newHTML);
+  currentContentPane = 'clientLogViewer';
+}
     // From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScore/_golfScoreWeb.js
         // From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScore/_golfScoreCommon.js
 
@@ -2702,7 +2716,6 @@ function showSupportRequestDialog() {
 
 
     // From: /home/wbmartin/www/firstapp/template/_templates_/app/SupportRequest/_supportRequestWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Header/_headerWeb.js
         // From: /home/wbmartin/www/firstapp/template/_templates_/app/LoginPortal/_loginPortalWeb.js
 
 

@@ -3,7 +3,12 @@
     var passwordResetUrlTarget = '../cgi-bin/pwdreset.pl';
     var VIEW_ID = 0;
     var PAGE_CALLS = new Array();
+		var DEFAULT_LOADING_MSG = $.mobile.loadingMessage;
+		var IS_MOBILE = true;
 
+function onBodyLoad(){
+  $.mobile.changePage("#LoginPortalDivId");
+}
 
 
 //header1.js
@@ -72,7 +77,12 @@ function clearForm(formName) {
 				fieldId = field.id.replace(formName + '-', '');
 				if (field.type == 'checkbox') {
 					field.checked = false;
-				} else if (field.type != 'button') field.value = '';
+				} else if (field.type != 'button') {
+				 	field.value = '';
+					if (IS_MOBILE && field.type === 'select-one') {
+						$(field).selectmenu('refresh');
+					}
+				}
 			}
 			);
 	toggleSaveMode(formName, false);
@@ -94,16 +104,19 @@ function standardValidate(formName) {
 		span.innerHTML = '';
 	});
 	$.each($('form#' + formName + ' .invalid'), function(ndx, field) {
+		if (isEmpty(field.id)){return true;}//skip/continue if no ID
 		$('form#' + formName + ' #' + field.id).removeClass('invalid');
 	});
 	$.each($('form#' + formName + ' .VALIDATErequired'), function(ndx, field) {
-		if (field.value == null || field.value == '') {
+		if (isEmpty(field.id)){return true;}//skip/continue if no ID
+		if (isEmpty(field.value)) {
 			appendValidationMsg(formName, field.id, 'Required');
 			highlightFieldError(formName, field.id, true);
 			formValid = false;
 		}
 	});
 	$.each($('form#' + formName + ' .VALIDATEinteger'), function(ndx, field) {
+		if (isEmpty(field.id)){return true;}//skip/continue if no ID
 		if (field.value != null && !isInteger(field.value)) {
 			appendValidationMsg(formName, field.id, 'Integer Input Required');
 			highlightFieldError(formName, field.id, true);
@@ -112,6 +125,7 @@ function standardValidate(formName) {
 	});
 	$.each($('form#' + formName + ' .VALIDATEmmddyyyydate'),
 			function(ndx, field) {
+		if (isEmpty(field.id)){return true;}//skip/continue if no ID
 				if (field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)) {
 					appendValidationMsg(formName, field.id, 'MM/DD/YYYY Required');
 					highlightFieldError(formName, field.id, true);
@@ -130,9 +144,11 @@ function isFieldIdEmpty(fieldId_) {
 }
 
 function isEmpty(val) {
-	if (typeof(val) == 'undefined') return true;
-	if (val == null || val == '') return true;
-	return false;
+	return (!val || 0 === val.length);
+	
+}
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
 }
 
 function isInteger(value) {
@@ -494,8 +510,8 @@ function onRefreshCache(data) {
 			SECURITY_GRANT.push(data[i].lbl);
 		}
 	}
-  populateAppSelectOptions;
-  imposeApplicationSecurityRestrictions;	
+  populateAppSelectOptions();
+  imposeApplicationSecurityRestrictions();	
 	}
 
 
@@ -511,6 +527,9 @@ function retrieveCache() {
 
 
 function populateAppSelectOptions(){
+	setSelectOptions('#quickGolfScoreForm select[name=golfer_id]',
+										GOLFER_CACHE
+									);
 
 }
 function imposeApplicationSecurityRestrictions(){
@@ -714,9 +733,44 @@ function validateLoginPortalForm(){
 
 //LayoutComponents.js
 
+
 function showDialog(msg){
 alert(msg);
 }
+
+	function showDialog(title_, msg_){
+		$("#userMsgDialog #title").html(title_);
+		$("#userMsgDialog #msg").html(msg_);
+		$.mobile.changePage("#userMsgDialog", {"transition":"pop"});
+
+
+	}
+
+function briefNotify(msg,type) {
+	// you are right here working on brief notify http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.js
+  if (typeof(delay)==='undefined') {
+    var delay = 3500; // in milliseconds
+  }
+  if (typeof(theme)==='undefined') {
+    var theme = 'a'; // default theme; setting this to 'e' is nice for error messages
+  }
+  var css_class = '';
+  if (theme==='e') {
+    css_class = 'ui-body-e';
+  }
+  $.mobile.loadingMessage = msg;
+  $.mobile.showPageLoadingMsg();
+  $(".ui-loader").addClass(css_class).find(".spin:visible").hide(); // hide the spinner graphic
+  setTimeout(
+    function() {
+      $(".ui-loader").removeClass(css_class).find(".spin:hidden").show(); // show the spinner graphic when we are done
+      $.mobile.hidePageLoadingMsg();
+      $.mobile.loadingMessage = DEFAULT_LOADING_MSG; // reset back to default message
+    }, 
+    delay
+  );
+}
+
 
 
 

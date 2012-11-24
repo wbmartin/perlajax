@@ -5,14 +5,19 @@
     var passwordResetUrlTarget = '../cgi-bin/pwdreset.pl';
     var VIEW_ID = 0;
     var PAGE_CALLS = new Array();
+		var DEFAULT_LOADING_MSG = $.mobile.loadingMessage;
+		var IS_MOBILE = true;
 
+function onBodyLoad(){
+  $.mobile.changePage("#LoginPortalDivId");
+}
 
 
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
 //header1.js
-[%INCLUDE core/_header1.js%]
+[%INCLUDE app/Lib/_libCommon.js%]
 //ClientLog.js
-[%#INCLUDE core/_clientLog.js%]
+[%#INCLUDE app/ClientLog/_clientLog.js%]
 //cache.js
 [%INCLUDE app/Cache/_cacheCommon.js%]
 [%INCLUDE app/Cache/_cacheMobile.js%]
@@ -20,7 +25,7 @@
 [%INCLUDE app/LoginPortal/_loginPortalCommon.js%]
 [%INCLUDE app/LoginPortal/_loginPortalMobile.js%]
 //LayoutComponents.js
-[%#INCLUDE app/LayoutComponents/_layoutComponentsCommon.js%]
+[%INCLUDE app/LayoutComponents/_layoutComponentsCommon.js%]
 [%INCLUDE app/LayoutComponents/_layoutComponentsMobile.js%]
 [%INCLUDE app/GolfScoreSummary/_golfScoreSummaryCommon.js%]
 [%INCLUDE app/GolfScoreSummary/_golfScoreSummaryMobile.js%]

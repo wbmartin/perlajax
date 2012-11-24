@@ -5,13 +5,10 @@
     var passwordResetUrlTarget = 'cgi-bin/pwdreset.pl';
     var VIEW_ID = 0;
     var PAGE_CALLS = new Array();
+		var IS_MOBILE = false;
 
 
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
-//header1.js
-[%INCLUDE core/_header1.js%]
-//client1.js
-[%INCLUDE core/_clientLog.js%]
 
 [%FOREACH tPath = appTemplates%]
   [%-IF  tPath.match('Web') or tPath.match('Common')-%]
