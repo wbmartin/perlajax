@@ -1,5 +1,11 @@
 [%divId='clientLogViewer'%]
 
+[% SRC_LOC = 'clientLogWeb'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function show[%ucfirst(divId)%]() {
 	hideCurrentContentPane();
 	statusMsg('Navigated to Log Viewer');

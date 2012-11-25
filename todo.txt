@@ -1,3 +1,8 @@
 email forgotten password
 FAQ Page
 Support Request
+
+* @param {Object} params data.									  * @return {}  .
+* @return {boolean} allowed.										  * @param {Object} row [%ucfirst(divId)%] info.
+* @param {Object} data [%ucfirst(divId)%] info.		* @param {integer} [%divId%]Id_ prkey.
+

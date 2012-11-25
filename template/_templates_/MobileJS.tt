@@ -8,8 +8,8 @@
 		var DEFAULT_LOADING_MSG = $.mobile.loadingMessage;
 		var IS_MOBILE = true;
 
-function onBodyLoad(){
-  $.mobile.changePage("#LoginPortalDivId");
+function onBodyLoad() {
+  $.mobile.changePage('#LoginPortalDivId');
 }
 
 

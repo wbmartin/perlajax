@@ -7,7 +7,7 @@
 
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityUser/_securityUserCommon.js
+
 
 
 
@@ -20,6 +20,12 @@
 
 
 //Server Calls
+
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function retrieveSecurityUserList() {
   if (!isUserAuthorized('SELECT_SECURITY_USER',
         true,
@@ -41,6 +47,11 @@ function retrieveSecurityUserList() {
   };
   serverCall(params, successf, FAILF);
 }
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function retrieveSecurityUser(params) {
   if (!isUserAuthorized('SELECT_SECURITY_USER',
         true,
@@ -72,6 +83,11 @@ function retrieveSecurityUser(params) {
 
 
 
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function deleteSecurityUser(securityUserId_, lastUpdate_) {
   if (!isUserAuthorized('DELETE_SECURITY_USER',
         true,
@@ -96,6 +112,11 @@ function deleteSecurityUser(securityUserId_, lastUpdate_) {
   serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function saveSecurityUser(params) {
   if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
       !isUserAuthorized('INSERT_SECURITY_USER', false)) {
@@ -130,6 +151,11 @@ function saveSecurityUser(params) {
 }
 
 //ServerCall Wrappers
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function editSecurityUser(securityUserId_) {
   if (!isUserAuthorized('SELECT_SECURITY_USER',
         true,
@@ -148,6 +174,11 @@ function editSecurityUser(securityUserId_) {
   }
 }
 
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function saveSecurityUserForm() {
   if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
       !isUserAuthorized('INSERT_SECURITY_USER', false)) {
@@ -169,6 +200,11 @@ function saveSecurityUserForm() {
 }
 
 //validation
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function validateSecurityUserForm() {
   var formName = 'securityUserForm';
   var formValid = standardValidate(formName);
@@ -182,6 +218,11 @@ function validateSecurityUserForm() {
 }
 
 //Top Level HTML Manip
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function populateSecurityUserListTable(dataRows) {
   var dataArray = new Array();
   if (dataRows != null)
@@ -192,6 +233,11 @@ function populateSecurityUserListTable(dataRows) {
   $('#securityUserListTable').dataTable().fnAddData(dataArray, true);
 }
 
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function buildSecurityUserListTableRow(data) {
   var dataHash = {};
   var links = '';
@@ -217,17 +263,32 @@ function buildSecurityUserListTableRow(data) {
   return dataHash;
 }
 
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function replaceSecurityUserListTableRow(row) {
   $('#securityUserListTable').dataTable().fnUpdate(
       buildSecurityUserListTableRow(row),
       $('#SecurityUserListTableTR-' + row.security_user_id)[0]
       );
 }
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function addNewSecurityUserListTableRow(row) {
   $('#securityUserListTable').dataTable().fnAddData(
       buildSecurityUserListTableRow(row)
       );
 }
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function removeSecurityUserListTableRow(securityUserId_) {
   $('#securityUserListTable').dataTable().fnDeleteRow(
       $('#SecurityUserListTableTR-' + securityUserId_)[0]
@@ -235,6 +296,11 @@ function removeSecurityUserListTableRow(securityUserId_) {
 }
 
 //Div Access and App Layout Calls
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function showSecurityUser() {
   statusMsg('Navigated to Security Users');
   if (!isUserAuthorized('SELECT_SECURITY_USER',
@@ -252,6 +318,11 @@ function showSecurityUser() {
   }
   showPasswordFields(true);
 }
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function clearSecurityUserForm() {
   clearForm('securityUserForm');
   showPasswordFields(true);
@@ -263,6 +334,11 @@ function clearSecurityUserForm() {
 
 
 //After complete Load setup
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 $(document).ready(function() {
     $('#securityUserListTable').dataTable({
       'aoColumns': [
@@ -277,6 +353,11 @@ $(document).ready(function() {
 
 //page specific functions
 
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function showPasswordFields(show) {
   if (show) {
     $('#securityUserForm-password_encDivId').fadeIn();
@@ -286,10 +367,20 @@ function showPasswordFields(show) {
     $('#securityUserForm-password_validateDivId').fadeOut();
   }
 }
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function initiateChangePassword() {
   showChangePasswordDialog($('#securityUserForm-edit_user_id').val());
 }
 
+/**
+*
+* SRC: _securityUserCommon
+*=====================================================================
+*/
 function imposeSecurityUserSecurityUIRestrictions() {
   var divIdToSecure;
   divIdToSecure = '#securityUserFormSave';
@@ -318,11 +409,32 @@ function imposeSecurityUserSecurityUIRestrictions() {
     securityLockForm('securityUserForm', true);
   }
 }
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityUser/_securityUserWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Cache/_cacheCommon.js
-    var GOLFER_CACHE;
+
+
+/**
+*
+* SRC: _securityUserWeb
+*=====================================================================
+*/
+
+
+
+/**
+*
+* SRC: _cacheCommon
+*=====================================================================
+*/
+var GOLFER_CACHE;
 var SECURITY_PROFILE_CACHE;
 var SECURITY_GRANT;
+
+/**
+*
+* @param {Object} data.
+* SRC: _cacheCommon
+*=====================================================================
+*/
+
 function onRefreshCache(data) {
   GOLFER_CACHE = {};
   SECURITY_PROFILE_CACHE = {};
@@ -341,6 +453,10 @@ function onRefreshCache(data) {
   }
 
 
+/**
+*
+* SRC: _cacheCommon
+*/
 
 function retrieveCache() {
   var params = prepParams(params, 'cross_table_cache', 'select');
@@ -351,8 +467,13 @@ function retrieveCache() {
 }
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Cache/_cacheWeb.js
-    function populateAppSelectOptions() {
+
+
+/**
+*
+* SRC: _cacheWeb
+*/
+function populateAppSelectOptions() {
   setSelectOptions('#quickGolfScoreForm select[name=golfer_id]',
                     GOLFER_CACHE
                   );
@@ -360,7 +481,10 @@ function retrieveCache() {
                      SECURITY_PROFILE_CACHE
                   );
 }
-
+/**
+*
+* SRC: _cacheWeb
+*/
 function imposeApplicationSecurityRestrictions() {
   imposeGolferSecurityUIRestrictions();
   imposeGolfScoreSecurityUIRestrictions();
@@ -372,8 +496,8 @@ function imposeApplicationSecurityRestrictions() {
 
 }
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Help/_helpWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Help/_helpCommon.js
+
+
 
 
   function showHelpPane() {
@@ -385,10 +509,22 @@ function imposeApplicationSecurityRestrictions() {
   }
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/LayoutComponents/_layoutComponentsCommon.js
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/LayoutComponents/_layoutComponentsWeb.js
-    function sizeLeftNav() {
+
+/**
+*
+* SRC: LayoutComponentsCommon
+*=====================================================================
+*/
+
+
+
+/**
+*
+* SRC: _layoutComponentsWeb
+*=====================================================================
+*/
+function sizeLeftNav() {
 
 
     document.getElementById('mainContent').style.top =
@@ -399,6 +535,11 @@ function imposeApplicationSecurityRestrictions() {
   document.getElementById('mainContent').style.width =
     (window.innerWidth - 20) + 'px';
 }
+/**
+*
+* SRC: _layoutComponentsWeb
+*=====================================================================
+*/
 function displayMainLayout(showHide) {
   var display = (showHide) ? 'block' : 'none';
   //document.getElementById('leftnav').style.display=display;
@@ -410,6 +551,11 @@ function displayMainLayout(showHide) {
   if (!showHide)showLoginPortal();
 }
 
+/**
+*
+* SRC: _layoutComponentsWeb
+*=====================================================================
+*/
 $(document).ready(function() {
   var tblClasses = $.fn.dataTableExt.oStdClasses;
   tblClasses.sPagePrevDisabled = ' smallButton LogicDisabled';
@@ -422,6 +568,11 @@ $(document).ready(function() {
 
 
 
+/**
+*
+* SRC: _layoutComponentsWeb
+*=====================================================================
+*/
 function briefNotify(msg, type) {
   var color;
   if (type == null || type == 'INFO') {
@@ -441,6 +592,11 @@ function briefNotify(msg, type) {
 }
 
 
+/**
+*
+* SRC: _layoutComponentsWeb
+*=====================================================================
+*/
 function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
   if ($('#genericDialogDivId').is(':data(dialog)')) {
     $('#genericDialogDivId').dialog('destroy');
@@ -470,13 +626,20 @@ function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
 
 }
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Lib/_libCommon.js
+
     //shared variables
+
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
+
 var usrSessionId = '';
 var usrLoginId = '';
 var usrLastAction = new Date();
 var usrLogoutScheduled = false;
-var usrTimeOutDuration = 20 * 60 * 1000;
+var usrTimeOutDuration = 18 * 60 * 1000;//set 2 min less than actual
 var clientLog = new Array();
 var insertUpdateChoose = 'INSERTUPDATE';
 var FAILF = function() {alert('FAIL');};
@@ -485,14 +648,23 @@ var SERVER_SIDE_FAIL = 'serverSideFail';
 var OUTSTANDING_SERVER_CALLS = 0;
 var PAGINATION_ROW_LIMIT = 10;
 var CURRENT_PAGE = '';
+var TRUSTED_DEVICE = false;
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Form Functions
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} formId form.
+* @param {string} fieldId field.
+* @param {string} msg message.
+*/
 function appendValidationMsg(formId, fieldId, msg) {
   var fullyQName = 'form#' + formId + ' #' + fieldId;
   if ($('form#' + formId + ' #' + fieldId + 'Error').length == 0) {
     var tmpSpan = '<span id = "' + fieldId;
-     tmpSpan += 'Error" class = "ValidationMsg"></span>';
+    tmpSpan += 'Error" class = "ValidationMsg"></span>';
     $(fullyQName).after(tmpSpan);
   }
   if ($(fullyQName + 'Error').html().length == 0) {
@@ -502,13 +674,28 @@ function appendValidationMsg(formId, fieldId, msg) {
   $(fullyQName).addClass('invalid');
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} formId form.
+* @param {string} fieldId field.
+* @param {boolean} yesNo  true for yes.
+*/
 function highlightFieldError(formId, fieldId, yesNo) {
   var bordercolor = 'black';
   if (yesNo) bordercolor = 'red';
-    $('form#' + formId + ' #' + fieldId).css('border-color:' + bordercolor);
+  $('form#' + formId + ' #' + fieldId).css('border-color:' + bordercolor);
 
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @params {string} formName form.
+* @return {Object} objectified form.
+*/
 function bindForm(formName) {
   var rslt = {};
   var fieldId = '';
@@ -520,6 +707,13 @@ function bindForm(formName) {
   return rslt;
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} formName  form.
+* @param {Object} obj object to bind.
+*/
 function bindToForm(formName, obj) {
   var fieldId = '';
   $.each($('form#' + formName + ' :input'),
@@ -529,6 +723,12 @@ function bindToForm(formName, obj) {
       });
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} formName  form.
+*/
 function clearForm(formName) {
   var fieldId = '';
   $.each($('form#' + formName + ' :input'),
@@ -537,7 +737,7 @@ function clearForm(formName) {
         if (field.type == 'checkbox') {
           field.checked = false;
         } else if (field.type != 'button') {
-           field.value = '';
+          field.value = '';
           if (IS_MOBILE && field.type === 'select-one') {
             $(field).selectmenu('refresh');
           }
@@ -547,6 +747,13 @@ function clearForm(formName) {
   toggleSaveMode(formName, false);
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} formName  form.
+* @param {boolean} saveMode  true for Save, false for Add
+*/
 function toggleSaveMode(formName, saveMode) {
   var buttonToShow = (saveMode) ? 'Save' : 'Add';
   var buttonToHide = (!saveMode) ? 'Save' : 'Add';
@@ -556,6 +763,13 @@ function toggleSaveMode(formName, saveMode) {
   $(id).removeClass('LogicDisabled');
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} formName  form.
+* @return {boolean} validity.
+*/
 function standardValidate(formName) {
   var formValid = true;
   if ($('#' + formName).length == 0) formValid = false;
@@ -563,11 +777,11 @@ function standardValidate(formName) {
     span.innerHTML = '';
   });
   $.each($('form#' + formName + ' .invalid'), function(ndx, field) {
-    if (isEmpty(field.id)){return true;}//skip/continue if no ID
+    if (isEmpty(field.id)) {return true;}//skip/continue if no ID
     $('form#' + formName + ' #' + field.id).removeClass('invalid');
   });
   $.each($('form#' + formName + ' .VALIDATErequired'), function(ndx, field) {
-    if (isEmpty(field.id)){return true;}//skip/continue if no ID
+    if (isEmpty(field.id)) {return true;}//skip/continue if no ID
     if (isEmpty(field.value)) {
       appendValidationMsg(formName, field.id, 'Required');
       highlightFieldError(formName, field.id, true);
@@ -575,7 +789,7 @@ function standardValidate(formName) {
     }
   });
   $.each($('form#' + formName + ' .VALIDATEinteger'), function(ndx, field) {
-    if (isEmpty(field.id)){return true;}//skip/continue if no ID
+    if (isEmpty(field.id)) {return true;}//skip/continue if no ID
     if (field.value != null && !isInteger(field.value)) {
       appendValidationMsg(formName, field.id, 'Integer Input Required');
       highlightFieldError(formName, field.id, true);
@@ -584,16 +798,22 @@ function standardValidate(formName) {
   });
   $.each($('form#' + formName + ' .VALIDATEmmddyyyydate'),
       function(ndx, field) {
-    if (isEmpty(field.id)){return true;}//skip/continue if no ID
+        if (isEmpty(field.id)) {return true;}//skip/continue if no ID
         if (field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)) {
           appendValidationMsg(formName, field.id, 'MM/DD/YYYY Required');
           highlightFieldError(formName, field.id, true);
           formValid = false;
         }
-  });
+      });
   return formValid;
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} fieldId_  field.
+*/
 function isFieldIdEmpty(fieldId_) {
   if (document.getElementById(fieldId_) == undefined) return true;
   if (document.getElementById(fieldId_).value == undefined) return true;
@@ -602,14 +822,55 @@ function isFieldIdEmpty(fieldId_) {
   return false;
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} val to evaluate.
+*/
 function isEmpty(val) {
   return (!val || 0 === val.length);
 
 }
+
+/**
+*  evalutes emptiness
+* @expose
+* @return {boolean} is empty.
+*/
+String.prototype.isEmpty = function() {
+  return isEmpty(this);
+};
+
+
+
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} str to evalute.
+*/
 function isBlank(str) {
-    return (!str || /^\s*$/.test(str));
+  return (!str || /^\s*$/.test(str));
 }
 
+/**
+*  evalutes blankness
+* @expose
+* @return {Boolean} is blank.
+*/
+String.prototype.isEmpty = function() {
+  return isBlank(this);
+};
+
+
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {Object} value to evaluate.
+* @return {boolean} is Integer.
+*/
 function isInteger(value) {
   if ((parseFloat(value) == parseInt(value)) && !isNaN(value)) {
     return true;
@@ -621,6 +882,13 @@ function isInteger(value) {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Formatting Functions
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} val to evaluate.
+* @return {string} formatted date.
+*/
 function pgDate(val) {
   var rslt;
   if (val != null) {
@@ -632,6 +900,17 @@ function pgDate(val) {
   return rslt;
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {object} num  number to format.
+* @param {integer} decimalNum  number ofdecimals.
+* @param {boolean} bolLeadingZero  include leading zeros.
+* @param {boolean} bolParens show negative with parens.
+* @param {boolean} bolCommas  format with commas.
+* @returns {string} formatted val.
+*/
 function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
   if (isNaN(parseInt(num))) return '---';
   var tmpNum = num;
@@ -655,13 +934,13 @@ function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
     iStart -= 3;
     while (iStart >= 1) {
       tmpNumStr = tmpNumStr.substring(0, iStart) + ',' + tmpNumStr.substring(iStart, tmpNumStr.length);
-        iStart -= 3;
+      iStart -= 3;
     }
   }
 
   // See if we need to use parenthesis
   if (bolParens && num < 0) {
-     tmpNumStr = '(' + tmpNumStr.substring(1, tmpNumStr.length) + ')';
+    tmpNumStr = '(' + tmpNumStr.substring(1, tmpNumStr.length) + ')';
   }
 
   if (tmpNumStr.indexOf('.') < 0 && decimalNum > 0) {
@@ -675,7 +954,11 @@ function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
   return tmpNumStr.toString();    // Return our formatted string!
 }
 
-
+/**
+*  Upper Cases First Letter of a string
+* @expose
+* @return {String} UCed first letter.
+*/
 String.prototype.ucfirst = function() {
   // Split the string into words if string contains multiple words.
   var x = this.split(/\s+/g);
@@ -694,6 +977,14 @@ String.prototype.ucfirst = function() {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //js Utility Functions
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {Object} cacheArray  array.
+* @param {string} idToSet  _.
+* @return {Object} filtered array.
+*/
 function filterCacheArrayByVal(cacheArray, idToSet) {
   for (var i = 0; i < cacheArray.length; i++) {
     if (cacheArray[i].val == idToSet)return cacheArray[i];
@@ -701,6 +992,14 @@ function filterCacheArrayByVal(cacheArray, idToSet) {
   return {};
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {Object} er digester.
+* @param {Object} ee digestee.
+* @return {Object} digested.
+*/
 function digest(er, ee) {
   if (null == ee ||
       'object' != typeof ee ||
@@ -713,10 +1012,24 @@ function digest(er, ee) {
 }
 
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {Object} obj _.
+* @return {Object} deep Coppied Object.
+*/
 function deepCopy(obj) {
   return $.extend(true, [], obj);
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} selectId  html select.
+* @param {Object} obj key/val hash.
+*/
 function setSelectOptions(selectId, obj) {
   var newhtml = '<option value=""></option>';
   $.each(obj, function(key, val) {
@@ -729,21 +1042,37 @@ function setSelectOptions(selectId, obj) {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Content Functions
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
 function timeoutIfNoAction() {
   var timeSince = new Date().getTime() - usrLastAction.getTime();
   if (usrLoginId != '' && timeSince > usrTimeOutDuration) {
-    usrLogoutScheduled = true;
-    statusMsg('Logging Out User in 1 minute');
-    window.setTimeout(function() {
-      if (usrLogoutScheduled) {logOutUser();}
-    }, 60000);
+    if (TRUSTED_DEVICE) {
+      var params = prepParams(params, 'keep_alive', 'select');
+      var successf = function(rslt) { };
+      serverCall(params, successf, FAILF);
+    } else {
+      usrLogoutScheduled = true;
+      statusMsg('Logging Out User in 1 minute');
+      window.setTimeout(function() {
+        if (usrLogoutScheduled) {logOutUser();}
+      }, 60000);
+    }
   } else {
-    window.setTimeout(timeoutIfNoAction, usrTimeOutDuration + 1000);
+    window.setTimeout(timeoutIfNoAction, usrTimeOutDuration);
   }
 
 }
 
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
 function hideCurrentContentPane() {
   if (document.getElementById(currentContentPane) != undefined) {
     document.getElementById(currentContentPane).style.display = 'none';
@@ -752,21 +1081,42 @@ function hideCurrentContentPane() {
 }
 
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} name divid.
+*/
 function standardShowContentPane(name) {
   hideCurrentContentPane();
   $('#' + name).fadeIn();
   currentContentPane = name;
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @return {string}  empty string.
+*/
 function hideMainContent() {
   return '';
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
 function registerAction() {
   usrLastAction = new Date();
   usrLogoutScheduled = false;
 }
 
+/**
+*  Extends window to unload function
+*  @return {string} message to be displayed when user refreshes or leaves.
+*/
 window.onbeforeunload = function() {
   if (usrSessionId != '') {
     var msg = 'If you click OK and continue to refresh this page, ';
@@ -778,10 +1128,24 @@ window.onbeforeunload = function() {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Log Msg Functions
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} msg message.
+*/
 function statusMsg(msg) {
   $('#statusMsg').html(msg);
   logMsg('Console Msg:' + msg);
 }
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} msg message.
+* @param {string} requestId  request tracker.
+* @return {integer} index of new log.
+*/
 function logMsg(msg, requestId) {
   var timingInfo = '';
   var logId = clientLog.length;
@@ -797,12 +1161,20 @@ function logMsg(msg, requestId) {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Server Call Functions
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {Object} params  ajax params.
+* @param {function} successCallback function to call if successful.
+* @param {function} failCallback function to call on failure.
+*/
 function serverCall(params, successCallback, failCallback) {
   if (usrSessionId == '' && params['spwfAction'] != 'authenticate') {
     return false;
   }//if session is cleared, don't make a new call
   var resourceActionInfo = 'Server Call Resource: ';
-   resourceActionInfo += params['spwfResource'] + ' Action: ';
+  resourceActionInfo += params['spwfResource'] + ' Action: ';
   resourceActionInfo += params['spwfAction'];
   params['requestId'] = logMsg(resourceActionInfo + ' Started');
   var successCallbackMod = function(rslt) {
@@ -833,11 +1205,21 @@ function serverCall(params, successCallback, failCallback) {
   });
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
 function incrementServerCalls() {
   var msg = 'Open Requests: ' + ++OUTSTANDING_SERVER_CALLS;
   $('#outstandingServerCalls').html(msg);
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
 function decrementServerCalls() {
   OUTSTANDING_SERVER_CALLS = (--OUTSTANDING_SERVER_CALLS < 0) ?
     0 : OUTSTANDING_SERVER_CALLS;
@@ -846,6 +1228,15 @@ function decrementServerCalls() {
 }
 
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @return {boolean} success.
+* @param {string} msg message.
+* @param {date} startTime time this started.
+* @param {Object} data server response to be validated.
+*/
 function handleServerResponse(msg, startTime, data) {
   if (!validateServerResponse(data)) {
     alert('Sorry, there was a problem communicating with the server.');
@@ -857,6 +1248,15 @@ function handleServerResponse(msg, startTime, data) {
   return true;
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {Object} params  ajax params.
+* @param {string} resource  usually table name.
+* @param {string} action  select, update, insert, delete.
+* @return {object}  preped params
+*/
 function prepParams(params, resource, action) {
   if (params == null) {params = {};}
   params['spwfResource'] = resource;
@@ -873,6 +1273,13 @@ function prepParams(params, resource, action) {
   return params;
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+* @param {string} responseTxt  response text.
+* @return {boolean} validity.
+*/
 function validateServerResponse(responseTxt) {
   if (responseTxt == undefined || responseTxt == null) {
     logMsg('validateServerResponse - undefined response');
@@ -892,6 +1299,11 @@ function validateServerResponse(responseTxt) {
   return true;
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
 function isUserAuthorized(request, notifyUser, caller) {
   var result = false;
   var msg = '';
@@ -912,14 +1324,29 @@ function isUserAuthorized(request, notifyUser, caller) {
   return result;
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
 function securityshow(divIdToSecure) {
   $(divIdToSecure).removeClass('SecurityDisabled');
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
 function securityHide(divIdToSecure) {
   $(divIdToSecure).addClass('SecurityDisabled');
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
 function securityLockForm(formName, lock) {
   var disableStatus;
   if ($('#' + formName).length == 0) {
@@ -932,13 +1359,18 @@ function securityLockForm(formName, lock) {
   $.each($('form#' + formName + '> input, >select'),
       function(ndx, field) {
         if (lock) {
-           $('form#' + formName + ' #' + field.id).attr('disabled', 'disabled');
+          $('form#' + formName + ' #' + field.id).attr('disabled', 'disabled');
         } else {
           $('form#' + formName + ' #' + field.id).removeAttr('disabled');
         }
-  });
+      });
 }
 
+/**
+*
+* SRC: _libCommon
+*=====================================================================
+*/
 function isFormEmpty(formName) {
   if ($('#' + formName + '-last_update').val() == '')return true;
   return false;
@@ -949,9 +1381,16 @@ function isFormEmpty(formName) {
 
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Launcher/_launchWeb.js
 
 
+
+
+/**
+*
+* SRC: _LaunchWeb
+*=====================================================================
+* @return {string} divid.
+*/
 function showLaunchPane() {
   statusMsg('Navigated to Main Portal');
   hideCurrentContentPane();
@@ -967,6 +1406,11 @@ function showLaunchPane() {
   return 'launchPane';
 }
 
+/**
+*
+* SRC: _LaunchWeb
+*=====================================================================
+*/
 function imposeLauncherSecurityUIRestrictions() {
   var divIdToSecure;
   divIdToSecure = '#launcherShowSecurityUserSpanId';
@@ -991,15 +1435,35 @@ function imposeLauncherSecurityUIRestrictions() {
 }
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Launcher/_launchCommon.js
 
 
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/About/_aboutWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/About/_aboutCommon.js
+/**
+*
+* SRC: _launchCommon
+*=====================================================================
+*/
 
 
+
+
+/**
+*
+* SRC: _aboutWeb
+*=====================================================================
+*/
+
+
+
+
+
+/**
+*
+* SRC: _cacheCommon
+*=====================================================================
+* @return {string}  div rendered.
+*/
 function showAboutPane() {
   hideCurrentContentPane();
   statusMsg('Navigated to About');
@@ -1009,7 +1473,7 @@ function showAboutPane() {
 }
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/QuickGolfScore/_quickGolfScoreWeb.js
+
 
 
 
@@ -1020,6 +1484,12 @@ function showAboutPane() {
 
 
 //After complete Load setup
+
+/**
+*
+* SRC: _quickGolfScoreWeb
+*=====================================================================
+*/
 $(document).ready(function() {
 
     $('#quickGolfScoreListTable').dataTable({
@@ -1035,6 +1505,12 @@ $(document).ready(function() {
 });
 
 //validation
+/**
+*
+* SRC: _quickGolfScoreWeb
+*=====================================================================
+* @return {boolean} validity.
+*/
 function validateQuickGolfScoreForm() {
   var formName = 'quickGolfScoreForm';
   var formValid = standardValidate(formName);
@@ -1043,6 +1519,12 @@ function validateQuickGolfScoreForm() {
 
 
 //Top Level HTML Manip
+/**
+*
+* SRC: _quickGolfScoreWeb
+*=====================================================================
+* @param {Object} dataRows  row of QuickGolfScore objects.
+*/
 function populateQuickGolfScoreListTable(dataRows) {
   var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -1052,6 +1534,13 @@ function populateQuickGolfScoreListTable(dataRows) {
   $('#quickGolfScoreListTable').dataTable().fnAddData(dataArray, true);
 }
 
+/**
+*
+* SRC: _quickGolfScoreWeb
+*=====================================================================a
+* @param {Object} data info.
+* @return {Object} list table row.
+*/
 function buildQuickGolfScoreListTableRow(data) {
   var dataHash = {};
   var links = '';
@@ -1080,17 +1569,35 @@ function buildQuickGolfScoreListTableRow(data) {
   return dataHash;
 }
 
+/**
+*
+* SRC: _quickGolfScoreWeb
+*=====================================================================a
+* @param {Object} row QuickGolfScore info.
+*/
 function replaceQuickGolfScoreListTableRow(row) {
   $('#quickGolfScoreListTable').dataTable().fnUpdate(
       buildQuickGolfScoreListTableRow(row),
       $('#QuickGolfScoreListTableTR-' + row.golf_score_id)[0]
       );
 }
+/**
+*
+* SRC: _quickGolfScoreWeb
+*=====================================================================
+* @param {Object} row QuickGolfScore info.
+*/
 function addNewQuickGolfScoreListTableRow(row) {
   $('#quickGolfScoreListTable').dataTable().fnAddData(
       buildQuickGolfScoreListTableRow(row)
       );
 }
+/**
+*
+* SRC: _quickGolfScoreWeb
+* =====================================================================
+* @param {integer} golfScoreId_ prkey.
+*/
 function removeQuickGolfScoreListTableRow(golfScoreId_) {
   $('#quickGolfScoreListTable').dataTable().fnDeleteRow(
       $('#QuickGolfScoreListTableTR-' + golfScoreId_)[0]
@@ -1098,6 +1605,11 @@ function removeQuickGolfScoreListTableRow(golfScoreId_) {
 }
 
 //Div Access and App Layout Calls
+/**
+*
+* SRC: _quickGolfScoreWeb
+*=====================================================================
+*/
 function showQuickGolfScore() {
   statusMsg('Navigated to Quick Golf Score Entry');
   retrieveQuickGolfScoreList();
@@ -1110,6 +1622,11 @@ function showQuickGolfScore() {
 
 }
 
+/**
+*
+* SRC: _quickGolfScoreWeb
+*=====================================================================
+*/
 function imposeQuickGolfScoreSecurityUIRestrictions() {
   var divIdToSecure;
   divIdToSecure = '#quickGolfScoreFormSave';
@@ -1138,7 +1655,7 @@ function imposeQuickGolfScoreSecurityUIRestrictions() {
 }
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/QuickGolfScore/_quickGolfScoreCommon.js
+
 
 
 
@@ -1150,6 +1667,13 @@ function imposeQuickGolfScoreSecurityUIRestrictions() {
 
 
 //Server Calls
+
+/**
+*
+* SRC: _quickGolfScoreCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function retrieveQuickGolfScoreList() {
   if (!isUserAuthorized(
         'SELECT_GOLF_SCORE',
@@ -1172,6 +1696,13 @@ function retrieveQuickGolfScoreList() {
     };
   serverCall(params, successf, FAILF);
 }
+/**
+*
+* SRC: _quickGolfScoreCommon
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
 function retrieveQuickGolfScore(params) {
   if (!isUserAuthorized(
         'SELECT_GOLF_SCORE',
@@ -1199,6 +1730,14 @@ function retrieveQuickGolfScore(params) {
 
 
 
+/**
+*
+* SRC: _quickGolfScoreCommon
+*=====================================================================
+* @param {integer} golfScoreId_ prkey.
+* @param {string } lastUpdate_ for tran mgt.
+* @return {boolean} allowed.
+*/
 function deleteQuickGolfScore(golfScoreId_, lastUpdate_) {
   if (!isUserAuthorized(
         'DELETE_GOLF_SCORE',
@@ -1224,6 +1763,13 @@ function deleteQuickGolfScore(golfScoreId_, lastUpdate_) {
   serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: _quickGolfScoreCommon
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
 function saveQuickGolfScore(params) {
   if (!isUserAuthorized('UPDATE_GOLF_SCORE', false) &&
       !isUserAuthorized('INSERT_GOLF_SCORE', false)) {
@@ -1256,6 +1802,13 @@ function saveQuickGolfScore(params) {
 }
 
 //ServerCall Wrappers
+/**
+*
+* SRC: _quickGolfScoreCommon
+*=====================================================================
+* @param {integer} quickGolfScoreId_ prkey.
+* @return {boolean} allowed.
+*/
 function editQuickGolfScore(quickGolfScoreId_) {
   if (!isUserAuthorized(
         'SELECT_GOLF_SCORE',
@@ -1274,6 +1827,12 @@ function editQuickGolfScore(quickGolfScoreId_) {
   }
 }
 
+/**
+*
+* SRC: _quickGolfScoreCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function saveQuickGolfScoreForm() {
   if (!isUserAuthorized('UPDATE_GOLF_SCORE') &&
       !isUserAuthorized('SELECT_GOLF_SCORE')) {
@@ -1289,6 +1848,11 @@ function saveQuickGolfScoreForm() {
 
 
 
+/**
+*
+* SRC: _quickGolfScoreCommon
+*=====================================================================
+*/
 function clearQuickGolfScoreForm() {
   clearForm('quickGolfScoreForm');
   (isUserAuthorized('INSERT_GOLF_SCORE', false)) ?
@@ -1298,12 +1862,27 @@ function clearQuickGolfScoreForm() {
 
 
 //After complete Load setup
+/**
+*
+* SRC: _quickGolfScoreCommon
+*=====================================================================
+*/
 $(document).ready(function() {
     $('#quickGolfScoreForm-game_dt').datepicker();
 
     });
 
 //page specific functions
+
+
+/**
+*
+* SRC: _quickGolfScoreCommon
+*=====================================================================
+* @param {integer} golferId_ prkey.
+* @return {boolean} allowed.
+*/
+
 function retrieveGolferNameForGolfScore(golferId_) {
   if (!isUserAuthorized(
         'SELECT_GOLF_SCORE',
@@ -1321,9 +1900,15 @@ function retrieveGolferNameForGolfScore(golferId_) {
 }
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/ClientLog/_clientLogWeb.js
 
 
+
+
+/**
+*
+* SRC: clientLogWeb
+*=====================================================================
+*/
 function showClientLogViewer() {
   hideCurrentContentPane();
   statusMsg('Navigated to Log Viewer');
@@ -1338,8 +1923,15 @@ function showClientLogViewer() {
   $('ul#clientLogView').html(newHTML);
   currentContentPane = 'clientLogViewer';
 }
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScore/_golfScoreWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScore/_golfScoreCommon.js
+
+
+/**
+*
+* SRC: _golfScoreWeb
+*=====================================================================
+*/
+
+
 
 
 
@@ -1351,6 +1943,15 @@ function showClientLogViewer() {
 
 
 //Server Calls
+
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @param {integer} golferId_ prkey.
+* @param {integer} selectedKey_ selected prkey.
+* @return {boolean} allowed.
+*/
 function retrieveGolfScoreList(golferId_, selectedKey_) {
   if (!isUserAuthorized('SELECT_GOLF_SCORE')) {
     briefNotify('Access Violation', 'ERROR');
@@ -1371,6 +1972,13 @@ function retrieveGolfScoreList(golferId_, selectedKey_) {
   };
   serverCall(params, successf, FAILF);
 }
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
 function retrieveGolfScore(params) {
   if (!isUserAuthorized('SELECT_GOLF_SCORE')) {
     briefNotify('Access Violation', 'ERROR');
@@ -1396,6 +2004,14 @@ function retrieveGolfScore(params) {
 
 
 
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================a
+* @param {integer} golfScoreId_ prkey.
+* @param {string} lastUpdate_  last update for trans mgmt.
+* @return {boolean} allowed.
+*/
 function deleteGolfScore(golfScoreId_, lastUpdate_) {
   if (!isUserAuthorized('DELETE_GOLF_SCORE')) {
     briefNotify('Access Violation', 'ERROR');
@@ -1420,6 +2036,13 @@ function deleteGolfScore(golfScoreId_, lastUpdate_) {
   serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @param {Object} params  ajax data.
+* @return {boolean} allowed.
+*/
 function saveGolfScore(params) {
   if (!isUserAuthorized('UPDATE_GOLF_SCORE') &&
       !isUserAuthorized('INSERT_GOLF_SCORE')) {
@@ -1452,6 +2075,13 @@ function saveGolfScore(params) {
 }
 
 //ServerCall Wrappers
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @param {integer} golfScoreId_ prkey.
+* @return {boolean} allowed.
+*/
 function editGolfScore(golfScoreId_) {
   if (!isUserAuthorized('SELECT_GOLF_SCORE')) {
     briefNotify('Access Violation', 'ERROR');
@@ -1469,8 +2099,13 @@ function editGolfScore(golfScoreId_) {
   }
 }
 
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function saveGolfScoreForm() {
-
   if (!isUserAuthorized('UPDATE_GOLF_SCORE') &&
       !isUserAuthorized('INSERT_GOLF_SCORE')) {
     briefNotify('Access Violation', 'ERROR');
@@ -1484,6 +2119,12 @@ function saveGolfScoreForm() {
 }
 
 //validation
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @return {boolean} validity.
+*/
 function validateGolfScoreForm() {
   var formName = 'golfScoreForm';
   var formValid = standardValidate(formName);
@@ -1491,6 +2132,12 @@ function validateGolfScoreForm() {
 }
 
 //Top Level HTML Manip
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @param {Object} dataRows array of GolfScore.
+*/
 function populateGolfScoreListTable(dataRows) {
  var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -1500,6 +2147,13 @@ function populateGolfScoreListTable(dataRows) {
   $('#golfScoreListTable').dataTable().fnAddData(dataArray, true);
 }
 
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @param {Object} data GolfScore info.
+* @return {Object} list table row.
+*/
 function buildGolfScoreListTableRow(data) {
   var dataHash = {};
   var links = '';
@@ -1526,17 +2180,35 @@ function buildGolfScoreListTableRow(data) {
   return dataHash;
 }
 
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================a
+* @param {Object} row GolfScore info.
+*/
 function replaceGolfScoreListTableRow(row) {
   $('#golfScoreListTable').dataTable().fnUpdate(
       buildGolfScoreListTableRow(row),
       $('#GolfScoreListTableTR-' + row.golf_score_id)[0]
       );
 }
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @param {Object} row GolfScore info.
+*/
 function addNewGolfScoreListTableRow(row) {
   $('#golfScoreListTable').dataTable().fnAddData(
       buildGolfScoreListTableRow(row)
       );
 }
+/**
+*
+* SRC: _golfScoreCommon
+* =====================================================================
+* @param {integer} golfScoreId_  prkey.
+*/
 function removeGolfScoreListTableRow(golfScoreId_) {
   $('#golfScoreListTable').dataTable().fnDeleteRow(
       $('#GolfScoreListTableTR-' + golfScoreId_)[0]
@@ -1544,6 +2216,13 @@ function removeGolfScoreListTableRow(golfScoreId_) {
 }
 
 //Div Access and App Layout Calls
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @param {integer} golferId_ prkey.
+* @return {boolean} allowed.
+*/
 function showGolfScore(golferId_) {
   if (!isUserAuthorized(
         'SELECT_GOLF_SCORE',
@@ -1567,6 +2246,11 @@ function showGolfScore(golferId_) {
 }
 
 
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+*/
 function clearGolfScoreForm() {
   var golferId = $('#golfScoreForm-golfer_id').val();
   clearForm('golfScoreForm');
@@ -1577,6 +2261,11 @@ function clearGolfScoreForm() {
 }
 
 //After complete Load setup
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+*/
 $(document).ready(function() {
     $('#golfScoreForm-game_dt').datepicker();
 
@@ -1593,6 +2282,13 @@ $(document).ready(function() {
 
 
 //page specific functions
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+* @param {integer} golferId_ prkey.
+* @return {boolean} allowed.
+*/
 function retrieveGolferNameForGolfScore(golferId_) {
   if (!isUserAuthorized('SELECT_GOLFER')) {
     briefNotify('Access Violation', 'ERROR');
@@ -1607,6 +2303,11 @@ function retrieveGolferNameForGolfScore(golferId_) {
   serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: _golfScoreCommon
+*=====================================================================
+*/
 function imposeGolfScoreSecurityUIRestrictions() {
   var divIdToSecure;
   divIdToSecure = '#golfScoreFormSave';
@@ -1633,7 +2334,7 @@ function imposeGolfScoreSecurityUIRestrictions() {
 
 }
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityGrants/_securityGrantsCommon.js
+
 
 
 
@@ -1646,6 +2347,13 @@ function imposeGolfScoreSecurityUIRestrictions() {
 
 
 //Server Calls
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function retrieveSecurityGrantsList() {
   if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
     briefNotify(
@@ -1669,6 +2377,13 @@ function retrieveSecurityGrantsList() {
   };
   serverCall(params, successf, FAILF);
 }
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
 function retrieveSecurityGrants(params) {
   if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
     briefNotify(
@@ -1695,6 +2410,14 @@ function retrieveSecurityGrants(params) {
 
 
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {integer} securityProfileId_ prkey.
+* @param {string} lastUpdate_ for transaction mgmt.
+* @return {boolean} allowed.
+*/
 function deleteSecurityGrants(securityProfileId_, lastUpdate_) {
   if (!isUserAuthorized('DELETE_SECURITY_PROFILE')) {
     briefNotify(
@@ -1722,6 +2445,13 @@ function deleteSecurityGrants(securityProfileId_, lastUpdate_) {
   serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
 function saveSecurityGrants(params) {
   if (!isUserAuthorized('UPDATE_SECURITY_PROFILE') &&
       !isUserAuthorized('INSERT_SECURITY_PROFILE')) {
@@ -1755,6 +2485,13 @@ function saveSecurityGrants(params) {
 }
 
 //ServerCall Wrappers
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {integer} securityGrantsId_ prkey.
+* @return {boolean} allowed.
+*/
 function editSecurityGrants(securityGrantsId_) {
   if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
     briefNotify(
@@ -1779,6 +2516,12 @@ function editSecurityGrants(securityGrantsId_) {
   }
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function saveSecurityGrantsForm() {
   if (!isUserAuthorized('UPDATE_SECURITY_PROFILE') &&
       !isUserAuthorized('INSERT_SECURITY_PROFILE')) {
@@ -1792,9 +2535,16 @@ function saveSecurityGrantsForm() {
     var params = bindForm('securityGrantsForm');
     saveSecurityGrants(params);
   }
-}
+
 
 //validation
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @return {boolean}  validity.
+*/
+}
 function validateSecurityGrantsForm() {
   var formName = 'securityGrantsForm';
   var formValid = standardValidate(formName);
@@ -1802,6 +2552,12 @@ function validateSecurityGrantsForm() {
 }
 
 //Top Level HTML Manip
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {Object} dataRows array of SecurityGrants objects.
+*/
 function populateSecurityGrantsListTable(dataRows) {
   var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -1811,6 +2567,13 @@ function populateSecurityGrantsListTable(dataRows) {
   $('#securityGrantsListTable').dataTable().fnAddData(dataArray, true);
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {Object} data SecurityGrants info.
+* @return {Object}  datatable row.
+*/
 function buildSecurityGrantsListTableRow(data) {
   var dataHash = {};
   var links = '';
@@ -1836,17 +2599,35 @@ function buildSecurityGrantsListTableRow(data) {
   return dataHash;
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {Object} row SecurityGrants info.
+*/
 function replaceSecurityGrantsListTableRow(row) {
   $('#securityGrantsListTable').dataTable().fnUpdate(
       buildSecurityGrantsListTableRow(row),
       $('#SecurityGrantsListTableTR-' + row.security_profile_id)[0]
       );
 }
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {Object} row SecurityGrants info.
+*/
 function addNewSecurityGrantsListTableRow(row) {
   $('#securityGrantsListTable').dataTable().fnAddData(
       buildSecurityGrantsListTableRow(row)
       );
 }
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================a
+* @param {integer} securityProfileId_ prkey.
+*/
 function removeSecurityGrantsListTableRow(securityProfileId_) {
   $('#securityGrantsListTable').dataTable().fnDeleteRow(
       $('#SecurityGrantsListTableTR-' + securityProfileId_)[0]
@@ -1854,6 +2635,12 @@ function removeSecurityGrantsListTableRow(securityProfileId_) {
 }
 
 //Div Access and App Layout Calls
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function showSecurityGrants() {
   statusMsg('Navigated to Security Grants');
   if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
@@ -1883,6 +2670,11 @@ function showSecurityGrants() {
 }
 
 //After complete Load setup
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+*/
 $(document).ready(function() {
   $('#securityGrantsListTable').dataTable(
     {'aoColumns' : [
@@ -1906,6 +2698,12 @@ $(document).ready(function() {
 
 //page specific functions
 var allAvailablePrivilegeList;
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @return {boolean} allowed.
+*/
 function retrieveAllAvailablePrivilegesList() {
   if (!isUserAuthorized('SELECT_SECURITY_PRIVILEGE')) {
     briefNotify(
@@ -1923,6 +2721,11 @@ function retrieveAllAvailablePrivilegesList() {
   serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+*/
 function populateAvailableGrantsWithAll() {
   var newOptions = '';
   for (var ndx = 0; ndx < allAvailablePrivilegeList.length; ndx++) {
@@ -1941,6 +2744,13 @@ function populateAvailableGrantsWithAll() {
   $('#grantedPrivilegesId').children().remove();
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {string} identifierTodraggable_  div id.
+* @return {boolean} allowed.
+*/
 function makeDragable(identifierTodraggable_) {
   if (!isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
     briefNotify('Access Violation - makeDragable', 'ERROR');
@@ -1958,6 +2768,13 @@ function makeDragable(identifierTodraggable_) {
         });
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {integer} profileId_ prkey.
+* @return {boolean} allowed.
+*/
 function retrieveAllGrantedPrivilegesList(profileId_) {
   if (!isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
     briefNotify(
@@ -1983,15 +2800,37 @@ function retrieveAllGrantedPrivilegesList(profileId_) {
 }
 
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {Object} event unknown.
+* @param {Object} ui  dom element.
+*/
 function handleSecurityGrantDrop(event, ui) {
   if (ui.draggable.parent().attr('id') != 'grantedPrivilegesId')
     attemptSecurityGrantRevoke('GRANT', ui.draggable.attr('id'));
 }
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {Object} event unknown.
+* @param {Object} ui  dom element.
+*/
 function handleSecurityRevokeDrop(event, ui) {
   if (ui.draggable.parent().attr('id') != 'availableGrantsId')
     attemptSecurityGrantRevoke('REVOKE', ui.draggable.attr('id'));
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {string} grantOrRevoke_  GRANT or REVOKE.
+* @param {string} divId_ div.
+* @return {boolean} allowed.
+*/
 function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
   if (!isUserAuthorized('DELETE_SECURITY_PROFILE_GRANT')) {
     briefNotify(
@@ -2000,7 +2839,7 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
         );
     return false;
   }
-  if(grantOrRevoke_ === 'SWAP' &&
+  if (grantOrRevoke_ === 'SWAP' &&
       $('#' + divId_).parent().attr('id') === 'availableGrantsId') {
     grantOrRevoke_ = 'GRANT';
   } else {
@@ -2025,6 +2864,14 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
 
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {string} grantDivId_ div.
+* @param {string} status_ GRANT or REVOKE.
+* @return {boolean} allowed.
+*/
 function assignGrantStatus(grantDivId_, status_) {
   if (!isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
     briefNotify('Access Violation - assignGrantStatus', 'ERROR');
@@ -2048,6 +2895,14 @@ function assignGrantStatus(grantDivId_, status_) {
       }
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {integer} securityPrivilegeId_ priv id.
+* @param {integer} securityProfileId_  profile id.
+* @return {boolean} allowed.
+*/
 function grantPrivilege(securityPrivilegeId_, securityProfileId_) {
   if (!isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
     briefNotify('Access Violation -grantPrivilege ', 'ERROR');
@@ -2072,6 +2927,14 @@ function grantPrivilege(securityPrivilegeId_, securityProfileId_) {
   serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {integer} securityPrivilegeId_ priv id.
+* @param {integer} securityProfileId_  profile id.
+* @return {boolean} allowed.
+*/
 function revokePrivilege(securityPrivilegeId_, securityProfileId_) {
   if (!isUserAuthorized('DELETE_SECURITY_PROFILE')) {
     briefNotify('Access Violation  - revokePrivilege' , 'ERROR');
@@ -2097,6 +2960,11 @@ function revokePrivilege(securityPrivilegeId_, securityProfileId_) {
   serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+*/
 function makeAvailableAllPrivileges() {
 
   $('#grantedPrivilegesId').children().remove();
@@ -2106,6 +2974,12 @@ function makeAvailableAllPrivileges() {
 
 
 }
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {string} divName_  to sort.
+*/
 function sortDivChildren(divName_) {
   var children = $(divName_).children().sort(function(a, b) {
     var vA = $(a).attr('id');
@@ -2119,6 +2993,11 @@ function sortDivChildren(divName_) {
   }
 }
 
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+*/
 function imposeSecurityGrantsSecurityUIRestrictions() {
   var divIdToSecure;
   divIdToSecure = '#grantAssignDiv';
@@ -2146,11 +3025,13 @@ function imposeSecurityGrantsSecurityUIRestrictions() {
       isFormEmpty('securityGrantsForm')) {
         securityLockForm('securityGrantsForm', true);
       }
-
-
-
-
 }
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+*/
 function clearSecurityGrantsForm() {
   clearForm('securityGrantsForm');
   makeAvailableAllPrivileges();
@@ -2166,13 +3047,33 @@ function clearSecurityGrantsForm() {
 
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityGrants/_securityGrantsWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/ChangePassword/_changePasswordDialogWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/ChangePassword/_changePasswordDialogCommon.js
 
 
-//----------------------------------------------------
-//server calls
+/**
+*
+* SRC: _securityGrantsWeb
+*=====================================================================
+*/
+
+
+
+/*
+*
+* SRC: _changePasswordDialogWeb
+*=====================================================================
+*/
+
+
+
+
+
+/**
+*
+* SRC: changePasswordDialogCommon
+* =====================================================================
+* @param {Object} params ajax param.
+*/
+
 function submitChangePasswordDialog(params) {
   params = prepParams(params, 'SECURITY_CHANGE_PASSWORD', 'CHANGE');
   var successf = function(rslt) {
@@ -2191,8 +3092,12 @@ function submitChangePasswordDialog(params) {
   serverCall(params, successf, FAILF);
 }
 
-//-----------------------
 //Server Call Wrappers
+/**
+*
+* SRC: changePasswordDialogCommon
+*=====================================================================
+*/
 
 function submitChangePasswordDialogForm() {
   if (validateChangePasswordDialogForm()) {
@@ -2209,6 +3114,12 @@ function submitChangePasswordDialogForm() {
 }
 
 //validation
+/**
+*
+* SRC: changePasswordDialogCommon
+* =====================================================================
+* @return {boolean} validity .
+*/
 function validateChangePasswordDialogForm() {
   var formName = 'changePasswordDialogForm';
   var formValid = standardValidate(formName);
@@ -2228,12 +3139,16 @@ function validateChangePasswordDialogForm() {
   return formValid;
 }
 
-//----------------------------------------------------
 //html building functions
 
 
-//-------------------------------------------------
 //Div Access and App Layout Calls
+/**
+*
+* SRC: changePasswordDialogCommon
+* =====================================================================
+* @param {string} userId_ user identifer.
+*/
 function showChangePasswordDialog(userId_) {
   statusMsg('Navigated to Change Password Dialog');
   var params = {};
@@ -2259,10 +3174,14 @@ function showChangePasswordDialog(userId_) {
 
 }
 
+/**
+*
+* SRC: changePasswordDialogCommon
+*=====================================================================
+*/
 $(document).ready(function() {
 });
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScoreSummary/_golfScoreSummaryCommon.js
 
 
 
@@ -2272,6 +3191,13 @@ $(document).ready(function() {
 
 
 
+
+/**
+*
+* SRC: _golfScoreSummaryCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function retrieveGolfScoreSummaryList() {
     if (!isUserAuthorized('SELECT_GOLFER_HANDICAP')) {
       briefNotify('Access Violation', 'ERROR');
@@ -2295,7 +3221,11 @@ function retrieveGolfScoreSummaryList() {
   }
 
 
-
+/**
+*
+* SRC: _golfScoreSummaryCommon
+*=====================================================================
+*/
 function imposeGolfScoreSummarySecurityUIRestrictions() {
 
 }
@@ -2303,7 +3233,6 @@ function imposeGolfScoreSummarySecurityUIRestrictions() {
 
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScoreSummary/_golfScoreSummaryWeb.js
 
 
 
@@ -2312,6 +3241,13 @@ function imposeGolfScoreSummarySecurityUIRestrictions() {
 
 
 
+
+
+/**
+*
+* SRC: _golfScoreSummaryWeb
+*=====================================================================
+*/
 $(document).ready(function() {
     $('#golfScoreSummaryListTable').dataTable(
        {
@@ -2325,7 +3261,12 @@ $(document).ready(function() {
       });
     });
 
-
+/**
+*
+* SRC: _golfScoreSummaryWeb
+* =====================================================================
+* @param {Object} dataRows Array of GolfScoreSummary.
+*/
 function populateGolfScoreSummaryListTable(dataRows) {
   var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -2336,6 +3277,13 @@ function populateGolfScoreSummaryListTable(dataRows) {
 
 }
 
+/**
+*
+* SRC: _golfScoreSummaryWeb
+*=====================================================================
+* @param {Object} gs golfscore info.
+* @return {Object} tablerow data.
+*/
 function buildGolfScoreSummaryListTableRow(gs) {
   var dataHash = {};
   var links = '';
@@ -2359,13 +3307,18 @@ function buildGolfScoreSummaryListTableRow(gs) {
 
 }
 
+/**
+*
+* SRC: _golfScoreSummaryWeb
+*=====================================================================
+*/
 function showGolfScoreSummary() {
   statusMsg('Navigated to Golf Score Summary View');
   retrieveGolfScoreSummaryList();
   standardShowContentPane('golfScoreSummary');
 }
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SupportRequest/_supportRequestCommon.js
+
 
 
 
@@ -2378,6 +3331,13 @@ function showGolfScoreSummary() {
 
 
 //Server Calls
+
+/**
+*
+* SRC: _supportRequestCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function retrieveSupportRequestList() {
   if (!isUserAuthorized('SELECT_SUPPORT_REQUEST',
         true,
@@ -2399,6 +3359,13 @@ function retrieveSupportRequestList() {
   };
   serverCall(params, successf, FAILF);
 }
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+* @param {Object} params ajax parameters.
+* @return {boolean} allowed.
+*/
 function retrieveSupportRequest(params) {
   if (!isUserAuthorized('SELECT_SUPPORT_REQUEST',
         true, 'retrieveSupportRequest')) {
@@ -2425,6 +3392,14 @@ function retrieveSupportRequest(params) {
 
 
 
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================a
+* @return {boolean} allowed.
+* @param {integer} supportRequestId_  prkey.
+* @param {string} lastUpdate_ last update for transaction management.
+*/
 function deleteSupportRequest(supportRequestId_, lastUpdate_) {
   if (!isUserAuthorized('DELETE_SUPPORT_REQUEST',
         true,
@@ -2449,6 +3424,13 @@ function deleteSupportRequest(supportRequestId_, lastUpdate_) {
   serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+* @param {Object} params ajax params.
+* @return {boolean} allowed.
+*/
 function saveSupportRequest(params) {
   if (!isUserAuthorized('UPDATE_SUPPORT_REQUEST', false) &&
       !isUserAuthorized('INSERT_SUPPORT_REQUEST', false)) {
@@ -2480,6 +3462,13 @@ function saveSupportRequest(params) {
 }
 
 //ServerCall Wrappers
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+* @param {integer} supportRequestId_ primary key.
+* @return {boolean} allowed.
+*/
 function editSupportRequest(supportRequestId_) {
   showSupportRequestDialog();
   if (!isUserAuthorized('SELECT_SUPPORT_REQUEST',
@@ -2499,6 +3488,12 @@ function editSupportRequest(supportRequestId_) {
   }
 }
 
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+* @return {boolean} allowed.
+*/
 function saveSupportRequestForm() {
   if (!isUserAuthorized('UPDATE_SUPPORT_REQUEST') &&
       !isUserAuthorized('SELECT_SUPPORT_REQUEST')) {
@@ -2514,6 +3509,12 @@ function saveSupportRequestForm() {
 }
 
 //validation
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================a
+* @return {boolean} validity.
+*/
 function validateSupportRequestForm() {
   var formName = 'supportRequestForm';
   var formValid = standardValidate(formName);
@@ -2521,6 +3522,12 @@ function validateSupportRequestForm() {
 }
 
 //Top Level HTML Manip
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+* @param {Object} dataRows array of Objects.
+*/
 function populateSupportRequestListTable(dataRows) {
   var dataArray = new Array();
   for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -2530,6 +3537,13 @@ function populateSupportRequestListTable(dataRows) {
   $('#supportRequestListTable').dataTable().fnAddData(dataArray, true);
 }
 
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+* @param {Object} data data object.
+* @return {Object} row data.
+*/
 function buildSupportRequestListTableRow(data) {
   var dataHash = {};
   var links = '';
@@ -2566,17 +3580,35 @@ function buildSupportRequestListTableRow(data) {
   return dataHash;
 }
 
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+* @param {Object} row row object to update.
+*/
 function replaceSupportRequestListTableRow(row) {
   $('#supportRequestListTable').dataTable().fnUpdate(
       buildSupportRequestListTableRow(row),
       $('#SupportRequestListTableTR-' + row.support_request_id)[0]
       );
 }
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+* @param {Object} row data object.
+*/
 function addNewSupportRequestListTableRow(row) {
   $('#supportRequestListTable').dataTable().fnAddData(
       buildSupportRequestListTableRow(row)
       );
 }
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+* @param {integer} supportRequestId_ id to remove.
+*/
 function removeSupportRequestListTableRow(supportRequestId_) {
   $('#supportRequestListTable').dataTable().fnDeleteRow(
       $('#SupportRequestListTableTR-' + supportRequestId_)[0]
@@ -2584,6 +3616,11 @@ function removeSupportRequestListTableRow(supportRequestId_) {
 }
 
 //Div Access and App Layout Calls
+/**
+*
+* SRC: _supportRequestCommon
+*=====================================================================
+*/
 function showSupportRequest() {
   statusMsg('Navigated to Support Request');
   retrieveSupportRequestList();
@@ -2596,6 +3633,11 @@ function showSupportRequest() {
 
 }
 
+/**
+*
+* SRC: _supportRequestCommon
+*=====================================================================
+*/
 function clearSupportRequestForm() {
   $('#supportRequestFormHolder').dialog('close');
   clearForm('supportRequestForm');
@@ -2606,6 +3648,11 @@ function clearSupportRequestForm() {
 
 
 //After complete Load setup
+/**
+*
+* SRC: _supportRequestCommon
+*=====================================================================
+*/
 $(document).ready(function() {
   $('#supportRequestListTable').dataTable({
     'aoColumns': [
@@ -2649,6 +3696,14 @@ $(document).ready(function() {
 
 });
 
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+* @param {Object} oTable table object.
+* @param {integer} nTr row id.
+* @return {string} expansion div.
+*/
 function fnFormatSupportRequestExpansion(oTable, nTr) {
   var aData = oTable.fnGetData(nTr);
   var sOut = '<div style="padding-left: 50px;">';
@@ -2673,6 +3728,11 @@ function fnFormatSupportRequestExpansion(oTable, nTr) {
   return sOut;
 }
 //page specific functions
+/**
+*
+* SRC: _supportRequestCommon
+*=====================================================================
+*/
 function imposeSupportRequestSecurityUIRestrictions() {
   var divIdToSecure;
   divIdToSecure = '#supportRequestFormSave';
@@ -2699,6 +3759,11 @@ function imposeSupportRequestSecurityUIRestrictions() {
 
 }
 
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+*/
 function addNewSupportRequest() {
   var logText = '';
   clearSupportRequestForm();
@@ -2710,17 +3775,34 @@ function addNewSupportRequest() {
   $('#supportRequestForm-log_details').val(logText);
 
 }
+/**
+*
+* SRC: _supportRequestCommon
+* =====================================================================
+*/
 function showSupportRequestDialog() {
   $('#supportRequestFormHolder').dialog({modal: true, width: '90%' });
 }
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/SupportRequest/_supportRequestWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/LoginPortal/_loginPortalWeb.js
+
+
+/**
+*
+* SRC: _supportRequestWeb
+*=====================================================================
+*/
 
 
 
 
+
+
+/**
+*
+* SRC: _loginPortalWeb.js
+*=====================================================================
+*/
 function onSuccessfulLogin() {
   $('#password').val('');
   displayMainLayout(true);
@@ -2731,10 +3813,21 @@ function onSuccessfulLogin() {
   retrieveCache();
 }
 
+/**
+*
+* SRC: _loginPortalWeb.js
+*=====================================================================
+*/
 $(document).ready(function() {
   changePage(function() {showLoginPortal()});
 });
 
+/**
+*
+* SRC: _loginPortalWeb.js
+* =====================================================================
+* @return {boolean}  validity.
+*/
 function validateLoginPortalForm() {
   var formValid = standardValidate('LoginPortalForm');
   return formValid;
@@ -2742,11 +3835,18 @@ function validateLoginPortalForm() {
 
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/LoginPortal/_loginPortalCommon.js
+
     //Begin LoginPortal
 
 
 
+
+/**
+ *
+ * SRC: _loginPortalCommon
+ *=====================================================================
+ * @param {string} action  action pass through.
+ */
 function loginCall(action) {
   var params = bindForm('LoginPortalForm');
 
@@ -2786,6 +3886,11 @@ function loginCall(action) {
 
 
 
+/**
+ *
+ * SRC: _loginPortalCommon
+ *=====================================================================
+ */
 function logOutUser() {
   usrSessionId = '';
   usrLoginId = '';
@@ -2798,11 +3903,21 @@ function logOutUser() {
 }
 
 
+/**
+ *
+ * SRC: _loginPortalCommon
+ *=====================================================================
+ */
 $(document).ready(function() {
   $('#LoginPortalForm-user_id').val('golfscore');
   $('#LoginPortalForm-password').val('golfscore');
 });
 
+/**
+ *
+ * SRC: _loginPortalCommon
+ *=====================================================================
+ */
 function showLoginPortal() {
   $(document).keypress(function(e) {
     if (e.keyCode == 13) {//enter
@@ -2811,6 +3926,12 @@ function showLoginPortal() {
   });
 
 }
+/**
+ *
+ * SRC: _loginPortalCommon
+ * =====================================================================
+ * @return {boolean} success.
+ */
 function initPasswordReset() {
   var params = {};
   params['user_id'] = $('#LoginPortalForm-user_id').val();
@@ -2837,6 +3958,11 @@ function initPasswordReset() {
   });
 }
 
+/**
+ *
+ * SRC: _loginPortalCommon
+ *=====================================================================
+ */
 function initForgottenUserName() {
   var msg = 'Please Enter your email address below.  ';
   msg += 'Instructions will be mailed to this address.  ';
@@ -2857,6 +3983,11 @@ function initForgottenUserName() {
 
 }
 //
+/**
+ *
+ * SRC: _loginPortalCommon
+ *=====================================================================
+ */
 function emailUserName() {
   var params = {};
   params['email_addr'] = $('#forgottenUserIdEmail').val();
@@ -2879,6 +4010,11 @@ function emailUserName() {
   });
 }
 
+/**
+ *
+ * SRC: _loginPortalCommon
+ *=====================================================================
+ */
 function prepForOneTimeEntry() {
   $('#LoginPortalForm-password_reset_codeDivId').show();
   $('#LoginPortalForm-passwordDivId').hide();
@@ -2888,6 +4024,12 @@ function prepForOneTimeEntry() {
 
 }
 
+/**
+ *
+ * SRC: _loginPortalCommon
+ * =====================================================================
+ * @return {boolean} success.
+ */
 function onetimeLogin() {
   var params = {};
   params['user_id'] = $('#LoginPortalForm-user_id').val();
@@ -2923,8 +4065,15 @@ function onetimeLogin() {
 
 
 
-    // From: /home/wbmartin/www/firstapp/template/_templates_/app/Golfer/_golferWeb.js
-        // From: /home/wbmartin/www/firstapp/template/_templates_/app/Golfer/_golferCommon.js
+
+
+/**
+*
+* SRC: _golferWeb
+*=====================================================================
+*/
+
+
 
 
 
@@ -2938,6 +4087,13 @@ function onetimeLogin() {
 
 //server calls
 
+
+/**
+*
+* SRC: _golferCommon
+* =====================================================================
+* @return {boolean} .
+*/
 function retrieveGolferList() {
   if (!isUserAuthorized(
         'SELECT_GOLFER',
@@ -2960,6 +4116,14 @@ function retrieveGolferList() {
     };
   serverCall(params, successf, FAILF);
 }
+
+/**
+*
+* SRC: _golferCommon
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
 function retrieveGolfer(params) {
   if (!isUserAuthorized(
         'SELECT_GOLFER',
@@ -2986,6 +4150,13 @@ function retrieveGolfer(params) {
 
 
 
+/**
+*
+* SRC: _golferCommon
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
 function saveGolfer(params) {
   if (!isUserAuthorized('UPDATE_GOLFER', false) &&
       !isUserAuthorized('INSERT_GOLFER', false)) {
@@ -3016,6 +4187,14 @@ function saveGolfer(params) {
 
 
 
+/**
+*
+* SRC: _golferCommon
+*=====================================================================
+* @param {integer} golferId_ id to delete.
+* @param {string } lastUpdate_ last updated date of record.
+* @return {boolean} allowed.
+*/
 function deleteGolfer(golferId_, lastUpdate_) {
   if (!isUserAuthorized('DELETE_GOLFER', true, 'deleteGolfer'))
     return false;
@@ -3039,8 +4218,14 @@ function deleteGolfer(golferId_, lastUpdate_) {
 }
 
 
-//-----------------------
 //Server Call Wrappers
+/**
+*
+* SRC: _golferCommon
+* =====================================================================
+* @param {integer} rowId_ id to edit.
+* @return {boolean} success.
+*/
 function editGolfer(rowId_) {
   if (!isUserAuthorized('SELECT_GOLFER',
                         true,
@@ -3057,6 +4242,12 @@ function editGolfer(rowId_) {
   }
 }
 
+/**
+*
+* SRC: _golferCommon
+* =====================================================================a
+* @return {boolean} success.
+*/
 function saveGolferForm() {
   if (!isUserAuthorized('UPDATE_GOLFER', false) &&
       !isUserAuthorized('INSERT_GOLFER', false)) {
@@ -3075,6 +4266,12 @@ function saveGolferForm() {
 }
 
 //validation
+/**
+*
+* SRC: _golferCommon
+*=====================================================================
+* @return {boolean} validity.
+*/
 function validateGolferForm() {
   var formName = 'golferForm';
   var formValid = standardValidate(formName);
@@ -3084,6 +4281,13 @@ function validateGolferForm() {
 //----------------------------------------------------
 //html building functions
 
+/**
+*
+* SRC: _golferCommon
+* =====================================================================
+* @param {Object} dataRows array of objects to render.
+* @param {integer} selectedKey_ id of selected row.
+*/
 function populateGolferListTable(dataRows, selectedKey_) {
   var dataArray = new Array();
   for (var i = 0; i < dataRows.length; i++) {
@@ -3097,6 +4301,13 @@ function populateGolferListTable(dataRows, selectedKey_) {
   $('#golferListTable').dataTable().fnAddData(dataArray, true);
 }
 
+/**
+*
+* SRC: _golferCommon
+*=====================================================================
+* @param {Object} data object to build.
+* @return {Object} built object.
+*/
 function buildGolferListTableRow(data) {
   var dataHash = {};
   var htmlRow = '';
@@ -3123,23 +4334,46 @@ function buildGolferListTableRow(data) {
   return dataHash;
 }
 
+/**
+*
+* SRC: _golferCommon
+* =====================================================================
+* @param {Object} row data.
+*/
 function replaceRowGolferListTable(row) {
   $('#golferListTable').dataTable().fnUpdate(
       buildGolferListTableRow(row),
       $('#GolferListTableTR-' + row.golfer_id)[0]
       );
 }
+/**
+*
+* SRC: _golferCommon
+* =====================================================================
+* @param {Object} row data.
+*/
 function addNewRowGolferListTable(row) {
   var newNdx = $('#golferListTable').dataTable().fnAddData(
       buildGolferListTableRow(row)
       );
 }
+/**
+*
+* SRC: _golferCommon
+* =====================================================================
+* @param {Object} golferId_ data to delete .
+*/
 function removeGolferListTableRow(golferId_) {
   $('#golferListTable').dataTable().fnDeleteRow(
       $('#GolferListTableTR-' + golferId_)[0]
        );
 }
 
+/**
+*
+* SRC: _golferCommon
+* =====================================================================
+*/
 function imposeGolferSecurityUIRestrictions() {
   var divIdToSecure;
   divIdToSecure = '#golferFormSave';
@@ -3164,8 +4398,13 @@ function imposeGolferSecurityUIRestrictions() {
 }
 
 
-//-------------------------------------------------
 //Div Access and App Layout Calls
+/**
+*
+* SRC: _golferCommon
+* =====================================================================
+* @param {integer} golferId_ id to delete.
+*/
 function showGolfer(golferId_) {
   statusMsg('Navigated to Golfer View');
   var params = {};
@@ -3186,6 +4425,11 @@ function showGolfer(golferId_) {
 
 }
 
+/**
+*
+* SRC: _golferCommon
+*=====================================================================
+*/
 function clearGolferForm() {
   clearForm('golferForm');
   (isUserAuthorized('INSERT_GOLFER', false)) ?
@@ -3194,6 +4438,11 @@ function clearGolferForm() {
 }
 
 
+/**
+*
+* SRC: _golferCommon
+*=====================================================================
+*/
 $(document).ready(function() {
     $('#golferListTable').dataTable({
       'aoColumns' : [

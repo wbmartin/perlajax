@@ -11,6 +11,12 @@ $(document).ready(function() {
 });
 
 
+[% SRC_LOC = '_golfScoreSummaryMobile'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
 	var newRow = '<div class = "ui-block-a"><b>Golfer</b></div>';
@@ -26,16 +32,26 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 
 }
 
-function build[%ucfirst(divId)%]ListTableRow(gs){
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
+function build[%ucfirst(divId)%]ListTableRow(gs) {
 	var newRow = '<div class = "ui-block-a">' + gs.golfer_name + '</div>';
 	newRow += '<div class = "ui-block-b">';
-  newRow +=	formatNumber(gs.golf_score, 2, true, false, true);
-  newRow +=	'</div>';
+  newRow += formatNumber(gs.golf_score, 2, true, false, true);
+  newRow += '</div>';
 	return newRow;
 }
-function show[%ucfirst(divId)%](){
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
+function show[%ucfirst(divId)%]() {
 	retrieve[%ucfirst(divId)%]List();
-	$.mobile.changePage("#[%divId%]DivId");
+	$.mobile.changePage('#[%divId%]DivId');
 
 }
 

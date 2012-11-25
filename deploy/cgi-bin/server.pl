@@ -91,6 +91,7 @@ sub buildResourceActionDef{
   my $resource =uc(shift);
   my $action = uc(shift);
   my ($rad, @stdSelectParamFields,@allFields,@paramFields);
+	#Standard ARGS passed to each fucntion  ('CHECK_AUTH', user_id, session_id) passed to all
   @stdSelectParamFields= ('where_clause','orderby_clause', 'rowlimit','startrow');
   print STDERR "searching for $resource $action\n" if($debug);
   if ($resource eq "SECURITY_USER" ){
@@ -258,7 +259,9 @@ sub buildResourceActionDef{
 		$rad = { rf=>['support_request_dqw'], pf=>\@paramFields, proc=>"support_request_dqw"};
 	}
 
-	
+} elsif($resource eq "KEEP_ALIVE" ){
+	@paramFields=();
+	$rad = { rf=>['keepalive'], pf=>\@paramFields, proc=>"keepalive"};
 
 } else {print STDERR "Not Found: $resource $action" if $debug; return;}
   return $rad;

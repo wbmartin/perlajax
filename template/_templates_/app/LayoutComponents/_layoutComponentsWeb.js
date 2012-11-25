@@ -1,3 +1,9 @@
+[% SRC_LOC = '_layoutComponentsWeb'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function sizeLeftNav() {
 [%headerHeight = 100%]
 [%leftNavWidth = 0%]
@@ -9,6 +15,11 @@ function sizeLeftNav() {
 	document.getElementById('mainContent').style.width =
 		(window.innerWidth - [%leftNavWidth + 20%]) + 'px';
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function displayMainLayout(showHide) {
 	var display = (showHide) ? 'block' : 'none';
 	//document.getElementById('leftnav').style.display=display;
@@ -20,6 +31,11 @@ function displayMainLayout(showHide) {
 	if (!showHide)showLoginPortal();
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 $(document).ready(function() {
 	var tblClasses = $.fn.dataTableExt.oStdClasses;
 	tblClasses.sPagePrevDisabled = '[%buttonClass%] smallButton LogicDisabled';
@@ -32,6 +48,11 @@ $(document).ready(function() {
 
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function briefNotify(msg, type) {
 	var color;
 	if (type == null || type == 'INFO') {
@@ -51,6 +72,11 @@ function briefNotify(msg, type) {
 }
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
 	if ($('#genericDialogDivId').is(':data(dialog)')) {
 		$('#genericDialogDivId').dialog('destroy');

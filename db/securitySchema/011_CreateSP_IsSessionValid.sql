@@ -21,4 +21,18 @@ End;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
+
+--wrapper for issessionValid
+CREATE OR REPLACE FUNCTION keepalive(alreadyAuth_ text, userid_ text, sessionid_ text)
+  RETURNS text AS
+$BODY$
+Declare
+Begin
+ return issessionvalid(userid_, sessionid_ );
+End;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+
+
 commit;

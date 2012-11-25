@@ -10,6 +10,13 @@
 
 
 //Server Calls
+[% SRC_LOC = '_supportRequestCommon'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function retrieve[%ucfirst(divId)%]List() {
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
 				true,
@@ -31,6 +38,13 @@ function retrieve[%ucfirst(divId)%]List() {
 	};
 	serverCall(params, successf, FAILF);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {Object} params ajax parameters.
+* @return {boolean} allowed.
+*/
 function retrieve[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
 				true, 'retrieve[%ucfirst(divId)%]')) {
@@ -57,6 +71,14 @@ function retrieve[%ucfirst(divId)%](params) {
 
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================a
+* @return {boolean} allowed.
+* @param {integer} [%toCC(prkey)%]_  prkey.
+* @param {string} lastUpdate_ last update for transaction management.
+*/
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	if (!isUserAuthorized('[%DELETE_GRANT%]',
 				true,
@@ -81,6 +103,13 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {Object} params ajax params.
+* @return {boolean} allowed.
+*/
 function save[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]', false) &&
 			!isUserAuthorized('[%INSERT_GRANT%]', false)) {
@@ -112,6 +141,13 @@ function save[%ucfirst(divId)%](params) {
 }
 
 //ServerCall Wrappers
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {integer} [%divId%]Id_ primary key.
+* @return {boolean} allowed.
+*/
 function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	show[%ucfirst(divId)%]Dialog();
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
@@ -131,6 +167,12 @@ function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	}
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @return {boolean} allowed.
+*/
 function save[%ucfirst(divId)%]Form() {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]') &&
 			!isUserAuthorized('[%SELECT_GRANT%]')) {
@@ -146,6 +188,12 @@ function save[%ucfirst(divId)%]Form() {
 }
 
 //validation
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================a
+* @return {boolean} validity.
+*/
 function validate[%ucfirst(divId)%]Form() {
 	var formName = '[%divId%]Form';
 	var formValid = standardValidate(formName);
@@ -153,6 +201,12 @@ function validate[%ucfirst(divId)%]Form() {
 }
 
 //Top Level HTML Manip
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {Object} dataRows array of Objects.
+*/
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
 	for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -162,6 +216,13 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	$('#[%divId%]ListTable').dataTable().fnAddData(dataArray, true);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {Object} data data object.
+* @return {Object} row data. 
+*/
 function build[%ucfirst(divId)%]ListTableRow(data) {
 	var dataHash = {};
 	var links = '';
@@ -198,17 +259,35 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 	return dataHash;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {Object} row row object to update.
+*/
 function replace[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnUpdate(
 			build[%ucfirst(divId)%]ListTableRow(row),
 			$('#[%ucfirst(divId)%]ListTableTR-' + row.[%prkey%])[0]
 			);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {Object} row data object.
+*/
 function addNew[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnAddData(
 			build[%ucfirst(divId)%]ListTableRow(row)
 			);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {integer} [%toCC(prkey)%]_ id to remove.
+*/
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 	$('#[%divId%]ListTable').dataTable().fnDeleteRow(
 			$('#[%ucfirst(divId)%]ListTableTR-' + [%toCC(prkey)%]_)[0]
@@ -216,6 +295,11 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 }
 
 //Div Access and App Layout Calls
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function show[%ucfirst(divId)%]() {
 	statusMsg('Navigated to Support Request');
 	retrieve[%ucfirst(divId)%]List();
@@ -228,6 +312,11 @@ function show[%ucfirst(divId)%]() {
 
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function clear[%ucfirst(divId)%]Form() {
 	$('#[%divId%]FormHolder').dialog('close');
 	clearForm('[%divId%]Form');
@@ -238,6 +327,11 @@ function clear[%ucfirst(divId)%]Form() {
 
 
 //After complete Load setup
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 $(document).ready(function() {
 	$('#[%divId%]ListTable').dataTable({
 		'aoColumns': [
@@ -281,6 +375,14 @@ $(document).ready(function() {
 
 });
 
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {Object} oTable table object.
+* @param {integer} nTr row id.
+* @return {string} expansion div.
+*/
 function fnFormat[%ucfirst(divId)%]Expansion(oTable, nTr) {
 	var aData = oTable.fnGetData(nTr);
 	var sOut = '<div style="padding-left: 50px;">';
@@ -305,6 +407,11 @@ function fnFormat[%ucfirst(divId)%]Expansion(oTable, nTr) {
 	return sOut;
 }
 //page specific functions
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	var divIdToSecure;
 	divIdToSecure = '#[%divId%]FormSave';
@@ -331,6 +438,11 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+*/
 function addNew[%ucfirst(divId)%]() {
 	var logText = '';
 	clear[%ucfirst(divId)%]Form();
@@ -342,6 +454,11 @@ function addNew[%ucfirst(divId)%]() {
 	$('#[%divId%]Form-log_details').val(logText);
 
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+*/
 function show[%ucfirst(divId)%]Dialog() {
 	$('#[%divId%]FormHolder').dialog({modal: true, width: '90%' });
 }

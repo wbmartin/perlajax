@@ -2,6 +2,13 @@
 [% divId = 'LoginPortal' %]
 [% spwfResource = 'security_user' %]
 
+[% SRC_LOC = '_loginPortalCommon'%]
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {string} action  action pass through.
+ */
 function loginCall(action) {
 	var params = bindForm('[%divId%]Form');
 	[%#prepParams will not work here %]
@@ -41,6 +48,11 @@ function loginCall(action) {
 
 
 
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
 function logOutUser() {
 	usrSessionId = '';
 	usrLoginId = '';
@@ -53,11 +65,21 @@ function logOutUser() {
 }
 
 
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
 $(document).ready(function() {
 	$('#[%divId%]Form-user_id').val('golfscore');
 	$('#[%divId%]Form-password').val('golfscore');
 });
 
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
 function showLoginPortal() {
 	$(document).keypress(function(e) {
 		if (e.keyCode == 13) {//enter
@@ -66,6 +88,12 @@ function showLoginPortal() {
 	});
 
 }
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ * =====================================================================
+ * @return {boolean} success.
+ */
 function initPasswordReset() {
 	var params = {};
 	params['user_id'] = $('#[%divId%]Form-user_id').val();
@@ -92,6 +120,11 @@ function initPasswordReset() {
 	});
 }
 
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
 function initForgottenUserName() {
 	var msg = 'Please Enter your email address below.  ';
 	msg += 'Instructions will be mailed to this address.  ';
@@ -112,6 +145,11 @@ function initForgottenUserName() {
 
 }
 //
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
 function emailUserName() {
 	var params = {};
 	params['email_addr'] = $('#forgottenUserIdEmail').val();
@@ -134,6 +172,11 @@ function emailUserName() {
 	});
 }
 
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
 function prepForOneTimeEntry() {
 	$('#[%divId%]Form-password_reset_codeDivId').show();
 	$('#[%divId%]Form-passwordDivId').hide();
@@ -143,6 +186,12 @@ function prepForOneTimeEntry() {
 
 }
 
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ * =====================================================================
+ * @return {boolean} success.
+ */
 function onetimeLogin() {
 	var params = {};
 	params['user_id'] = $('#[%divId%]Form-user_id').val();

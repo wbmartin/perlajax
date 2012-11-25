@@ -1,5 +1,12 @@
 
 [% divId = 'launchPane' %]
+[% SRC_LOC = '_LaunchWeb'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {string} divid.
+*/
 function show[%ucfirst(divId)%]() {
 	statusMsg('Navigated to Main Portal');
 	hideCurrentContentPane();
@@ -15,6 +22,11 @@ function show[%ucfirst(divId)%]() {
 	return '[%divId%]';
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function imposeLauncherSecurityUIRestrictions() {
 	var divIdToSecure;
 	divIdToSecure = '#launcherShowSecurityUserSpanId';

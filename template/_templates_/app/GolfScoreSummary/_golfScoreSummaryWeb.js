@@ -6,6 +6,12 @@
 [% SELECT_GRANT = 'SELECT_GOLFER_HANDICAP'  FILTER upper %]
 [% DELETE_GRANT = 'DELETE_' _ spwfResource  FILTER upper %]
 
+[% SRC_LOC = '_golfScoreSummaryWeb'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 $(document).ready(function() {
 		$('#[%divId%]ListTable').dataTable(
 			 {
@@ -19,7 +25,12 @@ $(document).ready(function() {
 			});
 		});
 
-
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {Object} dataRows Array of [%ucfirst(divId)%].
+*/
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
 	for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -30,6 +41,13 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} gs golfscore info.
+* @return {Object} tablerow data.
+*/
 function build[%ucfirst(divId)%]ListTableRow(gs) {
 	var dataHash = {};
 	var links = '';
@@ -53,6 +71,11 @@ function build[%ucfirst(divId)%]ListTableRow(gs) {
 
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function show[%ucfirst(divId)%]() {
 	statusMsg('Navigated to Golf Score Summary View');
 	retrieve[%ucfirst(divId)%]List();

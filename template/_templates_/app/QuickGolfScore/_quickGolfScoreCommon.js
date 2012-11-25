@@ -9,6 +9,13 @@
 
 
 //Server Calls
+[% SRC_LOC = '_quickGolfScoreCommon'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function retrieve[%ucfirst(divId)%]List() {
 	if (!isUserAuthorized(
 				'[%SELECT_GRANT%]',
@@ -31,6 +38,13 @@ function retrieve[%ucfirst(divId)%]List() {
 		};
 	serverCall(params, successf, FAILF);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
 function retrieve[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized(
 				'[%SELECT_GRANT%]',
@@ -58,6 +72,14 @@ function retrieve[%ucfirst(divId)%](params) {
 
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {integer} [%toCC(prkey)%]_ prkey.
+* @param {string } lastUpdate_ for tran mgt.
+* @return {boolean} allowed.
+*/
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	if (!isUserAuthorized(
 				'[%DELETE_GRANT%]',
@@ -83,6 +105,13 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
 function save[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]', false) &&
 			!isUserAuthorized('[%INSERT_GRANT%]', false)) {
@@ -115,6 +144,13 @@ function save[%ucfirst(divId)%](params) {
 }
 
 //ServerCall Wrappers
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {integer} [%divId%]Id_ prkey.
+* @return {boolean} allowed.
+*/
 function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	if (!isUserAuthorized(
 				'[%SELECT_GRANT%]',
@@ -133,6 +169,12 @@ function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	}
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function save[%ucfirst(divId)%]Form() {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]') &&
 			!isUserAuthorized('[%SELECT_GRANT%]')) {
@@ -148,6 +190,11 @@ function save[%ucfirst(divId)%]Form() {
 
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function clear[%ucfirst(divId)%]Form() {
 	clearForm('[%divId%]Form');
 	(isUserAuthorized('[%INSERT_GRANT%]', false)) ?
@@ -157,12 +204,27 @@ function clear[%ucfirst(divId)%]Form() {
 
 
 //After complete Load setup
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 $(document).ready(function() {
 		$('#[%divId%]Form-game_dt').datepicker();
 
 		});
 
 //page specific functions
+
+
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {integer} golferId_ prkey.
+* @return {boolean} allowed.
+*/
+
 function retrieveGolferNameForGolfScore(golferId_) {
 	if (!isUserAuthorized(
 				'[%SELECT_GRANT%]',

@@ -9,6 +9,15 @@
 
 
 //Server Calls
+[% SRC_LOC = '_golfScoreCommon'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {integer} golferId_ prkey.
+* @param {integer} selectedKey_ selected prkey.
+* @return {boolean} allowed.
+*/
 function retrieve[%ucfirst(divId)%]List(golferId_, selectedKey_) {
 	if (!isUserAuthorized('[%SELECT_GRANT%]')) {
 		briefNotify('Access Violation', 'ERROR');
@@ -29,6 +38,13 @@ function retrieve[%ucfirst(divId)%]List(golferId_, selectedKey_) {
 	};
 	serverCall(params, successf, FAILF);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
 function retrieve[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%SELECT_GRANT%]')) {
 		briefNotify('Access Violation', 'ERROR');
@@ -54,6 +70,14 @@ function retrieve[%ucfirst(divId)%](params) {
 
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================a
+* @param {integer} [%toCC(prkey)%]_ prkey.
+* @param {string} lastUpdate_  last update for trans mgmt.
+* @return {boolean} allowed.
+*/
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	if (!isUserAuthorized('[%DELETE_GRANT%]')) {
 		briefNotify('Access Violation', 'ERROR');
@@ -78,6 +102,13 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} params  ajax data.
+* @return {boolean} allowed.
+*/
 function save[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]') &&
 			!isUserAuthorized('[%INSERT_GRANT%]')) {
@@ -110,6 +141,13 @@ function save[%ucfirst(divId)%](params) {
 }
 
 //ServerCall Wrappers
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {integer} [%divId%]Id_ prkey.
+* @return {boolean} allowed.
+*/
 function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	if (!isUserAuthorized('[%SELECT_GRANT%]')) {
 		briefNotify('Access Violation', 'ERROR');
@@ -127,8 +165,13 @@ function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	}
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function save[%ucfirst(divId)%]Form() {
-
 	if (!isUserAuthorized('[%UPDATE_GRANT%]') &&
 			!isUserAuthorized('[%INSERT_GRANT%]')) {
 		briefNotify('Access Violation', 'ERROR');
@@ -142,6 +185,12 @@ function save[%ucfirst(divId)%]Form() {
 }
 
 //validation
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {boolean} validity.
+*/
 function validate[%ucfirst(divId)%]Form() {
 	var formName = '[%divId%]Form';
 	var formValid = standardValidate(formName);
@@ -149,6 +198,12 @@ function validate[%ucfirst(divId)%]Form() {
 }
 
 //Top Level HTML Manip
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} dataRows array of [%ucfirst(divId)%].
+*/
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
  var dataArray = new Array();
 	for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -158,6 +213,13 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	$('#[%divId%]ListTable').dataTable().fnAddData(dataArray, true);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} data [%ucfirst(divId)%] info.
+* @return {Object} list table row. 
+*/
 function build[%ucfirst(divId)%]ListTableRow(data) {
 	var dataHash = {};
 	var links = '';
@@ -184,17 +246,35 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 	return dataHash;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================a
+* @param {Object} row [%ucfirst(divId)%] info.
+*/
 function replace[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnUpdate(
 			build[%ucfirst(divId)%]ListTableRow(row),
 			$('#[%ucfirst(divId)%]ListTableTR-' + row.[%prkey%])[0]
 			);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} row [%ucfirst(divId)%] info.
+*/
 function addNew[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnAddData(
 			build[%ucfirst(divId)%]ListTableRow(row)
 			);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {integer} [%toCC(prkey)%]_  prkey.
+*/
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 	$('#[%divId%]ListTable').dataTable().fnDeleteRow(
 			$('#[%ucfirst(divId)%]ListTableTR-' + [%toCC(prkey)%]_)[0]
@@ -202,6 +282,13 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 }
 
 //Div Access and App Layout Calls
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {integer} golferId_ prkey.
+* @return {boolean} allowed.
+*/
 function show[%ucfirst(divId)%](golferId_) {
 	if (!isUserAuthorized(
 				'[%SELECT_GRANT%]',
@@ -225,6 +312,11 @@ function show[%ucfirst(divId)%](golferId_) {
 }
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function clear[%ucfirst(divId)%]Form() {
 	var golferId = $('#[%divId%]Form-golfer_id').val();
 	clearForm('[%divId%]Form');
@@ -235,6 +327,11 @@ function clear[%ucfirst(divId)%]Form() {
 }
 
 //After complete Load setup
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 $(document).ready(function() {
 		$('#[%divId%]Form-game_dt').datepicker();
 
@@ -251,6 +348,13 @@ $(document).ready(function() {
 
 
 //page specific functions
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {integer} golferId_ prkey.
+* @return {boolean} allowed.
+*/
 function retrieveGolferNameForGolfScore(golferId_) {
 	if (!isUserAuthorized('SELECT_GOLFER')) {
 		briefNotify('Access Violation', 'ERROR');
@@ -265,6 +369,11 @@ function retrieveGolferNameForGolfScore(golferId_) {
 	serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	var divIdToSecure;
 	divIdToSecure = '#[%divId%]FormSave';

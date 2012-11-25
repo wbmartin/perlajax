@@ -1,3 +1,8 @@
+[% SRC_LOC = '_cacheWeb'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*/
 function populateAppSelectOptions() {
 	setSelectOptions('#quickGolfScoreForm select[name=golfer_id]',
 										GOLFER_CACHE
@@ -6,7 +11,10 @@ function populateAppSelectOptions() {
 		 								SECURITY_PROFILE_CACHE
 									);
 }
-
+/**
+*
+* SRC: [%SRC_LOC%]
+*/
 function imposeApplicationSecurityRestrictions() {
   imposeGolferSecurityUIRestrictions();
 	imposeGolfScoreSecurityUIRestrictions();

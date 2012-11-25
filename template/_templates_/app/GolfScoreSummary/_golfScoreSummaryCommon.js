@@ -6,7 +6,13 @@
 [% SELECT_GRANT = 'SELECT_GOLFER_HANDICAP'  FILTER upper %]
 [% DELETE_GRANT = 'DELETE_' _ spwfResource  FILTER upper %]
 
-
+[% SRC_LOC = '_golfScoreSummaryCommon'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {boolean} allowed.
+*/
 function retrieve[%ucfirst(divId)%]List() {
 		if (!isUserAuthorized('[%SELECT_GRANT%]')) {
 			briefNotify('Access Violation', 'ERROR');
@@ -30,7 +36,11 @@ function retrieve[%ucfirst(divId)%]List() {
 	}
 
 
-
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 
 }

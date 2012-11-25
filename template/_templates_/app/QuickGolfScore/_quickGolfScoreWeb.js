@@ -8,6 +8,12 @@
 [% DELETE_GRANT = 'DELETE_' _ spwfResource  FILTER upper %]
 
 //After complete Load setup
+[% SRC_LOC = '_quickGolfScoreWeb'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 $(document).ready(function() {
 
 		$('#[%divId%]ListTable').dataTable({
@@ -23,6 +29,12 @@ $(document).ready(function() {
 });
 
 //validation
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {boolean} validity.
+*/
 function validate[%ucfirst(divId)%]Form() {
 	var formName = '[%divId%]Form';
 	var formValid = standardValidate(formName);
@@ -31,6 +43,12 @@ function validate[%ucfirst(divId)%]Form() {
 
 
 //Top Level HTML Manip
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} dataRows  row of [%ucfirst(divId)%] objects.
+*/
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
 	for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -40,6 +58,13 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	$('#[%divId%]ListTable').dataTable().fnAddData(dataArray, true);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================a
+* @param {Object} data info.
+* @return {Object} list table row.
+*/
 function build[%ucfirst(divId)%]ListTableRow(data) {
 	var dataHash = {};
 	var links = '';
@@ -68,17 +93,35 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 	return dataHash;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================a
+* @param {Object} row [%ucfirst(divId)%] info.
+*/
 function replace[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnUpdate(
 			build[%ucfirst(divId)%]ListTableRow(row),
 			$('#[%ucfirst(divId)%]ListTableTR-' + row.[%prkey%])[0]
 			);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} row [%ucfirst(divId)%] info.
+*/
 function addNew[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnAddData(
 			build[%ucfirst(divId)%]ListTableRow(row)
 			);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {integer} [%toCC(prkey)%]_ prkey.
+*/
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 	$('#[%divId%]ListTable').dataTable().fnDeleteRow(
 			$('#[%ucfirst(divId)%]ListTableTR-' + [%toCC(prkey)%]_)[0]
@@ -86,6 +129,11 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 }
 
 //Div Access and App Layout Calls
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function show[%ucfirst(divId)%]() {
 	statusMsg('Navigated to Quick Golf Score Entry');
 	retrieve[%ucfirst(divId)%]List();
@@ -98,6 +146,11 @@ function show[%ucfirst(divId)%]() {
 
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	var divIdToSecure;
 	divIdToSecure = '#[%divId%]FormSave';

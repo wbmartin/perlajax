@@ -10,6 +10,12 @@
 
 
 //Server Calls
+[% SRC_LOC = '_securityUserCommon'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function retrieve[%ucfirst(divId)%]List() {
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
 				true,
@@ -31,6 +37,11 @@ function retrieve[%ucfirst(divId)%]List() {
 	};
 	serverCall(params, successf, FAILF);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function retrieve[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
 				true,
@@ -62,6 +73,11 @@ function retrieve[%ucfirst(divId)%](params) {
 
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	if (!isUserAuthorized('[%DELETE_GRANT%]',
 				true,
@@ -86,6 +102,11 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	serverCall(params, successf, FAILF);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function save[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]', false) &&
 			!isUserAuthorized('[%INSERT_GRANT%]', false)) {
@@ -120,6 +141,11 @@ function save[%ucfirst(divId)%](params) {
 }
 
 //ServerCall Wrappers
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
 				true,
@@ -138,6 +164,11 @@ function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	}
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function save[%ucfirst(divId)%]Form() {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]', false) &&
 			!isUserAuthorized('[%INSERT_GRANT%]', false)) {
@@ -159,6 +190,11 @@ function save[%ucfirst(divId)%]Form() {
 }
 
 //validation
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function validate[%ucfirst(divId)%]Form() {
 	var formName = '[%divId%]Form';
 	var formValid = standardValidate(formName);
@@ -172,6 +208,11 @@ function validate[%ucfirst(divId)%]Form() {
 }
 
 //Top Level HTML Manip
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
 	if (dataRows != null)
@@ -182,6 +223,11 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	$('#[%divId%]ListTable').dataTable().fnAddData(dataArray, true);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function build[%ucfirst(divId)%]ListTableRow(data) {
 	var dataHash = {};
 	var links = '';
@@ -207,17 +253,32 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 	return dataHash;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function replace[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnUpdate(
 			build[%ucfirst(divId)%]ListTableRow(row),
 			$('#[%ucfirst(divId)%]ListTableTR-' + row.[%prkey%])[0]
 			);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function addNew[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnAddData(
 			build[%ucfirst(divId)%]ListTableRow(row)
 			);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 	$('#[%divId%]ListTable').dataTable().fnDeleteRow(
 			$('#[%ucfirst(divId)%]ListTableTR-' + [%toCC(prkey)%]_)[0]
@@ -225,6 +286,11 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 }
 
 //Div Access and App Layout Calls
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function show[%ucfirst(divId)%]() {
 	statusMsg('Navigated to Security Users');
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
@@ -242,6 +308,11 @@ function show[%ucfirst(divId)%]() {
 	}
 	showPasswordFields(true);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function clear[%ucfirst(divId)%]Form() {
 	clearForm('[%divId%]Form');
 	showPasswordFields(true);
@@ -253,6 +324,11 @@ function clear[%ucfirst(divId)%]Form() {
 
 
 //After complete Load setup
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 $(document).ready(function() {
 		$('#[%divId%]ListTable').dataTable({
 			'aoColumns': [
@@ -267,6 +343,11 @@ $(document).ready(function() {
 
 //page specific functions
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function showPasswordFields(show) {
 	if (show) {
 		$('#[%divId%]Form-password_encDivId').fadeIn();
@@ -276,10 +357,20 @@ function showPasswordFields(show) {
 		$('#[%divId%]Form-password_validateDivId').fadeOut();
 	}
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function initiateChangePassword() {
 	showChangePasswordDialog($('#[%divId%]Form-edit_user_id').val());
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	var divIdToSecure;
 	divIdToSecure = '#[%divId%]FormSave';

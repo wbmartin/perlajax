@@ -1,7 +1,13 @@
 [% divId = 'changePasswordDialog' %]
 [% spwfResource = 'security_user' %]
-//----------------------------------------------------
-//server calls
+[% SRC_LOC = 'changePasswordDialogCommon'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {Object} params ajax param.
+*/
+
 function submit[%ucfirst(divId)%](params) {
 	params = prepParams(params, 'SECURITY_CHANGE_PASSWORD', 'CHANGE');
 	var successf = function(rslt) {
@@ -20,8 +26,12 @@ function submit[%ucfirst(divId)%](params) {
 	serverCall(params, successf, FAILF);
 }
 
-//-----------------------
 //Server Call Wrappers
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 
 function submit[%ucfirst(divId)%]Form() {
 	if (validate[%ucfirst(divId)%]Form()) {
@@ -38,6 +48,12 @@ function submit[%ucfirst(divId)%]Form() {
 }
 
 //validation
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @return {boolean} validity .
+*/
 function validate[%ucfirst(divId)%]Form() {
 	var formName = '[%divId%]Form';
 	var formValid = standardValidate(formName);
@@ -57,12 +73,16 @@ function validate[%ucfirst(divId)%]Form() {
 	return formValid;
 }
 
-//----------------------------------------------------
 //html building functions
 
 
-//-------------------------------------------------
 //Div Access and App Layout Calls
+/**
+*
+* SRC: [%SRC_LOC%]
+* =====================================================================
+* @param {string} userId_ user identifer.
+*/
 function show[%ucfirst(divId)%](userId_) {
 	statusMsg('Navigated to Change Password Dialog');
 	var params = {};
@@ -88,6 +108,11 @@ function show[%ucfirst(divId)%](userId_) {
 
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 $(document).ready(function() {
 });
 

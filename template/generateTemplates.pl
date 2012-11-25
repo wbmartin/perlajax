@@ -41,8 +41,10 @@ $dbh->disconnect();
 #Post Processing
 print "replacing Tabs\n";
 `perl -p -i -e 's/\t/  /g' $outputPath/app.js`;
+`perl -p -i -e 's/\t/  /g' $outputPath/appmobile.js`;
 print "replacing EOL whitespace\n";
 `perl -p -i -e 's/[ \t]+\$//g' $outputPath/app.js`;
+`perl -p -i -e 's/[ \t]+\$//g' $outputPath/appmobile.js`;
 #print "adjusting mobile path";
 #`perl -p -i -e 's/images\//\.\.images\//g' $outputPath/mobile.html`;
 #print `gjslint $outputPath/app.js`;

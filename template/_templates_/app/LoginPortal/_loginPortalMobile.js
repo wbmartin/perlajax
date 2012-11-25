@@ -1,11 +1,22 @@
 [% divId = 'LoginPortal' %]
 
-function onSuccessfulLogin(){
+[% SRC_LOC = '_loginPortalMobile.js'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
+function onSuccessfulLogin() {
 	retrieveCache();
 	showLaunchPane();
 }
 
-function validate[%ucfirst(divId)%]Form(){
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
+function validate[%ucfirst(divId)%]Form() {
   return true;
 }
 

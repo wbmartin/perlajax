@@ -1,6 +1,20 @@
+[% SRC_LOC = '_cacheCommon'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 var GOLFER_CACHE;
 var SECURITY_PROFILE_CACHE;
 var SECURITY_GRANT;
+
+/**
+* 
+* @param {Object} data. 
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
+
 function onRefreshCache(data) {
 	GOLFER_CACHE = {};
 	SECURITY_PROFILE_CACHE = {};
@@ -19,6 +33,10 @@ function onRefreshCache(data) {
 	}
 
 
+/**
+* 
+* SRC: [%SRC_LOC%]
+*/
 
 function retrieveCache() {
 	var params = prepParams(params, 'cross_table_cache', 'select');

@@ -13,7 +13,7 @@
 [%FOREACH tPath = appTemplates%]
   [%-IF  tPath.match('Web') or tPath.match('Common')-%]
 	  [%-IF tPath.match('html'); NEXT; END;-%]
-		// From: [%tPath%] 
+		[%#// From: [%tPath%] 
 		[%INCLUDE $tPath%]
 	[%-END-%]
 [%-END-%]

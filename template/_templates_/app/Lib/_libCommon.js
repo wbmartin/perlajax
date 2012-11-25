@@ -1,9 +1,16 @@
 //shared variables
+[% SRC_LOC = '_libCommon'%]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
+
 var usrSessionId = '';
 var usrLoginId = '';
 var usrLastAction = new Date();
 var usrLogoutScheduled = false;
-var usrTimeOutDuration = 20 * 60 * 1000;
+var usrTimeOutDuration = 18 * 60 * 1000;//set 2 min less than actual
 var clientLog = new Array();
 var insertUpdateChoose = 'INSERTUPDATE';
 var FAILF = function() {alert('FAIL');};
@@ -12,14 +19,23 @@ var SERVER_SIDE_FAIL = 'serverSideFail';
 var OUTSTANDING_SERVER_CALLS = 0;
 var PAGINATION_ROW_LIMIT = 10;
 var CURRENT_PAGE = '';
+var TRUSTED_DEVICE = false;
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Form Functions
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} formId form.
+* @param {string} fieldId field.
+* @param {string} msg message.
+*/
 function appendValidationMsg(formId, fieldId, msg) {
 	var fullyQName = 'form#' + formId + ' #' + fieldId;
 	if ($('form#' + formId + ' #' + fieldId + 'Error').length == 0) {
 		var tmpSpan = '<span id = "' + fieldId;
-	 	tmpSpan += 'Error" class = "ValidationMsg"></span>';
+		tmpSpan += 'Error" class = "ValidationMsg"></span>';
 		$(fullyQName).after(tmpSpan);
 	}
 	if ($(fullyQName + 'Error').html().length == 0) {
@@ -29,13 +45,28 @@ function appendValidationMsg(formId, fieldId, msg) {
 	$(fullyQName).addClass('invalid');
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} formId form.
+* @param {string} fieldId field.
+* @param {boolean} yesNo  true for yes.
+*/
 function highlightFieldError(formId, fieldId, yesNo) {
 	var bordercolor = 'black';
 	if (yesNo) bordercolor = 'red';
-		$('form#' + formId + ' #' + fieldId).css('border-color:' + bordercolor);
+	$('form#' + formId + ' #' + fieldId).css('border-color:' + bordercolor);
 
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @params {string} formName form.
+* @return {Object} objectified form.
+*/
 function bindForm(formName) {
 	var rslt = {};
 	var fieldId = '';
@@ -47,6 +78,13 @@ function bindForm(formName) {
 	return rslt;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} formName  form.
+* @param {Object} obj object to bind.
+*/
 function bindToForm(formName, obj) {
 	var fieldId = '';
 	$.each($('form#' + formName + ' :input'),
@@ -56,6 +94,12 @@ function bindToForm(formName, obj) {
 			});
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} formName  form.
+*/
 function clearForm(formName) {
 	var fieldId = '';
 	$.each($('form#' + formName + ' :input'),
@@ -64,7 +108,7 @@ function clearForm(formName) {
 				if (field.type == 'checkbox') {
 					field.checked = false;
 				} else if (field.type != 'button') {
-				 	field.value = '';
+					field.value = '';
 					if (IS_MOBILE && field.type === 'select-one') {
 						$(field).selectmenu('refresh');
 					}
@@ -74,6 +118,13 @@ function clearForm(formName) {
 	toggleSaveMode(formName, false);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} formName  form.
+* @param {boolean} saveMode  true for Save, false for Add
+*/
 function toggleSaveMode(formName, saveMode) {
 	var buttonToShow = (saveMode) ? 'Save' : 'Add';
 	var buttonToHide = (!saveMode) ? 'Save' : 'Add';
@@ -83,6 +134,13 @@ function toggleSaveMode(formName, saveMode) {
 	$(id).removeClass('LogicDisabled');
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} formName  form.
+* @return {boolean} validity.
+*/
 function standardValidate(formName) {
 	var formValid = true;
 	if ($('#' + formName).length == 0) formValid = false;
@@ -90,11 +148,11 @@ function standardValidate(formName) {
 		span.innerHTML = '';
 	});
 	$.each($('form#' + formName + ' .invalid'), function(ndx, field) {
-		if (isEmpty(field.id)){return true;}//skip/continue if no ID
+		if (isEmpty(field.id)) {return true;}//skip/continue if no ID
 		$('form#' + formName + ' #' + field.id).removeClass('invalid');
 	});
 	$.each($('form#' + formName + ' .VALIDATErequired'), function(ndx, field) {
-		if (isEmpty(field.id)){return true;}//skip/continue if no ID
+		if (isEmpty(field.id)) {return true;}//skip/continue if no ID
 		if (isEmpty(field.value)) {
 			appendValidationMsg(formName, field.id, 'Required');
 			highlightFieldError(formName, field.id, true);
@@ -102,7 +160,7 @@ function standardValidate(formName) {
 		}
 	});
 	$.each($('form#' + formName + ' .VALIDATEinteger'), function(ndx, field) {
-		if (isEmpty(field.id)){return true;}//skip/continue if no ID
+		if (isEmpty(field.id)) {return true;}//skip/continue if no ID
 		if (field.value != null && !isInteger(field.value)) {
 			appendValidationMsg(formName, field.id, 'Integer Input Required');
 			highlightFieldError(formName, field.id, true);
@@ -111,16 +169,22 @@ function standardValidate(formName) {
 	});
 	$.each($('form#' + formName + ' .VALIDATEmmddyyyydate'),
 			function(ndx, field) {
-		if (isEmpty(field.id)){return true;}//skip/continue if no ID
+				if (isEmpty(field.id)) {return true;}//skip/continue if no ID
 				if (field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)) {
 					appendValidationMsg(formName, field.id, 'MM/DD/YYYY Required');
 					highlightFieldError(formName, field.id, true);
 					formValid = false;
 				}
-	});
+			});
 	return formValid;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} fieldId_  field.
+*/
 function isFieldIdEmpty(fieldId_) {
 	if (document.getElementById(fieldId_) == undefined) return true;
 	if (document.getElementById(fieldId_).value == undefined) return true;
@@ -129,19 +193,60 @@ function isFieldIdEmpty(fieldId_) {
 	return false;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} val to evaluate.
+*/
 function isEmpty(val) {
 	return (!val || 0 === val.length);
 	[%# replacing isEmpty 2012-11-23 w/ cleaner function
 		from http://stackoverflow.com/questions/154059/what-is-the-best-way-to-check-for-an-empty-string-in-javascript
-	//if (typeof(val) == 'undefined') return true;
-	//if (val == null || val == '') return true;
-	//return false;a
+		//if (typeof(val) == 'undefined') return true;
+		//if (val == null || val == '') return true;
+		//return false;a
 		%]
 }
+
+/**
+*	evalutes emptiness
+* @expose
+* @return {boolean} is empty.
+*/
+String.prototype.isEmpty = function() {
+	return isEmpty(this);
+};
+
+
+
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} str to evalute.
+*/
 function isBlank(str) {
-    return (!str || /^\s*$/.test(str));
+	return (!str || /^\s*$/.test(str));
 }
 
+/**
+*	evalutes blankness
+* @expose
+* @return {Boolean} is blank.
+*/
+String.prototype.isEmpty = function() {
+	return isBlank(this);
+};
+
+
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} value to evaluate.
+* @return {boolean} is Integer.
+*/
 function isInteger(value) {
 	if ((parseFloat(value) == parseInt(value)) && !isNaN(value)) {
 		return true;
@@ -153,17 +258,35 @@ function isInteger(value) {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Formatting Functions
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} val to evaluate.
+* @return {string} formatted date.
+*/
 function pgDate(val) {
 	var rslt;
 	if (val != null) {
 		rslt = val.substring(5, 7) + '/';
-	  rslt += val.substring(8, 10) + '/' + val.substring(0, 4);
+		rslt += val.substring(8, 10) + '/' + val.substring(0, 4);
 	} else {
 		rslt = '';
 	}
 	return rslt;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {object} num  number to format.
+* @param {integer} decimalNum  number ofdecimals.
+* @param {boolean} bolLeadingZero  include leading zeros.
+* @param {boolean} bolParens show negative with parens.
+* @param {boolean} bolCommas  format with commas.
+* @returns {string} formatted val.
+*/
 function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
 	if (isNaN(parseInt(num))) return '---';
 	var tmpNum = num;
@@ -187,13 +310,13 @@ function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
 		iStart -= 3;
 		while (iStart >= 1) {
 			tmpNumStr = tmpNumStr.substring(0, iStart) + ',' + tmpNumStr.substring(iStart, tmpNumStr.length);
-				iStart -= 3;
+			iStart -= 3;
 		}
 	}
 
 	// See if we need to use parenthesis
 	if (bolParens && num < 0) {
-	 	tmpNumStr = '(' + tmpNumStr.substring(1, tmpNumStr.length) + ')';
+		tmpNumStr = '(' + tmpNumStr.substring(1, tmpNumStr.length) + ')';
 	}
 
 	if (tmpNumStr.indexOf('.') < 0 && decimalNum > 0) {
@@ -207,7 +330,11 @@ function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
 	return tmpNumStr.toString();		// Return our formatted string!
 }
 
-
+/**
+*	Upper Cases First Letter of a string
+* @expose
+* @return {String} UCed first letter.
+*/
 String.prototype.ucfirst = function() {
 	// Split the string into words if string contains multiple words.
 	var x = this.split(/\s+/g);
@@ -226,6 +353,14 @@ String.prototype.ucfirst = function() {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //js Utility Functions
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} cacheArray  array.
+* @param {string} idToSet  _.
+* @return {Object} filtered array.
+*/
 function filterCacheArrayByVal(cacheArray, idToSet) {
 	for (var i = 0; i < cacheArray.length; i++) {
 		if (cacheArray[i].val == idToSet)return cacheArray[i];
@@ -233,6 +368,14 @@ function filterCacheArrayByVal(cacheArray, idToSet) {
 	return {};
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} er digester.
+* @param {Object} ee digestee.
+* @return {Object} digested.
+*/
 function digest(er, ee) {
 	if (null == ee ||
 			'object' != typeof ee ||
@@ -245,10 +388,24 @@ function digest(er, ee) {
 }
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} obj _.
+* @return {Object} deep Coppied Object.
+*/
 function deepCopy(obj) {
 	return $.extend(true, [], obj);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} selectId  html select.
+* @param {Object} obj key/val hash.
+*/
 function setSelectOptions(selectId, obj) {
 	var newhtml = '<option value=""></option>';
 	$.each(obj, function(key, val) {
@@ -261,21 +418,37 @@ function setSelectOptions(selectId, obj) {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Content Functions
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function timeoutIfNoAction() {
 	var timeSince = new Date().getTime() - usrLastAction.getTime();
 	if (usrLoginId != '' && timeSince > usrTimeOutDuration) {
-		usrLogoutScheduled = true;
-		statusMsg('Logging Out User in 1 minute');
-		window.setTimeout(function() {
-			if (usrLogoutScheduled) {logOutUser();}
-		}, 60000);
+		if (TRUSTED_DEVICE) {
+		  var params = prepParams(params, 'keep_alive', 'select');
+		  var successf = function(rslt) { };
+	    serverCall(params, successf, FAILF);
+		} else {
+			usrLogoutScheduled = true;
+			statusMsg('Logging Out User in 1 minute');
+			window.setTimeout(function() {
+				if (usrLogoutScheduled) {logOutUser();}
+			}, 60000);
+		}
 	} else {
-		window.setTimeout(timeoutIfNoAction, usrTimeOutDuration + 1000);
+		window.setTimeout(timeoutIfNoAction, usrTimeOutDuration);
 	}
 
 }
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function hideCurrentContentPane() {
 	if (document.getElementById(currentContentPane) != undefined) {
 		document.getElementById(currentContentPane).style.display = 'none';
@@ -284,21 +457,42 @@ function hideCurrentContentPane() {
 }
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} name divid.
+*/
 function standardShowContentPane(name) {
 	hideCurrentContentPane();
 	$('#' + name).fadeIn();
 	currentContentPane = name;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {string}  empty string.
+*/
 function hideMainContent() {
 	return '';
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function registerAction() {
 	usrLastAction = new Date();
 	usrLogoutScheduled = false;
 }
 
+/**
+*  Extends window to unload function
+*  @return {string} message to be displayed when user refreshes or leaves.
+*/
 window.onbeforeunload = function() {
 	if (usrSessionId != '') {
 		var msg = 'If you click OK and continue to refresh this page, ';
@@ -310,10 +504,24 @@ window.onbeforeunload = function() {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Log Msg Functions
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} msg message.
+*/
 function statusMsg(msg) {
 	$('#statusMsg').html(msg);
 	logMsg('Console Msg:' + msg);
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} msg message.
+* @param {string} requestId  request tracker.
+* @return {integer} index of new log.
+*/
 function logMsg(msg, requestId) {
 	var timingInfo = '';
 	var logId = clientLog.length;
@@ -329,20 +537,28 @@ function logMsg(msg, requestId) {
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //Server Call Functions
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} params  ajax params.
+* @param {function} successCallback function to call if successful.
+* @param {function} failCallback function to call on failure.
+*/
 function serverCall(params, successCallback, failCallback) {
 	if (usrSessionId == '' && params['spwfAction'] != 'authenticate') {
 		return false; 
 	}//if session is cleared, don't make a new call
 	var resourceActionInfo = 'Server Call Resource: ';
- 	resourceActionInfo += params['spwfResource'] + ' Action: ';
-  resourceActionInfo += params['spwfAction'];
+	resourceActionInfo += params['spwfResource'] + ' Action: ';
+	resourceActionInfo += params['spwfAction'];
 	params['requestId'] = logMsg(resourceActionInfo + ' Started');
 	var successCallbackMod = function(rslt) {
 		decrementServerCalls();
 		logMsg(resourceActionInfo + ' Responded', rslt.requestId);
 		if (!validateServerResponse(rslt)) {
 			var msg = resourceActionInfo;
-		  msg += 'Failed to validate the server response - ';
+			msg += 'Failed to validate the server response - ';
 			msg += rslt['errorMsg'];
 			logMsg(msg);
 			rslt[SERVER_SIDE_FAIL] = true;
@@ -353,7 +569,7 @@ function serverCall(params, successCallback, failCallback) {
 	};
 	var failCallbackMod = function() {
 		decrementServerCalls();
-	  failCallback();
+		failCallback();
 	};
 	incrementServerCalls();
 	$.ajax({type: 'POST',
@@ -365,11 +581,21 @@ function serverCall(params, successCallback, failCallback) {
 	});
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function incrementServerCalls() {
 	var msg = 'Open Requests: ' + ++OUTSTANDING_SERVER_CALLS;
 	$('#outstandingServerCalls').html(msg);
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function decrementServerCalls() {
 	OUTSTANDING_SERVER_CALLS = (--OUTSTANDING_SERVER_CALLS < 0) ?
 		0 : OUTSTANDING_SERVER_CALLS;
@@ -378,6 +604,15 @@ function decrementServerCalls() {
 }
 
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {boolean} success.
+* @param {string} msg message.
+* @param {date} startTime time this started.
+* @param {Object} data server response to be validated.
+*/
 function handleServerResponse(msg, startTime, data) {
 	if (!validateServerResponse(data)) {
 		alert('[%serverErrorMsg_Communication%]');
@@ -389,6 +624,15 @@ function handleServerResponse(msg, startTime, data) {
 	return true;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {Object} params  ajax params.
+* @param {string} resource  usually table name.
+* @param {string} action  select, update, insert, delete.
+* @return {object}  preped params
+*/
 function prepParams(params, resource, action) {
 	if (params == null) {params = {};}
 	params['spwfResource'] = resource;
@@ -405,6 +649,13 @@ function prepParams(params, resource, action) {
 	return params;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} responseTxt  response text.
+* @return {boolean} validity.
+*/
 function validateServerResponse(responseTxt) {
 	if (responseTxt == undefined || responseTxt == null) {
 		logMsg('validateServerResponse - undefined response');
@@ -424,6 +675,11 @@ function validateServerResponse(responseTxt) {
 	return true;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function isUserAuthorized(request, notifyUser, caller) {
 	var result = false;
 	var msg = '';
@@ -444,10 +700,20 @@ function isUserAuthorized(request, notifyUser, caller) {
 	return result;
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function securityshow(divIdToSecure) {
 	$(divIdToSecure).removeClass('SecurityDisabled');
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function securityHide(divIdToSecure) {
 	$(divIdToSecure).addClass('SecurityDisabled');
 }
@@ -456,6 +722,11 @@ function securityHide(divIdToSecure) {
 			 args:	formname - id
 			 lock - boolean, true to lock, false to unlock
 		 */ %]
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function securityLockForm(formName, lock) {
 	var disableStatus;
 	if ($('#' + formName).length == 0) {
@@ -468,13 +739,18 @@ function securityLockForm(formName, lock) {
 	$.each($('form#' + formName + '> input, >select'),
 			function(ndx, field) {
 				if (lock) {
-		 			$('form#' + formName + ' #' + field.id).attr('disabled', 'disabled');
+					$('form#' + formName + ' #' + field.id).attr('disabled', 'disabled');
 				} else {
 					$('form#' + formName + ' #' + field.id).removeAttr('disabled');
 				}
-	});
+			});
 }
 
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
 function isFormEmpty(formName) {
 	if ($('#' + formName + '-last_update').val() == '')return true;
 	return false;
