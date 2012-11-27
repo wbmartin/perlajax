@@ -49,6 +49,7 @@ class App
 		letDustSettle()
 	end
 	def logout()
+		letDustSettle
 		@b.link(:id,'logoutButtonId').click
 	end
 

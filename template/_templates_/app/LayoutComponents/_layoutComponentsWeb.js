@@ -19,6 +19,7 @@ function sizeLeftNav() {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {boolean} showHide show or hide main layout pieces.
 */
 function displayMainLayout(showHide) {
 	var display = (showHide) ? 'block' : 'none';
@@ -52,6 +53,8 @@ $(document).ready(function() {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {string} msg message to show.
+* @param {string} type level of notice: INFO, WARNING, ERROR.
 */
 function briefNotify(msg, type) {
 	var color;
@@ -76,6 +79,12 @@ function briefNotify(msg, type) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {string} msg_  message.
+* @param {integer} height_  height.
+* @param {integer} width_ width.
+* @param {boolean} modal_ modality.
+* @param {Object} buttons_ object contain button defs.
+* @param {string} title_ title bar text.
 */
 function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
 	if ($('#genericDialogDivId').is(':data(dialog)')) {

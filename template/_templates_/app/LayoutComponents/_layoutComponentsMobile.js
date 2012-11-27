@@ -3,6 +3,7 @@
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {string} msg message.
 */
 function showDialog(msg) {
 alert(msg);
@@ -12,6 +13,8 @@ alert(msg);
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {string} title_ title.
+* @param {string} msg_ message.
 */
 function showDialog(title_, msg_) {
 		$('#userMsgDialog #title').html(title_);
@@ -25,6 +28,8 @@ function showDialog(title_, msg_) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {string} msg  message.
+* @param {string} type type.
 */
 function briefNotify(msg, type) {
 	// you are right here working on brief notify http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.js

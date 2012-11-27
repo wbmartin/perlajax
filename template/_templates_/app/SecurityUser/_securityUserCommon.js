@@ -15,6 +15,8 @@
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+
+* @return {boolean} allowed.
 */
 function retrieve[%ucfirst(divId)%]List() {
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
@@ -41,6 +43,8 @@ function retrieve[%ucfirst(divId)%]List() {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} params ajax params.
+* @return {boolean} allowed.
 */
 function retrieve[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
@@ -77,6 +81,9 @@ function retrieve[%ucfirst(divId)%](params) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {integer} [%toCC(prkey)%]_  prkey.
+* @param {string} lastUpdate_  tran mgmt.
+* @return {boolean} allowed.
 */
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	if (!isUserAuthorized('[%DELETE_GRANT%]',
@@ -106,6 +113,8 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} params  ajax params.
+* @return {booleam} allowed.
 */
 function save[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]', false) &&
@@ -145,6 +154,8 @@ function save[%ucfirst(divId)%](params) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {integer} [%divId%]Id_  prkey to edit.
+* @return {boolean} allowed.
 */
 function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
@@ -168,6 +179,7 @@ function edit[%ucfirst(divId)%]([%divId%]Id_) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @return {boolean} allowed.
 */
 function save[%ucfirst(divId)%]Form() {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]', false) &&
@@ -194,6 +206,7 @@ function save[%ucfirst(divId)%]Form() {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @return {boolean} validity.
 */
 function validate[%ucfirst(divId)%]Form() {
 	var formName = '[%divId%]Form';
@@ -212,6 +225,7 @@ function validate[%ucfirst(divId)%]Form() {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} dataRows array of objects.
 */
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
@@ -227,6 +241,8 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} data [%ucfirst(divId)%] info.
+* @return {Object} built table row.
 */
 function build[%ucfirst(divId)%]ListTableRow(data) {
 	var dataHash = {};
@@ -257,6 +273,7 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} row [%ucfirst(divId)%] info.
 */
 function replace[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnUpdate(
@@ -268,6 +285,7 @@ function replace[%ucfirst(divId)%]ListTableRow(row) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} row [%ucfirst(divId)%] info.
 */
 function addNew[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnAddData(
@@ -278,6 +296,7 @@ function addNew[%ucfirst(divId)%]ListTableRow(row) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {integer} [%toCC(prkey)%]_ prkey.
 */
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 	$('#[%divId%]ListTable').dataTable().fnDeleteRow(
@@ -290,6 +309,7 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @return {boolean} allowed.
 */
 function show[%ucfirst(divId)%]() {
 	statusMsg('Navigated to Security Users');
@@ -347,6 +367,7 @@ $(document).ready(function() {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {boolean} show  show or not.
 */
 function showPasswordFields(show) {
 	if (show) {

@@ -38,6 +38,7 @@ describe "A golfer" do
 		@app.browser.links.each do |l|
 			if l.text == 'Delete' then 
 				l.click
+				@app.letDustSettle
 			end
 		end
 		@app.browser.text.should match /No data available in table/
@@ -62,16 +63,17 @@ describe "A golfer" do
 	end
 
 	it 'can be reset to add mode while editing' do
-		@app.browser.link(:text, 'Edit').click
+		@app.letDustSettle
+		@app.browser.div(:id, "golferListTableDivId").link(:text,"Edit").click
 		@app.letDustSettle
 		@app.browser.button(:id, 'golferFormAdd').should_not be_visible
 		@app.browser.button(:id, 'golferFormClear').click
 		@app.browser.text_field(:id,'golferForm-name').value.should == ''
 		@app.browser.button(:id, 'golferFormAdd').should be_visible
 	end
-
-	it "can be updated" do
-		@app.browser.link(:text, 'Edit').click
+	it 'can be updated' do
+		@app.letDustSettle
+		@app.browser.div(:id, "golferListTableDivId").link(:text,"Edit").click
 		@app.letDustSettle
 		@app.browser.text_field(:id, 'golferForm-name').value.should == "New Golfer"
 		@app.browser.text_field(:id, 'golferForm-name').set('New 1 Golfer')
@@ -95,10 +97,10 @@ describe "A golfer" do
 	end
 
 
-
 	after :each do
 		@app.letDustSettle
 	end
 	after :all do
+		@app.logout
 	end
 end

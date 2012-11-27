@@ -64,7 +64,7 @@ function highlightFieldError(formId, fieldId, yesNo) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
-* @params {string} formName form.
+* @param {string} formName form.
 * @return {Object} objectified form.
 */
 function bindForm(formName) {
@@ -123,7 +123,7 @@ function clearForm(formName) {
 * SRC: [%SRC_LOC%]
 *=====================================================================
 * @param {string} formName  form.
-* @param {boolean} saveMode  true for Save, false for Add
+* @param {boolean} saveMode  true for Save, false for Add.
 */
 function toggleSaveMode(formName, saveMode) {
 	var buttonToShow = (saveMode) ? 'Save' : 'Add';
@@ -184,6 +184,7 @@ function standardValidate(formName) {
 * SRC: [%SRC_LOC%]
 *=====================================================================
 * @param {string} fieldId_  field.
+* @return {boolean} if field is empty.
 */
 function isFieldIdEmpty(fieldId_) {
 	if (document.getElementById(fieldId_) == undefined) return true;
@@ -198,6 +199,7 @@ function isFieldIdEmpty(fieldId_) {
 * SRC: [%SRC_LOC%]
 *=====================================================================
 * @param {string} val to evaluate.
+* @return {boolean} true if empty.
 */
 function isEmpty(val) {
 	return (!val || 0 === val.length);
@@ -225,6 +227,7 @@ String.prototype.isEmpty = function() {
 * SRC: [%SRC_LOC%]
 *=====================================================================
 * @param {string} str to evalute.
+* @return {boolean}  true if blank.
 */
 function isBlank(str) {
 	return (!str || /^\s*$/.test(str));
@@ -285,7 +288,7 @@ function pgDate(val) {
 * @param {boolean} bolLeadingZero  include leading zeros.
 * @param {boolean} bolParens show negative with parens.
 * @param {boolean} bolCommas  format with commas.
-* @returns {string} formatted val.
+* @return {string} formatted val.
 */
 function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
 	if (isNaN(parseInt(num))) return '---';
@@ -544,6 +547,7 @@ function logMsg(msg, requestId) {
 * @param {Object} params  ajax params.
 * @param {function} successCallback function to call if successful.
 * @param {function} failCallback function to call on failure.
+* @return {boolean} allowed.
 */
 function serverCall(params, successCallback, failCallback) {
 	if (usrSessionId == '' && params['spwfAction'] != 'authenticate') {
@@ -631,7 +635,7 @@ function handleServerResponse(msg, startTime, data) {
 * @param {Object} params  ajax params.
 * @param {string} resource  usually table name.
 * @param {string} action  select, update, insert, delete.
-* @return {object}  preped params
+* @return {object}  preped params.
 */
 function prepParams(params, resource, action) {
 	if (params == null) {params = {};}
@@ -679,6 +683,10 @@ function validateServerResponse(responseTxt) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {string} request  grant to test.
+* @param {boolean} notifyUser notify user of result.
+* @param {string} caller name of function that is requesting for debugging.
+* @return {boolean} authorized.
 */
 function isUserAuthorized(request, notifyUser, caller) {
 	var result = false;
@@ -704,6 +712,7 @@ function isUserAuthorized(request, notifyUser, caller) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {string} divIdToSecure div to show.
 */
 function securityshow(divIdToSecure) {
 	$(divIdToSecure).removeClass('SecurityDisabled');
@@ -713,6 +722,7 @@ function securityshow(divIdToSecure) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {string} divIdToSecure div to hide.
 */
 function securityHide(divIdToSecure) {
 	$(divIdToSecure).addClass('SecurityDisabled');
@@ -726,6 +736,8 @@ function securityHide(divIdToSecure) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {string} formName the form.
+* @param {boolean} lock true to lock the form.
 */
 function securityLockForm(formName, lock) {
 	var disableStatus;
@@ -750,6 +762,8 @@ function securityLockForm(formName, lock) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {string} formName the form.
+* @return {boolean}  empty.
 */
 function isFormEmpty(formName) {
 	if ($('#' + formName + '-last_update').val() == '')return true;

@@ -16,6 +16,7 @@ $(document).ready(function() {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} dataRows  array of [%ucfirst(divId)%] objects.
 */
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
@@ -36,6 +37,8 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} gs rowdata.
+* @return {string}  built div.
 */
 function build[%ucfirst(divId)%]ListTableRow(gs) {
 	var newRow = '<div class = "ui-block-a">' + gs.golfer_name + '</div>';

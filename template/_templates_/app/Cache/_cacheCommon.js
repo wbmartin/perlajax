@@ -10,9 +10,9 @@ var SECURITY_GRANT;
 
 /**
 * 
-* @param {Object} data. 
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} data data retrieve from server to update local cache.
 */
 
 function onRefreshCache(data) {

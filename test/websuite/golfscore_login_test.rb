@@ -43,6 +43,5 @@ describe "A golf score login" do
 	after :each do
 	end
 	after :all do
-		@app.logout()
 	end
 end

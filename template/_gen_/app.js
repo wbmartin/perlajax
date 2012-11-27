@@ -25,6 +25,8 @@
 *
 * SRC: _securityUserCommon
 *=====================================================================
+
+* @return {boolean} allowed.
 */
 function retrieveSecurityUserList() {
   if (!isUserAuthorized('SELECT_SECURITY_USER',
@@ -51,6 +53,8 @@ function retrieveSecurityUserList() {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @param {Object} params ajax params.
+* @return {boolean} allowed.
 */
 function retrieveSecurityUser(params) {
   if (!isUserAuthorized('SELECT_SECURITY_USER',
@@ -87,6 +91,9 @@ function retrieveSecurityUser(params) {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @param {integer} securityUserId_  prkey.
+* @param {string} lastUpdate_  tran mgmt.
+* @return {boolean} allowed.
 */
 function deleteSecurityUser(securityUserId_, lastUpdate_) {
   if (!isUserAuthorized('DELETE_SECURITY_USER',
@@ -116,6 +123,8 @@ function deleteSecurityUser(securityUserId_, lastUpdate_) {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @param {Object} params  ajax params.
+* @return {booleam} allowed.
 */
 function saveSecurityUser(params) {
   if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
@@ -155,6 +164,8 @@ function saveSecurityUser(params) {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @param {integer} securityUserId_  prkey to edit.
+* @return {boolean} allowed.
 */
 function editSecurityUser(securityUserId_) {
   if (!isUserAuthorized('SELECT_SECURITY_USER',
@@ -178,6 +189,7 @@ function editSecurityUser(securityUserId_) {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @return {boolean} allowed.
 */
 function saveSecurityUserForm() {
   if (!isUserAuthorized('UPDATE_SECURITY_USER', false) &&
@@ -204,6 +216,7 @@ function saveSecurityUserForm() {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @return {boolean} validity.
 */
 function validateSecurityUserForm() {
   var formName = 'securityUserForm';
@@ -222,6 +235,7 @@ function validateSecurityUserForm() {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @param {Object} dataRows array of objects.
 */
 function populateSecurityUserListTable(dataRows) {
   var dataArray = new Array();
@@ -237,6 +251,8 @@ function populateSecurityUserListTable(dataRows) {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @param {Object} data SecurityUser info.
+* @return {Object} built table row.
 */
 function buildSecurityUserListTableRow(data) {
   var dataHash = {};
@@ -267,6 +283,7 @@ function buildSecurityUserListTableRow(data) {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @param {Object} row SecurityUser info.
 */
 function replaceSecurityUserListTableRow(row) {
   $('#securityUserListTable').dataTable().fnUpdate(
@@ -278,6 +295,7 @@ function replaceSecurityUserListTableRow(row) {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @param {Object} row SecurityUser info.
 */
 function addNewSecurityUserListTableRow(row) {
   $('#securityUserListTable').dataTable().fnAddData(
@@ -288,6 +306,7 @@ function addNewSecurityUserListTableRow(row) {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @param {integer} securityUserId_ prkey.
 */
 function removeSecurityUserListTableRow(securityUserId_) {
   $('#securityUserListTable').dataTable().fnDeleteRow(
@@ -300,6 +319,7 @@ function removeSecurityUserListTableRow(securityUserId_) {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @return {boolean} allowed.
 */
 function showSecurityUser() {
   statusMsg('Navigated to Security Users');
@@ -357,6 +377,7 @@ $(document).ready(function() {
 *
 * SRC: _securityUserCommon
 *=====================================================================
+* @param {boolean} show  show or not.
 */
 function showPasswordFields(show) {
   if (show) {
@@ -430,9 +451,9 @@ var SECURITY_GRANT;
 
 /**
 *
-* @param {Object} data.
 * SRC: _cacheCommon
 *=====================================================================
+* @param {Object} data data retrieve from server to update local cache.
 */
 
 function onRefreshCache(data) {
@@ -539,6 +560,7 @@ function sizeLeftNav() {
 *
 * SRC: _layoutComponentsWeb
 *=====================================================================
+* @param {boolean} showHide show or hide main layout pieces.
 */
 function displayMainLayout(showHide) {
   var display = (showHide) ? 'block' : 'none';
@@ -572,6 +594,8 @@ $(document).ready(function() {
 *
 * SRC: _layoutComponentsWeb
 *=====================================================================
+* @param {string} msg message to show.
+* @param {string} type level of notice: INFO, WARNING, ERROR.
 */
 function briefNotify(msg, type) {
   var color;
@@ -596,6 +620,12 @@ function briefNotify(msg, type) {
 *
 * SRC: _layoutComponentsWeb
 *=====================================================================
+* @param {string} msg_  message.
+* @param {integer} height_  height.
+* @param {integer} width_ width.
+* @param {boolean} modal_ modality.
+* @param {Object} buttons_ object contain button defs.
+* @param {string} title_ title bar text.
 */
 function showDialog(msg_, height_, width_, modal_, buttons_, title_) {
   if ($('#genericDialogDivId').is(':data(dialog)')) {
@@ -693,7 +723,7 @@ function highlightFieldError(formId, fieldId, yesNo) {
 *
 * SRC: _libCommon
 *=====================================================================
-* @params {string} formName form.
+* @param {string} formName form.
 * @return {Object} objectified form.
 */
 function bindForm(formName) {
@@ -752,7 +782,7 @@ function clearForm(formName) {
 * SRC: _libCommon
 *=====================================================================
 * @param {string} formName  form.
-* @param {boolean} saveMode  true for Save, false for Add
+* @param {boolean} saveMode  true for Save, false for Add.
 */
 function toggleSaveMode(formName, saveMode) {
   var buttonToShow = (saveMode) ? 'Save' : 'Add';
@@ -813,6 +843,7 @@ function standardValidate(formName) {
 * SRC: _libCommon
 *=====================================================================
 * @param {string} fieldId_  field.
+* @return {boolean} if field is empty.
 */
 function isFieldIdEmpty(fieldId_) {
   if (document.getElementById(fieldId_) == undefined) return true;
@@ -827,6 +858,7 @@ function isFieldIdEmpty(fieldId_) {
 * SRC: _libCommon
 *=====================================================================
 * @param {string} val to evaluate.
+* @return {boolean} true if empty.
 */
 function isEmpty(val) {
   return (!val || 0 === val.length);
@@ -849,6 +881,7 @@ String.prototype.isEmpty = function() {
 * SRC: _libCommon
 *=====================================================================
 * @param {string} str to evalute.
+* @return {boolean}  true if blank.
 */
 function isBlank(str) {
   return (!str || /^\s*$/.test(str));
@@ -909,7 +942,7 @@ function pgDate(val) {
 * @param {boolean} bolLeadingZero  include leading zeros.
 * @param {boolean} bolParens show negative with parens.
 * @param {boolean} bolCommas  format with commas.
-* @returns {string} formatted val.
+* @return {string} formatted val.
 */
 function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
   if (isNaN(parseInt(num))) return '---';
@@ -1168,6 +1201,7 @@ function logMsg(msg, requestId) {
 * @param {Object} params  ajax params.
 * @param {function} successCallback function to call if successful.
 * @param {function} failCallback function to call on failure.
+* @return {boolean} allowed.
 */
 function serverCall(params, successCallback, failCallback) {
   if (usrSessionId == '' && params['spwfAction'] != 'authenticate') {
@@ -1255,7 +1289,7 @@ function handleServerResponse(msg, startTime, data) {
 * @param {Object} params  ajax params.
 * @param {string} resource  usually table name.
 * @param {string} action  select, update, insert, delete.
-* @return {object}  preped params
+* @return {object}  preped params.
 */
 function prepParams(params, resource, action) {
   if (params == null) {params = {};}
@@ -1303,6 +1337,10 @@ function validateServerResponse(responseTxt) {
 *
 * SRC: _libCommon
 *=====================================================================
+* @param {string} request  grant to test.
+* @param {boolean} notifyUser notify user of result.
+* @param {string} caller name of function that is requesting for debugging.
+* @return {boolean} authorized.
 */
 function isUserAuthorized(request, notifyUser, caller) {
   var result = false;
@@ -1328,6 +1366,7 @@ function isUserAuthorized(request, notifyUser, caller) {
 *
 * SRC: _libCommon
 *=====================================================================
+* @param {string} divIdToSecure div to show.
 */
 function securityshow(divIdToSecure) {
   $(divIdToSecure).removeClass('SecurityDisabled');
@@ -1337,6 +1376,7 @@ function securityshow(divIdToSecure) {
 *
 * SRC: _libCommon
 *=====================================================================
+* @param {string} divIdToSecure div to hide.
 */
 function securityHide(divIdToSecure) {
   $(divIdToSecure).addClass('SecurityDisabled');
@@ -1346,6 +1386,8 @@ function securityHide(divIdToSecure) {
 *
 * SRC: _libCommon
 *=====================================================================
+* @param {string} formName the form.
+* @param {boolean} lock true to lock the form.
 */
 function securityLockForm(formName, lock) {
   var disableStatus;
@@ -1370,6 +1412,8 @@ function securityLockForm(formName, lock) {
 *
 * SRC: _libCommon
 *=====================================================================
+* @param {string} formName the form.
+* @return {boolean}  empty.
 */
 function isFormEmpty(formName) {
   if ($('#' + formName + '-last_update').val() == '')return true;

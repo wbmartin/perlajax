@@ -12,6 +12,7 @@
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @return {boolean} validity.
 */
 function validate[%ucfirst(divId)%]Form() {
 	var formName = '[%divId%]Form';
@@ -24,6 +25,7 @@ function validate[%ucfirst(divId)%]Form() {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} dataRows  array of hash objects.
 */
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	
@@ -33,6 +35,7 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} data  rowdata.
 */
 function build[%ucfirst(divId)%]ListTableRow(data) {
 }
@@ -41,6 +44,7 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} row row to replace.
 */
 function replace[%ucfirst(divId)%]ListTableRow(row) {
 }
@@ -48,6 +52,7 @@ function replace[%ucfirst(divId)%]ListTableRow(row) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {Object} row row to add.
 */
 function addNew[%ucfirst(divId)%]ListTableRow(row) {
 }
@@ -55,6 +60,7 @@ function addNew[%ucfirst(divId)%]ListTableRow(row) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {integer} [%toCC(prkey)%]_ prkey.
 */
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 }

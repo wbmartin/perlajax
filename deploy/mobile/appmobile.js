@@ -78,7 +78,7 @@ function highlightFieldError(formId, fieldId, yesNo) {
 *
 * SRC: _libCommon
 *=====================================================================
-* @params {string} formName form.
+* @param {string} formName form.
 * @return {Object} objectified form.
 */
 function bindForm(formName) {
@@ -137,7 +137,7 @@ function clearForm(formName) {
 * SRC: _libCommon
 *=====================================================================
 * @param {string} formName  form.
-* @param {boolean} saveMode  true for Save, false for Add
+* @param {boolean} saveMode  true for Save, false for Add.
 */
 function toggleSaveMode(formName, saveMode) {
   var buttonToShow = (saveMode) ? 'Save' : 'Add';
@@ -198,6 +198,7 @@ function standardValidate(formName) {
 * SRC: _libCommon
 *=====================================================================
 * @param {string} fieldId_  field.
+* @return {boolean} if field is empty.
 */
 function isFieldIdEmpty(fieldId_) {
   if (document.getElementById(fieldId_) == undefined) return true;
@@ -212,6 +213,7 @@ function isFieldIdEmpty(fieldId_) {
 * SRC: _libCommon
 *=====================================================================
 * @param {string} val to evaluate.
+* @return {boolean} true if empty.
 */
 function isEmpty(val) {
   return (!val || 0 === val.length);
@@ -234,6 +236,7 @@ String.prototype.isEmpty = function() {
 * SRC: _libCommon
 *=====================================================================
 * @param {string} str to evalute.
+* @return {boolean}  true if blank.
 */
 function isBlank(str) {
   return (!str || /^\s*$/.test(str));
@@ -294,7 +297,7 @@ function pgDate(val) {
 * @param {boolean} bolLeadingZero  include leading zeros.
 * @param {boolean} bolParens show negative with parens.
 * @param {boolean} bolCommas  format with commas.
-* @returns {string} formatted val.
+* @return {string} formatted val.
 */
 function formatNumber(num, decimalNum, bolLeadingZero, bolParens, bolCommas) {
   if (isNaN(parseInt(num))) return '---';
@@ -553,6 +556,7 @@ function logMsg(msg, requestId) {
 * @param {Object} params  ajax params.
 * @param {function} successCallback function to call if successful.
 * @param {function} failCallback function to call on failure.
+* @return {boolean} allowed.
 */
 function serverCall(params, successCallback, failCallback) {
   if (usrSessionId == '' && params['spwfAction'] != 'authenticate') {
@@ -640,7 +644,7 @@ function handleServerResponse(msg, startTime, data) {
 * @param {Object} params  ajax params.
 * @param {string} resource  usually table name.
 * @param {string} action  select, update, insert, delete.
-* @return {object}  preped params
+* @return {object}  preped params.
 */
 function prepParams(params, resource, action) {
   if (params == null) {params = {};}
@@ -688,6 +692,10 @@ function validateServerResponse(responseTxt) {
 *
 * SRC: _libCommon
 *=====================================================================
+* @param {string} request  grant to test.
+* @param {boolean} notifyUser notify user of result.
+* @param {string} caller name of function that is requesting for debugging.
+* @return {boolean} authorized.
 */
 function isUserAuthorized(request, notifyUser, caller) {
   var result = false;
@@ -713,6 +721,7 @@ function isUserAuthorized(request, notifyUser, caller) {
 *
 * SRC: _libCommon
 *=====================================================================
+* @param {string} divIdToSecure div to show.
 */
 function securityshow(divIdToSecure) {
   $(divIdToSecure).removeClass('SecurityDisabled');
@@ -722,6 +731,7 @@ function securityshow(divIdToSecure) {
 *
 * SRC: _libCommon
 *=====================================================================
+* @param {string} divIdToSecure div to hide.
 */
 function securityHide(divIdToSecure) {
   $(divIdToSecure).addClass('SecurityDisabled');
@@ -731,6 +741,8 @@ function securityHide(divIdToSecure) {
 *
 * SRC: _libCommon
 *=====================================================================
+* @param {string} formName the form.
+* @param {boolean} lock true to lock the form.
 */
 function securityLockForm(formName, lock) {
   var disableStatus;
@@ -755,6 +767,8 @@ function securityLockForm(formName, lock) {
 *
 * SRC: _libCommon
 *=====================================================================
+* @param {string} formName the form.
+* @return {boolean}  empty.
 */
 function isFormEmpty(formName) {
   if ($('#' + formName + '-last_update').val() == '')return true;
@@ -782,9 +796,9 @@ var SECURITY_GRANT;
 
 /**
 *
-* @param {Object} data.
 * SRC: _cacheCommon
 *=====================================================================
+* @param {Object} data data retrieve from server to update local cache.
 */
 
 function onRefreshCache(data) {
@@ -1087,6 +1101,7 @@ function onSuccessfulLogin() {
 *
 * SRC: _loginPortalMobile.js
 *=====================================================================
+* @return {boolean} validity.
 */
 function validateLoginPortalForm() {
   return true;
@@ -1108,6 +1123,7 @@ function validateLoginPortalForm() {
 *
 * SRC: _layoutComponentsMobile
 *=====================================================================
+* @param {string} msg message.
 */
 function showDialog(msg) {
 alert(msg);
@@ -1117,6 +1133,8 @@ alert(msg);
 *
 * SRC: _layoutComponentsMobile
 *=====================================================================
+* @param {string} title_ title.
+* @param {string} msg_ message.
 */
 function showDialog(title_, msg_) {
     $('#userMsgDialog #title').html(title_);
@@ -1130,6 +1148,8 @@ function showDialog(title_, msg_) {
 *
 * SRC: _layoutComponentsMobile
 *=====================================================================
+* @param {string} msg  message.
+* @param {string} type type.
 */
 function briefNotify(msg, type) {
   // you are right here working on brief notify http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.js
@@ -1230,6 +1250,7 @@ $(document).ready(function() {
 *
 * SRC: _golfScoreSummaryMobile
 *=====================================================================
+* @param {Object} dataRows  array of GolfScoreSummary objects.
 */
 function populateGolfScoreSummaryListTable(dataRows) {
   var dataArray = new Array();
@@ -1250,6 +1271,8 @@ function populateGolfScoreSummaryListTable(dataRows) {
 *
 * SRC: _golfScoreSummaryMobile
 *=====================================================================
+* @param {Object} gs rowdata.
+* @return {string}  built div.
 */
 function buildGolfScoreSummaryListTableRow(gs) {
   var newRow = '<div class = "ui-block-a">' + gs.golfer_name + '</div>';
@@ -1531,6 +1554,7 @@ function retrieveGolferNameForGolfScore(golferId_) {
 *
 * SRC: _quickGolfScoreMobile
 *=====================================================================
+* @return {boolean} validity.
 */
 function validateQuickGolfScoreForm() {
   var formName = 'quickGolfScoreForm';
@@ -1543,6 +1567,7 @@ function validateQuickGolfScoreForm() {
 *
 * SRC: _quickGolfScoreMobile
 *=====================================================================
+* @param {Object} dataRows  array of hash objects.
 */
 function populateQuickGolfScoreListTable(dataRows) {
 
@@ -1552,6 +1577,7 @@ function populateQuickGolfScoreListTable(dataRows) {
 *
 * SRC: _quickGolfScoreMobile
 *=====================================================================
+* @param {Object} data  rowdata.
 */
 function buildQuickGolfScoreListTableRow(data) {
 }
@@ -1560,6 +1586,7 @@ function buildQuickGolfScoreListTableRow(data) {
 *
 * SRC: _quickGolfScoreMobile
 *=====================================================================
+* @param {Object} row row to replace.
 */
 function replaceQuickGolfScoreListTableRow(row) {
 }
@@ -1567,6 +1594,7 @@ function replaceQuickGolfScoreListTableRow(row) {
 *
 * SRC: _quickGolfScoreMobile
 *=====================================================================
+* @param {Object} row row to add.
 */
 function addNewQuickGolfScoreListTableRow(row) {
 }
@@ -1574,6 +1602,7 @@ function addNewQuickGolfScoreListTableRow(row) {
 *
 * SRC: _quickGolfScoreMobile
 *=====================================================================
+* @param {integer} golfScoreId_ prkey.
 */
 function removeQuickGolfScoreListTableRow(golfScoreId_) {
 }

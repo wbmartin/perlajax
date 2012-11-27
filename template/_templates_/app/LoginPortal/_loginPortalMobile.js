@@ -15,6 +15,7 @@ function onSuccessfulLogin() {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @return {boolean} validity.
 */
 function validate[%ucfirst(divId)%]Form() {
   return true;
