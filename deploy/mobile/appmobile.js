@@ -105,6 +105,11 @@ function bindToForm(formName, obj) {
       function(key, field) {
         fieldId = field.id.replace(formName + '-', '');
         if (field.type != 'button') field.value = obj[fieldId];
+        if (IS_MOBILE && field.type === 'select-one' ) {
+            $(field).selectmenu();
+            $(field).selectmenu('refresh',true);
+          }
+
       });
 }
 
@@ -119,12 +124,16 @@ function clearForm(formName) {
   $.each($('form#' + formName + ' :input'),
       function(key, field) {
         fieldId = field.id.replace(formName + '-', '');
+        var selectRefreshNeeded = false;
         if (field.type == 'checkbox') {
           field.checked = false;
         } else if (field.type != 'button') {
+          if (IS_MOBILE && field.type === 'select-one' && field.value!== '') {
+             selectRefreshNeeded = true;
+          }
           field.value = '';
-          if (IS_MOBILE && field.type === 'select-one') {
-            $(field).selectmenu('refresh');
+          if (selectRefreshNeeded) {
+            $(field).selectmenu('refresh', true);
           }
         }
       }
@@ -143,9 +152,19 @@ function toggleSaveMode(formName, saveMode) {
   var buttonToShow = (saveMode) ? 'Save' : 'Add';
   var buttonToHide = (!saveMode) ? 'Save' : 'Add';
   var id = 'form#' + formName + ' #' + formName + buttonToHide;
-  $(id).addClass('LogicDisabled');
+  if (IS_MOBILE) {
+    $(id).parent().addClass('LogicDisabled');
+  } else {
+    $(id).addClass('LogicDisabled');
+  }
   id = 'form#' + formName + ' #' + formName + buttonToShow;
   $(id).removeClass('LogicDisabled');
+  if (IS_MOBILE) {
+    $(id).parent().removeClass('LogicDisabled');
+  } else {
+    $(id).removeClass('LogicDisabled');
+  }
+
 }
 
 /**
@@ -181,7 +200,7 @@ function standardValidate(formName) {
       formValid = false;
     }
   });
-  $.each($('form#' + formName + ' .VALIDATEmmddyyyydate'),
+  $.each($('form#' + formName + ' .VALIDATEdate_mmddyyyy'),
       function(ndx, field) {
         if (isEmpty(field.id)) {return true;}//skip/continue if no ID
         if (field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)) {
@@ -190,6 +209,16 @@ function standardValidate(formName) {
           formValid = false;
         }
       });
+  $.each($('form#' + formName + ' .VALIDATEdate_yyyy-mm-dd'),
+      function(ndx, field) {
+        if (isEmpty(field.id)) {return true;}//skip/continue if no ID
+        if (field.value != null && !field.value.match(/\d\d\d\d-\d\d-\d\d/)) {
+          appendValidationMsg(formName, field.id, 'YYYY-MM-DD date Required');
+          highlightFieldError(formName, field.id, true);
+          formValid = false;
+        }
+      });
+
   return formValid;
 }
 
@@ -424,6 +453,10 @@ function setSelectOptions(selectId, obj) {
     newhtml += '<option value="' + key + '">' + val + '</option>';
   });
   $(selectId).html(newhtml);
+  if (IS_MOBILE) {
+    $(selectId).selectmenu();
+    $(selectId).selectmenu('refresh',true);
+  }
 
 }
 
@@ -776,6 +809,29 @@ function isFormEmpty(formName) {
 }
 
 
+/**
+SRC: _libCommon
+*=====================================================================
+* @param {string} dt the form.
+* @param {string} format the form.
+* @return {boolean}  formatted date.
+
+  *
+  */
+function formatDate(dt,format) {
+  if (format === 'MM-DD') { return dt.substr(5); }
+  return 'format undefined';
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1095,6 +1151,11 @@ function onetimeLogin() {
 function onSuccessfulLogin() {
   retrieveCache();
   showLaunchPane();
+  if ($('#trustedDeviceId').value === 'on') {
+    TRUSTED_DEVICE = true;
+  } else {
+    TRUSTED_DEVICE = false;
+  }
 }
 
 /**
@@ -1106,6 +1167,14 @@ function onSuccessfulLogin() {
 function validateLoginPortalForm() {
   return true;
 }
+
+/**
+*
+* SRC: _loginPortalMobile.js
+*=====================================================================
+*/
+$(document).ready(function() {
+});
 
 
 
@@ -1120,65 +1189,67 @@ function validateLoginPortalForm() {
 
 
 /**
-*
-* SRC: _layoutComponentsMobile
-*=====================================================================
-* @param {string} msg message.
-*/
+ *
+ * SRC: _layoutComponentsMobile
+ *=====================================================================
+ * @param {string} msg message.
+ */
 function showDialog(msg) {
-alert(msg);
+  alert(msg);
 }
-
-  /**
-*
-* SRC: _layoutComponentsMobile
-*=====================================================================
-* @param {string} title_ title.
-* @param {string} msg_ message.
-*/
-function showDialog(title_, msg_) {
-    $('#userMsgDialog #title').html(title_);
-    $('#userMsgDialog #msg').html(msg_);
-    $.mobile.changePage('#userMsgDialog', {'transition': 'pop'});
-
-
-  }
 
 /**
-*
-* SRC: _layoutComponentsMobile
-*=====================================================================
-* @param {string} msg  message.
-* @param {string} type type.
-*/
-function briefNotify(msg, type) {
-  // you are right here working on brief notify http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.js
-  if (typeof(delay) === 'undefined') {
-    var delay = 3500; // in milliseconds
-  }
-  if (typeof(theme) === 'undefined') {
-    // default theme; setting this to 'e' is nice for error messages
-    var theme = 'a';
-  }
-  var css_class = '';
-  if (theme === 'e') {
-    css_class = 'ui-body-e';
-  }
-  $.mobile.loadingMessage = msg;
-  $.mobile.showPageLoadingMsg();
-  // hide the spinner graphic
-  $('.ui-loader').addClass(css_class).find('.spin:visible').hide();
-  setTimeout(
-    function() {
-      // show the spinner graphic when we are done
-      $('.ui-loader').removeClass(css_class).find('.spin:hidden').show();
-      $.mobile.hidePageLoadingMsg();
-      // reset back to default message
-      $.mobile.loadingMessage = DEFAULT_LOADING_MSG;
-    },
-    delay
-  );
+ *
+ * SRC: _layoutComponentsMobile
+ *=====================================================================
+ * @param {string} title_ title.
+ * @param {string} msg_ message.
+ */
+function showDialog(title_, msg_) {
+  $('#userMsgDialog #title').html(title_);
+  $('#userMsgDialog #msg').html(msg_);
+  $.mobile.changePage('#userMsgDialog', {'transition': 'pop'});
+
+
 }
+
+/**
+ *
+ * SRC: _layoutComponentsMobile
+ *=====================================================================
+ * @param {string} msg  message.
+ * @param {string} type type.
+ */
+function briefNotify(msg, type) {
+  var color;
+  if (type == null || type == 'INFO') {
+    color = 'ui-body-b';
+  }else if (type == 'WARNING') {
+    color = 'ui-body-b';
+  }else if (type == 'ERROR') {
+    color = 'ui-body-e';
+  }else {
+    color = 'ui-body-a';
+  }
+
+  var msgDiv = '<div class="ui-loader ui-overlay-shadow ';
+  msgDiv +=  color + ' ui-corner-all"><h3>';
+  msgDiv += msg + '</h3></div>';
+  $(msgDiv)
+    .css({ display: 'block',
+      opacity: 0.90,
+      position: 'fixed',
+      padding: '7px',
+      'text-align': 'center',
+      width: '270px',
+      left: ($(window).width() - 284)/2,
+      top: $(window).height()/2 })
+    .appendTo( $.mobile.pageContainer ).delay( 1500 )
+    .fadeOut( 400, function(){
+      $(this).remove();
+    });
+}
+
 
 
 
@@ -1253,7 +1324,7 @@ $(document).ready(function() {
 * @param {Object} dataRows  array of GolfScoreSummary objects.
 */
 function populateGolfScoreSummaryListTable(dataRows) {
-  var dataArray = new Array();
+//  var dataArray = new Array();
   var newRow = '<div class = "ui-block-a"><b>Golfer</b></div>';
   newRow += '<div class = "ui-block-b"><b>Handicap</b></div>';
   var newTable = newRow;
@@ -1271,13 +1342,13 @@ function populateGolfScoreSummaryListTable(dataRows) {
 *
 * SRC: _golfScoreSummaryMobile
 *=====================================================================
-* @param {Object} gs rowdata.
+* @param {Object} data rowdata.
 * @return {string}  built div.
 */
-function buildGolfScoreSummaryListTableRow(gs) {
-  var newRow = '<div class = "ui-block-a">' + gs.golfer_name + '</div>';
+function buildGolfScoreSummaryListTableRow(data) {
+  var newRow = '<div class = "ui-block-a">' + data.golfer_name + '</div>';
   newRow += '<div class = "ui-block-b">';
-  newRow += formatNumber(gs.golf_score, 2, true, false, true);
+  newRow += formatNumber(data.golf_score, 2, true, false, true);
   newRow += '</div>';
   return newRow;
 }
@@ -1289,9 +1360,7 @@ function buildGolfScoreSummaryListTableRow(gs) {
 function showGolfScoreSummary() {
   retrieveGolfScoreSummaryList();
   $.mobile.changePage('#golfScoreSummaryDivId');
-
 }
-
 
 
 
@@ -1507,7 +1576,6 @@ function clearQuickGolfScoreForm() {
 *=====================================================================
 */
 $(document).ready(function() {
-    $('#quickGolfScoreForm-game_dt').datepicker();
 
     });
 
@@ -1559,7 +1627,7 @@ function retrieveGolferNameForGolfScore(golferId_) {
 function validateQuickGolfScoreForm() {
   var formName = 'quickGolfScoreForm';
   var formValid = standardValidate(formName);
-  return true;
+  return formValid;
 }
 
 //Top Level HTML Manip
@@ -1570,6 +1638,14 @@ function validateQuickGolfScoreForm() {
 * @param {Object} dataRows  array of hash objects.
 */
 function populateQuickGolfScoreListTable(dataRows) {
+    var newRow = '<div class = "ui-block-a ui-th">Golfer</div>';
+  newRow += '<div class = "ui-block-b ui-th">Score (Date)</div>';
+  var newTable = newRow;
+
+  for (var ndx = 0; ndx < dataRows.length; ndx++) {
+    newTable += buildQuickGolfScoreListTableRow(dataRows[ndx]);
+  }
+  $('#quickGolfScoreTableId').html(newTable);
 
 }
 
@@ -1580,6 +1656,19 @@ function populateQuickGolfScoreListTable(dataRows) {
 * @param {Object} data  rowdata.
 */
 function buildQuickGolfScoreListTableRow(data) {
+  var newRow = '<div class = "ui-block-a ui-td">';
+  newRow +=  GOLFER_CACHE[data['golfer_id']] + '</div>';
+  newRow += '<div class = "ui-block-b ui-td">';
+  newRow += '<a href="#" onclick="showQuickGolfScoreEntry(';
+  newRow +=  data['golf_score_id'] + ')">';
+  newRow +=  formatNumber(data['golf_score'], 0, true, false, true);
+  newRow += ' (' + formatDate(data['game_dt'],'MM-DD');
+  newRow += ')';
+  newRow += '</a>';
+  newRow += '</div>';
+  return newRow;
+
+
 }
 
 /**
@@ -1612,17 +1701,27 @@ function removeQuickGolfScoreListTableRow(golfScoreId_) {
 *
 * SRC: _quickGolfScoreMobile
 *=====================================================================
+* @param {integer} id pkey to show
 */
-function showQuickGolfScoreEntry() {
+function showQuickGolfScoreEntry(id) {
+  var params = {};
+  if(id) {
+    params['where_clause'] = 'golf_score_id = ' + id;
+    retrieveQuickGolfScore(params)
+  } else {
+    clearQuickGolfScoreForm();
+  }
   $.mobile.changePage('#quickGolfScoreEntryDivId');
 }
+
 /**
 *
 * SRC: _quickGolfScoreMobile
 *=====================================================================
 */
 function showQuickGolfScoreHistory() {
-  $.mobile.changePage('#quickGolfScorehistoryDivId');
+  retrieveQuickGolfScoreList();
+  $.mobile.changePage('#quickGolfScoreHistoryDivId');
 }
 
 

@@ -177,5 +177,14 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	}
 
 }
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
+$(document).ready(function() {
+		$('#[%divId%]Form-game_dt').datepicker({dateFormat: 'yy-mm-dd'});
+
+		});
 
 

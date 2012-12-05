@@ -146,9 +146,6 @@ Form Layout styles
     border:solid 1px ;
     width:200px;
 }
-.error{
-  color: red;
-}
 
 .formLayout_Standard hr{
   margin:0;
@@ -240,10 +237,6 @@ Form Layout styles
   }
 
 
-  .ValidationMsg{
-    color:red;
-    font-size: .75em;
-  }
 
 
   #briefNotice {
@@ -587,14 +580,6 @@ div.ui-draggable-dragging {
 }
 h1.pageTitle{
     font-size: 1.5em;
-}
-.SecurityDisabled{
-  display:none;
-}
-
-.LogicDisabled{
-display:none;
-
 }
 #creditsULId{
 

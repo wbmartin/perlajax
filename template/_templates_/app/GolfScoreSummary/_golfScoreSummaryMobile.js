@@ -19,7 +19,7 @@ $(document).ready(function() {
 * @param {Object} dataRows  array of [%ucfirst(divId)%] objects.
 */
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
-	var dataArray = new Array();
+//	var dataArray = new Array();
 	var newRow = '<div class = "ui-block-a"><b>Golfer</b></div>';
 	newRow += '<div class = "ui-block-b"><b>Handicap</b></div>';
 	var newTable = newRow;
@@ -37,13 +37,13 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
-* @param {Object} gs rowdata.
+* @param {Object} data rowdata.
 * @return {string}  built div.
 */
-function build[%ucfirst(divId)%]ListTableRow(gs) {
-	var newRow = '<div class = "ui-block-a">' + gs.golfer_name + '</div>';
+function build[%ucfirst(divId)%]ListTableRow(data) {
+	var newRow = '<div class = "ui-block-a">' + data.golfer_name + '</div>';
 	newRow += '<div class = "ui-block-b">';
-  newRow += formatNumber(gs.golf_score, 2, true, false, true);
+  newRow += formatNumber(data.golf_score, 2, true, false, true);
   newRow += '</div>';
 	return newRow;
 }
@@ -55,6 +55,4 @@ function build[%ucfirst(divId)%]ListTableRow(gs) {
 function show[%ucfirst(divId)%]() {
 	retrieve[%ucfirst(divId)%]List();
 	$.mobile.changePage('#[%divId%]DivId');
-
 }
-

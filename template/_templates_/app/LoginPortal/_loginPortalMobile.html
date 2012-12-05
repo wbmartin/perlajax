@@ -12,6 +12,14 @@
 			<input type="password"  id="[%divId%]Form-password" placeholder="Password"/>
 			<br/>
 			<button type="button" id="cmd[%ucFirst(divId)%]LoginId" onclick="javascript:loginCall('authenticate');">Login</button>
+			<div id="TrustedDeviceDivId" class="containing-element" data-role="fieldcontain">
+			<label for="trustedDeviceId"  style="display:none;">Trusted Device:</label>
+			<select name="trustedDevice" id="trustedDeviceId" data-role="slider"  >
+				<option value="off">Public</option>
+				<option value="on">Trusted</option>
+			</select> 
+		</div>
+	
 		</form>
 	</div>
 </div>

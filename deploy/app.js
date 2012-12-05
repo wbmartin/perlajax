@@ -750,6 +750,11 @@ function bindToForm(formName, obj) {
       function(key, field) {
         fieldId = field.id.replace(formName + '-', '');
         if (field.type != 'button') field.value = obj[fieldId];
+        if (IS_MOBILE && field.type === 'select-one' ) {
+            $(field).selectmenu();
+            $(field).selectmenu('refresh',true);
+          }
+
       });
 }
 
@@ -764,12 +769,16 @@ function clearForm(formName) {
   $.each($('form#' + formName + ' :input'),
       function(key, field) {
         fieldId = field.id.replace(formName + '-', '');
+        var selectRefreshNeeded = false;
         if (field.type == 'checkbox') {
           field.checked = false;
         } else if (field.type != 'button') {
+          if (IS_MOBILE && field.type === 'select-one' && field.value!== '') {
+             selectRefreshNeeded = true;
+          }
           field.value = '';
-          if (IS_MOBILE && field.type === 'select-one') {
-            $(field).selectmenu('refresh');
+          if (selectRefreshNeeded) {
+            $(field).selectmenu('refresh', true);
           }
         }
       }
@@ -788,9 +797,19 @@ function toggleSaveMode(formName, saveMode) {
   var buttonToShow = (saveMode) ? 'Save' : 'Add';
   var buttonToHide = (!saveMode) ? 'Save' : 'Add';
   var id = 'form#' + formName + ' #' + formName + buttonToHide;
-  $(id).addClass('LogicDisabled');
+  if (IS_MOBILE) {
+    $(id).parent().addClass('LogicDisabled');
+  } else {
+    $(id).addClass('LogicDisabled');
+  }
   id = 'form#' + formName + ' #' + formName + buttonToShow;
   $(id).removeClass('LogicDisabled');
+  if (IS_MOBILE) {
+    $(id).parent().removeClass('LogicDisabled');
+  } else {
+    $(id).removeClass('LogicDisabled');
+  }
+
 }
 
 /**
@@ -826,7 +845,7 @@ function standardValidate(formName) {
       formValid = false;
     }
   });
-  $.each($('form#' + formName + ' .VALIDATEmmddyyyydate'),
+  $.each($('form#' + formName + ' .VALIDATEdate_mmddyyyy'),
       function(ndx, field) {
         if (isEmpty(field.id)) {return true;}//skip/continue if no ID
         if (field.value != null && !field.value.match(/\d\d\/\d\d\/\d\d\d\d/)) {
@@ -835,6 +854,16 @@ function standardValidate(formName) {
           formValid = false;
         }
       });
+  $.each($('form#' + formName + ' .VALIDATEdate_yyyy-mm-dd'),
+      function(ndx, field) {
+        if (isEmpty(field.id)) {return true;}//skip/continue if no ID
+        if (field.value != null && !field.value.match(/\d\d\d\d-\d\d-\d\d/)) {
+          appendValidationMsg(formName, field.id, 'YYYY-MM-DD date Required');
+          highlightFieldError(formName, field.id, true);
+          formValid = false;
+        }
+      });
+
   return formValid;
 }
 
@@ -1069,6 +1098,10 @@ function setSelectOptions(selectId, obj) {
     newhtml += '<option value="' + key + '">' + val + '</option>';
   });
   $(selectId).html(newhtml);
+  if (IS_MOBILE) {
+    $(selectId).selectmenu();
+    $(selectId).selectmenu('refresh',true);
+  }
 
 }
 
@@ -1421,6 +1454,29 @@ function isFormEmpty(formName) {
 }
 
 
+/**
+SRC: _libCommon
+*=====================================================================
+* @param {string} dt the form.
+* @param {string} format the form.
+* @return {boolean}  formatted date.
+
+  *
+  */
+function formatDate(dt,format) {
+  if (format === 'MM-DD') { return dt.substr(5); }
+  return 'format undefined';
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1697,6 +1753,15 @@ function imposeQuickGolfScoreSecurityUIRestrictions() {
   }
 
 }
+/**
+*
+* SRC: _quickGolfScoreWeb
+*=====================================================================
+*/
+$(document).ready(function() {
+    $('#quickGolfScoreForm-game_dt').datepicker({dateFormat: 'yy-mm-dd'});
+
+    });
 
 
 
@@ -1912,7 +1977,6 @@ function clearQuickGolfScoreForm() {
 *=====================================================================
 */
 $(document).ready(function() {
-    $('#quickGolfScoreForm-game_dt').datepicker();
 
     });
 
@@ -3855,6 +3919,12 @@ function onSuccessfulLogin() {
   timeoutIfNoAction();
   changePage(function() {showLaunchPane()});
   retrieveCache();
+  if ($('#trustedDeviceId').prop('checked')) {
+    TRUSTED_DEVICE = true;
+  } else {
+    TRUSTED_DEVICE = false;
+  }
+
 }
 
 /**

@@ -210,7 +210,6 @@ function clear[%ucfirst(divId)%]Form() {
 *=====================================================================
 */
 $(document).ready(function() {
-		$('#[%divId%]Form-game_dt').datepicker();
 
 		});
 

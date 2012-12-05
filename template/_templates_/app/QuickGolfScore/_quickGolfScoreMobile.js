@@ -17,7 +17,7 @@
 function validate[%ucfirst(divId)%]Form() {
 	var formName = '[%divId%]Form';
 	var formValid = standardValidate(formName);
-	return true;
+	return formValid;
 }
 
 //Top Level HTML Manip
@@ -28,7 +28,15 @@ function validate[%ucfirst(divId)%]Form() {
 * @param {Object} dataRows  array of hash objects.
 */
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
-	
+		var newRow = '<div class = "ui-block-a ui-th">Golfer</div>';
+	newRow += '<div class = "ui-block-b ui-th">Score (Date)</div>';
+	var newTable = newRow;
+
+	for (var ndx = 0; ndx < dataRows.length; ndx++) {
+		newTable += build[%ucfirst(divId)%]ListTableRow(dataRows[ndx]);
+	}
+	$('#[%divId%]TableId').html(newTable);
+
 }
 
 /**
@@ -38,6 +46,19 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 * @param {Object} data  rowdata.
 */
 function build[%ucfirst(divId)%]ListTableRow(data) {
+	var newRow = '<div class = "ui-block-a ui-td">';
+  newRow +=  GOLFER_CACHE[data['golfer_id']] + '</div>';
+	newRow += '<div class = "ui-block-b ui-td">';
+	newRow += '<a href="#" onclick="show[%ucfirst(divId)%]Entry(';
+	newRow +=  data['golf_score_id'] + ')">';
+  newRow +=  formatNumber(data['golf_score'], 0, true, false, true);
+  newRow += ' (' + formatDate(data['game_dt'],'MM-DD');
+  newRow += ')';
+	newRow += '</a>';
+	newRow += '</div>';
+	return newRow;
+
+	
 }
 
 /**
@@ -70,17 +91,27 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+* @param {integer} id pkey to show
 */
-function show[%ucfirst(divId)%]Entry() {
+function show[%ucfirst(divId)%]Entry(id) {
+	var params = {};
+	if(id) {
+		params['where_clause'] = 'golf_score_id = ' + id;
+		retrieve[%ucfirst(divId)%](params)
+	} else {
+		clear[%ucfirst(divId)%]Form();
+	}
   $.mobile.changePage('#[%divId%]EntryDivId');
 }
+
 /**
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
 */
 function show[%ucfirst(divId)%]History() {
-  $.mobile.changePage('#[%divId%]historyDivId');
+	retrieve[%ucfirst(divId)%]List();
+	$.mobile.changePage('#[%divId%]HistoryDivId');
 }
 
 

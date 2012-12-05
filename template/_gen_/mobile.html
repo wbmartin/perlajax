@@ -5,24 +5,53 @@
 <html> 
 <head> 		<link rel="stylesheet"  href="http://yui.yahooapis.com/3.7.3/build/cssreset/cssreset-min.css" type="text/css"/>
 	<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.min.js"></script>
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/ui-lightness/jquery-ui.css" type="text/css"/>
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/ui-lightness/jquery.ui.theme.css" type="text/css"/>
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" type="text/css"/>
+		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" type="text/css"/>
 
-  <style>
-  	/*jquery-ui vs jquery-mobile conflict overrides*/
-  	.ui-icon-circle-triangle-w { background-position: -80px -192px; background-color:transparent; }
+	<style>
+	/*_main.css */
+	.SecurityDisabled{
+  display:none;
+}
+
+.LogicDisabled{
+display:none;
+
+}
+.error{
+  color: red;
+}
+  .ValidationMsg{
+    color:red;
+    font-size: .75em;
+  }
+
+
+	/*jquery-ui vs jquery-mobile conflict overrides
+		.ui-icon-circle-triangle-w { background-position: -80px -192px; background-color:transparent; }
 		.ui-icon-circle-triangle-e { background-position: -48px -192px; background-color:transparent; }
-	</style>
+		*/
+		/*table formatting*/
+		.ui-th{
+			padding: 2px;
+			font-weight: bold;
+		}
+		.ui-td{
+			padding: 2px;
+		}
 
-  <meta name=viewport content="user-scalable=no,width=device-width" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <link rel="apple-touch-icon" sizes="57x57" href="../images/touch-icon-iphone-114.png" />
-  <link rel="apple-touch-icon" sizes="114x114" href="../images/touch-icon-iphone-114.png" />
-  <link rel="apple-touch-icon" sizes="72x72" href="../images/touch-icon-ipad-144.png" />
-  <link rel="apple-touch-icon" sizes="144x144" href="../images/touch-icon-ipad-144.png" />
+#TrustedDeviceDivId	 .ui-slider-switch { width: 9em }
+
+
+
+			</style>
+
+	<meta name=viewport content="user-scalable=no,width=device-width" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<link rel="apple-touch-icon" sizes="57x57" href="../images/touch-icon-iphone-114.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="../images/touch-icon-iphone-114.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="../images/touch-icon-ipad-144.png" />
+	<link rel="apple-touch-icon" sizes="144x144" href="../images/touch-icon-ipad-144.png" />
 	<script src="./appmobile.js"></script>
 </head> 
 
@@ -41,6 +70,14 @@
 			<input type="password"  id="LoginPortalForm-password" placeholder="Password"/>
 			<br/>
 			<button type="button" id="cmdLoginId" onclick="javascript:loginCall('authenticate');">Login</button>
+			<div id="TrustedDeviceDivId" class="containing-element" data-role="fieldcontain">
+			<label for="trustedDeviceId"  style="display:none;">Trusted Device:</label>
+			<select name="trustedDevice" id="trustedDeviceId" data-role="slider"  >
+				<option value="off">Public</option>
+				<option value="on">Trusted</option>
+			</select> 
+		</div>
+	
 		</form>
 	</div>
 </div>
@@ -79,10 +116,14 @@
 
 <!--MainLayout MainContentPaneStyle -->
 <div id="launchPaneDivId" data-role="page" class="">
+	<div data-role="header" data-position="fixed" >
+		<h1>Golf Score</h1>
+	</div>
 	<div data-role ="content">
 		<ul data-role="listview">
 			<li> <a href="#" onclick="showGolfScoreSummary()">Handicaps</a></li>
 			<li> <a href="#" onclick="showQuickGolfScoreEntry()">Add Score</a></li>
+			<li> <a href="#" onclick="showQuickGolfScoreHistory()">Recent Scores</a></li>
 	</ul>	
 </div>
 </div>
@@ -90,60 +131,58 @@
 
 
 
-<div data-role="page" id="quickGolfScoreEntryDivId" data-add-back-btn="true">
+<div data-role="page" id="quickGolfScoreEntryDivId" >
 	<div data-role="header" data-position="fixed" >
+		<a href="#" data-icon="home" onclick="showLaunchPane();">Home</a>
 		<h1>Golf Score - AddScore</h1>
 	</div>
 
 	<div data-role="content" style="margin-top: 10%">
-				<form id ="quickGolfScoreForm">
+		<form id ="quickGolfScoreForm">
 			
-					<div class="formFieldGroup" id="quickGolfScoreForm-golfer_idDivId">
-						<label for ="quickGolfScoreForm-golfer_id" id="quickGolfScoreFormLabel-golfer_id">Name</label>
-						<select name="golfer_id" id="quickGolfScoreForm-golfer_id" class="VALIDATErequired"></select>
-						<span class="ValidationMsg" id="quickGolfScoreFormLabel-golferIdError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="quickGolfScoreForm-golf_scoreDivId">
-						<label for ="quickGolfScoreForm-golf_score" id="quickGolfScoreFormLabel-golf_score">Score</label>
-						<input  type="text" class="VALIDATEinteger" name="golfScore" id="quickGolfScoreForm-golf_score"/>
-						<span class="ValidationMsg" id="quickGolfScoreFormLabel-golfScoreError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="quickGolfScoreForm-game_dtDivId">
-						<label for ="quickGolfScoreForm-game_dt" id="quickGolfScoreFormLabel-name">Date</label>
-						<input type="text"  name="gameDt" id="quickGolfScoreForm-game_dt" class="VALIDATEmmddyyyydate" readonly="true"/>
-						<span class="ValidationMsg" id="quickGolfScoreFormLabel-gameDtError"></span>
-					</div>
+			<div class="formFieldGroup" id="quickGolfScoreForm-golfer_idDivId">
+				<label for ="quickGolfScoreForm-golfer_id" id="quickGolfScoreFormLabel-golfer_id">Name</label>
+				<select name="golfer_id" id="quickGolfScoreForm-golfer_id" class="VALIDATErequired" data-native-menu="false"></select>
+				<span class="ValidationMsg" id="quickGolfScoreFormLabel-golferIdError"></span>
+			</div>
+			
+			<div class="formFieldGroup" id="quickGolfScoreForm-golf_scoreDivId">
+				<label for ="quickGolfScoreForm-golf_score" id="quickGolfScoreFormLabel-golf_score">Score</label>
+				<input  type="text" class="VALIDATEinteger" name="golfScore" id="quickGolfScoreForm-golf_score"/>
+				<span class="ValidationMsg" id="quickGolfScoreFormLabel-golfScoreError"></span>
+			</div>
+			
+			<div class="formFieldGroup" id="quickGolfScoreForm-game_dtDivId">
+				<label for ="quickGolfScoreForm-game_dt" id="quickGolfScoreFormLabel-name">Date</label>
+				<input type="date"  name="gameDt" id="quickGolfScoreForm-game_dt" class="VALIDATEdate_yyyy-mm-dd" />
+				<span class="ValidationMsg" id="quickGolfScoreFormLabel-gameDtError"></span>
+			</div>
 
 
 
-					<div class="formButtons">
+			<div class="formButtons" data-role="content">
 
-						<button type="button" id="quickGolfScoreFormSave" class="" value="Save" onclick="saveQuickGolfScoreForm();" ><span class="">Save</span></button>
-						<button type="button" id="quickGolfScoreFormAdd"  class="" value="Add" onclick="saveQuickGolfScoreForm();" ><span class="">Add</span></button>
-							<button type="button" id="quickGolfScoreFormClear"  class="" value="Clear" onclick="clearQuickGolfScoreForm();" ><span class="">Clear</span></button>
-					</div>
-					<input type="hidden" name="last_update" id="quickGolfScoreForm-last_update">
-					<input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id">
+				<button type="button" id="quickGolfScoreFormSave" class="" value="Save" onclick="saveQuickGolfScoreForm();" data-inline="true"><span class="">Save</span></button>
+				<button type="button" id="quickGolfScoreFormAdd"  class="" value="Add" onclick="saveQuickGolfScoreForm();" data-inline="true"><span class="">Add</span></button>
+				<button type="button" id="quickGolfScoreFormClear"  class="" value="Clear" onclick="clearQuickGolfScoreForm();" data-inline="true"><span class="">Clear</span></button>
+			</div>
+			<input type="hidden" name="last_update" id="quickGolfScoreForm-last_update">
+			<input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id">
 
 		</form>
 	</div>
 </div>
 
 
-<div data-role="page" id="quickGolfScoreHistoryDivId" data-add-back-btn="true">
+<div data-role="page" id="quickGolfScoreHistoryDivId" data-add-back-btn="true" >
 	<div data-role="header" data-position="fixed" >
 		<h1>Golf Score - History</h1>
 	</div>
 
 	<div data-role="content" style="margin-top: 10%">
 		<div id = "quickGolfScoreTableId" class = "ui-grid-a">
-			
+
 		</div>
-		<form id ="quickGolfScoreForm">
-			
-		</form>
 	</div>
 </div>
 

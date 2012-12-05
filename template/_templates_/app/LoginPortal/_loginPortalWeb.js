@@ -15,6 +15,12 @@ function onSuccessfulLogin() {
 	timeoutIfNoAction();
 	changePage(function() {showLaunchPane()});
 	retrieveCache();
+	if ($('#trustedDeviceId').prop('checked')) {
+		TRUSTED_DEVICE = true;
+	} else {
+		TRUSTED_DEVICE = false;
+	}
+
 }
 
 /**

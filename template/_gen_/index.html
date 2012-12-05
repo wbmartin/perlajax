@@ -1139,6 +1139,23 @@ width: 91.35%;
 }
 
 	/*_main.css */
+	.SecurityDisabled{
+  display:none;
+}
+
+.LogicDisabled{
+display:none;
+
+}
+.error{
+  color: red;
+}
+  .ValidationMsg{
+    color:red;
+    font-size: .75em;
+  }
+
+
 	
 
 
@@ -1287,9 +1304,6 @@ Form Layout styles
     border:solid 1px ;
     width:200px;
 }
-.error{
-  color: red;
-}
 
 .formLayout_Standard hr{
   margin:0;
@@ -1381,10 +1395,6 @@ Form Layout styles
   }
 
 
-  .ValidationMsg{
-    color:red;
-    font-size: .75em;
-  }
 
 
   #briefNotice {
@@ -1726,14 +1736,6 @@ div.ui-draggable-dragging {
 }
 h1.pageTitle{
     font-size: 1.5em;
-}
-.SecurityDisabled{
-  display:none;
-}
-
-.LogicDisabled{
-display:none;
-
 }
 #creditsULId{
 
@@ -2396,6 +2398,9 @@ text-align:left;
 						<button type="button"  id="cmdlogin" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="loginCall('authenticate')" > <span class="ui-button-text">Login</span> </button>  
 						<button type="button"  id="cmdOneTimelogin" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only " style="display:none;"  onclick="loginCall('one_time')" ><span class="ui-button-text"> One Time Login</span> </button>  
 					</div>
+					<label for="trustedDevice">Trusted Device:</label>
+					<input type="checkbox" id="trustedDeviceId">
+
 				</div>  
 			</form>  
 		</div>

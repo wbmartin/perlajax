@@ -9,6 +9,11 @@
 function onSuccessfulLogin() {
 	retrieveCache();
 	showLaunchPane();
+	if ($('#trustedDeviceId').value === 'on') {
+		TRUSTED_DEVICE = true;
+	} else {
+		TRUSTED_DEVICE = false;
+	}
 }
 
 /**
@@ -20,5 +25,13 @@ function onSuccessfulLogin() {
 function validate[%ucfirst(divId)%]Form() {
   return true;
 }
+
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+*/
+$(document).ready(function() {
+});
 
 

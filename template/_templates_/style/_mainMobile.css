@@ -1,0 +1,15 @@
+/*jquery-ui vs jquery-mobile conflict overrides
+		.ui-icon-circle-triangle-w { background-position: -80px -192px; background-color:transparent; }
+		.ui-icon-circle-triangle-e { background-position: -48px -192px; background-color:transparent; }
+		*/
+		/*table formatting*/
+		.ui-th{
+			padding: 2px;
+			font-weight: bold;
+		}
+		.ui-td{
+			padding: 2px;
+		}
+
+#TrustedDeviceDivId	 .ui-slider-switch { width: 9em }
+
