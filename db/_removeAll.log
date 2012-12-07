@@ -1,0 +1,75 @@
+psql:removeAll.sql:1: NOTICE:  function remove_all() does not exist, skipping
+DROP FUNCTION
+CREATE FUNCTION
+psql:removeAll.sql:72: NOTICE:  drop cascades to default for table support_request column support_request_id
+CONTEXT:  SQL statement "DROP SEQUENCE public.support_request_support_request_id_seq CASCADE;DROP SEQUENCE public.golfer_golfer_id_seq CASCADE;DROP SEQUENCE public.golf_score_golf_score_id_seq CASCADE;DROP SEQUENCE public.security_profile_grant_security_profile_grant_id_seq CASCADE;DROP SEQUENCE public.security_user_security_user_id_seq CASCADE;DROP SEQUENCE public.security_profile_security_profile_id_seq CASCADE;"
+PL/pgSQL function "remove_all" line 24 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to default for table golfer column golfer_id
+CONTEXT:  SQL statement "DROP SEQUENCE public.support_request_support_request_id_seq CASCADE;DROP SEQUENCE public.golfer_golfer_id_seq CASCADE;DROP SEQUENCE public.golf_score_golf_score_id_seq CASCADE;DROP SEQUENCE public.security_profile_grant_security_profile_grant_id_seq CASCADE;DROP SEQUENCE public.security_user_security_user_id_seq CASCADE;DROP SEQUENCE public.security_profile_security_profile_id_seq CASCADE;"
+PL/pgSQL function "remove_all" line 24 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to default for table golf_score column golf_score_id
+CONTEXT:  SQL statement "DROP SEQUENCE public.support_request_support_request_id_seq CASCADE;DROP SEQUENCE public.golfer_golfer_id_seq CASCADE;DROP SEQUENCE public.golf_score_golf_score_id_seq CASCADE;DROP SEQUENCE public.security_profile_grant_security_profile_grant_id_seq CASCADE;DROP SEQUENCE public.security_user_security_user_id_seq CASCADE;DROP SEQUENCE public.security_profile_security_profile_id_seq CASCADE;"
+PL/pgSQL function "remove_all" line 24 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to default for table security_profile_grant column security_profile_grant_id
+CONTEXT:  SQL statement "DROP SEQUENCE public.support_request_support_request_id_seq CASCADE;DROP SEQUENCE public.golfer_golfer_id_seq CASCADE;DROP SEQUENCE public.golf_score_golf_score_id_seq CASCADE;DROP SEQUENCE public.security_profile_grant_security_profile_grant_id_seq CASCADE;DROP SEQUENCE public.security_user_security_user_id_seq CASCADE;DROP SEQUENCE public.security_profile_security_profile_id_seq CASCADE;"
+PL/pgSQL function "remove_all" line 24 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to default for table security_user column security_user_id
+CONTEXT:  SQL statement "DROP SEQUENCE public.support_request_support_request_id_seq CASCADE;DROP SEQUENCE public.golfer_golfer_id_seq CASCADE;DROP SEQUENCE public.golf_score_golf_score_id_seq CASCADE;DROP SEQUENCE public.security_profile_grant_security_profile_grant_id_seq CASCADE;DROP SEQUENCE public.security_user_security_user_id_seq CASCADE;DROP SEQUENCE public.security_profile_security_profile_id_seq CASCADE;"
+PL/pgSQL function "remove_all" line 24 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to default for table security_profile column security_profile_id
+CONTEXT:  SQL statement "DROP SEQUENCE public.support_request_support_request_id_seq CASCADE;DROP SEQUENCE public.golfer_golfer_id_seq CASCADE;DROP SEQUENCE public.golf_score_golf_score_id_seq CASCADE;DROP SEQUENCE public.security_profile_grant_security_profile_grant_id_seq CASCADE;DROP SEQUENCE public.security_user_security_user_id_seq CASCADE;DROP SEQUENCE public.security_profile_security_profile_id_seq CASCADE;"
+PL/pgSQL function "remove_all" line 24 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to 3 other objects
+DETAIL:  drop cascades to function support_request_sq(text,text,text,text,text,integer,integer)
+drop cascades to function support_request_iq(text,text,text,text,text,text,text)
+drop cascades to function support_request_uq(text,text,text,integer,text,text,text,text,timestamp without time zone)
+CONTEXT:  SQL statement "DROP TABLE public.support_request CASCADE;DROP TABLE public.golfer CASCADE;DROP TABLE public.golf_score CASCADE;DROP TABLE public.security_user CASCADE;DROP TABLE public.security_profile CASCADE;DROP TABLE public.security_privilege CASCADE;DROP TABLE public.security_profile_grant CASCADE;"
+PL/pgSQL function "remove_all" line 42 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to 4 other objects
+DETAIL:  drop cascades to constraint fk_golf_score_1 on table golf_score
+drop cascades to function golfer_sq(text,text,text,text,text,integer,integer)
+drop cascades to function golfer_iq(text,text,text,character varying)
+drop cascades to function golfer_uq(text,text,text,integer,timestamp without time zone,character varying)
+CONTEXT:  SQL statement "DROP TABLE public.support_request CASCADE;DROP TABLE public.golfer CASCADE;DROP TABLE public.golf_score CASCADE;DROP TABLE public.security_user CASCADE;DROP TABLE public.security_profile CASCADE;DROP TABLE public.security_privilege CASCADE;DROP TABLE public.security_profile_grant CASCADE;"
+PL/pgSQL function "remove_all" line 42 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to 3 other objects
+DETAIL:  drop cascades to function golf_score_sq(text,text,text,text,text,integer,integer)
+drop cascades to function golf_score_iq(text,text,text,integer,integer,date)
+drop cascades to function golf_score_uq(text,text,text,integer,timestamp without time zone,integer,integer,date)
+CONTEXT:  SQL statement "DROP TABLE public.support_request CASCADE;DROP TABLE public.golfer CASCADE;DROP TABLE public.golf_score CASCADE;DROP TABLE public.security_user CASCADE;DROP TABLE public.security_profile CASCADE;DROP TABLE public.security_privilege CASCADE;DROP TABLE public.security_profile_grant CASCADE;"
+PL/pgSQL function "remove_all" line 42 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to 8 other objects
+DETAIL:  drop cascades to view vw_user_grant
+drop cascades to function initsession(text,text,text,text)
+drop cascades to function initsession_onetime(text,text,text,text)
+drop cascades to function security_user_sq(text,text,text,text,text,integer,integer)
+drop cascades to function security_user_iq(text,text,text,text,text,integer,character,text)
+drop cascades to function security_user_uq(text,text,text,integer,text,timestamp without time zone,integer,character,text)
+drop cascades to function init_passwd_reset(text,text)
+drop cascades to function init_lostuname(text,text)
+CONTEXT:  SQL statement "DROP TABLE public.support_request CASCADE;DROP TABLE public.golfer CASCADE;DROP TABLE public.golf_score CASCADE;DROP TABLE public.security_user CASCADE;DROP TABLE public.security_profile CASCADE;DROP TABLE public.security_privilege CASCADE;DROP TABLE public.security_profile_grant CASCADE;"
+PL/pgSQL function "remove_all" line 42 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to 5 other objects
+DETAIL:  drop cascades to constraint fk_security_profile_grant_2 on table security_profile_grant
+drop cascades to view vw_profile_grant
+drop cascades to function security_profile_sq(text,text,text,text,text,integer,integer)
+drop cascades to function security_profile_iq(text,text,text,text)
+drop cascades to function security_profile_uq(text,text,text,integer,text,timestamp without time zone)
+CONTEXT:  SQL statement "DROP TABLE public.support_request CASCADE;DROP TABLE public.golfer CASCADE;DROP TABLE public.golf_score CASCADE;DROP TABLE public.security_user CASCADE;DROP TABLE public.security_profile CASCADE;DROP TABLE public.security_privilege CASCADE;DROP TABLE public.security_profile_grant CASCADE;"
+PL/pgSQL function "remove_all" line 42 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to 2 other objects
+DETAIL:  drop cascades to constraint fk_securityprofilegrant_securityprivilege on table security_profile_grant
+drop cascades to function security_privilege_sq(text,text,text,text,text,integer,integer)
+CONTEXT:  SQL statement "DROP TABLE public.support_request CASCADE;DROP TABLE public.golfer CASCADE;DROP TABLE public.golf_score CASCADE;DROP TABLE public.security_user CASCADE;DROP TABLE public.security_profile CASCADE;DROP TABLE public.security_privilege CASCADE;DROP TABLE public.security_profile_grant CASCADE;"
+PL/pgSQL function "remove_all" line 42 at EXECUTE statement
+psql:removeAll.sql:72: NOTICE:  drop cascades to 3 other objects
+DETAIL:  drop cascades to function security_profile_grant_sq(text,text,text,text,text,integer,integer)
+drop cascades to function security_profile_grant_iq(text,text,text,integer,integer)
+drop cascades to function security_profile_grant_uq(text,text,text,integer,integer,integer,timestamp with time zone)
+CONTEXT:  SQL statement "DROP TABLE public.support_request CASCADE;DROP TABLE public.golfer CASCADE;DROP TABLE public.golf_score CASCADE;DROP TABLE public.security_user CASCADE;DROP TABLE public.security_profile CASCADE;DROP TABLE public.security_privilege CASCADE;DROP TABLE public.security_profile_grant CASCADE;"
+PL/pgSQL function "remove_all" line 42 at EXECUTE statement
+ remove_all 
+------------
+ 
+(1 row)
+

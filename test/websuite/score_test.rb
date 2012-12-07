@@ -39,14 +39,14 @@ describe "A quick golf score" do
 		end
 		@app.browser.select_list(:id,'quickGolfScoreForm-golfer_id').select('New 1 Golfer')
 		@app.browser.text_field(:id,'quickGolfScoreForm-golf_score').set('20')
-		@app.browser.text_field(:id,'quickGolfScoreForm-game_dt').set('11/13/2012')
+		@app.browser.text_field(:id,'quickGolfScoreForm-game_dt').set('2012-11-13')
 		@app.browser.send_keys :enter
 		@app.letDustSettle
 		@app.browser.button(:id,'quickGolfScoreFormAdd').click
 		@app.letDustSettle
 		@app.browser.table(:id,'quickGolfScoreListTable').rows[1].text.should match /New 1 Golfer/
 			@app.browser.table(:id,'quickGolfScoreListTable').rows[1].text.should match /20/
-			@app.browser.table(:id,'quickGolfScoreListTable').rows[1].text.should match /11\/13\/2012/
+			@app.browser.table(:id,'quickGolfScoreListTable').rows[1].text.should match /2012-11-13/
 	end
 
 	it 'can be edited' do
@@ -54,16 +54,16 @@ describe "A quick golf score" do
 		@app.letDustSettle
 		@app.browser.select_list(:id,'quickGolfScoreForm-golfer_id').text.should == 'New 1 Golfer'
 		@app.browser.text_field(:id,'quickGolfScoreForm-golf_score').value.should == '20'
-		@app.browser.text_field(:id,'quickGolfScoreForm-game_dt').value.should == '11/13/2012'
+		@app.browser.text_field(:id,'quickGolfScoreForm-game_dt').value.should == '2012-11-13'
 		@app.browser.text_field(:id,'quickGolfScoreForm-golf_score').set('30')
-		@app.browser.text_field(:id,'quickGolfScoreForm-game_dt').set('11/14/2012')
+		@app.browser.text_field(:id,'quickGolfScoreForm-game_dt').set('2012-11-14')
 		@app.browser.send_keys :enter
 		@app.letDustSettle
 		@app.browser.button(:id,'quickGolfScoreFormSave').click
 		@app.letDustSettle
 		@app.browser.table(:id,'quickGolfScoreListTable').rows[1].text.should match /New 1 Golfer/
 			@app.browser.table(:id,'quickGolfScoreListTable').rows[1].text.should match /30/
-			@app.browser.table(:id,'quickGolfScoreListTable').rows[1].text.should match /11\/14\/2012/
+			@app.browser.table(:id,'quickGolfScoreListTable').rows[1].text.should match /2012-11-14/
 	end
 
 	it 'can be edited and then canceled' do
@@ -71,7 +71,7 @@ describe "A quick golf score" do
 		@app.letDustSettle
 		@app.browser.select_list(:id,'quickGolfScoreForm-golfer_id').text.should == 'New 1 Golfer'
 		@app.browser.text_field(:id,'quickGolfScoreForm-golf_score').value.should == '30'
-		@app.browser.text_field(:id,'quickGolfScoreForm-game_dt').value.should == '11/14/2012'
+		@app.browser.text_field(:id,'quickGolfScoreForm-game_dt').value.should == '2012-11-14'
 		@app.browser.button(:id,'quickGolfScoreFormClear').click
 		@app.browser.select_list(:id,'quickGolfScoreForm-golfer_id').value.should == ''
 		@app.browser.text_field(:id,'quickGolfScoreForm-golf_score').value.should == ''
@@ -90,7 +90,7 @@ describe "A quick golf score" do
 		@app.letDustSettle
 		@app.browser.span(:id,'quickGolfScoreForm-golfer_idError').text.should match /Required/
 			@app.browser.span(:id,'quickGolfScoreForm-golf_scoreError').text.should match /Integer Input Required/
-			@app.browser.span(:id,'quickGolfScoreForm-game_dtError').text.should match /MM\/DD\/YYYY Required/
+			@app.browser.span(:id,'quickGolfScoreForm-game_dtError').text.should match /YYYY-MM-DD Required/
 
 	end
 
@@ -102,17 +102,17 @@ describe "A quick golf score" do
 	end
 
 	it 'will result in a correct average' do
-		addGolfScore('New 1 Golfer', '10', '12/10/2012')
-		addGolfScore('New 1 Golfer', '11', '12/11/2012')
-		addGolfScore('New 1 Golfer', '12', '12/12/2012')
-		addGolfScore('New 1 Golfer', '13', '12/13/2012')
-		addGolfScore('New 1 Golfer', '14', '12/14/2012')
-		addGolfScore('New 1 Golfer', '15', '12/15/2012')
-		addGolfScore('New 1 Golfer', '16', '12/16/2012')
-		addGolfScore('New 1 Golfer', '17', '12/17/2012')
-		addGolfScore('New 1 Golfer', '18', '12/18/2012')
-		addGolfScore('New 1 Golfer', '19', '12/19/2012')
-		addGolfScore('New 1 Golfer', '20', '12/20/2012')
+		addGolfScore('New 1 Golfer', '10', '2012-12-10')
+		addGolfScore('New 1 Golfer', '11', '2012-12-11')
+		addGolfScore('New 1 Golfer', '12', '2012-12-12')
+		addGolfScore('New 1 Golfer', '13', '2012-12-13')
+		addGolfScore('New 1 Golfer', '14', '2012-12-14')
+		addGolfScore('New 1 Golfer', '15', '2012-12-15')
+		addGolfScore('New 1 Golfer', '16', '2012-12-16')
+		addGolfScore('New 1 Golfer', '17', '2012-12-17')
+		addGolfScore('New 1 Golfer', '18', '2012-12-18')
+		addGolfScore('New 1 Golfer', '19', '2012-12-19')
+		addGolfScore('New 1 Golfer', '20', '2012-12-20')
 		swapToHandicap
 		@app.browser.table(:id,'golfScoreSummaryListTable').rows.each do |r|
 			if (r.text=~ /New 1 Golfer/) then
@@ -124,7 +124,7 @@ describe "A quick golf score" do
 	end
 
 	it 'will not effect the average when it is old' do
-		addGolfScore('New 1 Golfer', '1000', '12/10/2011')
+		addGolfScore('New 1 Golfer', '1000', '2011-12-10')
 		swapToHandicap
 		@app.browser.table(:id,'golfScoreSummaryListTable').rows.each do |r|
 			if (r.text=~ /New 1 Golfer/) then
@@ -136,11 +136,10 @@ describe "A quick golf score" do
 	end
 
 	it 'will not effect the average when it is new' do
-		addGolfScore('New 1 Golfer', '30', '12/21/2012')
+		addGolfScore('New 1 Golfer', '30', '2012-12-21')
 		swapToHandicap
 		@app.browser.table(:id,'golfScoreSummaryListTable').rows.each do |r|
 			if (r.text=~ /New 1 Golfer/) then
-				puts r.text
 				r.text.should match /17.4/
 			end
 		end

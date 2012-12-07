@@ -8,14 +8,7 @@ COMMIT
 begin;
 BEGIN
 drop table if exists security_profile cascade;
-psql:securitySchema/001_CreateSecurityProfile.sql:2: NOTICE:  drop cascades to 7 other objects
-DETAIL:  drop cascades to constraint fk_security_user_2 on table security_user
-drop cascades to constraint fk_security_profile_grant_2 on table security_profile_grant
-drop cascades to view vw_profile_grant
-drop cascades to view vw_user_grant
-drop cascades to function security_profile_sq(text,text,text,text,text,integer,integer)
-drop cascades to function security_profile_iq(text,text,text,text)
-drop cascades to function security_profile_uq(text,text,text,integer,text,timestamp without time zone)
+psql:securitySchema/001_CreateSecurityProfile.sql:2: NOTICE:  table "security_profile" does not exist, skipping
 DROP TABLE
 CREATE TABLE security_profile
 (
@@ -37,14 +30,7 @@ COMMIT
 begin;
 BEGIN
 DROP TABLE  if exists SECURITY_USER cascade;
-psql:securitySchema/002_CreateSecurityUser.sql:2: NOTICE:  drop cascades to 7 other objects
-DETAIL:  drop cascades to function initsession(text,text,text,text)
-drop cascades to function initsession_onetime(text,text,text,text)
-drop cascades to function security_user_sq(text,text,text,text,text,integer,integer)
-drop cascades to function security_user_iq(text,text,text,text,text,integer,character,text)
-drop cascades to function security_user_uq(text,text,text,integer,text,timestamp without time zone,integer,character,text)
-drop cascades to function init_passwd_reset(text,text)
-drop cascades to function init_lostuname(text,text)
+psql:securitySchema/002_CreateSecurityUser.sql:2: NOTICE:  table "security_user" does not exist, skipping
 DROP TABLE
 CREATE TABLE security_user
 ( security_user_id serial,
@@ -75,9 +61,7 @@ COMMIT
 begin;
 BEGIN
 drop TABLE if exists security_privilege cascade;
-psql:securitySchema/003_CreateSecurityPrivilege.sql:2: NOTICE:  drop cascades to 2 other objects
-DETAIL:  drop cascades to constraint fk_securityprofilegrant_securityprivilege on table security_profile_grant
-drop cascades to function security_privilege_sq(text,text,text,text,text,integer,integer)
+psql:securitySchema/003_CreateSecurityPrivilege.sql:2: NOTICE:  table "security_privilege" does not exist, skipping
 DROP TABLE
 CREATE TABLE security_privilege
 (
@@ -99,10 +83,7 @@ COMMIT
 begin;
 BEGIN
 drop table if exists security_profile_grant cascade;
-psql:securitySchema/004_CreateSecurityProfileGrant.sql:2: NOTICE:  drop cascades to 3 other objects
-DETAIL:  drop cascades to function security_profile_grant_sq(text,text,text,text,text,integer,integer)
-drop cascades to function security_profile_grant_iq(text,text,text,integer,integer)
-drop cascades to function security_profile_grant_uq(text,text,text,integer,integer,integer,timestamp with time zone)
+psql:securitySchema/004_CreateSecurityProfileGrant.sql:2: NOTICE:  table "security_profile_grant" does not exist, skipping
 DROP TABLE
 CREATE TABLE security_profile_grant
 (
@@ -230,6 +211,18 @@ Begin
     --return 'Session Invalid -- Access Denied';
   end if;
 
+End;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+CREATE FUNCTION
+--wrapper for issessionValid
+CREATE OR REPLACE FUNCTION keepalive(alreadyAuth_ text, userid_ text, sessionid_ text)
+  RETURNS text AS
+$BODY$
+Declare
+Begin
+ return issessionvalid(userid_, sessionid_ );
 End;
 $BODY$
   LANGUAGE plpgsql VOLATILE
@@ -911,9 +904,6 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 CREATE FUNCTION
-ALTER FUNCTION change_password(text, text, text, text, text)
-  OWNER TO concordc_golfscoredev;
-ALTER FUNCTION
 \i securitySchema/070_CreateProc_PasswordReset.sql
 begin;
 BEGIN

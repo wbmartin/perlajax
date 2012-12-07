@@ -1,3 +1,9 @@
 BEGIN
+psql:000_AppInit.sql:40: WARNING:  nonstandard use of \\ in a string literal
+LINE 1: SELECT  regexp_replace( $1 , ';|/\\*|\\*/|dblink|pg_|\-\-|[[...
+                                     ^
+HINT:  Use the escape string syntax for backslashes, e.g., E'\\'.
+QUERY:  SELECT  regexp_replace( $1 , ';|/\\*|\\*/|dblink|pg_|\-\-|[[:space:]]user|user[[:space:]]|\&|\\\\g', '', 'gi')
+CONTEXT:  SQL statement in PL/PgSQL function "buildsqlclauses" near line 27
 CREATE FUNCTION
 COMMIT

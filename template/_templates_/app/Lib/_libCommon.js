@@ -199,7 +199,7 @@ function standardValidate(formName) {
 			function(ndx, field) {
 				if (isEmpty(field.id)) {return true;}//skip/continue if no ID
 				if (field.value != null && !field.value.match(/\d\d\d\d-\d\d-\d\d/)) {
-					appendValidationMsg(formName, field.id, 'YYYY-MM-DD date Required');
+					appendValidationMsg(formName, field.id, 'YYYY-MM-DD Required');
 					highlightFieldError(formName, field.id, true);
 					formValid = false;
 				}
@@ -300,8 +300,8 @@ function isInteger(value) {
 function pgDate(val) {
 	var rslt;
 	if (val != null) {
-		rslt = val.substring(5, 7) + '/';
-		rslt += val.substring(8, 10) + '/' + val.substring(0, 4);
+		rslt = val.substring(0, 4) + '-';
+		rslt += val.substring(5, 7) + '-' + val.substring(8, 10);
 	} else {
 		rslt = '';
 	}

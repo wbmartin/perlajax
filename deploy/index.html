@@ -1140,18 +1140,18 @@ width: 91.35%;
 
 	/*_main.css */
 	.SecurityDisabled{
-  display:none;
+  display:none !important;
 }
 
 .LogicDisabled{
-display:none;
+display:none !important;
 
 }
 .error{
-  color: red;
+  color: red !important;
 }
   .ValidationMsg{
-    color:red;
+    color:red !important;
     font-size: .75em;
   }
 
@@ -2057,7 +2057,7 @@ text-align:left;
 					
 					<div class="formFieldGroup" id="quickGolfScoreForm-game_dtDivId">
 						<label for ="quickGolfScoreForm-game_dt" id="quickGolfScoreFormLabel-name">Date</label>
-						<input type="text"  name="gameDt" id="quickGolfScoreForm-game_dt" class="VALIDATEmmddyyyydate"/>
+						<input type="text"  name="gameDt" id="quickGolfScoreForm-game_dt" class="VALIDATEdate_yyyy-mm-dd"/>
 						<span class="ValidationMsg" id="quickGolfScoreFormLabel-gameDtError"></span>
 					</div>
 
@@ -2398,7 +2398,7 @@ text-align:left;
 						<button type="button"  id="cmdlogin" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="loginCall('authenticate')" > <span class="ui-button-text">Login</span> </button>  
 						<button type="button"  id="cmdOneTimelogin" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only " style="display:none;"  onclick="loginCall('one_time')" ><span class="ui-button-text"> One Time Login</span> </button>  
 					</div>
-					<label for="trustedDevice">Trusted Device:</label>
+					<label for="trustedDevice" style="display:inline-block;">Trusted Device:</label>
 					<input type="checkbox" id="trustedDeviceId">
 
 				</div>  

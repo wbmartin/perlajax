@@ -22,11 +22,14 @@ describe "A golfer" do
 		@app.letDustSettle
 		@app.browser.link(:id,'launcherShowQuickGolfScore').click
 		@app.letDustSettle
-		@app.browser.links.each do |l|
+		for i in  0..2 do # doing this twice to clear any stragglers
+		@app.browser.table(:id,'quickGolfScoreListTable').links.each do |l|
 			if l.text == 'Delete' then 
 				l.click
 				@app.letDustSettle
 			end
+		end
+		@app.letDustSettle
 		end
 		@app.browser.text.should match /No data available in table/
 			@app.browser.link(:id,'launcherHome').click
@@ -52,6 +55,7 @@ describe "A golfer" do
 	end
 
 	it "can be added" do
+		sleep 3 #waiting 3 seconds to allow the screen to clear 
 		if @app.browser.button(:id,'golferFormClear').visible? then
 			@app.browser.button(:id,'golferFormClear').click
 			@app.letDustSettle
@@ -63,11 +67,13 @@ describe "A golfer" do
 	end
 
 	it 'can be reset to add mode while editing' do
+		sleep 3
 		@app.letDustSettle
 		@app.browser.div(:id, "golferListTableDivId").link(:text,"Edit").click
 		@app.letDustSettle
 		@app.browser.button(:id, 'golferFormAdd').should_not be_visible
 		@app.browser.button(:id, 'golferFormClear').click
+		@app.letDustSettle
 		@app.browser.text_field(:id,'golferForm-name').value.should == ''
 		@app.browser.button(:id, 'golferFormAdd').should be_visible
 	end

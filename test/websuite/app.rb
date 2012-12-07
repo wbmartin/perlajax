@@ -84,6 +84,7 @@ class App
 		end
 		letDustSettle
 		@b.browser.link(:id,'launcherHome').click
+		letDustSettle
 		refreshCache
 		
 	end

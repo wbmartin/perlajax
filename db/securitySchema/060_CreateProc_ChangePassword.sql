@@ -19,5 +19,3 @@ $BODY$
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION change_password(text, text, text, text, text)
-  OWNER TO concordc_golfscoredev;

@@ -1,16 +1,16 @@
 .SecurityDisabled{
-  display:none;
+  display:none !important;
 }
 
 .LogicDisabled{
-display:none;
+display:none !important;
 
 }
 .error{
-  color: red;
+  color: red !important;
 }
   .ValidationMsg{
-    color:red;
+    color:red !important;
     font-size: .75em;
   }
 

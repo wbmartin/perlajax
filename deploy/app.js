@@ -954,8 +954,8 @@ function isInteger(value) {
 function pgDate(val) {
   var rslt;
   if (val != null) {
-    rslt = val.substring(5, 7) + '/';
-    rslt += val.substring(8, 10) + '/' + val.substring(0, 4);
+    rslt = val.substring(0, 4) + '-';
+    rslt += val.substring(5, 7) + '-' + val.substring(8, 10);
   } else {
     rslt = '';
   }

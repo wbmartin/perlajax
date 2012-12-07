@@ -2,11 +2,7 @@
 --ok
 \i tables/010_CreateTable_Golfer.sql
 drop table if exists golfer cascade;
-psql:tables/010_CreateTable_Golfer.sql:1: NOTICE:  drop cascades to 4 other objects
-DETAIL:  drop cascades to constraint fk_golf_score_1 on table golf_score
-drop cascades to function golfer_sq(text,text,text,text,text,integer,integer)
-drop cascades to function golfer_iq(text,text,text,character varying)
-drop cascades to function golfer_uq(text,text,text,integer,timestamp without time zone,character varying)
+psql:tables/010_CreateTable_Golfer.sql:1: NOTICE:  table "golfer" does not exist, skipping
 DROP TABLE
 commit;
 psql:tables/010_CreateTable_Golfer.sql:2: WARNING:  there is no transaction in progress
@@ -30,10 +26,7 @@ psql:tables/010_CreateTable_Golfer.sql:14: WARNING:  there is no transaction in 
 COMMIT
 \i tables/020_CreateTableGolfScore.sql
 drop table if exists golf_score cascade;
-psql:tables/020_CreateTableGolfScore.sql:1: NOTICE:  drop cascades to 3 other objects
-DETAIL:  drop cascades to function golf_score_sq(text,text,text,text,text,integer,integer)
-drop cascades to function golf_score_iq(text,text,text,integer,integer,date)
-drop cascades to function golf_score_uq(text,text,text,integer,timestamp without time zone,integer,integer,date)
+psql:tables/020_CreateTableGolfScore.sql:1: NOTICE:  table "golf_score" does not exist, skipping
 DROP TABLE
 CREATE TABLE golf_score
 (
@@ -61,12 +54,10 @@ COMMIT
 --post tables
 --Custom types
 drop type if exists golfer_summary cascade;
-psql:tables/999_posttables.sql:3: NOTICE:  drop cascades to function golfer_handicap_sq(text,text,text)
 DROP TYPE
 create  type golfer_summary as (golfer_id int, golfer_name varchar, golf_score float, last_date timestamp, first_date timestamp);
 CREATE TYPE
 drop type if exists type_label_value cascade;
-psql:tables/999_posttables.sql:5: NOTICE:  drop cascades to function cross_table_cache_sq(text,text,text)
 DROP TYPE
 create  type type_label_value as (tp  varchar, lbl varchar, val varchar);
 CREATE TYPE
