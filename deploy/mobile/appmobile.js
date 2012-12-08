@@ -105,9 +105,9 @@ function bindToForm(formName, obj) {
       function(key, field) {
         fieldId = field.id.replace(formName + '-', '');
         if (field.type != 'button') field.value = obj[fieldId];
-        if (IS_MOBILE && field.type === 'select-one' ) {
+        if (IS_MOBILE && field.type === 'select-one') {
             $(field).selectmenu();
-            $(field).selectmenu('refresh',true);
+            $(field).selectmenu('refresh', true);
           }
 
       });
@@ -128,7 +128,8 @@ function clearForm(formName) {
         if (field.type == 'checkbox') {
           field.checked = false;
         } else if (field.type != 'button') {
-          if (IS_MOBILE && field.type === 'select-one' && field.value!== '') {
+          if (IS_MOBILE && field.type === 'select-one' &&
+              field.value !== '') {
              selectRefreshNeeded = true;
           }
           field.value = '';
@@ -213,7 +214,7 @@ function standardValidate(formName) {
       function(ndx, field) {
         if (isEmpty(field.id)) {return true;}//skip/continue if no ID
         if (field.value != null && !field.value.match(/\d\d\d\d-\d\d-\d\d/)) {
-          appendValidationMsg(formName, field.id, 'YYYY-MM-DD date Required');
+          appendValidationMsg(formName, field.id, 'YYYY-MM-DD Required');
           highlightFieldError(formName, field.id, true);
           formValid = false;
         }
@@ -454,8 +455,8 @@ function setSelectOptions(selectId, obj) {
   });
   $(selectId).html(newhtml);
   if (IS_MOBILE) {
-    $(selectId).selectmenu();
-    $(selectId).selectmenu('refresh',true);
+    //$(selectId).selectmenu();
+    //$(selectId).selectmenu('refresh',true);
   }
 
 }
@@ -818,7 +819,7 @@ SRC: _libCommon
 
   *
   */
-function formatDate(dt,format) {
+function formatDate(dt, format) {
   if (format === 'MM-DD') { return dt.substr(5); }
   return 'format undefined';
 }
@@ -1233,7 +1234,7 @@ function briefNotify(msg, type) {
   }
 
   var msgDiv = '<div class="ui-loader ui-overlay-shadow ';
-  msgDiv +=  color + ' ui-corner-all"><h3>';
+  msgDiv += color + ' ui-corner-all"><h3>';
   msgDiv += msg + '</h3></div>';
   $(msgDiv)
     .css({ display: 'block',
@@ -1242,10 +1243,10 @@ function briefNotify(msg, type) {
       padding: '7px',
       'text-align': 'center',
       width: '270px',
-      left: ($(window).width() - 284)/2,
-      top: $(window).height()/2 })
-    .appendTo( $.mobile.pageContainer ).delay( 1500 )
-    .fadeOut( 400, function(){
+      left: ($(window).width() - 284) / 2,
+      top: $(window).height() / 2 })
+    .appendTo($.mobile.pageContainer).delay(1500)
+    .fadeOut(400, function() {
       $(this).remove();
     });
 }
@@ -1654,15 +1655,16 @@ function populateQuickGolfScoreListTable(dataRows) {
 * SRC: _quickGolfScoreMobile
 *=====================================================================
 * @param {Object} data  rowdata.
+* @return {string} div row.
 */
 function buildQuickGolfScoreListTableRow(data) {
   var newRow = '<div class = "ui-block-a ui-td">';
-  newRow +=  GOLFER_CACHE[data['golfer_id']] + '</div>';
+  newRow += GOLFER_CACHE[data['golfer_id']] + '</div>';
   newRow += '<div class = "ui-block-b ui-td">';
   newRow += '<a href="#" onclick="showQuickGolfScoreEntry(';
-  newRow +=  data['golf_score_id'] + ')">';
-  newRow +=  formatNumber(data['golf_score'], 0, true, false, true);
-  newRow += ' (' + formatDate(data['game_dt'],'MM-DD');
+  newRow += data['golf_score_id'] + ')">';
+  newRow += formatNumber(data['golf_score'], 0, true, false, true);
+  newRow += ' (' + formatDate(data['game_dt'], 'MM-DD');
   newRow += ')';
   newRow += '</a>';
   newRow += '</div>';
@@ -1701,13 +1703,13 @@ function removeQuickGolfScoreListTableRow(golfScoreId_) {
 *
 * SRC: _quickGolfScoreMobile
 *=====================================================================
-* @param {integer} id pkey to show
+* @param {integer} id pkey to show.
 */
 function showQuickGolfScoreEntry(id) {
   var params = {};
-  if(id) {
+  if (id) {
     params['where_clause'] = 'golf_score_id = ' + id;
-    retrieveQuickGolfScore(params)
+    retrieveQuickGolfScore(params);
   } else {
     clearQuickGolfScoreForm();
   }
@@ -1733,9 +1735,6 @@ function showQuickGolfScoreHistory() {
 function imposeQuickGolfScoreSecurityUIRestrictions() {
 
 }
-
-
-
 
 
 

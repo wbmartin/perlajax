@@ -91,9 +91,9 @@ function bindToForm(formName, obj) {
 			function(key, field) {
 				fieldId = field.id.replace(formName + '-', '');
 				if (field.type != 'button') field.value = obj[fieldId];
-				if (IS_MOBILE && field.type === 'select-one' ) {
+				if (IS_MOBILE && field.type === 'select-one') {
 						$(field).selectmenu();
-						$(field).selectmenu('refresh',true);
+						$(field).selectmenu('refresh', true);
 					}
 
 			});
@@ -114,7 +114,8 @@ function clearForm(formName) {
 				if (field.type == 'checkbox') {
 					field.checked = false;
 				} else if (field.type != 'button') {
-					if (IS_MOBILE && field.type === 'select-one' && field.value!== '') {
+					if (IS_MOBILE && field.type === 'select-one' && 
+							field.value !== '') {
 						 selectRefreshNeeded = true;
 					}
 					field.value = '';
@@ -445,8 +446,8 @@ function setSelectOptions(selectId, obj) {
 	});
 	$(selectId).html(newhtml);
 	if (IS_MOBILE) {
-		$(selectId).selectmenu();
-		$(selectId).selectmenu('refresh',true);
+		//$(selectId).selectmenu();
+	  //$(selectId).selectmenu('refresh',true);
 	}
 
 }
@@ -813,7 +814,7 @@ SRC: [%SRC_LOC%]
 
 	*
 	*/
-function formatDate(dt,format) {
+function formatDate(dt, format) {
   if (format === 'MM-DD') { return dt.substr(5); }
 	return 'format undefined';
 }

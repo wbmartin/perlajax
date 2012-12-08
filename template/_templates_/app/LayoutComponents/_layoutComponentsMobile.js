@@ -44,7 +44,7 @@ function briefNotify(msg, type) {
 	}
 
 	var msgDiv = '<div class="ui-loader ui-overlay-shadow ';
-	msgDiv +=	color + ' ui-corner-all"><h3>';
+	msgDiv += color + ' ui-corner-all"><h3>';
 	msgDiv += msg + '</h3></div>';
 	$(msgDiv)
 		.css({ display: 'block', 
@@ -53,10 +53,10 @@ function briefNotify(msg, type) {
 			padding: '7px',
 			'text-align': 'center',
 			width: '270px',
-			left: ($(window).width() - 284)/2,
-			top: $(window).height()/2 })
-		.appendTo( $.mobile.pageContainer ).delay( 1500 )
-		.fadeOut( 400, function(){
+			left: ($(window).width() - 284) / 2,
+			top: $(window).height() / 2 })
+		.appendTo($.mobile.pageContainer).delay(1500)
+		.fadeOut(400, function() {
 			$(this).remove();
 		});
 }

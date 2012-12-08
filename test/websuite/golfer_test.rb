@@ -5,7 +5,7 @@ require './app'
 describe "A golfer" do
 	before :all do
 		@app = App.instance
-		@app.browser.goto("http://localhost/firstapp")
+		#@app.browser.goto("http://localhost/firstapp")
 	end
 
 

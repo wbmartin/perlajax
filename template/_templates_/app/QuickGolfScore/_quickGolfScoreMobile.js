@@ -44,15 +44,16 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 * SRC: [%SRC_LOC%]
 *=====================================================================
 * @param {Object} data  rowdata.
+* @return {string} div row.
 */
 function build[%ucfirst(divId)%]ListTableRow(data) {
 	var newRow = '<div class = "ui-block-a ui-td">';
-  newRow +=  GOLFER_CACHE[data['golfer_id']] + '</div>';
+  newRow += GOLFER_CACHE[data['golfer_id']] + '</div>';
 	newRow += '<div class = "ui-block-b ui-td">';
 	newRow += '<a href="#" onclick="show[%ucfirst(divId)%]Entry(';
-	newRow +=  data['golf_score_id'] + ')">';
-  newRow +=  formatNumber(data['golf_score'], 0, true, false, true);
-  newRow += ' (' + formatDate(data['game_dt'],'MM-DD');
+	newRow += data['golf_score_id'] + ')">';
+  newRow += formatNumber(data['golf_score'], 0, true, false, true);
+  newRow += ' (' + formatDate(data['game_dt'], 'MM-DD');
   newRow += ')';
 	newRow += '</a>';
 	newRow += '</div>';
@@ -91,13 +92,13 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
-* @param {integer} id pkey to show
+* @param {integer} id pkey to show.
 */
 function show[%ucfirst(divId)%]Entry(id) {
 	var params = {};
-	if(id) {
+	if (id) {
 		params['where_clause'] = 'golf_score_id = ' + id;
-		retrieve[%ucfirst(divId)%](params)
+		retrieve[%ucfirst(divId)%](params);
 	} else {
 		clear[%ucfirst(divId)%]Form();
 	}
@@ -123,6 +124,3 @@ function show[%ucfirst(divId)%]History() {
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	
 }
-
-
-

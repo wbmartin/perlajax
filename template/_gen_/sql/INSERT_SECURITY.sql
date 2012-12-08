@@ -16,32 +16,6 @@ INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Security Grants
---GRANT ALL ON TABLE security_user TO GROUP golfscore;
-INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
-	VALUES ( ,'SELECT_SECURITY_USER', now(), 'Allows users to select security_user'); 
-INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
-	VALUES (,'INSERT_SECURITY_USER', now(), 'Allows users to add records to security_user');
-INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
-	VALUES (,'UPDATE_SECURITY_USER', now(), 'Allows users to update records in security_user');
-INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
-	VALUES ( ,'DELETE_SECURITY_USER', now(), 'Allows users to delete records from security_user');
-
-
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Security Grants
---GRANT ALL ON TABLE support_request TO GROUP golfscore;
-INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
-	VALUES ( ,'SELECT_SUPPORT_REQUEST', now(), 'Allows users to select support_request'); 
-INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
-	VALUES (,'INSERT_SUPPORT_REQUEST', now(), 'Allows users to add records to support_request');
-INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
-	VALUES (,'UPDATE_SUPPORT_REQUEST', now(), 'Allows users to update records in support_request');
-INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
-	VALUES ( ,'DELETE_SUPPORT_REQUEST', now(), 'Allows users to delete records from support_request');
-
-
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Security Grants
 --GRANT ALL ON TABLE security_privilege TO GROUP golfscore;
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
 	VALUES ( ,'SELECT_SECURITY_PRIVILEGE', now(), 'Allows users to select security_privilege'); 
@@ -81,6 +55,19 @@ INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Security Grants
+--GRANT ALL ON TABLE security_user TO GROUP golfscore;
+INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
+	VALUES ( ,'SELECT_SECURITY_USER', now(), 'Allows users to select security_user'); 
+INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
+	VALUES (,'INSERT_SECURITY_USER', now(), 'Allows users to add records to security_user');
+INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
+	VALUES (,'UPDATE_SECURITY_USER', now(), 'Allows users to update records in security_user');
+INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
+	VALUES ( ,'DELETE_SECURITY_USER', now(), 'Allows users to delete records from security_user');
+
+
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Security Grants
 --GRANT ALL ON TABLE security_profile_grant TO GROUP golfscore;
 INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
 	VALUES ( ,'SELECT_SECURITY_PROFILE_GRANT', now(), 'Allows users to select security_profile_grant'); 
@@ -103,6 +90,19 @@ INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, 
 	VALUES (,'UPDATE_SECURITY_PROFILE', now(), 'Allows users to update records in security_profile');
 INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
 	VALUES ( ,'DELETE_SECURITY_PROFILE', now(), 'Allows users to delete records from security_profile');
+
+
+--=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+-- Security Grants
+--GRANT ALL ON TABLE support_request TO GROUP golfscore;
+INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
+	VALUES ( ,'SELECT_SUPPORT_REQUEST', now(), 'Allows users to select support_request'); 
+INSERT INTO security_privilege( security_privilege_id, priv_name, last_update, description)    
+	VALUES (,'INSERT_SUPPORT_REQUEST', now(), 'Allows users to add records to support_request');
+INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
+	VALUES (,'UPDATE_SUPPORT_REQUEST', now(), 'Allows users to update records in support_request');
+INSERT INTO security_privilege( security_privilege_id,  priv_name, last_update, description)    
+	VALUES ( ,'DELETE_SUPPORT_REQUEST', now(), 'Allows users to delete records from support_request');
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
