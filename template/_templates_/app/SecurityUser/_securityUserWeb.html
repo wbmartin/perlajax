@@ -12,24 +12,23 @@
 <div id="[%divId%]" class="contentPane MainLayout"  >
 	<h1 id="[%divId%]HeaderId" class="pageTitle">Users</h1>
 	<div class="row">
-		<span class="fourcol">
-			<table id="[%divId%]ListTable"  class='dataTable pretty' >
+		<div class="fourcol">
+			<table id="[%divId%]ListTable"  class='dataTable pretty' summary="">
 				<thead><tr><th>User Id</th> <th >I want to&hellip;</th></tr></thead>
-				<tbody></tbody>
 			</table>
-		</span>
-		<span class = "eightcol last">
+		</div>
+		<div class = "eightcol last">
 
-			<form id="[%divId%]Form" >
+			<form id="[%divId%]Form"  action="">
 				<div class="formLayout_Standard prettyWrapper">
 					[%dbColumnName = 'edit_user_id'%]
-					<div class="formFieldGroup ">
+					<div class="formFieldGroup">
 						<label>  User Id </label>
 						<input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 					[%dbColumnName = 'email_addr'%]
-					<div class="formFieldGroup"id="[%divId%]Form-[%dbColumnName%]DivId">
+					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label>  E-mail </label>
 						<input  type="text" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
@@ -37,13 +36,13 @@
 					[%dbColumnName = 'password_enc'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label  for ="[%divId%]Form-[%dbColumnName%]">  Password </label>
-						<input type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
+						<input type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 					[%dbColumnName = 'password_validate'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label for ="[%divId%]Form-[%dbColumnName%]">  Confirm Password </label>
-						<input  type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
+						<input  type="password" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 
@@ -57,7 +56,7 @@
 					[%dbColumnName = 'active_yn'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label style="display:inline-block" for ="[%divId%]Form-[%dbColumnName%]">  Active </label>
-						<input style="width:25px;" type="checkbox" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"></input>
+						<input style="width:25px;" type="checkbox" name="[%toCC(dbColumnName)%]" id="[%divId%]Form-[%dbColumnName%]"/>
 						<span class="ValidationMsg" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 
@@ -79,12 +78,12 @@
 							<span class="[%buttonTextClass%]">Change Password</span>
 						</button>
 					</div>
-					<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-					<input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]">
+					<input type="hidden" name="last_update" id="[%divId%]Form-last_update"/>
+					<input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]"/>
 
 				</div>
 			</form>
-		</span>
+		</div>
 		<br/>
 	</div>
 </div> <!--end:[%ucfirst(divId)%]-->

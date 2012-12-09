@@ -13,17 +13,16 @@
 <div id="[%divId%]" class="MainLayout contentPane" >
 	<h1 id="[%divId%]Title" class="pageTitle" >Golfers</h1>
 	<div class="row">
-		<span class="sixcol">
+		<div class="sixcol">
 			<!--<div id="[%divId%]ListTablePaginationDivId"></div> -->
 			<div id="[%divId%]ListTableDivId"  >
-				<table id='[%divId%]ListTable' class='dataTable pretty'  >
+				<table id="[%divId%]ListTable" class="dataTable pretty" summary="">
 					<thead><tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr></thead>
-					<tbody></tbody>
 				</table>
 			</div>
-		</span>
-		<span class="sixcol last">
-			<form id="[%divId%]Form" >
+		</div>
+		<div class="sixcol last">
+			<form id="[%divId%]Form"  action="">
 				<div id="[%divId%]EntryDivId" class="formLayout_Standard prettyWrapper">
 					[%dbColumnName = 'name'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
@@ -38,10 +37,10 @@
 						<button type="button" id="[%divId%]FormClear" class="[%buttonClass%]" value="Clear" onclick="clear[%ucfirst(divId)%]Form();" ><span class="[%buttonTextClass%]">Clear</span></button>
 					</div>
 				</div>
-				<input type="hidden" name="last_update" id="[%divId%]Form-last_update">
-				<input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id">
+				<input type="hidden" name="last_update" id="[%divId%]Form-last_update"/>
+				<input type="hidden" name="golfer_id" id="[%divId%]Form-golfer_id"/>
 
 			</form>
-		</span>
+		</div>
 		</div [%# row%]>	  
 	</div> [%# end golfScoreSummary%]

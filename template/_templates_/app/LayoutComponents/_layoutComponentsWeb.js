@@ -32,20 +32,6 @@ function displayMainLayout(showHide) {
 	if (!showHide)showLoginPortal();
 }
 
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-	var tblClasses = $.fn.dataTableExt.oStdClasses;
-	tblClasses.sPagePrevDisabled = '[%buttonClass%] smallButton LogicDisabled';
-	tblClasses.sPagePrevEnabled = '[%buttonClass%] smallButton';
-	tblClasses.sPageNextDisabled = '[%buttonClass%] smallButton LogicDisabled';
-	tblClasses.sPageNextEnabled = '[%buttonClass%] smallButton';
-	tblClasses.sWrapper = 'prettyWrapper dataTables_wrapper';
-
-});
 
 
 

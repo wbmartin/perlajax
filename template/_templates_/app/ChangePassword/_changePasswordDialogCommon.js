@@ -90,7 +90,9 @@ function show[%ucfirst(divId)%](userId_) {
 		userId_ = $('form#loginHolder #user_id').val();
 	}
 	$('#[%divId%]Form-user_to_update').val(userId_);
-	$('#[%divId%]').dialog('destroy');
+	if ($('#[%divId%]').is(':data(dialog)')) {
+	  $('#[%divId%]').dialog('destroy');
+	}
 
 	$('#[%divId%]').dialog({
 				resizable: false,

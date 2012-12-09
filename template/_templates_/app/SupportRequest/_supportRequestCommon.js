@@ -318,7 +318,9 @@ function show[%ucfirst(divId)%]() {
 *=====================================================================
 */
 function clear[%ucfirst(divId)%]Form() {
-	$('#[%divId%]FormHolder').dialog('close');
+	if ($('#[%divId%]FormHolder').is(':data(dialog)')) {
+	  $('#[%divId%]FormHolder').dialog('close');
+	}
 	clearForm('[%divId%]Form');
 	(isUserAuthorized('[%INSERT_GRANT%]', false)) ?
 		securityLockForm('[%divId%]Form', false) :

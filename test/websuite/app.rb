@@ -2,8 +2,8 @@ require 'headless'
 class App
 	Username = 'golfscore'
 	Password = 'golfscore'
-	#Url = 'http://localhost/firstapp'
-	Url = 'http://golf-uat.martinanalytics.com/'
+	Url = 'http://localhost/firstapp'
+	#Url = 'http://golf-uat.martinanalytics.com/'
 	RunHeadless = false
 
 	def initialize

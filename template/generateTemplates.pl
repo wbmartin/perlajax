@@ -40,11 +40,24 @@ $dbh->disconnect();
 
 #Post Processing
 print "replacing Tabs\n";
-`perl -p -i -e 's/\t/  /g' $outputPath/app.js`;
-`perl -p -i -e 's/\t/  /g' $outputPath/appmobile.js`;
+`perl -p -i -e 's/\t/ /g' $outputPath/app.js`;
+`perl -p -i -e 's/\t/ /g' $outputPath/appmobile.js`;
+`perl -p -i -e 's/\t/ /g' $outputPath/index.html`;
 print "replacing EOL whitespace\n";
 `perl -p -i -e 's/[ \t]+\$//g' $outputPath/app.js`;
 `perl -p -i -e 's/[ \t]+\$//g' $outputPath/appmobile.js`;
+`perl -p -i -e 's/[ \t]+\$//g' $outputPath/index.html`;
+
+print 'replacing redundant line breaks';
+`perl -p -i -e 's/^\n//' $outputPath/index.html`;
+`perl -p -i -e 's/\n\n/\n/g' $outputPath/app.js`;
+`perl -p -i -e 's/\n\n/\n/g' $outputPath/appmobile.js`;
+print 'removing redunant spaces in html';
+`perl -p -i -e 's/ +/ /g' $outputPath/index.html`;
+#print 'tidying the html';
+#`tidy -m $outputPath/index.html`;
+#probably want to use tidy -qe for quiet and errors.warnings only no markup changes
+
 #print "adjusting mobile path";
 #`perl -p -i -e 's/images\//\.\.images\//g' $outputPath/mobile.html`;
 #print `gjslint $outputPath/app.js`;

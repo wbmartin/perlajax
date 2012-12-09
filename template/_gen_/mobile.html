@@ -65,7 +65,7 @@ display:none !important;
 	</div>
 
 	<div data-role="content" style="margin-top: 10%">
-		<form id ="LoginPortalForm">
+		<form id ="LoginPortalForm" action="">
 			<input type="text"  id="LoginPortalForm-user_id" placeholder="User Name"/>
 			<br/>
 			<input type="password"  id="LoginPortalForm-password" placeholder="Password"/>
@@ -139,7 +139,7 @@ display:none !important;
 	</div>
 
 	<div data-role="content" style="margin-top: 10%">
-		<form id ="quickGolfScoreForm">
+		<form id ="quickGolfScoreForm" action="">
 			
 			<div class="formFieldGroup" id="quickGolfScoreForm-golfer_idDivId">
 				<label for ="quickGolfScoreForm-golfer_id" id="quickGolfScoreFormLabel-golfer_id">Name</label>
@@ -167,8 +167,8 @@ display:none !important;
 				<button type="button" id="quickGolfScoreFormAdd"  class="" value="Add" onclick="saveQuickGolfScoreForm();" data-inline="true"><span class="">Add</span></button>
 				<button type="button" id="quickGolfScoreFormClear"  class="" value="Clear" onclick="clearQuickGolfScoreForm();" data-inline="true"><span class="">Clear</span></button>
 			</div>
-			<input type="hidden" name="last_update" id="quickGolfScoreForm-last_update">
-			<input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id">
+			<input type="hidden" name="last_update" id="quickGolfScoreForm-last_update"/>
+			<input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id"/>
 
 		</form>
 	</div>

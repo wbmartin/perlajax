@@ -4,11 +4,11 @@
 
 <div id="[%divId%]"  class="contentPane container">
 	<div class="row ">
-		<img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash">
+		<img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash"/>
 	</div>
 	<div  id="loginFormRow" class="row ">
 		<div class="center" style="width:30em;"> 
-			<form id="[%divId%]Form" >
+			<form id="[%divId%]Form" action="">
 				<div class="formLayout_Standard prettyWrapper" style="width:30em;">
 					<h1>Login</h1>
 					<span class="small" >Please enter your login credentials</span><hr/>
@@ -18,19 +18,19 @@
 					[%validationMsgWidth='0em'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label for ="[%divId%]Form-[%dbColumnName%]" style="display:inline-block;width:[%labelWidth%];" id="[%divId%]FormLabel-[%dbColumnName%]">User ID</label>
-						<input type="text" style="width:15em"name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATErequired">	    
+						<input type="text" style="width:15em" name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATErequired"/>	    
 						<span class="ValidationMsg" style="width:[%validationMsgWidth%]" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 					[%dbColumnName = 'password'%]
 					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId">
 						<label for ="[%divId%]Form-[%dbColumnName%]" style="display:inline-block;width:[%labelWidth%];" id="[%divId%]FormLabel-[%dbColumnName%]">Password</label>
-						<input type="password" style="width:15em"name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATErequired">	    
+						<input type="password" style="width:15em" name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="VALIDATErequired"/>	    
 						<span class="ValidationMsg" style="width:[%validationMsgWidth%]" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 					[%dbColumnName = 'password_reset_code'%]
-					<div class="formFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId" style="display:none">
-						<label for ="[%divId%]Form-[%dbColumnName%]" style="display:inline-block;width:[%labelWidth%];" id="[%divId%]FormLabel-[%dbColumnName%]">Reset Code</label>
-						<input type="text" style="width:15em"name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class="">	    
+					<div class="text/cssformFieldGroup" id="[%divId%]Form-[%dbColumnName%]DivId" style="display:none">
+						text/css<label for ="[%divId%]Form-[%dbColumnName%]" style="display:inline-block;width:[%labelWidth%];" id="[%divId%]FormLabel-[%dbColumnName%]">Reset Code</label>
+						text/css<input type="text" style="width:15em" name="[%dbColumnName%]" id="[%divId%]Form-[%dbColumnName%]" class=""/>	    
 						<span class="ValidationMsg" style="width:[%validationMsgWidth%]" id="[%divId%]FormLabel-[%toCC(dbColumnName)%]Error"></span>
 					</div>
 
@@ -40,12 +40,12 @@
 						<button type="button"  id="cmdlogin" class="[%buttonClass%]"  onclick="loginCall('authenticate')" > <span class="[%buttonTextClass%]">Login</span> </button>  
 						<button type="button"  id="cmdOneTimelogin" class="[%buttonClass%] " style="display:none;"  onclick="loginCall('one_time')" ><span class="[%buttonTextClass%]"> One Time Login</span> </button>  
 					</div>
-					<label for="trustedDevice" style="display:inline-block;">Trusted Device:</label>
-					<input type="checkbox" id="trustedDeviceId">
+					<label for="trustedDeviceId" style="display:inline-block;">Trusted Device:</label>
+					<input type="checkbox" id="trustedDeviceId"/>
 
 				</div>  
 			</form>  
 		</div>
 		<p style="text-align:center; margin-top: 4em;"><a href="#" class="alink" onclick="javascript:initPasswordReset(); return false;">I forgot My password</a> &nbsp; &nbsp;<a class="alink" href="#" onclick="initForgottenUserName();return false;">I forgot my user User Id</a> </p>
-	</div> <!--loginportal--> 
-	<!--End LoginPortal-->
+	</div>  
+</div>	

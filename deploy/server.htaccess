@@ -1,0 +1,6 @@
+<FilesMatch ".(js|css|pdf|txt|html|jpg|png)$">
+Header set Cache-Control "max-age=604800"
+</FilesMatch>
+
+Header unset ETag
+FileETag None

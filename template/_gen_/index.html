@@ -1,23 +1,19 @@
-
-
-
 <!DOCType html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
-<head>	<title> Golf Score Tracker</title> 
-<link rel="stylesheet"  href="http://yui.yahooapis.com/3.7.3/build/cssreset/cssreset-min.css" type="text/css"/>
-	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<!-- 1140px Grid styles for IE -->
-	<!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
-	<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.min.js"></script>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+<head> <title> Golf Score Tracker</title>
+<link rel="stylesheet" href="http://yui.yahooapis.com/3.7.3/build/cssreset/cssreset-min.css" type="text/css"/>
+ <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <!-- 1140px Grid styles for IE -->
+ <!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
+ <script src="http://code.jquery.com/jquery-1.8.0.min.js" type="text/javascript"></script>
+ <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.min.js" type="text/javascript"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/ui-lightness/jquery-ui.css" type="text/css"/>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/ui-lightness/jquery.ui.theme.css" type="text/css"/>
-
-	<script type="text/javascript"> 
-		//<![CDATA[
-		//1140 mediaqueries not strict safe
-	if(typeof Object.create!=="function"){
+ <script type="text/javascript">
+ //<![CDATA[
+ //1140 mediaqueries not strict safe
+ if(typeof Object.create!=="function"){
 Object.create=function(o){
 function F(){
 };
@@ -796,23 +792,22 @@ document.execCommand("BackgroundImageCache",false,true);
 catch(e){
 }
 
-
-	//>>>>>>>>>>>>>>>>>>>>>>>>
-	/*
- * File:        jquery.dataTables.min.js
- * Version:     1.9.3
- * Author:      Allan Jardine (www.sprymedia.co.uk)
- * Info:        www.datatables.net
- * 
+ //>>>>>>>>>>>>>>>>>>>>>>>>
+ /*
+ * File: jquery.dataTables.min.js
+ * Version: 1.9.3
+ * Author: Allan Jardine (www.sprymedia.co.uk)
+ * Info: www.datatables.net
+ *
  * Copyright 2008-2012 Allan Jardine, all rights reserved.
  *
  * This source file is free software, under either the GPL v2 license or a
  * BSD style license, available at:
- *   http://datatables.net/license_gpl2
- *   http://datatables.net/license_bsd
- * 
- * This source file is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * http://datatables.net/license_gpl2
+ * http://datatables.net/license_bsd
+ *
+ * This source file is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
  */
 (function(i,O,l,n){var j=function(e){function o(a,b){var c=j.defaults.columns,d=a.aoColumns.length,c=i.extend({},j.models.oColumn,c,{sSortingClass:a.oClasses.sSortable,sSortingClassJUI:a.oClasses.sSortJUI,nTh:b?b:l.createElement("th"),sTitle:c.sTitle?c.sTitle:b?b.innerHTML:"",aDataSort:c.aDataSort?c.aDataSort:[d],mData:c.mData?c.oDefaults:d});a.aoColumns.push(c);if(a.aoPreSearchCols[d]===n||null===a.aoPreSearchCols[d])a.aoPreSearchCols[d]=i.extend({},j.models.oSearch);else if(c=a.aoPreSearchCols[d],
@@ -851,7 +846,7 @@ a.iDraw)return;a.iDraw=1*b.sEcho}(!a.oScroll.bInfinite||a.oScroll.bInfinite&&(a.
 g=0,e=c.length;g<e;g++)c[g]!=i(this).parents("div.dataTables_filter")[0]&&i(c[g]._DT_Input).val(d);d!=b.sSearch&&M(a,{sSearch:d,bRegex:b.bRegex,bSmart:b.bSmart,bCaseInsensitive:b.bCaseInsensitive})});c.attr("aria-controls",a.sTableId).bind("keypress.DT",function(a){if(a.keyCode==13)return false});return d}function M(a,b,c){var d=a.oPreviousSearch,h=a.aoPreSearchCols,f=function(a){d.sSearch=a.sSearch;d.bRegex=a.bRegex;d.bSmart=a.bSmart;d.bCaseInsensitive=a.bCaseInsensitive};if(a.oFeatures.bServerSide)f(b);
 else{Ha(a,b.sSearch,c,b.bRegex,b.bSmart,b.bCaseInsensitive);f(b);for(b=0;b<a.aoPreSearchCols.length;b++)Ia(a,h[b].sSearch,b,h[b].bRegex,h[b].bSmart,h[b].bCaseInsensitive);Ja(a)}a.bFiltered=!0;i(a.oInstance).trigger("filter",a);a._iDisplayStart=0;A(a);z(a);ka(a,0)}function Ja(a){for(var b=j.ext.afnFiltering,c=v(a,"bSearchable"),d=0,h=b.length;d<h;d++)for(var f=0,g=0,e=a.aiDisplay.length;g<e;g++){var i=a.aiDisplay[g-f];b[d](a,Y(a,i,"filter",c),i)||(a.aiDisplay.splice(g-f,1),f++)}}function Ia(a,b,c,
 d,h,f){if(""!==b)for(var g=0,b=la(b,d,h,f),d=a.aiDisplay.length-1;0<=d;d--)h=Ka(x(a,a.aiDisplay[d],c,"filter"),a.aoColumns[c].sType),b.test(h)||(a.aiDisplay.splice(d,1),g++)}function Ha(a,b,c,d,h,f){d=la(b,d,h,f);h=a.oPreviousSearch;c||(c=0);0!==j.ext.afnFiltering.length&&(c=1);if(0>=b.length)a.aiDisplay.splice(0,a.aiDisplay.length),a.aiDisplay=a.aiDisplayMaster.slice();else if(a.aiDisplay.length==a.aiDisplayMaster.length||h.sSearch.length>b.length||1==c||0!==b.indexOf(h.sSearch)){a.aiDisplay.splice(0,
-a.aiDisplay.length);ka(a,1);for(b=0;b<a.aiDisplayMaster.length;b++)d.test(a.asDataSearch[b])&&a.aiDisplay.push(a.aiDisplayMaster[b])}else for(b=c=0;b<a.asDataSearch.length;b++)d.test(a.asDataSearch[b])||(a.aiDisplay.splice(b-c,1),c++)}function ka(a,b){if(!a.oFeatures.bServerSide){a.asDataSearch=[];for(var c=v(a,"bSearchable"),d=1===b?a.aiDisplayMaster:a.aiDisplay,h=0,f=d.length;h<f;h++)a.asDataSearch[h]=ma(a,Y(a,d[h],"filter",c))}}function ma(a,b){var c=b.join("  ");-1!==c.indexOf("&")&&(c=i("<div>").html(c).text());
+a.aiDisplay.length);ka(a,1);for(b=0;b<a.aiDisplayMaster.length;b++)d.test(a.asDataSearch[b])&&a.aiDisplay.push(a.aiDisplayMaster[b])}else for(b=c=0;b<a.asDataSearch.length;b++)d.test(a.asDataSearch[b])||(a.aiDisplay.splice(b-c,1),c++)}function ka(a,b){if(!a.oFeatures.bServerSide){a.asDataSearch=[];for(var c=v(a,"bSearchable"),d=1===b?a.aiDisplayMaster:a.aiDisplay,h=0,f=d.length;h<f;h++)a.asDataSearch[h]=ma(a,Y(a,d[h],"filter",c))}}function ma(a,b){var c=b.join(" ");-1!==c.indexOf("&")&&(c=i("<div>").html(c).text());
 return c.replace(/[\n\r]/g," ")}function la(a,b,c,d){if(c)return a=b?a.split(" "):na(a).split(" "),a="^(?=.*?"+a.join(")(?=.*?")+").*$",RegExp(a,d?"i":"");a=b?a:na(a);return RegExp(a,d?"i":"")}function Ka(a,b){return"function"===typeof j.ext.ofnSearch[b]?j.ext.ofnSearch[b](a):null===a?"":"html"==b?a.replace(/[\r\n]/g," ").replace(/<.*?>/g,""):"string"===typeof a?a.replace(/[\r\n]/g," "):a}function na(a){return a.replace(RegExp("(\\/|\\.|\\*|\\+|\\?|\\||\\(|\\)|\\[|\\]|\\{|\\}|\\\\|\\$|\\^|\\-)","g"),
 "\\$1")}function Da(a){var b=l.createElement("div");b.className=a.oClasses.sInfo;a.aanFeatures.i||(a.aoDrawCallback.push({fn:La,sName:"information"}),b.id=a.sTableId+"_info");a.nTable.setAttribute("aria-describedby",a.sTableId+"_info");return b}function La(a){if(a.oFeatures.bInfo&&0!==a.aanFeatures.i.length){var b=a.oLanguage,c=a._iDisplayStart+1,d=a.fnDisplayEnd(),h=a.fnRecordsTotal(),f=a.fnRecordsDisplay(),g;g=0===f&&f==h?b.sInfoEmpty:0===f?b.sInfoEmpty+" "+b.sInfoFiltered:f==h?b.sInfo:b.sInfo+
 " "+b.sInfoFiltered;g+=b.sInfoPostFix;g=ia(a,g);null!==b.fnInfoCallback&&(g=b.fnInfoCallback.call(a.oInstance,a,c,d,h,f,g));a=a.aanFeatures.i;b=0;for(c=a.length;b<c;b++)i(a[b]).html(g)}}function ia(a,b){var c=a.fnFormatNumber(a._iDisplayStart+1),d=a.fnDisplayEnd(),d=a.fnFormatNumber(d),h=a.fnRecordsDisplay(),h=a.fnFormatNumber(h),f=a.fnRecordsTotal(),f=a.fnFormatNumber(f);a.oScroll.bInfinite&&(c=a.fnFormatNumber(1));return b.replace("_START_",c).replace("_END_",d).replace("_TOTAL_",h).replace("_MAX_",
@@ -947,35 +942,27 @@ sSortable:"ui-state-default",sSortableAsc:"ui-state-default",sSortableDesc:"ui-s
 sScrollFoot:"dataTables_scrollFoot ui-state-default",sFooterTH:"ui-state-default",sJUIHeader:"fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix",sJUIFooter:"fg-toolbar ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"});i.extend(j.ext.oPagination,{two_button:{fnInit:function(e,j,n){var k=e.oLanguage.oPaginate,l=function(i){e.oApi._fnPageChange(e,i.data.action)&&n(e)},k=!e.bJUI?'<a class="'+e.oClasses.sPagePrevDisabled+'" tabindex="'+e.iTabIndex+
 '" role="button">'+k.sPrevious+'</a><a class="'+e.oClasses.sPageNextDisabled+'" tabindex="'+e.iTabIndex+'" role="button">'+k.sNext+"</a>":'<a class="'+e.oClasses.sPagePrevDisabled+'" tabindex="'+e.iTabIndex+'" role="button"><span class="'+e.oClasses.sPageJUIPrev+'"></span></a><a class="'+e.oClasses.sPageNextDisabled+'" tabindex="'+e.iTabIndex+'" role="button"><span class="'+e.oClasses.sPageJUINext+'"></span></a>';i(j).append(k);var t=i("a",j),k=t[0],t=t[1];e.oApi._fnBindAction(k,{action:"previous"},
 l);e.oApi._fnBindAction(t,{action:"next"},l);e.aanFeatures.p||(j.id=e.sTableId+"_paginate",k.id=e.sTableId+"_previous",t.id=e.sTableId+"_next",k.setAttribute("aria-controls",e.sTableId),t.setAttribute("aria-controls",e.sTableId))},fnUpdate:function(e){if(e.aanFeatures.p)for(var i=e.oClasses,j=e.aanFeatures.p,k=0,n=j.length;k<n;k++)0!==j[k].childNodes.length&&(j[k].childNodes[0].className=0===e._iDisplayStart?i.sPagePrevDisabled:i.sPagePrevEnabled,j[k].childNodes[1].className=e.fnDisplayEnd()==e.fnRecordsDisplay()?
-i.sPageNextDisabled:i.sPageNextEnabled)}},iFullNumbersShowPages:5,full_numbers:{fnInit:function(e,j,n){var k=e.oLanguage.oPaginate,l=e.oClasses,t=function(i){e.oApi._fnPageChange(e,i.data.action)&&n(e)};i(j).append('<a  tabindex="'+e.iTabIndex+'" class="'+l.sPageButton+" "+l.sPageFirst+'">'+k.sFirst+'</a><a  tabindex="'+e.iTabIndex+'" class="'+l.sPageButton+" "+l.sPagePrevious+'">'+k.sPrevious+'</a><span></span><a tabindex="'+e.iTabIndex+'" class="'+l.sPageButton+" "+l.sPageNext+'">'+k.sNext+'</a><a tabindex="'+
+i.sPageNextDisabled:i.sPageNextEnabled)}},iFullNumbersShowPages:5,full_numbers:{fnInit:function(e,j,n){var k=e.oLanguage.oPaginate,l=e.oClasses,t=function(i){e.oApi._fnPageChange(e,i.data.action)&&n(e)};i(j).append('<a tabindex="'+e.iTabIndex+'" class="'+l.sPageButton+" "+l.sPageFirst+'">'+k.sFirst+'</a><a tabindex="'+e.iTabIndex+'" class="'+l.sPageButton+" "+l.sPagePrevious+'">'+k.sPrevious+'</a><span></span><a tabindex="'+e.iTabIndex+'" class="'+l.sPageButton+" "+l.sPageNext+'">'+k.sNext+'</a><a tabindex="'+
 e.iTabIndex+'" class="'+l.sPageButton+" "+l.sPageLast+'">'+k.sLast+"</a>");var w=i("a",j),k=w[0],l=w[1],v=w[2],w=w[3];e.oApi._fnBindAction(k,{action:"first"},t);e.oApi._fnBindAction(l,{action:"previous"},t);e.oApi._fnBindAction(v,{action:"next"},t);e.oApi._fnBindAction(w,{action:"last"},t);e.aanFeatures.p||(j.id=e.sTableId+"_paginate",k.id=e.sTableId+"_first",l.id=e.sTableId+"_previous",v.id=e.sTableId+"_next",w.id=e.sTableId+"_last")},fnUpdate:function(e,o){if(e.aanFeatures.p){var l=j.ext.oPagination.iFullNumbersShowPages,
 k=Math.floor(l/2),n=Math.ceil(e.fnRecordsDisplay()/e._iDisplayLength),t=Math.ceil(e._iDisplayStart/e._iDisplayLength)+1,w="",v,D=e.oClasses,y,H=e.aanFeatures.p,O=function(i){e.oApi._fnBindAction(this,{page:i+v-1},function(i){e.oApi._fnPageChange(e,i.data.page);o(e);i.preventDefault()})};-1===e._iDisplayLength?t=k=v=1:n<l?(v=1,k=n):t<=k?(v=1,k=l):t>=n-k?(v=n-l+1,k=n):(v=t-Math.ceil(l/2)+1,k=v+l-1);for(l=v;l<=k;l++)w+=t!==l?'<a tabindex="'+e.iTabIndex+'" class="'+D.sPageButton+'">'+e.fnFormatNumber(l)+
 "</a>":'<a tabindex="'+e.iTabIndex+'" class="'+D.sPageButtonActive+'">'+e.fnFormatNumber(l)+"</a>";l=0;for(k=H.length;l<k;l++)0!==H[l].childNodes.length&&(i("span:eq(0)",H[l]).html(w).children("a").each(O),y=H[l].getElementsByTagName("a"),y=[y[0],y[1],y[y.length-2],y[y.length-1]],i(y).removeClass(D.sPageButton+" "+D.sPageButtonActive+" "+D.sPageButtonStaticDisabled),i([y[0],y[1]]).addClass(1==t?D.sPageButtonStaticDisabled:D.sPageButton),i([y[2],y[3]]).addClass(0===n||t===n||-1===e._iDisplayLength?
 D.sPageButtonStaticDisabled:D.sPageButton))}}}});i.extend(j.ext.oSort,{"string-pre":function(e){"string"!=typeof e&&(e=null!==e&&e.toString?e.toString():"");return e.toLowerCase()},"string-asc":function(e,i){return e<i?-1:e>i?1:0},"string-desc":function(e,i){return e<i?1:e>i?-1:0},"html-pre":function(e){return e.replace(/<.*?>/g,"").toLowerCase()},"html-asc":function(e,i){return e<i?-1:e>i?1:0},"html-desc":function(e,i){return e<i?1:e>i?-1:0},"date-pre":function(e){e=Date.parse(e);if(isNaN(e)||""===
 e)e=Date.parse("01/01/1970 00:00:00");return e},"date-asc":function(e,i){return e-i},"date-desc":function(e,i){return i-e},"numeric-pre":function(e){return"-"==e||""===e?0:1*e},"numeric-asc":function(e,i){return e-i},"numeric-desc":function(e,i){return i-e}});i.extend(j.ext.aTypes,[function(e){if("number"===typeof e)return"numeric";if("string"!==typeof e)return null;var i,j=!1;i=e.charAt(0);if(-1=="0123456789-".indexOf(i))return null;for(var k=1;k<e.length;k++){i=e.charAt(k);if(-1=="0123456789.".indexOf(i))return null;
 if("."==i){if(j)return null;j=!0}}return"numeric"},function(e){var i=Date.parse(e);return null!==i&&!isNaN(i)||"string"===typeof e&&0===e.length?"date":null},function(e){return"string"===typeof e&&-1!=e.indexOf("<")&&-1!=e.indexOf(">")?"html":null}]);i.fn.DataTable=j;i.fn.dataTable=j;i.fn.dataTableSettings=j.settings;i.fn.dataTableExt=j.ext})(jQuery,window,document,void 0);
-
-	//]]>
+ //]]>
 </script>
 <script type="text/javascript" src="app.js"> </script>
-
-
-<style>
-	/*1140.css */
-	/* CSS Resets */
-
+<style type="text/css">
+ /*1140.css */
+ /* CSS Resets */
 html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,address,cite,code,del,dfn,em,img,ins,q,small,strong,sub,sup,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{border:0;margin:0;padding:0}article,aside,figure,figure img,figcaption,hgroup,footer,header,nav,section,video,object{display:block}a img{border:0}figure{position:relative}figure img{width:100%}
-
-
 /* ==================================================================================================================== */
-/* ! The 1140px Grid V2 by Andy Taylor \ http://cssgrid.net \ http://www.twitter.com/andytlr \ http://www.andytlr.com   */
+/* ! The 1140px Grid V2 by Andy Taylor \ http://cssgrid.net \ http://www.twitter.com/andytlr \ http://www.andytlr.com */
 /* ==================================================================================================================== */
-
 .container {
 padding-left: 20px;
 padding-right: 20px;
 }
-
 .row {
 width: 100%;
 max-width: 1140px;
@@ -983,1431 +970,1118 @@ min-width: 755px;
 margin: 0 auto;
 overflow: hidden;
 }
-
 .onecol, .twocol, .threecol, .fourcol, .fivecol, .sixcol, .sevencol, .eightcol, .ninecol, .tencol, .elevencol {
 margin-right: 3.8%;
 float: left;
 min-height: 1px;
 }
-
 .row .onecol {
 width: 4.85%;
 }
-
 .row .twocol {
 width: 13.45%;
 }
-
 .row .threecol {
 width: 22.05%;
 }
-
 .row .fourcol {
 width: 30.75%;
 }
-
 .row .fivecol {
 width: 39.45%;
 }
-
 .row .sixcol {
 width: 48%;
 }
-
 .row .sevencol {
 width: 56.75%;
 }
-
 .row .eightcol {
 width: 65.4%;
 }
-
 .row .ninecol {
 width: 74.05%;
 }
-
 .row .tencol {
 width: 82.7%;
 }
-
 .row .elevencol {
 width: 91.35%;
 }
-
 .row .twelvecol {
 width: 100%;
 float: left;
 }
-
 .last {
 margin-right: 0px;
 }
-
 img, object, embed {
 max-width: 100%;
 }
-
 img {
-	height: auto;
+ height: auto;
 }
-
-
 /* Smaller screens */
-
 @media only screen and (max-width: 1023px) {
-
-	body {
-	font-size: 0.8em;
-	line-height: 1.5em;
-	}
-	
-	}
-
-
+ body {
+ font-size: 0.8em;
+ line-height: 1.5em;
+ }
+ }
 /* Mobile */
-
 @media handheld, only screen and (max-width: 767px) {
-
-	body {
-	font-size: 16px;
-	-webkit-text-size-adjust: none;
-	}
-	
-	.row, body, .container {
-	width: 100%;
-	min-width: 0;
-	margin-left: 0px;
-	margin-right: 0px;
-	padding-left: 0px;
-	padding-right: 0px;
-	}
-	
-	.row .onecol, .row .twocol, .row .threecol, .row .fourcol, .row .fivecol, .row .sixcol, .row .sevencol, .row .eightcol, .row .ninecol, .row .tencol, .row .elevencol, .row .twelvecol {
-	width: auto;
-	float: none;
-	margin-left: 0px;
-	margin-right: 0px;
-	padding-left: 20px;
-	padding-right: 20px;
-	}
-
+ body {
+ font-size: 16px;
+ -webkit-text-size-adjust: none;
+ }
+ .row, body, .container {
+ width: 100%;
+ min-width: 0;
+ margin-left: 0px;
+ margin-right: 0px;
+ padding-left: 0px;
+ padding-right: 0px;
+ }
+ .row .onecol, .row .twocol, .row .threecol, .row .fourcol, .row .fivecol, .row .sixcol, .row .sevencol, .row .eightcol, .row .ninecol, .row .tencol, .row .elevencol, .row .twelvecol {
+ width: auto;
+ float: none;
+ margin-left: 0px;
+ margin-right: 0px;
+ padding-left: 20px;
+ padding-right: 20px;
+ }
 }
-
-	/*ie.css */
-	.onecol {
+ /*ie.css */
+ .onecol {
 width: 4.7%;
 }
-
 .twocol {
 width: 13.2%;
 }
-
 .threecol {
 width: 22.05%;
 }
-
 .fourcol {
 width: 30.6%;
 }
-
 .fivecol {
 width: 39%;
 }
-
 .sixcol {
 width: 48%;
 }
-
 .sevencol {
 width: 56.75%;
 }
-
 .eightcol {
 width: 61.6%;
 }
-
 .ninecol {
 width: 74.05%;
 }
-
 .tencol {
 width: 82%;
 }
-
 .elevencol {
 width: 91.35%;
 }
-
-	/*_main.css */
-	.SecurityDisabled{
-  display:none !important;
+ /*_main.css */
+ .SecurityDisabled{
+ display:none !important;
 }
-
 .LogicDisabled{
 display:none !important;
-
 }
 .error{
-  color: red !important;
+ color: red !important;
 }
-  .ValidationMsg{
-    color:red !important;
-    font-size: .75em;
-  }
-
-
-	
-
-
-
-
-
+ .ValidationMsg{
+ color:red !important;
+ font-size: .75em;
+ }
 .MainContentPaneStyle{
-  width:100%;
-  height:100%;
-  display:none;
-  overflow:auto;
-  padding: .4em ;
+ width:100%;
+ height:100%;
+ display:none;
+ overflow:auto;
+ padding: .4em ;
 }
 .MainLayout{
-  background: #FFF url(./images/gradientbg.jpg) repeat-x;
-  display:none;/*Initially Hidden*/
+ background: #FFF url(./images/gradientbg.jpg) repeat-x;
+ display:none;/*Initially Hidden*/
 }
-
 body{
-  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
-  font-size:1.1em;
-	background-color:white;
-
+ font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+ font-size:1.1em;
+ background-color:white;
 }
 h1{
-	color: #246B24
+ color: #246B24
 }
 .small{
-  color:#666666;
-  display:block;
-  font-size:.8em;
-  font-weight:normal;
-  text-align:left;
-  margin-top:0;
-  margin-bottom:0;
-  padding-top: 0;
-  padding-bottom: 0;
+ color:#666666;
+ display:block;
+ font-size:.8em;
+ font-weight:normal;
+ text-align:left;
+ margin-top:0;
+ margin-bottom:0;
+ padding-top: 0;
+ padding-bottom: 0;
 }
-
 .largeIconSpan{
-  display:inline-block; 
-  border-style:none;
-  text-align:center;
-  padding:15px;
-  margin:15px;
+ display:inline-block;
+ border-style:none;
+ text-align:center;
+ padding:15px;
+ margin:15px;
 }
-
 .sprite64Icon{
-  display:inline-block;
-  height:64px;
-  width:64px;
-  background:url(images/consolidatedIcons.png) no-repeat;
-  padding: 0 0 0 0;
+ display:inline-block;
+ height:64px;
+ width:64px;
+ background:url(images/consolidatedIcons.png) no-repeat;
+ padding: 0 0 0 0;
 }
-
 .sprite32Icon{
-  display:inline-block;
-  height:32px;
-  width:32px;
-  background:url(images/consolidatedIcons.png) no-repeat;
-  padding: 0 0 0 0;
+ display:inline-block;
+ height:32px;
+ width:32px;
+ background:url(images/consolidatedIcons.png) no-repeat;
+ padding: 0 0 0 0;
 }
 .sprite16Icon{
-  display:inline-block;
-  height:16px;
-  width:16px;
-  background:url(images/consolidatedIcons.png) no-repeat;
-  padding: 0 0 0 0;
+ display:inline-block;
+ height:16px;
+ width:16px;
+ background:url(images/consolidatedIcons.png) no-repeat;
+ padding: 0 0 0 0;
 }
-
-
-
 .kolfIcon{
-  background-position:0 0 ;
+ background-position:0 0 ;
 }
 .peopleIcon{
-  background-position:0px -100px;
+ background-position:0px -100px;
 }
 .learnMoreIcon{
-  background-position:0px -200px;
+ background-position:0px -200px;
 }
 .helpIcon{
-  background-position:0px -300px;
+ background-position:0px -300px;
 }
 .keyIcon{
-  background-position:0px -400px;
+ background-position:0px -400px;
 }
 .keyManIcon{
-  background-position:0px -500px;
+ background-position:0px -500px;
 }
 .plusIcon{
-  background-position:0px -268px;
-
+ background-position:0px -268px;
 }
 .cancelIcon{
-  background-position:-32px -268px;
-
+ background-position:-32px -268px;
 }
 .logIcon{
-  background-position:0px -575px;
+ background-position:0px -575px;
 }
 .lightningFolderIcon{
-  background-position:0px -650px;
+ background-position:0px -650px;
 }
 .lockIcon{
-  background-position:0px -725px;
+ background-position:0px -725px;
 }
 .askForHelpIcon{
 background-position:0px -800px;
-
 }
-
 .remoteIcon{
 background-position:0px -875px;
-
 }
-
 .smallPlusIcon{
 background-position:0px -180px;
-
 }
 .smallCancelIcon{
 background-position:-20px -180px;
-
 }
-
 /*
 Form Layout styles
  */
-  .formLayout_Standard label{
-    font-weight:bold;
-    display:block;
-    margin-bottom: -0.5em;
-
-  }
-  .formLayout_Standard select, input{
-    display:inline-block;
-    border: 1px solid #BFBFBF;
-    width: 30em;
-    -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-  }
-
-  input{
-    border:solid 1px ;
-    width:200px;
+ .formLayout_Standard label{
+ font-weight:bold;
+ display:block;
+ margin-bottom: -0.5em;
+ }
+ .formLayout_Standard select, input{
+ display:inline-block;
+ border: 1px solid #BFBFBF;
+ width: 30em;
+ -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+ -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+ box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+ }
+ input{
+ border:solid 1px ;
+ width:200px;
 }
-
 .formLayout_Standard hr{
-  margin:0;
+ margin:0;
 }
 .formLayout_Standard .small{
-  margin-top: -.35em;
-  margin-bottom: -.35em;
+ margin-top: -.35em;
+ margin-bottom: -.35em;
 }
-.formLayout_Standard    {
-   margin:auto;
-  position:relative;
-  /*font-family: Tahoma, Geneva, sans-serif;*/
-  font-size: 1em;
-  font-style: italic;
-  line-height: 2em;
-  font-weight: bold;
-  color: #246B24;
-  text-decoration: none;
-  padding:1em;
+.formLayout_Standard {
+ margin:auto;
+ position:relative;
+ /*font-family: Tahoma, Geneva, sans-serif;*/
+ font-size: 1em;
+ font-style: italic;
+ line-height: 2em;
+ font-weight: bold;
+ color: #246B24;
+ text-decoration: none;
+ padding:1em;
  }
-
 .prettyWrapper{
-	margin:auto;
-	 background: -webkit-gradient(linear, bottom, left 175px, from(#CCCCCC), to(#EEEEEE));
-  background: -moz-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+ margin:auto;
+ background: -webkit-gradient(linear, bottom, left 175px, from(#CCCCCC), to(#EEEEEE));
+ background: -moz-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-  border: 1px solid #BFBFBF;
-  border: inset 1px solid #333;
-  -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-	margin:3px;
-
+ -moz-border-radius: 10px;
+ border-radius: 10px;
+ border: 1px solid #BFBFBF;
+ border: inset 1px solid #333;
+ -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+ -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+ box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+ margin:3px;
 }
-
-
 .formButtons{
-  display:block;
+ display:block;
 }
-  .formLayout_Standard h1{
-    font-weight: bold;
-    font-size: 1.5em;
-  }
-  
-   
-  .vcenter {
-    position:absolute; 
-    top:0; bottom:0; left:0; right:0;
-    margin:auto; 
-    height:240px; width:70%;
-  }
-  #statusMsg{
-    border-width: 3px;
-    border-style: ridge;
-		padding: .2em;
-    font-size: .75em;
-  }
-	#outstandingServerCalls{
-		
-		border-width: 3px;
-    border-style:ridge; 
-		padding: .2em;
-    font-size: .75em;
-
-	}
+ .formLayout_Standard h1{
+ font-weight: bold;
+ font-size: 1.5em;
+ }
+ .vcenter {
+ position:absolute;
+ top:0; bottom:0; left:0; right:0;
+ margin:auto;
+ height:240px; width:70%;
+ }
+ #statusMsg{
+ border-width: 3px;
+ border-style: ridge;
+ padding: .2em;
+ font-size: .75em;
+ }
+ #outstandingServerCalls{
+ border-width: 3px;
+ border-style:ridge;
+ padding: .2em;
+ font-size: .75em;
+ }
 #footer{
-	  position:fixed; 
-	  bottom: 0; 
-	  left:0; 
-	  width:100%; 
-	  background-color:#BFBFBF;
-		padding:3px;
-	}
-
-
-
-  input.invalid { 
-    border: solid 1px red; 
-  }
-
-  .formLayout_Standard .ValidationMsg{
-    display:inline-block;
-    
-    padding:0;
-    margin:0;
-    color:red;
-  }
-
-
-
-
-  #briefNotice {
-    position:absolute;
-    bottom:0;
-    width:100%;
-    height:75px; 
-    padding-bottom:15px;  
-		z-index:1000;
-  }
-  #briefNoticeMsg{
-    display:inline-block;
-    padding:15px;
-    width:200px;
-    background: #FFF url(./images/gradientbg.jpg) repeat-x;
-    color:#246B24;
-    border-width:1px;
-    border-style:solid;
-    border-radius:15px;
-		z-index:1000;
-  }
-  .centerblock{
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-	ul.pagination{
-
-	}
-	ul.pagination li{
-		display: inline-block;
-		padding: .2em;
-	}
-
-	  /*PixelGreen Extract*/
-  /* ----------------------------------------------------
-
-  AUTHOR           :  	Erwin Aligam
-  WEBSITE          :   http://www.styleshout.com/
-  TEMPLATE NAME    : 	PixelGreen
-  TEMPLATE CODE    : 	S-0010
-  VERSION          :   1.3
-  LAST MODIFIED    :   January 19, 2010
-
-  ------------------------------------------------------- */
-
-  #header{
-    background: #000;
-    border-bottom-style: solid;
-    border-width:medium;
-    border-color:#246B24
-  }
-  #header .primary{
-    color: #246B24;
-  }
-  #header .secondary{
-    color:#EFEFEF;
-  }
-  #header a{
-    text-decoration:none;
-  }
-
-  ul.buttonbar{
-    display:inline;
-    font: bolder 1.1em 'Trebuchet MS', sans-serif;
-    list-style: none;
-    margin: 0; padding: 0;
-    color:white;	
-  }
-  ul.buttonbar li{
-    display: inline;
-    background: #1C1C1C;
-    padding: .2em;
-    font: 0.7em;
-  }
-  ul.buttonbar li:hover{
-    background: #246B24;
-  }
-  #topMenuBar{
-    margin-top: 2em;
-    display:none; /*Initially hidden*/
-  }
-
-
-  .logoBlock{
-    margin-top:.5em;
-  }
-  .logoBlock h1 {
-    display:inline-block;
-    font-size: 3.5em;
-  }
-  .logoBlock h2 {
-    font-size: .75em;
-    margin-left: 2.5em;
-    color: #EFEFEF;
-    margin-top: -.5em
-
-  }
-  .center {
-    margin-left:auto;
-    margin-right:auto;
-  }
-
-  #LoginPortal{
-    background: #FFF url(./images/gradientbg.jpg) repeat-x;
-  }
-  #LoginPortal img{
-    display:block;
-    margin-top:2em;
-  }
-
-  .contentPane{
-    padding-top:2em;
-    padding-bottom:2em;
-
-  }
-
-  #loginFormRow{
-    margin-top: 2em;
-  }
-
-  table.dataTable{
-    border-style:none;
-    border-spacing:0;
-		width: 100%;
-  }
-  .dataTable th{
-    border-top-style:double;
-    border-bottom-style:double;
-    border-width: 3px;
-    padding-left: 1.1em;
-    padding-right: 1.1em;
-    border-color: #BFBFBF;
-    color: #BFBFBF;
-    font-weight:bold;
-  }
-  .dataTable td{
-    padding-left: 1.1em;
-    padding-right: 1.1em;
-    border-color: #BFBFBF;
-    border-width: 1px;
-    border-bottom-style:solid;
-    color:#246B24;
-
-  }
-  .dataTable a {
-    text-decoration: none;
-    color:#246B24;
-  }
-  .dataTable a:visited{
-    color:#246B24;
-  }
-	
-  .dataTable .accentColumn{
-    background:#F5F5F5;
-  }
-
-
-
+ position:fixed;
+ bottom: 0;
+ left:0;
+ width:100%;
+ background-color:#BFBFBF;
+ padding:3px;
+ }
+ input.invalid {
+ border: solid 1px red;
+ }
+ .formLayout_Standard .ValidationMsg{
+ display:inline-block;
+ padding:0;
+ margin:0;
+ color:red;
+ }
+ #briefNotice {
+ position:absolute;
+ bottom:0;
+ width:100%;
+ height:75px;
+ padding-bottom:15px;
+ z-index:1000;
+ }
+ #briefNoticeMsg{
+ display:inline-block;
+ padding:15px;
+ width:200px;
+ background: #FFF url(./images/gradientbg.jpg) repeat-x;
+ color:#246B24;
+ border-width:1px;
+ border-style:solid;
+ border-radius:15px;
+ z-index:1000;
+ }
+ .centerblock{
+ display: block;
+ margin-left: auto;
+ margin-right: auto;
+ }
+ ul.pagination{
+ }
+ ul.pagination li{
+ display: inline-block;
+ padding: .2em;
+ }
+ /*PixelGreen Extract*/
+ /* ----------------------------------------------------
+ AUTHOR : Erwin Aligam
+ WEBSITE : http://www.styleshout.com/
+ TEMPLATE NAME : PixelGreen
+ TEMPLATE CODE : S-0010
+ VERSION : 1.3
+ LAST MODIFIED : January 19, 2010
+ ------------------------------------------------------- */
+ #header{
+ background: #000;
+ border-bottom-style: solid;
+ border-width:medium;
+ border-color:#246B24
+ }
+ #header .primary{
+ color: #246B24;
+ }
+ #header .secondary{
+ color:#EFEFEF;
+ }
+ #header a{
+ text-decoration:none;
+ }
+ ul.buttonbar{
+ display:inline;
+ font: bolder 1.1em 'Trebuchet MS', sans-serif;
+ list-style: none;
+ margin: 0; padding: 0;
+ color:white;
+ }
+ ul.buttonbar li{
+ display: inline;
+ background: #1C1C1C;
+ padding: .2em;
+ font: 0.7em;
+ }
+ ul.buttonbar li:hover{
+ background: #246B24;
+ }
+ #topMenuBar{
+ margin-top: 2em;
+ display:none; /*Initially hidden*/
+ }
+ .logoBlock{
+ margin-top:.5em;
+ }
+ .logoBlock h1 {
+ display:inline-block;
+ font-size: 3.5em;
+ }
+ .logoBlock h2 {
+ font-size: .75em;
+ margin-left: 2.5em;
+ color: #EFEFEF;
+ margin-top: -.5em
+ }
+ .center {
+ margin-left:auto;
+ margin-right:auto;
+ }
+ #LoginPortal{
+ background: #FFF url(./images/gradientbg.jpg) repeat-x;
+ }
+ #LoginPortal img{
+ display:block;
+ margin-top:2em;
+ }
+ .contentPane{
+ padding-top:2em;
+ padding-bottom:2em;
+ }
+ #loginFormRow{
+ margin-top: 2em;
+ }
+ table.dataTable{
+ border-style:none;
+ border-spacing:0;
+ width: 100%;
+ }
+ .dataTable th{
+ border-top-style:double;
+ border-bottom-style:double;
+ border-width: 3px;
+ padding-left: 1.1em;
+ padding-right: 1.1em;
+ border-color: #BFBFBF;
+ color: #BFBFBF;
+ font-weight:bold;
+ }
+ .dataTable td{
+ padding-left: 1.1em;
+ padding-right: 1.1em;
+ border-color: #BFBFBF;
+ border-width: 1px;
+ border-bottom-style:solid;
+ color:#246B24;
+ }
+ .dataTable a {
+ text-decoration: none;
+ color:#246B24;
+ }
+ .dataTable a:visited{
+ color:#246B24;
+ }
+ .dataTable .accentColumn{
+ background:#F5F5F5;
+ }
 div.dataTables_length {
-    float: left;
-		font-size: 0.6em;
+ float: left;
+ font-size: 0.6em;
 }
- 
 div.dataTables_filter {
-    float: right;
-		font-size: 0.6em;
-		margin-right: 8px;
+ float: right;
+ font-size: 0.6em;
+ margin-right: 8px;
 }
-div.dataTables_filter  input{
-	  width:10em;
+div.dataTables_filter input{
+ width:10em;
 }
- 
 div.dataTables_info {
-    float: left;
-		font-size: 0.6em;
-		padding: 9px 6px 6px 2px;
-
+ float: left;
+ font-size: 0.6em;
+ padding: 9px 6px 6px 2px;
 }
- 
 div.dataTables_paginate {
-    float: right;
-    background-color:#FFF ;
-		font-size: 0.6em;
-		margin-right: 8px;
+ float: right;
+ background-color:#FFF ;
+ font-size: 0.6em;
+ margin-right: 8px;
 }
- 
 div.dataTables_length,
 div.dataTables_filter,
 div.dataTables_paginate,
 div.dataTables_info {
-    /*padding: .03em;*/
+ /*padding: .03em;*/
 }
 div.dataTables_filter{
-    padding-top: 3px;
+ padding-top: 3px;
 }
-
-
 table.pretty {
-    clear: both;
-		min-width:350px;
+ clear: both;
+ min-width:350px;
 }
- 
 /* Self clearing - */
 div.dataTables_wrapper:after {
-    content: ".";
-    display: block;
-    clear: both;
-    visibility: hidden;
-    line-height: 0;
-    height: 0;
-		
+ content: ".";
+ display: block;
+ clear: both;
+ visibility: hidden;
+ line-height: 0;
+ height: 0;
 }
 html[xmlns] .dataTables_wrapper { display: block; }
 * html .dataTables_wrapper { height: 1%; }
 /* Body cells */
 table.pretty tbody th {
-    text-align: left;
-    background: #FFF;
+ text-align: left;
+ background: #FFF;
 }
-     
 table.pretty tbody td {
-    text-align: center;
-    background: #FFF;
+ text-align: center;
+ background: #FFF;
 }
-         
 table.pretty tbody tr.odd td {
-    background: #FFF;
+ background: #FFF;
 }
-
-/* Footer cells */ 
+/* Footer cells */
 table.pretty tfoot th {
-    background: #FFF;
-    text-align: left;
+ background: #FFF;
+ text-align: left;
 }
-     
 table.pretty tfoot td {
-    background: #FFF;
-    text-align: center;
-    font-weight: bold;
+ background: #FFF;
+ text-align: center;
+ font-weight: bold;
 }
-
 div.dataTables_wrapper {
-		min-width:360px;
-		padding: .5em;
+ min-width:360px;
+ padding: .5em;
 }
-
 table.pretty thead th.sorting_asc {
-    background: #FFF url('images/sort_asc.png') no-repeat right center;
+ background: #FFF url('images/sort_asc.png') no-repeat right center;
 }
- 
 table.pretty thead th.sorting_desc {
-    background: #FFF url('images/sort_desc.png') no-repeat right center;
+ background: #FFF url('images/sort_desc.png') no-repeat right center;
 }
- 
 table.pretty thead th.sorting {
-    background: #FFF url('images/sort_both.png') no-repeat right center;
+ background: #FFF url('images/sort_both.png') no-repeat right center;
 }
 a.paginate_button,
 a.paginate_active {
-    display: inline-block;
-    background-color: #EFEFEF;
-    padding: 2px 6px;
-    margin-left: 2px;
-    cursor: pointer;
-    *cursor: hand;
+ display: inline-block;
+ background-color: #EFEFEF;
+ padding: 2px 6px;
+ margin-left: 2px;
+ cursor: pointer;
+ *cursor: hand;
 }
-
- 
 a.paginate_active {
-    background-color: transparent;
-    border: 1px solid black;
+ background-color: transparent;
+ border: 1px solid black;
 }
- 
 a.paginate_button_disabled {
-    color: #3d6672;
+ color: #3d6672;
 }
 .paging_full_numbers a:active {
-    outline: none
+ outline: none
 }
 .paging_full_numbers a:hover {
-    text-decoration: none;
+ text-decoration: none;
 }
- 
 div.dataTables_paginate span>a {
-    width: 15px;
-    text-align: center;
+ width: 15px;
+ text-align: center;
 }
 div.paging_two_button {
-    padding: 9px 2px 6px 6px;
+ padding: 9px 2px 6px 6px;
 }
-
 .smallButton{
 color: #246B24;
 padding: 2px;
 }
-
 div.paging_two_button a {
 }
-
-
-
- 
-
  .securityGrant{
-    border-style: solid;
-    border-width: 1px;
-    border-radius:10px;
-    width: 21em;
-    font-size: .7em;
-    padding: .3em;
+ border-style: solid;
+ border-width: 1px;
+ border-radius:10px;
+ width: 21em;
+ font-size: .7em;
+ padding: .3em;
 }
 .securityGrantReceiver{
-    display:inline-block;
-    vertical-align: top;
-    border-style:solid;
-    border-radius:10px;
-    border-width:1px;
-    padding: .1em;
-    width:17em;
-    height:20em;
-    overflow:auto;
-		margin: 15px;
-
+ display:inline-block;
+ vertical-align: top;
+ border-style:solid;
+ border-radius:10px;
+ border-width:1px;
+ padding: .1em;
+ width:17em;
+ height:20em;
+ overflow:auto;
+ margin: 15px;
 }
-
 #grantedPrivilegesId{
-    border-style:solid;
-    border-width:1px;
+ border-style:solid;
+ border-width:1px;
 }
 div.ui-draggable-dragging {
-    -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
-    -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
-    box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+ -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+ -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+ box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
 }
 #grantAssignDiv{
-    vertical-align:top;
+ vertical-align:top;
 }
 h1.pageTitle{
-    font-size: 1.5em;
+ font-size: 1.5em;
 }
 #creditsULId{
-
-	width:40em;
-	padding: 10px 0px 10px 100px;
+ width:40em;
+ padding: 10px 0px 10px 100px;
 }
 ul#creditsULId li {
-	list-style-type: square;
+ list-style-type: square;
 }
-
 .ui-button-text{
-  color:#246B24;
+ color:#246B24;
 }
 .ui-button{
 }
 .ui-button-text-only .ui-button-text{
-	padding-bottom: .35em; 
+ padding-bottom: .35em;
 }
 a.alink:visited {
-		color:#246B24;
+ color:#246B24;
 }
-
 #clientLogViewer{
 padding: 5px;
 }
 td.textAlignLeft{
 text-align: left !important;
 }
-
 .supportRequestAdditionalInfo{
 align:left;
 text-align:left;
 }
 .supportRequestAdditionalInfoTitle{
-	font-weight:bold;
-
+ font-weight:bold;
 }
-
 </style>
-	<link rel="icon" type="image/png" href="../favicon.png">
+ <link rel="icon" type="image/png" href="../favicon.png"/>
 </head>
-
-<body  onload='bodyOnLoad();' onresize="bodyOnResize();" > 
+<body onload='bodyOnLoad();' onresize="bodyOnResize();" >
 <div id="header" class="container">
-	<div class="row">
-		<div class="sixcol ">
-			<div class="logoBlock center" style="width:17em">
-				<h1 id="logo"><a href="index.html" title=""><span class="primary">golf</span><span class="secondary">score</span></a></h1>
-				<h2 id="slogan">keepin' it honest...</h2>
-			</div>
-		</div>
-		<div class="sixcol last" id= "topMenuBar" > 
-			<div class="center" style="width:25em;"> 
-				<ul class="buttonbar" style = "">
-					<li><a id="launcherHome" onclick="changePage(function(){showLaunchPane()});">Home</a></li>
-					<li><a id="aboutGolfScore" onclick="changePage(function(){showHelpPane()});">Help</a></li>
-					<li><a id="logoutButtonId" onclick="changePage(function(){logOutUser()});">Logout</a></li>			
-				</ul>
-			</div>	
-		</div>
-	</div>
+ <div class="row">
+ <div class="sixcol ">
+ <div class="logoBlock center" style="width:17em">
+ <h1 id="logo"><a href="index.html" title=""><span class="primary">golf</span><span class="secondary">score</span></a></h1>
+ <h2 id="slogan">keepin' it honest...</h2>
+ </div>
+ </div>
+ <div class="sixcol last" id= "topMenuBar" >
+ <div class="center" style="width:25em;">
+ <ul class="buttonbar" style = "">
+ <li><a id="launcherHome" onclick="changePage(function(){showLaunchPane()});">Home</a></li>
+ <li><a id="aboutGolfScore" onclick="changePage(function(){showHelpPane()});">Help</a></li>
+ <li><a id="logoutButtonId" onclick="changePage(function(){logOutUser()});">Logout</a></li>
+ </ul>
+ </div>
+ </div>
+ </div>
 </div>
-
 <div id="footer" class="MainLayout container" style="">
-	<span id="statusMsg" ></span>
-	<span id="outstandingServerCalls" ></span>
+ <span id="statusMsg" ></span>
+ <span id="outstandingServerCalls" ></span>
 </div>
 <div id="briefNotice" style="display:none;">
-	<table style="width:100%">
-		<tr>  <td style="width:33%" >&nbsp;</td>
-			<td style="width:33%" ><div id="briefNoticeMsg"></div></td>
-			<td style="width:33%" >&nbsp;</td>
-		</tr>
-	</table>
+ <table style="width:100%" summary="">
+ <tr> <td style="width:33%" >&nbsp;</td>
+ <td style="width:33%" ><div id="briefNoticeMsg"></div></td>
+ <td style="width:33%" >&nbsp;</td>
+ </tr>
+ </table>
 </div>
-
 <div id="genericDialogDivId">
-	<span id="dialogMsgSpanId"></span>
+ <span id="dialogMsgSpanId"></span>
 </div>
-
-
-
-<div id="mainContent" class="container MainLayout"  >
-
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityUser/_securityUserWeb.html -->
-		
-
-
-
-
-
-
-
-
-
-
-<div id="securityUser" class="contentPane MainLayout"  >
-	<h1 id="securityUserHeaderId" class="pageTitle">Users</h1>
-	<div class="row">
-		<span class="fourcol">
-			<table id="securityUserListTable"  class='dataTable pretty' >
-				<thead><tr><th>User Id</th> <th >I want to&hellip;</th></tr></thead>
-				<tbody></tbody>
-			</table>
-		</span>
-		<span class = "eightcol last">
-
-			<form id="securityUserForm" >
-				<div class="formLayout_Standard prettyWrapper">
-					
-					<div class="formFieldGroup ">
-						<label>  User Id </label>
-						<input  type="text" name="editUserId" id="securityUserForm-edit_user_id"/>
-						<span class="ValidationMsg" id="securityUserFormLabel-editUserIdError"></span>
-					</div>
-					
-					<div class="formFieldGroup"id="securityUserForm-email_addrDivId">
-						<label>  E-mail </label>
-						<input  type="text" name="emailAddr" id="securityUserForm-email_addr"/>
-						<span class="ValidationMsg" id="securityUserFormLabel-emailAddrError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="securityUserForm-password_encDivId">
-						<label  for ="securityUserForm-password_enc">  Password </label>
-						<input type="password" name="passwordEnc" id="securityUserForm-password_enc"></input>
-						<span class="ValidationMsg" id="securityUserFormLabel-passwordEncError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="securityUserForm-password_validateDivId">
-						<label for ="securityUserForm-password_validate">  Confirm Password </label>
-						<input  type="password" name="passwordValidate" id="securityUserForm-password_validate"></input>
-						<span class="ValidationMsg" id="securityUserFormLabel-passwordValidateError"></span>
-					</div>
-
-
-					
-					<div class="formFieldGroup" id="securityUserForm-security_profile_idDivId">
-						<label>  Security Profile </label>
-						<select name="securityProfileId" id="securityUserForm-security_profile_id"></select>
-						<span class="ValidationMsg" id="securityUserFormLabel-securityProfileIdError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="securityUserForm-active_ynDivId">
-						<label style="display:inline-block" for ="securityUserForm-active_yn">  Active </label>
-						<input style="width:25px;" type="checkbox" name="activeYn" id="securityUserForm-active_yn"></input>
-						<span class="ValidationMsg" id="securityUserFormLabel-activeYnError"></span>
-					</div>
-
-
-
-
-
-					<div class="formButtons">
-						<button type="button" id="securityUserFormSave" value="Save" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="saveSecurityUserForm();" >
-							<span class="ui-button-text">Save</span>
-						</button>
-						<button type="button" id="securityUserFormAdd" value="Add" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="saveSecurityUserForm();" >
-							<span class="ui-button-text">Add</span>
-						</button>
-						<button type="button" id="securityUserFormClear" value="Clear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="clearSecurityUserForm();" >
-							<span class="ui-button-text">Clear</span>
-						</button>
-						<button  style="" type="button" id="securityUserChangeOthersPassword" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Change Password" onclick="initiateChangePassword();" >
-							<span class="ui-button-text">Change Password</span>
-						</button>
-					</div>
-					<input type="hidden" name="last_update" id="securityUserForm-last_update">
-					<input type="hidden" name="security_user_id" id="securityUserForm-security_user_id">
-
-				</div>
-			</form>
-		</span>
-		<br/>
-	</div>
+<div id="mainContent" class="container MainLayout" >
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityUser/_securityUserWeb.html -->
+<div id="securityUser" class="contentPane MainLayout" >
+ <h1 id="securityUserHeaderId" class="pageTitle">Users</h1>
+ <div class="row">
+ <div class="fourcol">
+ <table id="securityUserListTable" class='dataTable pretty' summary="">
+ <thead><tr><th>User Id</th> <th >I want to&hellip;</th></tr></thead>
+ </table>
+ </div>
+ <div class = "eightcol last">
+ <form id="securityUserForm" action="">
+ <div class="formLayout_Standard prettyWrapper">
+ <div class="formFieldGroup">
+ <label> User Id </label>
+ <input type="text" name="editUserId" id="securityUserForm-edit_user_id"/>
+ <span class="ValidationMsg" id="securityUserFormLabel-editUserIdError"></span>
+ </div>
+ <div class="formFieldGroup" id="securityUserForm-email_addrDivId">
+ <label> E-mail </label>
+ <input type="text" name="emailAddr" id="securityUserForm-email_addr"/>
+ <span class="ValidationMsg" id="securityUserFormLabel-emailAddrError"></span>
+ </div>
+ <div class="formFieldGroup" id="securityUserForm-password_encDivId">
+ <label for ="securityUserForm-password_enc"> Password </label>
+ <input type="password" name="passwordEnc" id="securityUserForm-password_enc"/>
+ <span class="ValidationMsg" id="securityUserFormLabel-passwordEncError"></span>
+ </div>
+ <div class="formFieldGroup" id="securityUserForm-password_validateDivId">
+ <label for ="securityUserForm-password_validate"> Confirm Password </label>
+ <input type="password" name="passwordValidate" id="securityUserForm-password_validate"/>
+ <span class="ValidationMsg" id="securityUserFormLabel-passwordValidateError"></span>
+ </div>
+ <div class="formFieldGroup" id="securityUserForm-security_profile_idDivId">
+ <label> Security Profile </label>
+ <select name="securityProfileId" id="securityUserForm-security_profile_id"></select>
+ <span class="ValidationMsg" id="securityUserFormLabel-securityProfileIdError"></span>
+ </div>
+ <div class="formFieldGroup" id="securityUserForm-active_ynDivId">
+ <label style="display:inline-block" for ="securityUserForm-active_yn"> Active </label>
+ <input style="width:25px;" type="checkbox" name="activeYn" id="securityUserForm-active_yn"/>
+ <span class="ValidationMsg" id="securityUserFormLabel-activeYnError"></span>
+ </div>
+ <div class="formButtons">
+ <button type="button" id="securityUserFormSave" value="Save" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="saveSecurityUserForm();" >
+ <span class="ui-button-text">Save</span>
+ </button>
+ <button type="button" id="securityUserFormAdd" value="Add" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="saveSecurityUserForm();" >
+ <span class="ui-button-text">Add</span>
+ </button>
+ <button type="button" id="securityUserFormClear" value="Clear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="clearSecurityUserForm();" >
+ <span class="ui-button-text">Clear</span>
+ </button>
+ <button style="" type="button" id="securityUserChangeOthersPassword" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Change Password" onclick="initiateChangePassword();" >
+ <span class="ui-button-text">Change Password</span>
+ </button>
+ </div>
+ <input type="hidden" name="last_update" id="securityUserForm-last_update"/>
+ <input type="hidden" name="security_user_id" id="securityUserForm-security_user_id"/>
+ </div>
+ </form>
+ </div>
+ <br/>
+ </div>
 </div> <!--end:SecurityUser-->
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/Help/_helpWeb.html -->
-		
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/Help/_helpWeb.html -->
 <div id="helpPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
-	<div id ="helpPaneCenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; background-color:white; max-width:300; ">
-		<h1 id="helpPaneTitle" class="pageTitle" >Help&hellip;</h1>
-
-		<div class="row">
-			<span class="twocol largeIconSpan"><a id="helpLauncherShowLog" onclick="changePage(function(){showClientLogViewer()});">
-					<span class="sprite64Icon logIcon"></span><br/>
-					View Log</a>
-			</span>
-			<span class="twocol largeIconSpan"><a id="launcherShowAbout" onclick="changePage(function(){showAboutPane()});">
-					<span class="sprite64Icon learnMoreIcon"></span><br/>
-					Learn More</a>
-			</span>
-			<span class="twocol largeIconSpan"><a id="launcherShowAbout" onclick="changePage(function(){showSupportRequest()});">
-					<span class="sprite64Icon askForHelpIcon"></span><br/>
-					Ask For Help</a>
-			</span>
-			<span class="twocol largeIconSpan"><a id="launcherRefreshCache" onclick="retrieveCache();">
-					<span class="sprite64Icon remoteIcon"></span><br/>
-					Refresh Cache</a>
-			</span>
-
-
-
-		</div>
-
-
-
-	</div>
+ <div id ="helpPaneCenterDiv" style="position:relative;width:300; height: 500; margin-left:auto; margin-right:auto; background-color:white; max-width:300; ">
+ <h1 id="helpPaneTitle" class="pageTitle" >Help&hellip;</h1>
+ <div class="row">
+ <div class="twocol largeIconSpan"><a id="helpLauncherShowLog" onclick="changePage(function(){showClientLogViewer()});">
+ <span class="sprite64Icon logIcon">&nbsp;</span><br/>
+ View Log</a>
+ </div>
+ <div class="twocol largeIconSpan"><a id="launcherShowAbout" onclick="changePage(function(){showAboutPane()});">
+ <span class="sprite64Icon learnMoreIcon">&nbsp;</span><br/>
+ Learn More</a>
+ </div>
+ <div class="twocol largeIconSpan"><a id="launcherShowSupportRequest" onclick="changePage(function(){showSupportRequest()});">
+ <span class="sprite64Icon askForHelpIcon">&nbsp;</span><br/>
+ Ask For Help</a>
+ </div>
+ <div class="twocol largeIconSpan"><a id="launcherRefreshCache" onclick="retrieveCache();">
+ <span class="sprite64Icon remoteIcon">&nbsp;</span><br/>
+ Refresh Cache</a>
+ </div>
+ </div>
+ </div>
 </div>
-
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/Launcher/_launchWeb.html -->
-		
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/Launcher/_launchWeb.html -->
 <!--MainLayout MainContentPaneStyle -->
 <div id="launchPane" class="contentPane" style="text-align:left; display:none; ">
-  <div id ="launchPaneCenterDiv" >
-    
-    <div class="row">
-      <h1 id="launchPaneTitle" class="pageTitle" >I want to&hellip;</h1>
-    </div>
-    <div class="row">
-			<span class="twocol largeIconSpan" id="launcherShowViewAveragesSpanId"><a id="launcherShowHandicaps" onclick="changePage(function(){showGolfScoreSummary()});">
-	  <span class="sprite64Icon kolfIcon"></span><br/>
-	  View Averages</a>
-      </span>
-			<span class="twocol largeIconSpan" id="launcherShowQuickEntrySpanId"><a id="launcherShowQuickGolfScore" onclick="changePage(function(){showQuickGolfScore()});">
-	  <span class="sprite64Icon lightningFolderIcon"></span><br/>
-	  Quick Entry</a>
-      </span>
-
-			<span class="twocol  largeIconSpan" id="launcherShowGolfersSpanId"><a id="launcherShowGolfer" onclick="changePage(function(){showGolfer()});">
-	  <span class="sprite64Icon peopleIcon"></span><br/>
-	  View Golfers</a>
-      </span>
-			<span class="twocol largeIconSpan" id="launcherShowGetHelpSpanId"><a id="launcherShowHelp" onclick="changePage(function(){showHelpPane()});">
-	  <span class="sprite64Icon helpIcon"></span><br/>
-	  Get Help</a>
-      </span>
-
-			<span class="twocol largeIconSpan" id="launcherShowGrantsSpanId"><a id="launcherShowSecuritygrants" onclick="changePage(function(){showSecurityGrants()});">
-	  <span class="sprite64Icon keyIcon"></span><br/>
-	  Access Groups</a>
-      </span>
-			<span class="twocol last largeIconSpan" id="launcherShowSecurityUserSpanId"><a id="launcherShowSecurityUserId" onclick="changePage(function(){showSecurityUser()});">
-	  <span class="sprite64Icon keyManIcon"></span><br/>
-	  Application Users</a>
-      </span>
-			<span class="twocol last largeIconSpan" id="launcherShowChangeOwnPasswordSpanId"><a id="launcherShowHelp" onclick="changePage(function(){showChangePasswordDialog()});">
-	  <span class="sprite64Icon lockIcon"></span><br/>
-	  Change My Password</a>
-      </span>
-    </div>
-  </div>
+ <div id ="launchPaneCenterDiv" >
+ <div class="row">
+ <h1 id="launchPaneTitle" class="pageTitle" >I want to&hellip;</h1>
+ </div>
+ <div class="row">
+ <div class="twocol largeIconSpan" id="launcherShowViewAveragesSpanId"><a id="launcherShowHandicaps" onclick="changePage(function(){showGolfScoreSummary()});">
+ <span class="sprite64Icon kolfIcon">&nbsp;</span><br/>
+ View Averages</a>
+ </div>
+ <div class="twocol largeIconSpan" id="launcherShowQuickEntrySpanId"><a id="launcherShowQuickGolfScore" onclick="changePage(function(){showQuickGolfScore()});">
+ <span class="sprite64Icon lightningFolderIcon">&nbsp;</span><br/>
+ Quick Entry</a>
+ </div>
+ <div class="twocol largeIconSpan" id="launcherShowGolfersSpanId"><a id="launcherShowGolfer" onclick="changePage(function(){showGolfer()});">
+ <span class="sprite64Icon peopleIcon">&nbsp;</span><br/>
+ View Golfers</a>
+ </div>
+ <div class="twocol largeIconSpan" id="launcherShowGetHelpSpanId"><a id="launcherShowHelp" onclick="changePage(function(){showHelpPane()});">
+ <span class="sprite64Icon helpIcon">&nbsp;</span><br/>
+ Get Help</a>
+ </div>
+ <div class="twocol largeIconSpan" id="launcherShowGrantsSpanId"><a id="launcherShowSecuritygrants" onclick="changePage(function(){showSecurityGrants()});">
+ <span class="sprite64Icon keyIcon">&nbsp;</span><br/>
+ Access Groups</a>
+ </div>
+ <div class="twocol last largeIconSpan" id="launcherShowSecurityUserSpanId"><a id="launcherShowSecurityUserId" onclick="changePage(function(){showSecurityUser()});">
+ <span class="sprite64Icon keyManIcon">&nbsp;</span><br/>
+ Application Users</a>
+ </div>
+ <div class="twocol last largeIconSpan" id="launcherShowChangeOwnPasswordSpanId"><a id="launcherShowChangePassword" onclick="changePage(function(){showChangePasswordDialog()});">
+ <span class="sprite64Icon lockIcon">&nbsp;</span><br/>
+ Change My Password</a>
+ </div>
+ </div>
+ </div>
 </div>
-
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/About/_aboutWeb.html -->
-		
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/About/_aboutWeb.html -->
 <div id="aboutPane" class="MainLayout MainContentPaneStyle" style="text-align:left; ">
 <div class="row">
-  <div class="threecol">&nbsp; </div>
-  <div class="sixcol">
-	<h1 style="width:100%; text-align:center;">About golfscore</h1>	<p >golfscore is an open source application developed by Martinanalytics.  Part of our open source model leverages software developed by other open source contributors that we recognize here:
+ <div class="threecol">&nbsp; </div>
+ <div class="sixcol">
+ <h1 style="width:100%; text-align:center;">About golfscore</h1> <p >golfscore is an open source application developed by Martinanalytics. Part of our open source model leverages software developed by other open source contributors that we recognize here:
 </p>
 </div>
-  <div class="threecol last">&nbsp; </div>
+ <div class="threecol last">&nbsp; </div>
 </div>
 <div class="row">
-  <div class="threecol">&nbsp; </div>
-   <div class="sixcol">
-    <ul  class="centerblock" id ="creditsULId" >
-	<li><a href="http://jquery.com/">jQuery</a> </li>
-	<li><a href="http://jqueryui.com/">jQuery UI Components</a> </li>
-	<li><a href="http://datatables.net">DataTables Jquery Plugin</a> </li>
-	<li><a href="http://www.styleshout.com/">StyleShout's PixelGreen web template</a> </li>
-	<li><a href="http://cssgrid.net/">the 1140 CSS Grid</a></li>
-	<li><a href="http://www.apache.org/">Apache Web Server</a> </li>
-	<li><a href="http://www.perl.org/">Perl</a> </li>
-	<li><a href="http://www.postgresql.org/">PostgreSQL</a> </li>
-	<li><a href="http://www.ubuntu.org/">Ubuntu</a></li>
-    </ul>
-   </div>
-  <div class="threecol last">&nbsp; </div>
+ <div class="threecol">&nbsp; </div>
+ <div class="sixcol">
+ <ul class="centerblock" id ="creditsULId" >
+ <li><a href="http://jquery.com/">jQuery</a> </li>
+ <li><a href="http://jqueryui.com/">jQuery UI Components</a> </li>
+ <li><a href="http://datatables.net">DataTables Jquery Plugin</a> </li>
+ <li><a href="http://www.styleshout.com/">StyleShout's PixelGreen web template</a> </li>
+ <li><a href="http://cssgrid.net/">the 1140 CSS Grid</a></li>
+ <li><a href="http://www.apache.org/">Apache Web Server</a> </li>
+ <li><a href="http://www.perl.org/">Perl</a> </li>
+ <li><a href="http://www.postgresql.org/">PostgreSQL</a> </li>
+ <li><a href="http://www.ubuntu.org/">Ubuntu</a></li>
+ </ul>
+ </div>
+ <div class="threecol last">&nbsp; </div>
 </div>
-
-
 </div>
-
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/QuickGolfScore/_quickGolfScoreWeb.html -->
-		
-
-
-
-
-
-
-
-
-
-<div id="quickGolfScore" class="contentPane MainLayout"  >
-	<h1 id="quickGolfScoreh1" class="pageTitle">Recent Golf Scores</h1>
-	<div class="row">
-		<span class="sixcol">
-			<table id="quickGolfScoreListTable"  class='dataTable pretty' >
-				<thead><tr><th>Golfer</th> <th >Score</th><th >Date</th> <th >I want to&hellip;</th></tr></thead>
-				<tbody></tbody>
-			</table>
-		</span>
-		<span class = "sixcol last">
-			<form id="quickGolfScoreForm" >
-				<div class="formLayout_Standard prettyWrapper" id="quickGolfScoreEntryDivId">
-					
-					<div class="formFieldGroup" id="quickGolfScoreForm-golfer_idDivId">
-						<label for ="quickGolfScoreForm-golfer_id" id="quickGolfScoreFormLabel-golfer_id">Name</label>
-						<select style="width:15em"name="golfer_id" id="quickGolfScoreForm-golfer_id" class="VALIDATErequired"></select>
-						<span class="ValidationMsg" id="quickGolfScoreFormLabel-golferIdError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="quickGolfScoreForm-golf_scoreDivId">
-						<label for ="quickGolfScoreForm-golf_score" id="quickGolfScoreFormLabel-golf_score">Score</label>
-						<input  type="text" class="VALIDATEinteger" name="golfScore" id="quickGolfScoreForm-golf_score"/>
-						<span class="ValidationMsg" id="quickGolfScoreFormLabel-golfScoreError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="quickGolfScoreForm-game_dtDivId">
-						<label for ="quickGolfScoreForm-game_dt" id="quickGolfScoreFormLabel-name">Date</label>
-						<input type="text"  name="gameDt" id="quickGolfScoreForm-game_dt" class="VALIDATEdate_yyyy-mm-dd"/>
-						<span class="ValidationMsg" id="quickGolfScoreFormLabel-gameDtError"></span>
-					</div>
-
-
-
-					<div class="formButtons">
-
-						<button type="button" id="quickGolfScoreFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveQuickGolfScoreForm();" ><span class="ui-button-text">Save</span></button>
-						<button type="button" id="quickGolfScoreFormAdd"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveQuickGolfScoreForm();" ><span class="ui-button-text">Add</span></button>
-							<button type="button" id="quickGolfScoreFormClear"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearQuickGolfScoreForm();" ><span class="ui-button-text">Clear</span></button>
-					</div>
-					<input type="hidden" name="last_update" id="quickGolfScoreForm-last_update">
-					<input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id">
-				</div>
-			</form>
-
-		</span>
-	</div>
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/QuickGolfScore/_quickGolfScoreWeb.html -->
+<div id="quickGolfScore" class="contentPane MainLayout" >
+ <h1 id="quickGolfScoreh1" class="pageTitle">Recent Golf Scores</h1>
+ <div class="row">
+ <div class="sixcol">
+ <table id="quickGolfScoreListTable" class="dataTable pretty" summary="">
+ <thead><tr><th>Golfer</th> <th >Score</th><th >Date</th> <th >I want to&hellip;</th></tr></thead>
+ </table>
+ </div>
+ <div class = "sixcol last">
+ <form id="quickGolfScoreForm" action="">
+ <div class="formLayout_Standard prettyWrapper" id="quickGolfScoreEntryDivId">
+ <div class="formFieldGroup" id="quickGolfScoreForm-golfer_idDivId">
+ <label for ="quickGolfScoreForm-golfer_id" id="quickGolfScoreFormLabel-golfer_id">Name</label>
+ <select style="width:15em" name="golfer_id" id="quickGolfScoreForm-golfer_id" class="VALIDATErequired"></select>
+ <span class="ValidationMsg" id="quickGolfScoreFormLabel-golferIdError"></span>
+ </div>
+ <div class="formFieldGroup" id="quickGolfScoreForm-golf_scoreDivId">
+ <label for ="quickGolfScoreForm-golf_score" id="quickGolfScoreFormLabel-golf_score">Score</label>
+ <input type="text" class="VALIDATEinteger" name="golfScore" id="quickGolfScoreForm-golf_score"/>
+ <span class="ValidationMsg" id="quickGolfScoreFormLabel-golfScoreError"></span>
+ </div>
+ <div class="formFieldGroup" id="quickGolfScoreForm-game_dtDivId">
+ <label for ="quickGolfScoreForm-game_dt" id="quickGolfScoreFormLabel-name">Date</label>
+ <input type="text" name="gameDt" id="quickGolfScoreForm-game_dt" class="VALIDATEdate_yyyy-mm-dd"/>
+ <span class="ValidationMsg" id="quickGolfScoreFormLabel-gameDtError"></span>
+ </div>
+ <div class="formButtons">
+ <button type="button" id="quickGolfScoreFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveQuickGolfScoreForm();" ><span class="ui-button-text">Save</span></button>
+ <button type="button" id="quickGolfScoreFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveQuickGolfScoreForm();" ><span class="ui-button-text">Add</span></button>
+ <button type="button" id="quickGolfScoreFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearQuickGolfScoreForm();" ><span class="ui-button-text">Clear</span></button>
+ </div>
+ <input type="hidden" name="last_update" id="quickGolfScoreForm-last_update"/>
+ <input type="hidden" name="golfer_score_id" id="quickGolfScoreForm-golf_score_id"/>
+ </div>
+ </form>
+ </div>
+ </div>
 </div> <!--end:QuickGolfScore-->
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/ClientLog/_clientLogWeb.html -->
-		
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/ClientLog/_clientLogWeb.html -->
 <div id="clientLogViewer" class="MainLayout">
 <ul id ="clientLogView">
 </ul>
-</div> 
-
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScore/_golfScoreWeb.html -->
-		
-
-
-
-
-
-
-
-
-
-<div id="golfScore" class="contentPane MainLayout"  >
-	<h1 id="golfScoreGolferNameId" class="pageTitle">Handicap Summary</h1>
-	<div class="row">
-		<span class="sixcol">
-			<div style="display:inline-block">
-			<table id="golfScoreListTable"  class='dataTable pretty' >
-					<thead><tr><th>Score</th><th>Game Date</th><th class='accentColumn'>I want to&hellip;</th></tr></thead>
-					<tbody></tbody>
-				</table>
-			</div>
-		</span>
-		<span class = "fivecol last">
-			<form id="golfScoreForm" >
-				<div class="formLayout_Standard prettyWrapper">
-					
-					<div class="formFieldGroup" id="golfScoreForm-golf_scoreDivId">
-						<label for ="golfScoreForm-golf_score" id="golfScoreFormLabel-golf_score">Score</label>
-						<input  type="text" class="VALIDATEinteger" name="golfScore" id="golfScoreForm-golf_score"/>
-						<span class="ValidationMsg" id="golfScoreFormLabel-golfScoreError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="golfScoreForm-game_dtDivId">
-						<label for ="golfScoreForm-game_dt" id="golfScoreFormLabel-game_dt">Game Date</label>
-						<input  type="text" class="VALIDATEmmddyyyydate" name="gameDt" id="golfScoreForm-game_dt"/>
-						<span class="ValidationMsg" id="golfScoreFormLabel-gameDtError"></span>
-					</div>
-
-					<div class="formButtons">
-
-						<button type="button" id="golfScoreFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveGolfScoreForm();" > <span class="ui-button-text">Save</span></button>
-						<button type="button" id="golfScoreFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveGolfScoreForm();" > <span class="ui-button-text">Add</span></button>
-							<button type="button" id="golfScoreFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearGolfScoreForm();" > <span class="ui-button-text">Clear</span></button>
-					</div>
-
-					<input type="hidden" name="last_update" id="golfScoreForm-last_update">
-					<input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id">
-					<input type="hidden" name="golfer_id" id="golfScoreForm-golfer_id">
-				</div>
-			</form>
-
-		</span>
-	</div>
+</div>
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScore/_golfScoreWeb.html -->
+<div id="golfScore" class="contentPane MainLayout" >
+ <h1 id="golfScoreGolferNameId" class="pageTitle">Handicap Summary</h1>
+ <div class="row">
+ <div class="sixcol">
+ <div style="display:inline-block">
+ <table id="golfScoreListTable" class="dataTable pretty" summary="">
+ <thead><tr><th>Score</th><th>Game Date</th><th class='accentColumn'>I want to&hellip;</th></tr></thead>
+ </table>
+ </div>
+ </div>
+ <div class = "fivecol last">
+ <form id="golfScoreForm" action="">
+ <div class="formLayout_Standard prettyWrapper">
+ <div class="formFieldGroup" id="golfScoreForm-golf_scoreDivId">
+ <label for ="golfScoreForm-golf_score" id="golfScoreFormLabel-golf_score">Score</label>
+ <input type="text" class="VALIDATEinteger" name="golfScore" id="golfScoreForm-golf_score"/>
+ <span class="ValidationMsg" id="golfScoreFormLabel-golfScoreError"></span>
+ </div>
+ <div class="formFieldGroup" id="golfScoreForm-game_dtDivId">
+ <label for ="golfScoreForm-game_dt" id="golfScoreFormLabel-game_dt">Game Date</label>
+ <input type="text" class="VALIDATEmmddyyyydate" name="gameDt" id="golfScoreForm-game_dt"/>
+ <span class="ValidationMsg" id="golfScoreFormLabel-gameDtError"></span>
+ </div>
+ <div class="formButtons">
+ <button type="button" id="golfScoreFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveGolfScoreForm();" > <span class="ui-button-text">Save</span></button>
+ <button type="button" id="golfScoreFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveGolfScoreForm();" > <span class="ui-button-text">Add</span></button>
+ <button type="button" id="golfScoreFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearGolfScoreForm();" > <span class="ui-button-text">Clear</span></button>
+ </div>
+ <input type="hidden" name="last_update" id="golfScoreForm-last_update"/>
+ <input type="hidden" name="golfer_score_id" id="golfScoreForm-golf_score_id"/>
+ <input type="hidden" name="golfer_id" id="golfScoreForm-golfer_id"/>
+ </div>
+ </form>
+ </div>
+ </div>
 </div> <!--end:GolfScore-->
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityGrants/_securityGrantsWeb.html -->
-		
-
-
-
-
-
-
-
-
-
-
-<div id="securityGrants" class="contentPane MainLayout"  >
-	<h1 id="securityGrantsGolferNameId" class="pageTitle">Security Grants</h1>
-	<div class="row">
-		<span class="sixcol">
-			<table id="securityGrantsListTable"  class='dataTable pretty' >
-				<thead><tr><th>Profile Name</th><th >I want to&hellip;</th></tr></thead>
-				<tbody></tbody>
-			</table>
-		</span>
-		<span class = "sixcol last">
-			<form id="securityGrantsForm" >
-				<div class="formLayout_Standard prettyWrapper">
-
-					
-					<div class="formFieldGroup" id="securityGrantsForm-profile_nameDivId">
-						<label for ="securityGrantsForm-profile_name" id="securityGrantsFormLabel-profile_name">Profile Name</label>
-						<input  type="text" class="VALIDATErequired" name="profileName" id="securityGrantsForm-profile_name"/>
-						<span class="ValidationMsg" id="securityGrantsFormLabel-profileNameError"></span>
-					</div>
-					<div class="formButtons">
-
-						<button type="button" id="securityGrantsFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Save" onclick="saveSecurityGrantsForm();" >
-							<span class="ui-button-text">Save</span></button>
-						<button type="button" id="securityGrantsFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Add" onclick="saveSecurityGrantsForm();" >
-							<span class="ui-button-text">Add</span></button>
-						<button type="button" id="securityGrantsFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  value="Clear" 
-							onclick="clearSecurityGrantsForm();" ><span class="ui-button-text">Clear</span></button>
-					</div>
-					<input type="hidden" name="last_update" id="securityGrantsForm-last_update">
-					<input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id">
-				</div>
-			</form>
-			<br/>
-			<div id="grantAssignDiv">
-				<p>Double Click or drag privileges.</p>
-				<table cellpadding="10"> <tr><td style="text-align:center;">Available </td><td> &nbsp; </td><td style="text-align:center;">Granted</td></tr>
-					<tr><td>
-							<div id="availableGrantsId" size="15" class="securityGrantReceiver"></div></td>
-						<td>&nbsp;						</td>
-						<td><div id="grantedPrivilegesId" size="15" class="securityGrantReceiver">&nbsp;</div></td>
-					</tr>
-				</table>
-			</div>
-		</div>
-	</div> <!--end:SecurityGrants-->
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/ChangePassword/_changePasswordDialogWeb.html -->
-		
-
-
-<div id="changePasswordDialog" title="Changing Password..."  style="display:none;">
-	<form id="changePasswordDialogForm" >
-		<div class="formLayout_Standard" style="border:none;box-shadow:none;">
-			
-			<div class="formFieldGroup">
-				<label>  New Password</label>
-				<input  type="password" name="newPassword" id="changePasswordDialogForm-new_password" class="VALIDATERequired"/>
-				<span class="ValidationMsg" id="changePasswordDialogFormLabel-newPasswordError"></span>
-			</div>
-			
-			<div class="formFieldGroup">
-				<label>  Confirm Password</label>
-				<input  type="password" name="confirmPassword" id="changePasswordDialogForm-confirm_password" class="VALIDATERequired"/>
-				<span class="ValidationMsg" id="changePasswordDialogFormLabel-confirmPasswordError"></span>
-			</div>
-			<input  type="hidden" name="userId" id="changePasswordDialogForm-user_to_update"/>
-		</div>
-	</form>
-</div> 
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScoreSummary/_golfScoreSummaryWeb.html -->
-		
-
-
-
-
-
-
-
-	<div id="golfScoreSummary" class="contentPane MainLayout"  >
-		<h1 id="golfScoreSummaryGolferNameId" class="pageTitle"> Handicap Summary</h1>
-			<table id="golfScoreSummaryListTable"  class='dataTable pretty' >
-				<thead>
-					<tr> <th>Golfer</th><th >Last 10 Avg</th><th>Period</th><th >I want to&hellip;</th></tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-	</div> 
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/SupportRequest/_supportRequestWeb.html -->
-		
-
-
-
-
-
-
-
-
-
-
-<div id="supportRequest" class="contentPane MainLayout"  >
-	<h1 id="supportRequesth1" class="pageTitle"> Support Request</h1>
-	<div class="row" style="text-align:center">
-		<button type="button" id="supportRequestCreate" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Request Help" onclick="addNewSupportRequest();" ><span class="ui-button-text">Enter New Help Request</span></button>
-	</div>
-	<div class="row">
-		<span class="twelvecol">
-			<table id="supportRequestListTable"  class='dataTable pretty' width="100%">
-				<thead><tr><th>Details</th><th>ID</th> <th > Summary</th><th >detailed_description</th> <th>last_update</th> <th >I want to&hellip;</th></tr></thead>
-				<tbody></tbody>
-			</table>
-		</span>
-		<div id="supportRequestFormHolder" title="Support Request" class = "" style="display:none; height:400px !important; overflow:auto;">
-			<form id="supportRequestForm"  title="Support Request" style="overflow:auto;">
-				<div class="formLayout_Standard prettyWrapper" id="supportRequestEntryDivId">
-					
-					<div class="formFieldGroup" id="supportRequestForm-summaryDivId">
-						<label for ="supportRequestForm-summary" id="supportRequestFormLabel-summary">Summary</label>
-						<textarea name="summary" id="supportRequestForm-summary" class="VALIDATErequired" rows="1" cols="60"></textarea>
-						<span class="ValidationMsg" id="supportRequestFormLabel-summaryError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="supportRequestForm-detailed_descriptionDivId">
-						<label for ="supportRequestForm-detailed_description" id="supportRequestFormLabel-detailed_description">Detailed Description</label>
-						<textarea  class="VALIDATErequired" name="detailedDescription" id="supportRequestForm-detailed_description" rows="5" cols="60"/></textarea>
-						<span class="ValidationMsg" id="supportRequestFormLabel-detailedDescriptionError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="supportRequestForm-solution_descriptionDivId">
-						<label for ="supportRequestForm-solution_description" id="supportRequestFormLabel-solution_description">Solution Description</label>
-						<textarea  class="" name="solutionDescription" id="supportRequestForm-solution_description" rows="5" cols="60"/></textarea>
-						<span class="ValidationMsg" id="supportRequestFormLabel-solutionDescriptionError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="supportRequestForm-log_detailsDivId">
-						<label for ="supportRequestForm-log_details" id="supportRequestFormLabel-log_details">Log Details</label>
-						<textarea  class="" disabled="disabled" name="logDetails" id="supportRequestForm-log_details" rows="5" cols="60"/></textarea>
-						<span class="ValidationMsg" id="supportRequestFormLabel-logDetailsError"></span>
-					</div>
-
-
-
-					<div class="formButtons">
-
-						<button type="button" id="supportRequestFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveSupportRequestForm();" ><span class="ui-button-text">Save</span></button>
-						<button type="button" id="supportRequestFormAdd"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveSupportRequestForm();" ><span class="ui-button-text">Add</span></button>
-						<button type="button" id="supportRequestFormClear"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearSupportRequestForm();" ><span class="ui-button-text">Clear</span></button>
-					</div>
-					<input type="hidden" name="last_update" id="supportRequestForm-last_update">
-					<input type="hidden" name="support_request_id" id="supportRequestForm-support_request_id">
-				</div>
-			</form>
-
-		</div>
-	</div>
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityGrants/_securityGrantsWeb.html -->
+<div id="securityGrants" class="contentPane MainLayout" >
+ <h1 id="securityGrantsGolferNameId" class="pageTitle">Security Grants</h1>
+ <div class="row">
+ <div class="sixcol">
+ <table id="securityGrantsListTable" class='dataTable pretty' summary="">
+ <thead><tr><th>Profile Name</th><th >I want to&hellip;</th></tr></thead>
+ </table>
+ </div>
+ <div class = "sixcol last">
+ <form id="securityGrantsForm" action="">
+ <div class="formLayout_Standard prettyWrapper">
+ <div class="formFieldGroup" id="securityGrantsForm-profile_nameDivId">
+ <label for ="securityGrantsForm-profile_name" id="securityGrantsFormLabel-profile_name">Profile Name</label>
+ <input type="text" class="VALIDATErequired" name="profileName" id="securityGrantsForm-profile_name"/>
+ <span class="ValidationMsg" id="securityGrantsFormLabel-profileNameError"></span>
+ </div>
+ <div class="formButtons">
+ <button type="button" id="securityGrantsFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveSecurityGrantsForm();" >
+ <span class="ui-button-text">Save</span></button>
+ <button type="button" id="securityGrantsFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveSecurityGrantsForm();" >
+ <span class="ui-button-text">Add</span></button>
+ <button type="button" id="securityGrantsFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear"
+ onclick="clearSecurityGrantsForm();" ><span class="ui-button-text">Clear</span></button>
+ </div>
+ <input type="hidden" name="last_update" id="securityGrantsForm-last_update"/>
+ <input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id"/>
+ </div>
+ </form>
+ </div>
+ <br/>
+ <div id="grantAssignDiv" style="display:none;">
+ <p>Double Click or drag privileges.</p>
+ <table summary=""> <tr><td style="text-align:center;">Available </td><td> &nbsp; </td><td style="text-align:center;">Granted</td></tr>
+ <tr><td>
+ <div id="availableGrantsId" class="securityGrantReceiver"></div></td>
+ <td>&nbsp; </td>
+ <td><div id="grantedPrivilegesId" class="securityGrantReceiver">&nbsp;</div></td>
+ </tr>
+ </table>
+ </div>
+ </div>
+</div> <!--end:SecurityGrants-->
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/ChangePassword/_changePasswordDialogWeb.html -->
+<div id="changePasswordDialog" title="Changing Password..." style="display:none;">
+ <form id="changePasswordDialogForm" action="" >
+ <div class="formLayout_Standard" style="border:none;box-shadow:none;">
+ <div class="formFieldGroup">
+ <label> New Password</label>
+ <input type="password" name="newPassword" id="changePasswordDialogForm-new_password" class="VALIDATERequired"/>
+ <span class="ValidationMsg" id="changePasswordDialogFormLabel-newPasswordError"></span>
+ </div>
+ <div class="formFieldGroup">
+ <label> Confirm Password</label>
+ <input type="password" name="confirmPassword" id="changePasswordDialogForm-confirm_password" class="VALIDATERequired"/>
+ <span class="ValidationMsg" id="changePasswordDialogFormLabel-confirmPasswordError"></span>
+ </div>
+ <input type="hidden" name="userId" id="changePasswordDialogForm-user_to_update"/>
+ </div>
+ </form>
+</div>
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/GolfScoreSummary/_golfScoreSummaryWeb.html -->
+ <div id="golfScoreSummary" class="contentPane MainLayout" >
+ <h1 id="golfScoreSummaryGolferNameId" class="pageTitle"> Handicap Summary</h1>
+ <table id="golfScoreSummaryListTable" class='dataTable pretty' summary="" >
+ <thead>
+ <tr> <th>Golfer</th><th >Last 10 Avg</th><th>Period</th><th >I want to&hellip;</th></tr>
+ </thead>
+ </table>
+ </div>
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/SupportRequest/_supportRequestWeb.html -->
+<div id="supportRequest" class="contentPane MainLayout" >
+ <h1 id="supportRequesth1" class="pageTitle"> Support Request</h1>
+ <div class="row" style="text-align:center">
+ <button type="button" id="supportRequestCreate" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Request Help" onclick="addNewSupportRequest();" ><span class="ui-button-text">Enter New Help Request</span></button>
+ </div>
+ <div class="row">
+ <div class="twelvecol">
+ <table id="supportRequestListTable" class='dataTable pretty' style="width:100%;" summary="">
+ <thead><tr><th>Details</th><th>ID</th> <th > Summary</th><th >detailed_description</th> <th>last_update</th> <th >I want to&hellip;</th></tr></thead>
+ <tbody></tbody>
+ </table>
+ </div>
+ <div id="supportRequestFormHolder" title="Support Request" class = "" style="display:none; height:400px !important; overflow:auto;">
+ <form id="supportRequestForm" title="Support Request" style="overflow:auto;" action="">
+ <div class="formLayout_Standard prettyWrapper" id="supportRequestEntryDivId">
+ <div class="formFieldGroup" id="supportRequestForm-summaryDivId">
+ <label for ="supportRequestForm-summary" id="supportRequestFormLabel-summary">Summary</label>
+ <textarea name="summary" id="supportRequestForm-summary" class="VALIDATErequired" rows="1" cols="60"></textarea>
+ <span class="ValidationMsg" id="supportRequestFormLabel-summaryError"></span>
+ </div>
+ <div class="formFieldGroup" id="supportRequestForm-detailed_descriptionDivId">
+ <label for ="supportRequestForm-detailed_description" id="supportRequestFormLabel-detailed_description">Detailed Description</label>
+ <textarea class="VALIDATErequired" name="detailedDescription" id="supportRequestForm-detailed_description" rows="5" cols="60"></textarea>
+ <span class="ValidationMsg" id="supportRequestFormLabel-detailedDescriptionError"></span>
+ </div>
+ <div class="formFieldGroup" id="supportRequestForm-solution_descriptionDivId">
+ <label for ="supportRequestForm-solution_description" id="supportRequestFormLabel-solution_description">Solution Description</label>
+ <textarea class="" name="solutionDescription" id="supportRequestForm-solution_description" rows="5" cols="60"></textarea>
+ <span class="ValidationMsg" id="supportRequestFormLabel-solutionDescriptionError"></span>
+ </div>
+ <div class="formFieldGroup" id="supportRequestForm-log_detailsDivId">
+ <label for ="supportRequestForm-log_details" id="supportRequestFormLabel-log_details">Log Details</label>
+ <textarea class="" disabled="disabled" name="logDetails" id="supportRequestForm-log_details" rows="5" cols="60"></textarea>
+ <span class="ValidationMsg" id="supportRequestFormLabel-logDetailsError"></span>
+ </div>
+ <div class="formButtons">
+ <button type="button" id="supportRequestFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveSupportRequestForm();" ><span class="ui-button-text">Save</span></button>
+ <button type="button" id="supportRequestFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveSupportRequestForm();" ><span class="ui-button-text">Add</span></button>
+ <button type="button" id="supportRequestFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearSupportRequestForm();" ><span class="ui-button-text">Clear</span></button>
+ </div>
+ <input type="hidden" name="last_update" id="supportRequestForm-last_update"/>
+ <input type="hidden" name="support_request_id" id="supportRequestForm-support_request_id"/>
+ </div>
+ </form>
+ </div>
+ </div>
 </div> <!--end:SupportRequest-->
-		<!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/Golfer/_golferWeb.html -->
-		
-
-
-
-
-
-
-
-
-
-
-
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/Golfer/_golferWeb.html -->
 <div id="golfer" class="MainLayout contentPane" >
-	<h1 id="golferTitle" class="pageTitle" >Golfers</h1>
-	<div class="row">
-		<span class="sixcol">
-			<!--<div id="golferListTablePaginationDivId"></div> -->
-			<div id="golferListTableDivId"  >
-				<table id='golferListTable' class='dataTable pretty'  >
-					<thead><tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr></thead>
-					<tbody></tbody>
-				</table>
-			</div>
-		</span>
-		<span class="sixcol last">
-			<form id="golferForm" >
-				<div id="golferEntryDivId" class="formLayout_Standard prettyWrapper">
-					
-					<div class="formFieldGroup" id="golferForm-nameDivId">
-						<label for ="golferForm-name" id="golferFormLabel-name">Name</label>
-						<input  type="text" class="VALIDATErequired" name="name" id="golferForm-name"/>
-						<span class="ValidationMsg" id="golferFormLabel-nameError"></span>
-					</div>
-					<div class="formButtons">
-
-						<button type="button" id="golferFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveGolferForm();" ><span class="ui-button-text">Save</span></button>
-						<button type="button" id="golferFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveGolferForm();" ><span class="ui-button-text">Add</span></button>
-						<button type="button" id="golferFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearGolferForm();" ><span class="ui-button-text">Clear</span></button>
-					</div>
-				</div>
-				<input type="hidden" name="last_update" id="golferForm-last_update">
-				<input type="hidden" name="golfer_id" id="golferForm-golfer_id">
-
-			</form>
-		</span>
-		</div >	  
-	</div> 
-
+ <h1 id="golferTitle" class="pageTitle" >Golfers</h1>
+ <div class="row">
+ <div class="sixcol">
+ <!--<div id="golferListTablePaginationDivId"></div> -->
+ <div id="golferListTableDivId" >
+ <table id="golferListTable" class="dataTable pretty" summary="">
+ <thead><tr><th>Golfer Name</th><th class='accentColumn'>I want to&hellip;</th></tr></thead>
+ </table>
+ </div>
+ </div>
+ <div class="sixcol last">
+ <form id="golferForm" action="">
+ <div id="golferEntryDivId" class="formLayout_Standard prettyWrapper">
+ <div class="formFieldGroup" id="golferForm-nameDivId">
+ <label for ="golferForm-name" id="golferFormLabel-name">Name</label>
+ <input type="text" class="VALIDATErequired" name="name" id="golferForm-name"/>
+ <span class="ValidationMsg" id="golferFormLabel-nameError"></span>
+ </div>
+ <div class="formButtons">
+ <button type="button" id="golferFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveGolferForm();" ><span class="ui-button-text">Save</span></button>
+ <button type="button" id="golferFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveGolferForm();" ><span class="ui-button-text">Add</span></button>
+ <button type="button" id="golferFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear" onclick="clearGolferForm();" ><span class="ui-button-text">Clear</span></button>
+ </div>
+ </div>
+ <input type="hidden" name="last_update" id="golferForm-last_update"/>
+ <input type="hidden" name="golfer_id" id="golferForm-golfer_id"/>
+ </form>
+ </div>
+ </div >
+ </div>
 </div><!--End Main Content-->
 <!-- From: LoginPortal -->
 <!--Begin LoginPortal-->
-
-
-
-<div id="LoginPortal"  class="contentPane container">
-	<div class="row ">
-		<img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash">
-	</div>
-	<div  id="loginFormRow" class="row ">
-		<div class="center" style="width:30em;"> 
-			<form id="LoginPortalForm" >
-				<div class="formLayout_Standard prettyWrapper" style="width:30em;">
-					<h1>Login</h1>
-					<span class="small" >Please enter your login credentials</span><hr/>
-
-					
-					
-					
-					<div class="formFieldGroup" id="LoginPortalForm-user_idDivId">
-						<label for ="LoginPortalForm-user_id" style="display:inline-block;width:7em;" id="LoginPortalFormLabel-user_id">User ID</label>
-						<input type="text" style="width:15em"name="user_id" id="LoginPortalForm-user_id" class="VALIDATErequired">	    
-						<span class="ValidationMsg" style="width:0em" id="LoginPortalFormLabel-userIdError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="LoginPortalForm-passwordDivId">
-						<label for ="LoginPortalForm-password" style="display:inline-block;width:7em;" id="LoginPortalFormLabel-password">Password</label>
-						<input type="password" style="width:15em"name="password" id="LoginPortalForm-password" class="VALIDATErequired">	    
-						<span class="ValidationMsg" style="width:0em" id="LoginPortalFormLabel-passwordError"></span>
-					</div>
-					
-					<div class="formFieldGroup" id="LoginPortalForm-password_reset_codeDivId" style="display:none">
-						<label for ="LoginPortalForm-password_reset_code" style="display:inline-block;width:7em;" id="LoginPortalFormLabel-password_reset_code">Reset Code</label>
-						<input type="text" style="width:15em"name="password_reset_code" id="LoginPortalForm-password_reset_code" class="">	    
-						<span class="ValidationMsg" style="width:0em" id="LoginPortalFormLabel-passwordResetCodeError"></span>
-					</div>
-
-
-					<div class="formButtons">
-
-						<button type="button"  id="cmdlogin" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"  onclick="loginCall('authenticate')" > <span class="ui-button-text">Login</span> </button>  
-						<button type="button"  id="cmdOneTimelogin" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only " style="display:none;"  onclick="loginCall('one_time')" ><span class="ui-button-text"> One Time Login</span> </button>  
-					</div>
-					<label for="trustedDevice" style="display:inline-block;">Trusted Device:</label>
-					<input type="checkbox" id="trustedDeviceId">
-
-				</div>  
-			</form>  
-		</div>
-		<p style="text-align:center; margin-top: 4em;"><a href="#" class="alink" onclick="javascript:initPasswordReset(); return false;">I forgot My password</a> &nbsp; &nbsp;<a class="alink" href="#" onclick="initForgottenUserName();return false;">I forgot my user User Id</a> </p>
-	</div> <!--loginportal--> 
-	<!--End LoginPortal-->
-
+<div id="LoginPortal" class="contentPane container">
+ <div class="row ">
+ <img class="center" id="headerSplash" src="./images/headerphoto.jpg" alt="Login Page Splash"/>
+ </div>
+ <div id="loginFormRow" class="row ">
+ <div class="center" style="width:30em;">
+ <form id="LoginPortalForm" action="">
+ <div class="formLayout_Standard prettyWrapper" style="width:30em;">
+ <h1>Login</h1>
+ <span class="small" >Please enter your login credentials</span><hr/>
+ <div class="formFieldGroup" id="LoginPortalForm-user_idDivId">
+ <label for ="LoginPortalForm-user_id" style="display:inline-block;width:7em;" id="LoginPortalFormLabel-user_id">User ID</label>
+ <input type="text" style="width:15em" name="user_id" id="LoginPortalForm-user_id" class="VALIDATErequired"/>
+ <span class="ValidationMsg" style="width:0em" id="LoginPortalFormLabel-userIdError"></span>
+ </div>
+ <div class="formFieldGroup" id="LoginPortalForm-passwordDivId">
+ <label for ="LoginPortalForm-password" style="display:inline-block;width:7em;" id="LoginPortalFormLabel-password">Password</label>
+ <input type="password" style="width:15em" name="password" id="LoginPortalForm-password" class="VALIDATErequired"/>
+ <span class="ValidationMsg" style="width:0em" id="LoginPortalFormLabel-passwordError"></span>
+ </div>
+ <div class="text/cssformFieldGroup" id="LoginPortalForm-password_reset_codeDivId" style="display:none">
+ text/css<label for ="LoginPortalForm-password_reset_code" style="display:inline-block;width:7em;" id="LoginPortalFormLabel-password_reset_code">Reset Code</label>
+ text/css<input type="text" style="width:15em" name="password_reset_code" id="LoginPortalForm-password_reset_code" class=""/>
+ <span class="ValidationMsg" style="width:0em" id="LoginPortalFormLabel-passwordResetCodeError"></span>
+ </div>
+ <div class="formButtons">
+ <button type="button" id="cmdlogin" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="loginCall('authenticate')" > <span class="ui-button-text">Login</span> </button>
+ <button type="button" id="cmdOneTimelogin" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only " style="display:none;" onclick="loginCall('one_time')" ><span class="ui-button-text"> One Time Login</span> </button>
+ </div>
+ <label for="trustedDeviceId" style="display:inline-block;">Trusted Device:</label>
+ <input type="checkbox" id="trustedDeviceId"/>
+ </div>
+ </form>
+ </div>
+ <p style="text-align:center; margin-top: 4em;"><a href="#" class="alink" onclick="javascript:initPasswordReset(); return false;">I forgot My password</a> &nbsp; &nbsp;<a class="alink" href="#" onclick="initForgottenUserName();return false;">I forgot my user User Id</a> </p>
+ </div>
+</div>
 </body>
 </html>
