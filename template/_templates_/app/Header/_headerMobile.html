@@ -1,18 +1,19 @@
-<head> 	
+<head> 
+	<title>Golf Score Tracker</title>	
 	[%- CDN_BASE_URL = 'http://code.jquery.com' -%]	
 	[%- CDN_JQUERY_URL = '/jquery-1.8.0.min.js' -%]	
 	[%- CDN_JQUI_URL = '/ui/1.9.1' -%]
 	<link rel="stylesheet"  href="http://yui.yahooapis.com/3.7.3/build/cssreset/cssreset-min.css" type="text/css"/>
-	<script src="[%-CDN_BASE_URL-%][%-CDN_JQUERY_URL-%]"></script>
-		<script src="[%-CDN_BASE_URL-%]/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-		<link rel="stylesheet" href="[%-CDN_BASE_URL-%]/mobile/1.2.0/jquery.mobile-1.2.0.min.css" type="text/css"/>
+	<script src="[%-CDN_BASE_URL-%][%-CDN_JQUERY_URL-%]" type="text/javascript"></script>
+	<script src="[%-CDN_BASE_URL-%]/mobile/1.2.0/jquery.mobile-1.2.0.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="[%-CDN_BASE_URL-%]/mobile/1.2.0/jquery.mobile-1.2.0.min.css" type="text/css"/>
 
-	<style>
-	/*_main.css */
-	[%INCLUDE style/_mainCommon.css%]
-	[%INCLUDE style/_mainMobile.css%]
+	<style type="text/css">
+		/*_main.css */
+		[%INCLUDE style/_mainCommon.css%]
+		[%INCLUDE style/_mainMobile.css%]
 
-			</style>
+	</style>
 
 	<meta name=viewport content="user-scalable=no,width=device-width" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
@@ -21,5 +22,5 @@
 	<link rel="apple-touch-icon" sizes="72x72" href="../images/touch-icon-ipad-144.png" />[%# Standard iPad   %]
 	<link rel="apple-touch-icon" sizes="144x144" href="../images/touch-icon-ipad-144.png" />[%# Retina iPad  %]
 	<link rel="icon" type="image/png" href="../favicon.png">
-	<script src="./appmobile.js"></script>
+	<script type="text/javascript" src="./appmobile.js"></script>
 </head> 

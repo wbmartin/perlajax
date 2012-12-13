@@ -326,26 +326,6 @@ function clear[%ucfirst(divId)%]Form() {
 		securityLockForm('[%divId%]Form', true);
 }
 
-//After complete Load setup
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-		$('#[%divId%]Form-game_dt').datepicker();
-
-		$('#[%divId%]ListTable').dataTable({
-			'aoColumns': [
-			 {'mData': 'golf_score'},
-			 {'mData': 'game_dt'},
-			 {'mData': 'links', asSorting: 'none'}
-			],
-			'sPaginationType': 'two_button'
-			}
-		 	);
-		});
-
 
 //page specific functions
 /**

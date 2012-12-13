@@ -109,12 +109,3 @@ function show[%ucfirst(divId)%](userId_) {
 
 
 }
-
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-});
-

@@ -203,15 +203,6 @@ function clear[%ucfirst(divId)%]Form() {
 }
 
 
-//After complete Load setup
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-
-		});
 
 //page specific functions
 

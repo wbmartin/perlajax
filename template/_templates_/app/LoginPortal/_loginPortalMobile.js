@@ -25,13 +25,3 @@ function onSuccessfulLogin() {
 function validate[%ucfirst(divId)%]Form() {
   return true;
 }
-
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-});
-
-

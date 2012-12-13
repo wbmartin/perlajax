@@ -357,33 +357,6 @@ $('#grantAssignDiv').dialog({
 }
 
 
-//After complete Load setup
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-	$('#[%divId%]ListTable').dataTable(
-		{'aoColumns' : [
-			{ 'mData': 'profile_name' },
-	{ 'mData': 'links', asSorting: 'none' }
-	],
-	'sPaginationType' : 'two_button'
-		}
-		);
-
-	$('#availableGrantsId').droppable({
-		accept: '.securityGrant',
-		drop: handleSecurityRevokeDrop
-	});
-	$('#grantedPrivilegesId').droppable({
-		accept: '.securityGrant',
-		drop: handleSecurityGrantDrop
-	});
-
-});
-
 //page specific functions
 var allAvailablePrivilegeList;
 /**

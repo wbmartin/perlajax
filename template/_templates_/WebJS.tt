@@ -7,26 +7,12 @@
     var PAGE_CALLS = new Array();
 		var IS_MOBILE = false;
 
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-	var tblClasses = $.fn.dataTableExt.oStdClasses;
-	tblClasses.sPagePrevDisabled = '[%buttonClass%] smallButton LogicDisabled';
-	tblClasses.sPagePrevEnabled = '[%buttonClass%] smallButton';
-	tblClasses.sPageNextDisabled = '[%buttonClass%] smallButton LogicDisabled';
-	tblClasses.sPageNextEnabled = '[%buttonClass%] smallButton';
-	tblClasses.sWrapper = 'prettyWrapper dataTables_wrapper';
-
-});
-
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
 
 [%FOREACH tPath = appTemplates%]
   [%-IF  tPath.match('Web') or tPath.match('Common')-%]
 	  [%-IF tPath.match('html'); NEXT; END;-%]
+	  [%-IF tPath.match('_footer'); NEXT; END;-%]
 		[%#// From: [%tPath%] 
 		[%INCLUDE $tPath%]
 	[%-END-%]

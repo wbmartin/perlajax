@@ -977,17 +977,6 @@ function logOutUser() {
  return;
 }
 
-
-/**
- *
- * SRC: _loginPortalCommon
- *=====================================================================
- */
-$(document).ready(function() {
- $('#LoginPortalForm-user_id').val('golfscore');
- $('#LoginPortalForm-password').val('golfscore');
-});
-
 /**
  *
  * SRC: _loginPortalCommon
@@ -1168,16 +1157,6 @@ function onSuccessfulLogin() {
 function validateLoginPortalForm() {
   return true;
 }
-
-/**
-*
-* SRC: _loginPortalMobile.js
-*=====================================================================
-*/
-$(document).ready(function() {
-});
-
-
 
 //LayoutComponents.js
 
@@ -1570,15 +1549,6 @@ function clearQuickGolfScoreForm() {
 }
 
 
-//After complete Load setup
-/**
-*
-* SRC: _quickGolfScoreCommon
-*=====================================================================
-*/
-$(document).ready(function() {
-
-  });
 
 //page specific functions
 

@@ -64,17 +64,6 @@ function logOutUser() {
 	return;
 }
 
-
-/**
- *
- * SRC: [%SRC_LOC%]
- *=====================================================================
- */
-$(document).ready(function() {
-	$('#[%divId%]Form-user_id').val('golfscore');
-	$('#[%divId%]Form-password').val('golfscore');
-});
-
 /**
  *
  * SRC: [%SRC_LOC%]

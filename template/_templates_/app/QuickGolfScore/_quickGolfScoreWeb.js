@@ -9,25 +9,6 @@
 
 //After complete Load setup
 [% SRC_LOC = '_quickGolfScoreWeb'%]
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-
-		$('#[%divId%]ListTable').dataTable({
-			'aoColumns' : [
-			 { 'mData': 'golfer_name' },
-			 { 'mData': 'golf_score' },
-			 { 'mData': 'game_dt' },
-			 { 'mData': 'links', asSorting: 'none' }
-			],
-			'sPaginationType' : 'two_button'
-			}
-		 	);
-});
-
 //validation
 /**
 *
@@ -177,14 +158,4 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	}
 
 }
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-		$('#[%divId%]Form-game_dt').datepicker({dateFormat: 'yy-mm-dd'});
-
-		});
-
 

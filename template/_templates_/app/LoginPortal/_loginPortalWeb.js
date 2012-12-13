@@ -22,16 +22,6 @@ function onSuccessfulLogin() {
 	}
 
 }
-
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-	changePage(function() {showLoginPortal()});
-});
-
 /**
 *
 * SRC: [%SRC_LOC%]

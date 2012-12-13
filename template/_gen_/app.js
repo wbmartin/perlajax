@@ -5,21 +5,6 @@
     var PAGE_CALLS = new Array();
   var IS_MOBILE = false;
 
-/**
-*
-* SRC:
-*=====================================================================
-*/
-$(document).ready(function() {
- var tblClasses = $.fn.dataTableExt.oStdClasses;
- tblClasses.sPagePrevDisabled = ' smallButton LogicDisabled';
- tblClasses.sPagePrevEnabled = ' smallButton';
- tblClasses.sPageNextDisabled = ' smallButton LogicDisabled';
- tblClasses.sPageNextEnabled = ' smallButton';
- tblClasses.sWrapper = 'prettyWrapper dataTables_wrapper';
-
-});
-
 
 
 
@@ -365,25 +350,6 @@ function clearSecurityUserForm() {
    securityLockForm('securityUserForm', true);
 
 }
-
-
-//After complete Load setup
-/**
-*
-* SRC: _securityUserCommon
-*=====================================================================
-*/
-$(document).ready(function() {
-  $('#securityUserListTable').dataTable({
-   'aoColumns': [
-    {'mData': 'user_id' },
-    {'mData': 'links', asSorting: 'none' }
-   ],
-   'sPaginationType': 'two_button'
-   }
-   );
-
-  });
 
 //page specific functions
 
@@ -1586,25 +1552,6 @@ function showAboutPane() {
 
 //After complete Load setup
 
-/**
-*
-* SRC: _quickGolfScoreWeb
-*=====================================================================
-*/
-$(document).ready(function() {
-
-  $('#quickGolfScoreListTable').dataTable({
-   'aoColumns' : [
-    { 'mData': 'golfer_name' },
-    { 'mData': 'golf_score' },
-    { 'mData': 'game_dt' },
-    { 'mData': 'links', asSorting: 'none' }
-   ],
-   'sPaginationType' : 'two_button'
-   }
-    );
-});
-
 //validation
 /**
 *
@@ -1754,16 +1701,6 @@ function imposeQuickGolfScoreSecurityUIRestrictions() {
  }
 
 }
-/**
-*
-* SRC: _quickGolfScoreWeb
-*=====================================================================
-*/
-$(document).ready(function() {
-  $('#quickGolfScoreForm-game_dt').datepicker({dateFormat: 'yy-mm-dd'});
-
-  });
-
 
 
 
@@ -1971,15 +1908,6 @@ function clearQuickGolfScoreForm() {
 }
 
 
-//After complete Load setup
-/**
-*
-* SRC: _quickGolfScoreCommon
-*=====================================================================
-*/
-$(document).ready(function() {
-
-  });
 
 //page specific functions
 
@@ -2369,26 +2297,6 @@ function clearGolfScoreForm() {
   securityLockForm('golfScoreForm', true);
 }
 
-//After complete Load setup
-/**
-*
-* SRC: _golfScoreCommon
-*=====================================================================
-*/
-$(document).ready(function() {
-  $('#golfScoreForm-game_dt').datepicker();
-
-  $('#golfScoreListTable').dataTable({
-   'aoColumns': [
-    {'mData': 'golf_score'},
-    {'mData': 'game_dt'},
-    {'mData': 'links', asSorting: 'none'}
-   ],
-   'sPaginationType': 'two_button'
-   }
-    );
-  });
-
 
 //page specific functions
 /**
@@ -2564,15 +2472,6 @@ function showChangePasswordDialog(userId_) {
 
 }
 
-/**
-*
-* SRC: changePasswordDialogCommon
-*=====================================================================
-*/
-$(document).ready(function() {
-});
-
-
 
 
 
@@ -2632,24 +2531,6 @@ function imposeGolfScoreSummarySecurityUIRestrictions() {
 
 
 
-
-/**
-*
-* SRC: _golfScoreSummaryWeb
-*=====================================================================
-*/
-$(document).ready(function() {
-  $('#golfScoreSummaryListTable').dataTable(
-    {
-   'aoColumns' : [
-    {'mData': 'golfer_name' },
-    {'mData': 'handicap' },
-    {'mData': 'date_range' },
-    {'mData': 'links', asSorting: 'none' }
-   ],
-   'sPaginationType': 'two_button'
-   });
-  });
 
 /**
 *
@@ -3039,54 +2920,6 @@ function clearSupportRequestForm() {
 }
 
 
-//After complete Load setup
-/**
-*
-* SRC: _supportRequestCommon
-*=====================================================================
-*/
-$(document).ready(function() {
- $('#supportRequestListTable').dataTable({
-  'aoColumns': [
- { 'mData': 'details', bSortable: false, 'sWidth': '10'},
- { 'mData': 'support_request_id', 'sWidth': '10' },
- { 'mData': 'summary', 'sClass': 'textAlignLeft'},
- { 'mData': 'detailed_description', bVisible: false },
- // { 'mData': 'log_details' },
- // { 'mData': 'solution_description' },
- { 'mData': 'last_update', bVisible: false},
- // { 'mData': 'updated_by' },
- { 'mData': 'links', asSorting: 'none', 'sWidth': '10em' }
- ],
- 'sPaginationType': 'two_button'
- }
- );
-
-
- $('#supportRequestListTable tbody td span.expanderClass').live(
-  'click',
-  function() {
-   var nTr = $(this).parents('tr')[0];
-   var oTable = $('#supportRequestListTable').dataTable();
-   if (oTable.fnIsOpen(nTr)) { /* This row is already open - close it */
-    $(this).replaceWith(
-     '<span class="sprite16Icon smallPlusIcon expanderClass"></span>'
-     );
-    oTable.fnClose(nTr);
-   } else { /* Open this row */
-    $(this).replaceWith(
-     '<span class="sprite16Icon smallCancelIcon expanderClass"></span>'
-     );
-    oTable.fnOpen(nTr,
-     fnFormatSupportRequestExpansion(oTable, nTr),
-     'details'
-     );
-   }
-  }
-  );
-
-
-});
 
 /**
 *
@@ -3545,33 +3378,6 @@ $('#grantAssignDiv').dialog({
 }
 
 
-//After complete Load setup
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-*/
-$(document).ready(function() {
- $('#securityAccessGroupsListTable').dataTable(
-  {'aoColumns' : [
-   { 'mData': 'profile_name' },
- { 'mData': 'links', asSorting: 'none' }
- ],
- 'sPaginationType' : 'two_button'
-  }
-  );
-
- $('#availableGrantsId').droppable({
-  accept: '.securityGrant',
-  drop: handleSecurityRevokeDrop
- });
- $('#grantedPrivilegesId').droppable({
-  accept: '.securityGrant',
-  drop: handleSecurityGrantDrop
- });
-
-});
-
 //page specific functions
 var allAvailablePrivilegeList;
 /**
@@ -3956,16 +3762,6 @@ function onSuccessfulLogin() {
  }
 
 }
-
-/**
-*
-* SRC: _loginPortalWeb.js
-*=====================================================================
-*/
-$(document).ready(function() {
- changePage(function() {showLoginPortal()});
-});
-
 /**
 *
 * SRC: _loginPortalWeb.js
@@ -4045,17 +3841,6 @@ function logOutUser() {
  hideMainContent();
  return;
 }
-
-
-/**
- *
- * SRC: _loginPortalCommon
- *=====================================================================
- */
-$(document).ready(function() {
- $('#LoginPortalForm-user_id').val('golfscore');
- $('#LoginPortalForm-password').val('golfscore');
-});
 
 /**
  *
@@ -4580,24 +4365,6 @@ function clearGolferForm() {
   securityLockForm('golferForm', false) :
   securityLockForm('golferForm', true);
 }
-
-
-/**
-*
-* SRC: _golferCommon
-*=====================================================================
-*/
-$(document).ready(function() {
-  $('#golferListTable').dataTable({
-   'aoColumns' : [
-    { 'mData': 'name' },
-    { 'mData': 'links', asSorting: 'none' }
-   ],
-   'sPaginationType' : 'two_button'
-   }
-   );
-  });
-
 
 
 

@@ -342,25 +342,6 @@ function clear[%ucfirst(divId)%]Form() {
 
 }
 
-
-//After complete Load setup
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-		$('#[%divId%]ListTable').dataTable({
-			'aoColumns': [
-			 {'mData': 'user_id' },
-			 {'mData': 'links', asSorting: 'none' }
-			],
-			'sPaginationType': 'two_button'
-			}
-			);
-
-		});
-
 //page specific functions
 
 /**

@@ -6,7 +6,7 @@
 <!DOCType html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" > 
 [%INCLUDE app/Header/_headerWeb.html%]
-<body  onload='bodyOnLoad();' onresize="bodyOnResize();" > 
+<body  onload="bodyOnLoad();" onresize="bodyOnResize();" > 
 [%INCLUDE app/LayoutComponents/_layoutComponentsWeb.html%]
 
 <div id="mainContent" class="container MainLayout"  >
@@ -16,7 +16,7 @@
   [%-IF  tPath.match('Web')-%]
 	  [%-IF tPath.match('js'); NEXT; END;-%]
 	  [%-IF tPath.match('LayoutComponents'); NEXT; END;-%]
-	  [%-IF tPath.match('Header'); NEXT; END;-%]
+	  [%-IF tPath.match('Header') or tPath.match('Footer'); NEXT; END;-%]
 	  [%-IF tPath.match('LoginPortal'); NEXT; END;-%]
 		<!-- From: [%tPath%] -->
 		[%INCLUDE $tPath%]
@@ -27,6 +27,9 @@
 </div><!--End Main Content-->
 <!-- From: LoginPortal -->
 [%INCLUDE app/LoginPortal/_loginPortalWeb.html%]
+[%INCLUDE app/Footer/_footerWeb.html%]
+[%INCLUDE app/Footer/_footerCommon.html%]
+
 </body>
 </html>
 [%- END #filter -%]

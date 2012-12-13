@@ -360,21 +360,3 @@ function clear[%ucfirst(divId)%]Form() {
 		securityLockForm('[%divId%]Form', false) :
 		securityLockForm('[%divId%]Form', true);
 }
-
-
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-		$('#[%divId%]ListTable').dataTable({
-			'aoColumns' : [
-			 { 'mData': 'name' },
-			 { 'mData': 'links', asSorting: 'none' }
-			],
-			'sPaginationType' : 'two_button'
-			}
-			);
-		});
-

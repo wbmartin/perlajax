@@ -328,54 +328,6 @@ function clear[%ucfirst(divId)%]Form() {
 }
 
 
-//After complete Load setup
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-	$('#[%divId%]ListTable').dataTable({
-		'aoColumns': [
-	{ 'mData': 'details', bSortable: false, 'sWidth': '10'},
-	{ 'mData': 'support_request_id', 'sWidth': '10' },
-	{ 'mData': 'summary', 'sClass': 'textAlignLeft'},
-	{ 'mData': 'detailed_description', bVisible: false },
-	// { 'mData': 'log_details' },
-	// { 'mData': 'solution_description' },
-	{ 'mData': 'last_update', bVisible: false},
-	// { 'mData': 'updated_by' },
-	{ 'mData': 'links', asSorting: 'none', 'sWidth': '10em' }
-	],
-	'sPaginationType': 'two_button'
-	}
-	);
-
-
-	$('#[%divId%]ListTable tbody td span.expanderClass').live(
-		'click',
-		function() {
-			var nTr = $(this).parents('tr')[0];
-			var oTable = $('#[%divId%]ListTable').dataTable();
-			if (oTable.fnIsOpen(nTr)) { /* This row is already open - close it */
-				$(this).replaceWith(
-					'<span class="sprite16Icon smallPlusIcon expanderClass"></span>'
-					);
-				oTable.fnClose(nTr);
-			} else { /* Open this row */
-				$(this).replaceWith(
-					'<span class="sprite16Icon smallCancelIcon expanderClass"></span>'
-					);
-				oTable.fnOpen(nTr,
-					fnFormat[%ucfirst(divId)%]Expansion(oTable, nTr),
-					'details'
-					);
-			}
-		}
-		);
-
-
-});
 
 /**
 *

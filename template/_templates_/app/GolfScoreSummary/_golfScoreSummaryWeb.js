@@ -10,24 +10,6 @@
 /**
 *
 * SRC: [%SRC_LOC%]
-*=====================================================================
-*/
-$(document).ready(function() {
-		$('#[%divId%]ListTable').dataTable(
-			 {
-			'aoColumns' : [
-			 {'mData': 'golfer_name' },
-			 {'mData': 'handicap' },
-			 {'mData': 'date_range' },
-			 {'mData': 'links', asSorting: 'none' }
-			],
-			'sPaginationType': 'two_button'
-			});
-		});
-
-/**
-*
-* SRC: [%SRC_LOC%]
 * =====================================================================
 * @param {Object} dataRows Array of [%ucfirst(divId)%].
 */
