@@ -1769,7 +1769,7 @@ text-align:left;
  <span class="sprite64Icon helpIcon">&nbsp;</span><br/>
  Get Help</a>
  </div>
- <div class="twocol largeIconSpan" id="launcherShowGrantsSpanId"><a id="launcherShowSecuritygrants" onclick="changePage(function(){showSecurityGrants()});">
+ <div class="twocol largeIconSpan" id="launcherShowAccessGroupsSpanId"><a id="launcherShowSecurityAccessGroups" onclick="changePage(function(){showSecurityAccessGroups()});">
  <span class="sprite64Icon keyIcon">&nbsp;</span><br/>
  Access Groups</a>
  </div>
@@ -1893,49 +1893,6 @@ text-align:left;
  </div>
  </div>
 </div> <!--end:GolfScore-->
- <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityGrants/_securityGrantsWeb.html -->
-<div id="securityGrants" class="contentPane MainLayout" >
- <h1 id="securityGrantsGolferNameId" class="pageTitle">Security Grants</h1>
- <div class="row">
- <div class="sixcol">
- <table id="securityGrantsListTable" class='dataTable pretty' summary="">
- <thead><tr><th>Profile Name</th><th >I want to&hellip;</th></tr></thead>
- </table>
- </div>
- <div class = "sixcol last">
- <form id="securityGrantsForm" action="">
- <div class="formLayout_Standard prettyWrapper">
- <div class="formFieldGroup" id="securityGrantsForm-profile_nameDivId">
- <label for ="securityGrantsForm-profile_name" id="securityGrantsFormLabel-profile_name">Profile Name</label>
- <input type="text" class="VALIDATErequired" name="profileName" id="securityGrantsForm-profile_name"/>
- <span class="ValidationMsg" id="securityGrantsFormLabel-profileNameError"></span>
- </div>
- <div class="formButtons">
- <button type="button" id="securityGrantsFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveSecurityGrantsForm();" >
- <span class="ui-button-text">Save</span></button>
- <button type="button" id="securityGrantsFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveSecurityGrantsForm();" >
- <span class="ui-button-text">Add</span></button>
- <button type="button" id="securityGrantsFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear"
- onclick="clearSecurityGrantsForm();" ><span class="ui-button-text">Clear</span></button>
- </div>
- <input type="hidden" name="last_update" id="securityGrantsForm-last_update"/>
- <input type="hidden" name="security_profile_id" id="securityGrantsForm-security_profile_id"/>
- </div>
- </form>
- </div>
- <br/>
- <div id="grantAssignDiv" style="display:none;">
- <p>Double Click or drag privileges.</p>
- <table summary=""> <tr><td style="text-align:center;">Available </td><td> &nbsp; </td><td style="text-align:center;">Granted</td></tr>
- <tr><td>
- <div id="availableGrantsId" class="securityGrantReceiver"></div></td>
- <td>&nbsp; </td>
- <td><div id="grantedPrivilegesId" class="securityGrantReceiver">&nbsp;</div></td>
- </tr>
- </table>
- </div>
- </div>
-</div> <!--end:SecurityGrants-->
  <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/ChangePassword/_changePasswordDialogWeb.html -->
 <div id="changePasswordDialog" title="Changing Password..." style="display:none;">
  <form id="changePasswordDialogForm" action="" >
@@ -1973,7 +1930,6 @@ text-align:left;
  <div class="twelvecol">
  <table id="supportRequestListTable" class='dataTable pretty' style="width:100%;" summary="">
  <thead><tr><th>Details</th><th>ID</th> <th > Summary</th><th >detailed_description</th> <th>last_update</th> <th >I want to&hellip;</th></tr></thead>
- <tbody></tbody>
  </table>
  </div>
  <div id="supportRequestFormHolder" title="Support Request" class = "" style="display:none; height:400px !important; overflow:auto;">
@@ -2011,6 +1967,50 @@ text-align:left;
  </div>
  </div>
 </div> <!--end:SupportRequest-->
+ <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/SecurityAccessGroups/_securityAccessGroupsWeb.html -->
+<div id="securityAccessGroups" class="contentPane MainLayout" >
+ <h1 id="securityAccessGroupsGolferNameId" class="pageTitle">Security Grants</h1>
+ <div class="row">
+ <div class="sixcol">
+ <table id="securityAccessGroupsListTable" class='dataTable pretty' summary="">
+ <thead><tr><th>Profile Name</th><th >I want to&hellip;</th></tr></thead>
+ </table>
+ </div>
+ <div class = "sixcol last">
+ <form id="securityAccessGroupsForm" action="">
+ <div class="formLayout_Standard prettyWrapper">
+ <div class="formFieldGroup" id="securityAccessGroupsForm-profile_nameDivId">
+ <label for ="securityAccessGroupsForm-profile_name" id="securityAccessGroupsFormLabel-profile_name">Profile Name</label>
+ <input type="text" class="VALIDATErequired" name="profileName" id="securityAccessGroupsForm-profile_name"/>
+ <span class="ValidationMsg" id="securityAccessGroupsFormLabel-profileNameError"></span>
+ </div>
+ <div class="formButtons">
+ <button type="button" id="securityAccessGroupsFormSave" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Save" onclick="saveSecurityAccessGroupsForm();" >
+ <span class="ui-button-text">Save</span></button>
+ <button type="button" id="securityAccessGroupsFormAdd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Add" onclick="saveSecurityAccessGroupsForm();" >
+ <span class="ui-button-text">Add</span></button>
+ <button type="button" id="securityAccessGroupsFormClear" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear"
+ onclick="clearSecurityAccessGroupsForm();" ><span class="ui-button-text">Clear</span></button>
+ <button type="button" id="securityAccessGroupsFormGrants" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Clear"
+ onclick="showSecurityGrantsAssignmentDialog();" ><span class="ui-button-text">Grants</span></button>
+ </div>
+ <input type="hidden" name="last_update" id="securityAccessGroupsForm-last_update"/>
+ <input type="hidden" name="security_profile_id" id="securityAccessGroupsForm-security_profile_id"/>
+ </div>
+ </form>
+ </div>
+ <br/>
+ <div id="grantAssignDiv" style="display:none;">
+ <table summary=""> <tr><td style="text-align:center;">Available </td><td> &nbsp; </td><td style="text-align:center;">Granted</td></tr>
+ <tr><td>
+ <div id="availableGrantsId" class="securityGrantReceiver"></div></td>
+ <td>&nbsp; </td>
+ <td><div id="grantedPrivilegesId" class="securityGrantReceiver">&nbsp;</div></td>
+ </tr>
+ </table>
+ </div>
+ </div>
+</div> <!--end:SecurityAccessGroups-->
  <!-- From: /home/wbmartin/www/firstapp/template/_templates_/app/Golfer/_golferWeb.html -->
 <div id="golfer" class="MainLayout contentPane" >
  <h1 id="golferTitle" class="pageTitle" >Golfers</h1>

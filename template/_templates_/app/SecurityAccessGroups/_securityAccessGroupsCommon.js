@@ -1,4 +1,4 @@
-[% divId = 'securityGrants' %]
+[% divId = 'securityAccessGroups' %]
 [% spwfResource = 'security_profile' %]
 [% prkey = 'security_profile_id' %]
 [% prettyName = 'Security Profile' %]
@@ -331,6 +331,31 @@ function show[%ucfirst(divId)%]() {
 	}
 
 }
+
+/**
+*
+*
+*/
+function showSecurityGrantsAssignmentDialog(){
+	if (isEmpty($('#[%divId%]Form-[%prkey%]').val())) {
+	 showDialog('Please select a Profile to continue.'); 
+	 return false;
+	}
+$('#grantAssignDiv').dialog({
+		resizable: false,
+		title:'Double Click or drag privileges.',
+		height: $(window).height()*.9,
+		width: $(window).width()*.9,
+		modal: true,
+		buttons: {
+			
+		'Finished': function() {
+			$(this).dialog('close');
+		}
+		}
+			});
+}
+
 
 //After complete Load setup
 /**

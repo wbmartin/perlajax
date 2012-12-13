@@ -58,14 +58,19 @@ class App
 		parentDiv = ''
 		@b.browser.link(:id,'launcherHome').click
 		letDustSettle
-		@b.browser.link(:id, 'launcherShowSecuritygrants').click
+		@b.browser.link(:id, 'launcherShowSecurityAccessGroups').click
 		#@b.browser.div(:id =>'securityGrantsListTable_filter').text_field.set('admin')
 		letDustSettle
-		@b.browser.table(:id ,'securityGrantsListTable').rows.each do |r| 
+		
+
+		
+		@b.browser.table(:id ,'securityAccessGroupsListTable').rows.each do |r| 
 			if r.text =~/default/ then
 				r.link(:text,'Edit').click
 			end
 		end
+		letDustSettle
+		@b.browser.button(:id,'securityAccessGroupsFormGrants').click
 		letDustSettle
 		sleep 2
 		if grantOrRevoke == 'G' then
@@ -83,6 +88,8 @@ class App
 	    end
 
 		end
+		letDustSettle
+		@b.browser.button(:text,'Finished').click()
 		letDustSettle
 		@b.browser.link(:id,'launcherHome').click
 		letDustSettle

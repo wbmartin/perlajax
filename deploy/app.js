@@ -526,7 +526,7 @@ function imposeApplicationSecurityRestrictions() {
  imposeLauncherSecurityUIRestrictions();
  imposeGolfScoreSummarySecurityUIRestrictions();
  imposeSecurityUserSecurityUIRestrictions();
- imposeSecurityGrantsSecurityUIRestrictions();
+ imposeSecurityAccessGroupsSecurityUIRestrictions();
  imposeQuickGolfScoreSecurityUIRestrictions();
 
 }
@@ -2445,727 +2445,6 @@ function imposeGolfScoreSecurityUIRestrictions() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-//Server Calls
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @return {boolean} allowed.
-*/
-function retrieveSecurityGrantsList() {
- if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
-  briefNotify(
-    'Access Violation retrieveSecurityGrantsList',
-    'ERROR'
-    );
-  return false;
- }
-
- var params = prepParams(params, 'security_profile' , 'select');
- var successf = function(rslt) {
-  if (!rslt[SERVER_SIDE_FAIL]) {
-   populateSecurityGrantsListTable(rslt.rows);
-  }else {
-   briefNotify(
-     'There was a problem communicating with the Server.',
-     'ERROR'
-     );
-  }
-
- };
- serverCall(params, successf, FAILF);
-}
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {Object} params data.
-* @return {boolean} allowed.
-*/
-function retrieveSecurityGrants(params) {
- if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
-  briefNotify(
-    'Access Violation - retrieveSecurityGrants',
-    'ERROR');
-  return false;
- }
-
- params = prepParams(params, 'security_profile', 'SELECT');
- var successf = function(rslt) {
-  if (!rslt[SERVER_SIDE_FAIL]) {
-   bindToForm('securityGrantsForm', rslt.rows[0]);
-   toggleSaveMode('securityGrantsForm', true);
-  }else {
-   briefNotify(
-     'There was a problem communicating with the Server.',
-     'ERROR'
-     );
-  }
-
- };
- serverCall(params, successf, FAILF);
-}
-
-
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {integer} securityProfileId_ prkey.
-* @param {string} lastUpdate_ for transaction mgmt.
-* @return {boolean} allowed.
-*/
-function deleteSecurityGrants(securityProfileId_, lastUpdate_) {
- if (!isUserAuthorized('DELETE_SECURITY_PROFILE')) {
-  briefNotify(
-    'Access Violation -  deleteSecurityGrants ',
-    'ERROR'
-    );
-  return false;
- }
-
- var params = prepParams(params, 'security_profile' , 'delete');
- params['security_profile_id'] = securityProfileId_;
- params['last_update'] = lastUpdate_;
- var successf = function(rslt) {
-  if (!rslt[SERVER_SIDE_FAIL]) {
-   removeSecurityGrantsListTableRow(rslt.security_profile_id);
-   briefNotify('Security Profile Deleted Successfully', 'INFO');
-  }else {
-   briefNotify(
-     'There was a problem communicating with the Server.',
-     'ERROR'
-     );
-  }
-
- };
- serverCall(params, successf, FAILF);
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {Object} params data.
-* @return {boolean} allowed.
-*/
-function saveSecurityGrants(params) {
- if (!isUserAuthorized('UPDATE_SECURITY_PROFILE') &&
-   !isUserAuthorized('INSERT_SECURITY_PROFILE')) {
-    briefNotify(
-      'Access Violation - saveSecurityGrants ',
-      'ERROR'
-      );
-    return false;
-   }
-
- params = prepParams(params, 'security_profile', insertUpdateChoose);
- var successf = function(rslt) {
-  if (!rslt[SERVER_SIDE_FAIL]) {
-   clearForm('securityGrantsForm');
-   if (rslt.spwfAction == 'UPDATE') {
-    replaceSecurityGrantsListTableRow(rslt.rows[0]);
-   }else if (rslt.spwfAction == 'INSERT') {
-    addNewSecurityGrantsListTableRow(rslt.rows[0]);
-   }
-   briefNotify('Security Profile Successfully Saved');
-   clearSecurityGrantsForm();
-
-  }else {
-   briefNotify(
-     'There was a problem communicating with the Server.',
-     'ERROR');
-  }
-
- };
- serverCall(params, successf, FAILF);
-}
-
-//ServerCall Wrappers
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {integer} securityGrantsId_ prkey.
-* @return {boolean} allowed.
-*/
-function editSecurityGrants(securityGrantsId_) {
- if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
-  briefNotify(
-    'Access Violation - editSecurityGrants',
-    'ERROR'
-    );
-  return false;
- }
-
- if (isUserAuthorized('UPDATE_SECURITY_PROFILE')) {
-  securityLockForm('securityGrantsForm', false);
- }else {securityLockForm('securityGrantsForm', true);}
-
- $('#grantAssignDiv').removeClass('LogicDisabled');
- if (securityGrantsId_) {
-  makeAvailableAllPrivileges();
-  var params = {'where_clause' : 'security_profile_id=' + securityGrantsId_};
-  retrieveSecurityGrants(params);
-  if (isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
-   retrieveAllGrantedPrivilegesList(securityGrantsId_);
-  }
- }
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @return {boolean} allowed.
-*/
-function saveSecurityGrantsForm() {
- if (!isUserAuthorized('UPDATE_SECURITY_PROFILE') &&
-   !isUserAuthorized('INSERT_SECURITY_PROFILE')) {
-    briefNotify('Access Violation  - saveSecurityGrantsForm',
-      'ERROR'
-      );
-    return false;
-   }
-
- if (validateSecurityGrantsForm()) {
-  var params = bindForm('securityGrantsForm');
-  saveSecurityGrants(params);
- }
-
-
-//validation
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @return {boolean}  validity.
-*/
-}
-function validateSecurityGrantsForm() {
- var formName = 'securityGrantsForm';
- var formValid = standardValidate(formName);
- return formValid;
-}
-
-//Top Level HTML Manip
-/**
-*
-* SRC: _securityGrantsCommon
-* =====================================================================
-* @param {Object} dataRows array of SecurityGrants objects.
-*/
-function populateSecurityGrantsListTable(dataRows) {
- var dataArray = new Array();
- for (var ndx = 0; ndx < dataRows.length; ndx++) {
-  dataArray[ndx] = buildSecurityGrantsListTableRow(dataRows[ndx]);
- }
- $('#securityGrantsListTable').dataTable().fnClearTable();
- $('#securityGrantsListTable').dataTable().fnAddData(dataArray, true);
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-* =====================================================================
-* @param {Object} data SecurityGrants info.
-* @return {Object}  datatable row.
-*/
-function buildSecurityGrantsListTableRow(data) {
- var dataHash = {};
- var links = '';
- dataHash['profile_name'] = data.profile_name;
- if (isUserAuthorized('UPDATE_SECURITY_PROFILE')) {
-  links += '<a class="alink" onclick="editSecurityGrants(';
-  links += data.security_profile_id + ')">Edit</a> ';
-  links += ' &nbsp; &nbsp; ';
- }else if (isUserAuthorized('SELECT_SECURITY_PROFILE')) {
-  links += '<a class="alink" onclick="editSecurityGrants(';
-  links += data.security_profile_id + ')">View</a>';
-  links += ' &nbsp; &nbsp; ';
- }
- if (isUserAuthorized('DELETE_SECURITY_PROFILE')) {
-  links += '<a class="alink" onclick="deleteSecurityGrants(';
-  links += data.security_profile_id + ', \'' + data.last_update;
-  links += '\')">Delete</a>';
- }
- dataHash['links'] = links;
- dataHash['DT_RowId'] = 'SecurityGrantsListTableTR-';
- dataHash['DT_RowId'] += data.security_profile_id;
-
- return dataHash;
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {Object} row SecurityGrants info.
-*/
-function replaceSecurityGrantsListTableRow(row) {
- $('#securityGrantsListTable').dataTable().fnUpdate(
-   buildSecurityGrantsListTableRow(row),
-   $('#SecurityGrantsListTableTR-' + row.security_profile_id)[0]
-   );
-}
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {Object} row SecurityGrants info.
-*/
-function addNewSecurityGrantsListTableRow(row) {
- $('#securityGrantsListTable').dataTable().fnAddData(
-   buildSecurityGrantsListTableRow(row)
-   );
-}
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================a
-* @param {integer} securityProfileId_ prkey.
-*/
-function removeSecurityGrantsListTableRow(securityProfileId_) {
- $('#securityGrantsListTable').dataTable().fnDeleteRow(
-   $('#SecurityGrantsListTableTR-' + securityProfileId_)[0]
-   );
-}
-
-//Div Access and App Layout Calls
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @return {boolean} allowed.
-*/
-function showSecurityGrants() {
- statusMsg('Navigated to Security Grants');
- if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
-  briefNotify(
-    'Access Violation - showSecurityGrants',
-    'ERROR'
-    );
-  return false;
- }
-
- retrieveSecurityGrantsList();
- hideCurrentContentPane();
- $('#securityGrants').fadeIn();
- currentContentPane = 'securityGrants';
- if (isFormEmpty('securityGrantsForm')) {
-  toggleSaveMode('securityGrantsForm', false);
- }
- if (isUserAuthorized('SELECT_SECURITY_PRIVILEGE')) {
-  if ($('#securityGrantsForm-security_profile_id').val() == '') {
-   retrieveAllAvailablePrivilegesList();
-  }
- }
- if ($('#securityGrantsForm-security_profile_id').val() == '') {
-  $('#grantAssignDiv').addClass('LogicDisabled');
- }
-
-}
-
-//After complete Load setup
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-*/
-$(document).ready(function() {
- $('#securityGrantsListTable').dataTable(
-  {'aoColumns' : [
-   { 'mData': 'profile_name' },
- { 'mData': 'links', asSorting: 'none' }
- ],
- 'sPaginationType' : 'two_button'
-  }
-  );
-
- $('#availableGrantsId').droppable({
-  accept: '.securityGrant',
-  drop: handleSecurityRevokeDrop
- });
- $('#grantedPrivilegesId').droppable({
-  accept: '.securityGrant',
-  drop: handleSecurityGrantDrop
- });
-
-});
-
-//page specific functions
-var allAvailablePrivilegeList;
-/**
-*
-* SRC: _securityGrantsCommon
-* =====================================================================
-* @return {boolean} allowed.
-*/
-function retrieveAllAvailablePrivilegesList() {
- if (!isUserAuthorized('SELECT_SECURITY_PRIVILEGE')) {
-  briefNotify(
-    'Access Violation - retrieveAllAvailablePrivilegesList',
-    'ERROR'
-    );
-  return false;
- }
-
- var params = prepParams(params, 'security_privilege' , 'select');
- var successf = function(rslt) {
-  allAvailablePrivilegeList = deepCopy(rslt.rows);
-  populateAvailableGrantsWithAll();
- };
- serverCall(params, successf, FAILF);
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-*/
-function populateAvailableGrantsWithAll() {
- var newOptions = '';
- for (var ndx = 0; ndx < allAvailablePrivilegeList.length; ndx++) {
-  newOptions += '<div class="securityGrant" id="securityGrant';
-  newOptions += allAvailablePrivilegeList[ndx].security_privilege_id;
-  newOptions += 'Id")"><span class="securityGrantName"> ';
-  newOptions += allAvailablePrivilegeList[ndx].priv_name;
-  newOptions += '</span> <span class="securityGrantDescription">';
-  newOptions += allAvailablePrivilegeList[ndx].description + '</span></div>';
- }
-
- $('#availableGrantsId').html(newOptions);
- if (isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
-  makeDragable('.securityGrant');
- }
- $('#grantedPrivilegesId').children().remove();
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {string} identifierTodraggable_  div id.
-* @return {boolean} allowed.
-*/
-function makeDragable(identifierTodraggable_) {
- if (!isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
-  briefNotify('Access Violation - makeDragable', 'ERROR');
-  return false;
- }
-
- $(identifierTodraggable_).draggable({
-  snap: '.securityGrantReceiver',
- revert: 'invalid',
- scroll: false,
- helper: 'clone'
- });
-    $(identifierTodraggable_).dblclick(function() {
-     attemptSecurityGrantRevoke('SWAP', $(this).attr('id'));
-    });
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-* =====================================================================
-* @param {integer} profileId_ prkey.
-* @return {boolean} allowed.
-*/
-function retrieveAllGrantedPrivilegesList(profileId_) {
- if (!isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
-  briefNotify(
-    'Access Violation  - retrieveAllGrantedPrivilegesList',
-    'ERROR'
-    );
-  return false;
- }
-
- var params = prepParams(params, 'security_profile_grant' , 'select');
- params['where_clause'] = 'security_profile_id=' + profileId_;
- var successf = function(rslt) {
-  var grants = rslt.rows;
-  for (var i = 0; i < grants.length; i++) {
-   assignGrantStatus(
-     'securityGrant' + grants[i].security_privilege_id + 'Id',
-     'GRANT'
-     );
-  }
-  sortDivChildren('#grantedPrivilegesId');
- };
- serverCall(params, successf, FAILF);
-}
-
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {Object} event unknown.
-* @param {Object} ui  dom element.
-*/
-function handleSecurityGrantDrop(event, ui) {
- if (ui.draggable.parent().attr('id') != 'grantedPrivilegesId')
-  attemptSecurityGrantRevoke('GRANT', ui.draggable.attr('id'));
-}
-/**
-*
-* SRC: _securityGrantsCommon
-* =====================================================================
-* @param {Object} event unknown.
-* @param {Object} ui  dom element.
-*/
-function handleSecurityRevokeDrop(event, ui) {
- if (ui.draggable.parent().attr('id') != 'availableGrantsId')
-  attemptSecurityGrantRevoke('REVOKE', ui.draggable.attr('id'));
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {string} grantOrRevoke_  GRANT or REVOKE.
-* @param {string} divId_ div.
-* @return {boolean} allowed.
-*/
-function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
- if (!isUserAuthorized('DELETE_SECURITY_PROFILE_GRANT')) {
-  briefNotify(
-    'Access Violation - attemptSecurityGrantRevoke ',
-    'ERROR'
-    );
-  return false;
- }
- if (grantOrRevoke_ === 'SWAP' &&
-   $('#' + divId_).parent().attr('id') === 'availableGrantsId') {
-  grantOrRevoke_ = 'GRANT';
- } else {
-  grantOrRevoke_ = 'REVOKE';
- }
-
-
- var profileId = $('#securityGrantsForm-security_profile_id').val();
- var privId = divId_.replace('securityGrant', '');
- privId = privId.replace('Id', '');
- if (!isEmpty(profileId)) {
-  if (grantOrRevoke_ === 'GRANT') {//grant requested
-   assignGrantStatus(divId_, 'GRANT');
-   grantPrivilege(privId, profileId);
-  }else {//default to revoke
-   assignGrantStatus(divId_, 'REVOKE');
-   revokePrivilege(privId, profileId);
-  }
- }else {// div is auto removed if not assignGrantsStatus above called
-  briefNotify('Please choose a profile');
- }
-
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {string} grantDivId_ div.
-* @param {string} status_ GRANT or REVOKE.
-* @return {boolean} allowed.
-*/
-function assignGrantStatus(grantDivId_, status_) {
- if (!isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
-  briefNotify('Access Violation - assignGrantStatus', 'ERROR');
-  return false;
- }
-
- var fromLocation, toLocation;
- if (status_ == 'GRANT') {
-  fromLocation = '#availableGrantsId';
-  toLocation = '#grantedPrivilegesId';
- } else {
-  fromLocation = '#grantedPrivilegesId';
-  toLocation = '#availableGrantsId';
- }
- fromLocation += ' #' + grantDivId_;
- $(fromLocation).appendTo(toLocation);
- $(fromLocation).remove();
- if (isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT') &&
-   isUserAuthorized('UPDATE_SECURITY_PROFILE_GRANT')) {
-    makeDragable(toLocation + ' #' + grantDivId_);
-   }
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-* @param {integer} securityPrivilegeId_ priv id.
-* @param {integer} securityProfileId_  profile id.
-* @return {boolean} allowed.
-*/
-function grantPrivilege(securityPrivilegeId_, securityProfileId_) {
- if (!isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
-  briefNotify('Access Violation -grantPrivilege ', 'ERROR');
-  return false;
- }
-
- var params = prepParams(params, 'security_profile_grant', 'insert');
- params['security_privilege_id'] = securityPrivilegeId_;
- params['security_profile_id'] = securityProfileId_;
- params['passThru'] = 'pendingDiv~securityGrant';
- params['passThru'] += securityPrivilegeId_ + 'Id;';
- var successf = function(rslt) {
-  if (!rslt['serverSideFail']) {
-   briefNotify('Privilege Granted');
-   sortDivChildren('#grantedPrivilegesId');
-  }
-  else {
-   briefNotify('There was a problem granting this privilege');
-   assignGrantStatus(rslt['PT_pendingDiv'], 'AVAIL');
-  }
- };
- serverCall(params, successf, FAILF);
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-* =====================================================================
-* @param {integer} securityPrivilegeId_ priv id.
-* @param {integer} securityProfileId_  profile id.
-* @return {boolean} allowed.
-*/
-function revokePrivilege(securityPrivilegeId_, securityProfileId_) {
- if (!isUserAuthorized('DELETE_SECURITY_PROFILE')) {
-  briefNotify('Access Violation  - revokePrivilege' , 'ERROR');
-  return false;
- }
-
- var params = prepParams(params, 'security_profile_grant', 'deletew');
- params['where_clause'] = 'security_privilege_id=';
- params['where_clause'] += securityPrivilegeId_;
- params['where_clause'] += ' and security_profile_id = ' + securityProfileId_;
- params['passThru'] = 'pendingDiv~securityGrant';
- params['passThru'] += securityPrivilegeId_ + 'Id;';
- var successf = function(rslt) {
-  if (!rslt['serverSideFail']) {
-   briefNotify('Privilege Revoked');
-   sortDivChildren('#availableGrantsId');
-  }else {
-   briefNotify('There was a problem granting this privilege');
-   assignGrantStatus(rslt['PT_pendingDiv'], 'GRANT');
-  }
-
- };
- serverCall(params, successf, FAILF);
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-*/
-function makeAvailableAllPrivileges() {
-
- $('#grantedPrivilegesId').children().remove();
- $('#availableGrantsId').children().remove();
- populateAvailableGrantsWithAll();
- sortDivChildren('#availableGrantsId');
-
-
-}
-/**
-*
-* SRC: _securityGrantsCommon
-* =====================================================================
-* @param {string} divName_  to sort.
-*/
-function sortDivChildren(divName_) {
- var children = $(divName_).children().sort(function(a, b) {
-  var vA = $(a).attr('id');
-  var vB = $(b).attr('id');
-  return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
- });
- $(divName_).children().remove();
- $(divName_).append(children);
- if (isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
-  makeDragable(divName_ + ' .securityGrant');
- }
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-*/
-function imposeSecurityGrantsSecurityUIRestrictions() {
- var divIdToSecure;
- divIdToSecure = '#grantAssignDiv';
- (isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) ?
-  securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
- divIdToSecure = '#securityGrantsFormSave';
- (isUserAuthorized('UPDATE_SECURITY_PROFILE')) ?
-  securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
- divIdToSecure = '#securityGrantsFormAdd';
- (isUserAuthorized('INSERT_SECURITY_PROFILE')) ?
-  securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
- divIdToSecure = '#securityGrantsEntryDivId';
- (isUserAuthorized('UPDATE_SECURITY_PROFILE') ||
-  isUserAuthorized('INSERT_SECURITY_PROFILE')) ?
-  securityshow(divIdToSecure) : securityHide(divIdToSecure);
-
- if (!isUserAuthorized('INSERT_SECURITY_PROFILE') &&
-   !isUserAuthorized('UPDATE_SECURITY_PROFILE')) {
-    securityLockForm('securityGrantsForm', true);
-   }
- if (!isUserAuthorized('INSERT_SECURITY_PROFILE', false) &&
-   isFormEmpty('securityGrantsForm')) {
-    securityLockForm('securityGrantsForm', true);
-   }
-}
-
-/**
-*
-* SRC: _securityGrantsCommon
-*=====================================================================
-*/
-function clearSecurityGrantsForm() {
- clearForm('securityGrantsForm');
- makeAvailableAllPrivileges();
- $('#grantAssignDiv').addClass('LogicDisabled');
- if (isUserAuthorized('INSERT_SECURITY_PROFILE', false)) {
-  securityshow('#securityGrantsFormAdd');
-  securityLockForm('securityGrantsForm', false);
- }else {
-  securityHide('#securityGrantsFormAdd');
-  securityLockForm('securityGrantsForm', true);
- }
-}
-
-
-
-
-
-/**
-*
-* SRC: _securityGrantsWeb
-*=====================================================================
-*/
-
-
-
 /*
 *
 * SRC: _changePasswordDialogWeb
@@ -3903,6 +3182,752 @@ function showSupportRequestDialog() {
 /**
 *
 * SRC: _supportRequestWeb
+*=====================================================================
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Server Calls
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
+function retrieveSecurityAccessGroupsList() {
+ if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
+  briefNotify(
+    'Access Violation retrieveSecurityAccessGroupsList',
+    'ERROR'
+    );
+  return false;
+ }
+
+ var params = prepParams(params, 'security_profile' , 'select');
+ var successf = function(rslt) {
+  if (!rslt[SERVER_SIDE_FAIL]) {
+   populateSecurityAccessGroupsListTable(rslt.rows);
+  }else {
+   briefNotify(
+     'There was a problem communicating with the Server.',
+     'ERROR'
+     );
+  }
+
+ };
+ serverCall(params, successf, FAILF);
+}
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
+function retrieveSecurityAccessGroups(params) {
+ if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
+  briefNotify(
+    'Access Violation - retrieveSecurityAccessGroups',
+    'ERROR');
+  return false;
+ }
+
+ params = prepParams(params, 'security_profile', 'SELECT');
+ var successf = function(rslt) {
+  if (!rslt[SERVER_SIDE_FAIL]) {
+   bindToForm('securityAccessGroupsForm', rslt.rows[0]);
+   toggleSaveMode('securityAccessGroupsForm', true);
+  }else {
+   briefNotify(
+     'There was a problem communicating with the Server.',
+     'ERROR'
+     );
+  }
+
+ };
+ serverCall(params, successf, FAILF);
+}
+
+
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {integer} securityProfileId_ prkey.
+* @param {string} lastUpdate_ for transaction mgmt.
+* @return {boolean} allowed.
+*/
+function deleteSecurityAccessGroups(securityProfileId_, lastUpdate_) {
+ if (!isUserAuthorized('DELETE_SECURITY_PROFILE')) {
+  briefNotify(
+    'Access Violation -  deleteSecurityAccessGroups ',
+    'ERROR'
+    );
+  return false;
+ }
+
+ var params = prepParams(params, 'security_profile' , 'delete');
+ params['security_profile_id'] = securityProfileId_;
+ params['last_update'] = lastUpdate_;
+ var successf = function(rslt) {
+  if (!rslt[SERVER_SIDE_FAIL]) {
+   removeSecurityAccessGroupsListTableRow(rslt.security_profile_id);
+   briefNotify('Security Profile Deleted Successfully', 'INFO');
+  }else {
+   briefNotify(
+     'There was a problem communicating with the Server.',
+     'ERROR'
+     );
+  }
+
+ };
+ serverCall(params, successf, FAILF);
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {Object} params data.
+* @return {boolean} allowed.
+*/
+function saveSecurityAccessGroups(params) {
+ if (!isUserAuthorized('UPDATE_SECURITY_PROFILE') &&
+   !isUserAuthorized('INSERT_SECURITY_PROFILE')) {
+    briefNotify(
+      'Access Violation - saveSecurityAccessGroups ',
+      'ERROR'
+      );
+    return false;
+   }
+
+ params = prepParams(params, 'security_profile', insertUpdateChoose);
+ var successf = function(rslt) {
+  if (!rslt[SERVER_SIDE_FAIL]) {
+   clearForm('securityAccessGroupsForm');
+   if (rslt.spwfAction == 'UPDATE') {
+    replaceSecurityAccessGroupsListTableRow(rslt.rows[0]);
+   }else if (rslt.spwfAction == 'INSERT') {
+    addNewSecurityAccessGroupsListTableRow(rslt.rows[0]);
+   }
+   briefNotify('Security Profile Successfully Saved');
+   clearSecurityAccessGroupsForm();
+
+  }else {
+   briefNotify(
+     'There was a problem communicating with the Server.',
+     'ERROR');
+  }
+
+ };
+ serverCall(params, successf, FAILF);
+}
+
+//ServerCall Wrappers
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {integer} securityAccessGroupsId_ prkey.
+* @return {boolean} allowed.
+*/
+function editSecurityAccessGroups(securityAccessGroupsId_) {
+ if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
+  briefNotify(
+    'Access Violation - editSecurityAccessGroups',
+    'ERROR'
+    );
+  return false;
+ }
+
+ if (isUserAuthorized('UPDATE_SECURITY_PROFILE')) {
+  securityLockForm('securityAccessGroupsForm', false);
+ }else {securityLockForm('securityAccessGroupsForm', true);}
+
+ $('#grantAssignDiv').removeClass('LogicDisabled');
+ if (securityAccessGroupsId_) {
+  makeAvailableAllPrivileges();
+  var params = {'where_clause' : 'security_profile_id=' + securityAccessGroupsId_};
+  retrieveSecurityAccessGroups(params);
+  if (isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
+   retrieveAllGrantedPrivilegesList(securityAccessGroupsId_);
+  }
+ }
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
+function saveSecurityAccessGroupsForm() {
+ if (!isUserAuthorized('UPDATE_SECURITY_PROFILE') &&
+   !isUserAuthorized('INSERT_SECURITY_PROFILE')) {
+    briefNotify('Access Violation  - saveSecurityAccessGroupsForm',
+      'ERROR'
+      );
+    return false;
+   }
+
+ if (validateSecurityAccessGroupsForm()) {
+  var params = bindForm('securityAccessGroupsForm');
+  saveSecurityAccessGroups(params);
+ }
+
+
+//validation
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @return {boolean}  validity.
+*/
+}
+function validateSecurityAccessGroupsForm() {
+ var formName = 'securityAccessGroupsForm';
+ var formValid = standardValidate(formName);
+ return formValid;
+}
+
+//Top Level HTML Manip
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {Object} dataRows array of SecurityAccessGroups objects.
+*/
+function populateSecurityAccessGroupsListTable(dataRows) {
+ var dataArray = new Array();
+ for (var ndx = 0; ndx < dataRows.length; ndx++) {
+  dataArray[ndx] = buildSecurityAccessGroupsListTableRow(dataRows[ndx]);
+ }
+ $('#securityAccessGroupsListTable').dataTable().fnClearTable();
+ $('#securityAccessGroupsListTable').dataTable().fnAddData(dataArray, true);
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {Object} data SecurityAccessGroups info.
+* @return {Object}  datatable row.
+*/
+function buildSecurityAccessGroupsListTableRow(data) {
+ var dataHash = {};
+ var links = '';
+ dataHash['profile_name'] = data.profile_name;
+ if (isUserAuthorized('UPDATE_SECURITY_PROFILE')) {
+  links += '<a class="alink" onclick="editSecurityAccessGroups(';
+  links += data.security_profile_id + ')">Edit</a> ';
+  links += ' &nbsp; &nbsp; ';
+ }else if (isUserAuthorized('SELECT_SECURITY_PROFILE')) {
+  links += '<a class="alink" onclick="editSecurityAccessGroups(';
+  links += data.security_profile_id + ')">View</a>';
+  links += ' &nbsp; &nbsp; ';
+ }
+ if (isUserAuthorized('DELETE_SECURITY_PROFILE')) {
+  links += '<a class="alink" onclick="deleteSecurityAccessGroups(';
+  links += data.security_profile_id + ', \'' + data.last_update;
+  links += '\')">Delete</a>';
+ }
+ dataHash['links'] = links;
+ dataHash['DT_RowId'] = 'SecurityAccessGroupsListTableTR-';
+ dataHash['DT_RowId'] += data.security_profile_id;
+
+ return dataHash;
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {Object} row SecurityAccessGroups info.
+*/
+function replaceSecurityAccessGroupsListTableRow(row) {
+ $('#securityAccessGroupsListTable').dataTable().fnUpdate(
+   buildSecurityAccessGroupsListTableRow(row),
+   $('#SecurityAccessGroupsListTableTR-' + row.security_profile_id)[0]
+   );
+}
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {Object} row SecurityAccessGroups info.
+*/
+function addNewSecurityAccessGroupsListTableRow(row) {
+ $('#securityAccessGroupsListTable').dataTable().fnAddData(
+   buildSecurityAccessGroupsListTableRow(row)
+   );
+}
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================a
+* @param {integer} securityProfileId_ prkey.
+*/
+function removeSecurityAccessGroupsListTableRow(securityProfileId_) {
+ $('#securityAccessGroupsListTable').dataTable().fnDeleteRow(
+   $('#SecurityAccessGroupsListTableTR-' + securityProfileId_)[0]
+   );
+}
+
+//Div Access and App Layout Calls
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @return {boolean} allowed.
+*/
+function showSecurityAccessGroups() {
+ statusMsg('Navigated to Security Grants');
+ if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
+  briefNotify(
+    'Access Violation - showSecurityAccessGroups',
+    'ERROR'
+    );
+  return false;
+ }
+
+ retrieveSecurityAccessGroupsList();
+ hideCurrentContentPane();
+ $('#securityAccessGroups').fadeIn();
+ currentContentPane = 'securityAccessGroups';
+ if (isFormEmpty('securityAccessGroupsForm')) {
+  toggleSaveMode('securityAccessGroupsForm', false);
+ }
+ if (isUserAuthorized('SELECT_SECURITY_PRIVILEGE')) {
+  if ($('#securityAccessGroupsForm-security_profile_id').val() == '') {
+   retrieveAllAvailablePrivilegesList();
+  }
+ }
+ if ($('#securityAccessGroupsForm-security_profile_id').val() == '') {
+  $('#grantAssignDiv').addClass('LogicDisabled');
+ }
+
+}
+
+/**
+*
+*
+*/
+function showSecurityGrantsAssignmentDialog(){
+ if (isEmpty($('#securityAccessGroupsForm-security_profile_id').val())) {
+  showDialog('Please select a Profile to continue.');
+  return false;
+ }
+$('#grantAssignDiv').dialog({
+  resizable: false,
+  title:'Double Click or drag privileges.',
+  height: $(window).height()*.9,
+  width: $(window).width()*.9,
+  modal: true,
+  buttons: {
+
+  'Finished': function() {
+   $(this).dialog('close');
+  }
+  }
+   });
+}
+
+
+//After complete Load setup
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+*/
+$(document).ready(function() {
+ $('#securityAccessGroupsListTable').dataTable(
+  {'aoColumns' : [
+   { 'mData': 'profile_name' },
+ { 'mData': 'links', asSorting: 'none' }
+ ],
+ 'sPaginationType' : 'two_button'
+  }
+  );
+
+ $('#availableGrantsId').droppable({
+  accept: '.securityGrant',
+  drop: handleSecurityRevokeDrop
+ });
+ $('#grantedPrivilegesId').droppable({
+  accept: '.securityGrant',
+  drop: handleSecurityGrantDrop
+ });
+
+});
+
+//page specific functions
+var allAvailablePrivilegeList;
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @return {boolean} allowed.
+*/
+function retrieveAllAvailablePrivilegesList() {
+ if (!isUserAuthorized('SELECT_SECURITY_PRIVILEGE')) {
+  briefNotify(
+    'Access Violation - retrieveAllAvailablePrivilegesList',
+    'ERROR'
+    );
+  return false;
+ }
+
+ var params = prepParams(params, 'security_privilege' , 'select');
+ var successf = function(rslt) {
+  allAvailablePrivilegeList = deepCopy(rslt.rows);
+  populateAvailableGrantsWithAll();
+ };
+ serverCall(params, successf, FAILF);
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+*/
+function populateAvailableGrantsWithAll() {
+ var newOptions = '';
+ for (var ndx = 0; ndx < allAvailablePrivilegeList.length; ndx++) {
+  newOptions += '<div class="securityGrant" id="securityGrant';
+  newOptions += allAvailablePrivilegeList[ndx].security_privilege_id;
+  newOptions += 'Id")"><span class="securityGrantName"> ';
+  newOptions += allAvailablePrivilegeList[ndx].priv_name;
+  newOptions += '</span> <span class="securityGrantDescription">';
+  newOptions += allAvailablePrivilegeList[ndx].description + '</span></div>';
+ }
+
+ $('#availableGrantsId').html(newOptions);
+ if (isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
+  makeDragable('.securityGrant');
+ }
+ $('#grantedPrivilegesId').children().remove();
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {string} identifierTodraggable_  div id.
+* @return {boolean} allowed.
+*/
+function makeDragable(identifierTodraggable_) {
+ if (!isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
+  briefNotify('Access Violation - makeDragable', 'ERROR');
+  return false;
+ }
+
+ $(identifierTodraggable_).draggable({
+  snap: '.securityGrantReceiver',
+ revert: 'invalid',
+ scroll: false,
+ helper: 'clone'
+ });
+    $(identifierTodraggable_).dblclick(function() {
+     attemptSecurityGrantRevoke('SWAP', $(this).attr('id'));
+    });
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {integer} profileId_ prkey.
+* @return {boolean} allowed.
+*/
+function retrieveAllGrantedPrivilegesList(profileId_) {
+ if (!isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
+  briefNotify(
+    'Access Violation  - retrieveAllGrantedPrivilegesList',
+    'ERROR'
+    );
+  return false;
+ }
+
+ var params = prepParams(params, 'security_profile_grant' , 'select');
+ params['where_clause'] = 'security_profile_id=' + profileId_;
+ var successf = function(rslt) {
+  var grants = rslt.rows;
+  for (var i = 0; i < grants.length; i++) {
+   assignGrantStatus(
+     'securityGrant' + grants[i].security_privilege_id + 'Id',
+     'GRANT'
+     );
+  }
+  sortDivChildren('#grantedPrivilegesId');
+ };
+ serverCall(params, successf, FAILF);
+}
+
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {Object} event unknown.
+* @param {Object} ui  dom element.
+*/
+function handleSecurityGrantDrop(event, ui) {
+ if (ui.draggable.parent().attr('id') != 'grantedPrivilegesId')
+  attemptSecurityGrantRevoke('GRANT', ui.draggable.attr('id'));
+}
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {Object} event unknown.
+* @param {Object} ui  dom element.
+*/
+function handleSecurityRevokeDrop(event, ui) {
+ if (ui.draggable.parent().attr('id') != 'availableGrantsId')
+  attemptSecurityGrantRevoke('REVOKE', ui.draggable.attr('id'));
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {string} grantOrRevoke_  GRANT or REVOKE.
+* @param {string} divId_ div.
+* @return {boolean} allowed.
+*/
+function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
+ if (!isUserAuthorized('DELETE_SECURITY_PROFILE_GRANT')) {
+  briefNotify(
+    'Access Violation - attemptSecurityGrantRevoke ',
+    'ERROR'
+    );
+  return false;
+ }
+ if (grantOrRevoke_ === 'SWAP' &&
+   $('#' + divId_).parent().attr('id') === 'availableGrantsId') {
+  grantOrRevoke_ = 'GRANT';
+ } else {
+  grantOrRevoke_ = 'REVOKE';
+ }
+
+
+ var profileId = $('#securityAccessGroupsForm-security_profile_id').val();
+ var privId = divId_.replace('securityGrant', '');
+ privId = privId.replace('Id', '');
+ if (!isEmpty(profileId)) {
+  if (grantOrRevoke_ === 'GRANT') {//grant requested
+   assignGrantStatus(divId_, 'GRANT');
+   grantPrivilege(privId, profileId);
+  }else {//default to revoke
+   assignGrantStatus(divId_, 'REVOKE');
+   revokePrivilege(privId, profileId);
+  }
+ }else {// div is auto removed if not assignGrantsStatus above called
+  briefNotify('Please choose a profile');
+ }
+
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {string} grantDivId_ div.
+* @param {string} status_ GRANT or REVOKE.
+* @return {boolean} allowed.
+*/
+function assignGrantStatus(grantDivId_, status_) {
+ if (!isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
+  briefNotify('Access Violation - assignGrantStatus', 'ERROR');
+  return false;
+ }
+
+ var fromLocation, toLocation;
+ if (status_ == 'GRANT') {
+  fromLocation = '#availableGrantsId';
+  toLocation = '#grantedPrivilegesId';
+ } else {
+  fromLocation = '#grantedPrivilegesId';
+  toLocation = '#availableGrantsId';
+ }
+ fromLocation += ' #' + grantDivId_;
+ $(fromLocation).appendTo(toLocation);
+ $(fromLocation).remove();
+ if (isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT') &&
+   isUserAuthorized('UPDATE_SECURITY_PROFILE_GRANT')) {
+    makeDragable(toLocation + ' #' + grantDivId_);
+   }
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+* @param {integer} securityPrivilegeId_ priv id.
+* @param {integer} securityProfileId_  profile id.
+* @return {boolean} allowed.
+*/
+function grantPrivilege(securityPrivilegeId_, securityProfileId_) {
+ if (!isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
+  briefNotify('Access Violation -grantPrivilege ', 'ERROR');
+  return false;
+ }
+
+ var params = prepParams(params, 'security_profile_grant', 'insert');
+ params['security_privilege_id'] = securityPrivilegeId_;
+ params['security_profile_id'] = securityProfileId_;
+ params['passThru'] = 'pendingDiv~securityGrant';
+ params['passThru'] += securityPrivilegeId_ + 'Id;';
+ var successf = function(rslt) {
+  if (!rslt['serverSideFail']) {
+   briefNotify('Privilege Granted');
+   sortDivChildren('#grantedPrivilegesId');
+  }
+  else {
+   briefNotify('There was a problem granting this privilege');
+   assignGrantStatus(rslt['PT_pendingDiv'], 'AVAIL');
+  }
+ };
+ serverCall(params, successf, FAILF);
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {integer} securityPrivilegeId_ priv id.
+* @param {integer} securityProfileId_  profile id.
+* @return {boolean} allowed.
+*/
+function revokePrivilege(securityPrivilegeId_, securityProfileId_) {
+ if (!isUserAuthorized('DELETE_SECURITY_PROFILE')) {
+  briefNotify('Access Violation  - revokePrivilege' , 'ERROR');
+  return false;
+ }
+
+ var params = prepParams(params, 'security_profile_grant', 'deletew');
+ params['where_clause'] = 'security_privilege_id=';
+ params['where_clause'] += securityPrivilegeId_;
+ params['where_clause'] += ' and security_profile_id = ' + securityProfileId_;
+ params['passThru'] = 'pendingDiv~securityGrant';
+ params['passThru'] += securityPrivilegeId_ + 'Id;';
+ var successf = function(rslt) {
+  if (!rslt['serverSideFail']) {
+   briefNotify('Privilege Revoked');
+   sortDivChildren('#availableGrantsId');
+  }else {
+   briefNotify('There was a problem granting this privilege');
+   assignGrantStatus(rslt['PT_pendingDiv'], 'GRANT');
+  }
+
+ };
+ serverCall(params, successf, FAILF);
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+*/
+function makeAvailableAllPrivileges() {
+
+ $('#grantedPrivilegesId').children().remove();
+ $('#availableGrantsId').children().remove();
+ populateAvailableGrantsWithAll();
+ sortDivChildren('#availableGrantsId');
+
+
+}
+/**
+*
+* SRC: _securityGrantsCommon
+* =====================================================================
+* @param {string} divName_  to sort.
+*/
+function sortDivChildren(divName_) {
+ var children = $(divName_).children().sort(function(a, b) {
+  var vA = $(a).attr('id');
+  var vB = $(b).attr('id');
+  return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
+ });
+ $(divName_).children().remove();
+ $(divName_).append(children);
+ if (isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
+  makeDragable(divName_ + ' .securityGrant');
+ }
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+*/
+function imposeSecurityAccessGroupsSecurityUIRestrictions() {
+ var divIdToSecure;
+ divIdToSecure = '#grantAssignDiv';
+ (isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) ?
+  securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+ divIdToSecure = '#securityAccessGroupsFormSave';
+ (isUserAuthorized('UPDATE_SECURITY_PROFILE')) ?
+  securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+ divIdToSecure = '#securityAccessGroupsFormAdd';
+ (isUserAuthorized('INSERT_SECURITY_PROFILE')) ?
+  securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+ divIdToSecure = '#securityAccessGroupsEntryDivId';
+ (isUserAuthorized('UPDATE_SECURITY_PROFILE') ||
+  isUserAuthorized('INSERT_SECURITY_PROFILE')) ?
+  securityshow(divIdToSecure) : securityHide(divIdToSecure);
+
+ if (!isUserAuthorized('INSERT_SECURITY_PROFILE') &&
+   !isUserAuthorized('UPDATE_SECURITY_PROFILE')) {
+    securityLockForm('securityAccessGroupsForm', true);
+   }
+ if (!isUserAuthorized('INSERT_SECURITY_PROFILE', false) &&
+   isFormEmpty('securityAccessGroupsForm')) {
+    securityLockForm('securityAccessGroupsForm', true);
+   }
+}
+
+/**
+*
+* SRC: _securityGrantsCommon
+*=====================================================================
+*/
+function clearSecurityAccessGroupsForm() {
+ clearForm('securityAccessGroupsForm');
+ makeAvailableAllPrivileges();
+ $('#grantAssignDiv').addClass('LogicDisabled');
+ if (isUserAuthorized('INSERT_SECURITY_PROFILE', false)) {
+  securityshow('#securityAccessGroupsFormAdd');
+  securityLockForm('securityAccessGroupsForm', false);
+ }else {
+  securityHide('#securityAccessGroupsFormAdd');
+  securityLockForm('securityAccessGroupsForm', true);
+ }
+}
+
+
+
+
+
+/**
+*
+* SRC: _securityGrantsWeb
 *=====================================================================
 */
 

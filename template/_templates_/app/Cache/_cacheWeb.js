@@ -21,7 +21,7 @@ function imposeApplicationSecurityRestrictions() {
 	imposeLauncherSecurityUIRestrictions();
 	imposeGolfScoreSummarySecurityUIRestrictions();
 	imposeSecurityUserSecurityUIRestrictions();
-	imposeSecurityGrantsSecurityUIRestrictions();
+	imposeSecurityAccessGroupsSecurityUIRestrictions();
 	imposeQuickGolfScoreSecurityUIRestrictions();
 
 }

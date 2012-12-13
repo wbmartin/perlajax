@@ -1,4 +1,4 @@
-[%divId="securityGrants"%]
+[%divId="securityAccessGroups"%]
 [%spwfResource="security_profile"%]
 [%prkey="security_profile_id"%]
 [%prettyName="Security Profile"%]
@@ -10,7 +10,7 @@
 
 
 <div id="[%divId%]" class="contentPane MainLayout"  >
-	<h1 id="[%divId%]GolferNameId" class="pageTitle">Security Grants</h1>
+	<h1 id="[%divId%]Title" class="pageTitle">Security Access Groups</h1>
 	<div class="row">
 		<div class="sixcol">
 			<table id="[%divId%]ListTable"  class='dataTable pretty' summary="">
@@ -35,6 +35,9 @@
 							<span class="[%buttonTextClass%]">Add</span></button>
 						<button type="button" id="[%divId%]FormClear" class="[%buttonClass%]"  value="Clear" 
 							onclick="clear[%ucfirst(divId)%]Form();" ><span class="[%buttonTextClass%]">Clear</span></button>
+						<button type="button" id="[%divId%]FormGrants" class="[%buttonClass%]"  value="Clear" 
+							onclick="showSecurityGrantsAssignmentDialog();" ><span class="[%buttonTextClass%]">Grants</span></button>
+						
 					</div>
 					<input type="hidden" name="last_update" id="[%divId%]Form-last_update"/>
 					<input type="hidden" name="[%prkey%]" id="[%divId%]Form-[%prkey%]"/>
@@ -44,7 +47,6 @@
 		</div>
 		<br/>
 		<div id="grantAssignDiv" style="display:none;">
-			<p>Double Click or drag privileges.</p>
 			<table summary=""> <tr><td style="text-align:center;">Available </td><td> &nbsp; </td><td style="text-align:center;">Granted</td></tr>
 				<tr><td>
 						<div id="availableGrantsId"  class="securityGrantReceiver"></div></td>
