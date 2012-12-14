@@ -10,13 +10,13 @@
 
 
 //Server Calls
-[% SRC_LOC = '_securityGrantsCommon'%]
+[% SRC_LOC = '_securityAccessGroupsCommon'%]
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @return {boolean} allowed.
+ */
 function retrieve[%ucfirst(divId)%]List() {
 	if (!isUserAuthorized('[%SELECT_GRANT%]')) {
 		briefNotify(
@@ -41,12 +41,12 @@ function retrieve[%ucfirst(divId)%]List() {
 	serverCall(params, successf, FAILF);
 }
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {Object} params data.
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {Object} params data.
+ * @return {boolean} allowed.
+ */
 function retrieve[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%SELECT_GRANT%]')) {
 		briefNotify(
@@ -74,13 +74,13 @@ function retrieve[%ucfirst(divId)%](params) {
 
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {integer} [%toCC(prkey)%]_ prkey.
-* @param {string} lastUpdate_ for transaction mgmt.
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {integer} [%toCC(prkey)%]_ prkey.
+ * @param {string} lastUpdate_ for transaction mgmt.
+ * @return {boolean} allowed.
+ */
 function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 	if (!isUserAuthorized('[%DELETE_GRANT%]')) {
 		briefNotify(
@@ -109,12 +109,12 @@ function delete[%ucfirst(divId)%]([%toCC(prkey)%]_, lastUpdate_) {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {Object} params data.
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {Object} params data.
+ * @return {boolean} allowed.
+ */
 function save[%ucfirst(divId)%](params) {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]') &&
 			!isUserAuthorized('[%INSERT_GRANT%]')) {
@@ -149,12 +149,12 @@ function save[%ucfirst(divId)%](params) {
 
 //ServerCall Wrappers
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {integer} [%divId%]Id_ prkey.
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {integer} [%divId%]Id_ prkey.
+ * @return {boolean} allowed.
+ */
 function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	if (!isUserAuthorized('[%SELECT_GRANT%]')) {
 		briefNotify(
@@ -171,7 +171,8 @@ function edit[%ucfirst(divId)%]([%divId%]Id_) {
 	$('#grantAssignDiv').removeClass('LogicDisabled');
 	if ([%divId%]Id_) {
 		makeAvailableAllPrivileges();
-		var params = {'where_clause' : '[%prkey%]=' + [%divId%]Id_};
+		var params = {'where_clause' : 
+			'[%prkey%]='	+ [%divId%]Id_};
 		retrieve[%ucfirst(divId)%](params);
 		if (isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
 			retrieveAllGrantedPrivilegesList([%divId%]Id_);
@@ -180,11 +181,11 @@ function edit[%ucfirst(divId)%]([%divId%]Id_) {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @return {boolean} allowed.
+ */
 function save[%ucfirst(divId)%]Form() {
 	if (!isUserAuthorized('[%UPDATE_GRANT%]') &&
 			!isUserAuthorized('[%INSERT_GRANT%]')) {
@@ -199,14 +200,14 @@ function save[%ucfirst(divId)%]Form() {
 		save[%ucfirst(divId)%](params);
 	}
 
-	
-//validation
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @return {boolean}  validity.
-*/
+
+	//validation
+	/**
+	 *
+	 * SRC: [%SRC_LOC%]
+	 *=====================================================================
+	 * @return {boolean}  validity.
+	 */
 }
 function validate[%ucfirst(divId)%]Form() {
 	var formName = '[%divId%]Form';
@@ -216,11 +217,11 @@ function validate[%ucfirst(divId)%]Form() {
 
 //Top Level HTML Manip
 /**
-*
-* SRC: [%SRC_LOC%]
-* =====================================================================
-* @param {Object} dataRows array of [%ucfirst(divId)%] objects.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ * =====================================================================
+ * @param {Object} dataRows array of [%ucfirst(divId)%] objects.
+ */
 function populate[%ucfirst(divId)%]ListTable(dataRows) {
 	var dataArray = new Array();
 	for (var ndx = 0; ndx < dataRows.length; ndx++) {
@@ -231,12 +232,12 @@ function populate[%ucfirst(divId)%]ListTable(dataRows) {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-* =====================================================================
-* @param {Object} data [%ucfirst(divId)%] info.
-* @return {Object}  datatable row.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ * =====================================================================
+ * @param {Object} data [%ucfirst(divId)%] info.
+ * @return {Object}  datatable row.
+ */
 function build[%ucfirst(divId)%]ListTableRow(data) {
 	var dataHash = {};
 	var links = '';
@@ -263,11 +264,11 @@ function build[%ucfirst(divId)%]ListTableRow(data) {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {Object} row [%ucfirst(divId)%] info.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {Object} row [%ucfirst(divId)%] info.
+ */
 function replace[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnUpdate(
 			build[%ucfirst(divId)%]ListTableRow(row),
@@ -275,22 +276,22 @@ function replace[%ucfirst(divId)%]ListTableRow(row) {
 			);
 }
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {Object} row [%ucfirst(divId)%] info.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {Object} row [%ucfirst(divId)%] info.
+ */
 function addNew[%ucfirst(divId)%]ListTableRow(row) {
 	$('#[%divId%]ListTable').dataTable().fnAddData(
 			build[%ucfirst(divId)%]ListTableRow(row)
 			);
 }
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================a
-* @param {integer} [%toCC(prkey)%]_ prkey.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================a
+ * @param {integer} [%toCC(prkey)%]_ prkey.
+ */
 function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 	$('#[%divId%]ListTable').dataTable().fnDeleteRow(
 			$('#[%ucfirst(divId)%]ListTableTR-' + [%toCC(prkey)%]_)[0]
@@ -299,11 +300,11 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 
 //Div Access and App Layout Calls
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @return {boolean} allowed.
+ */
 function show[%ucfirst(divId)%]() {
 	statusMsg('Navigated to Security Grants');
 	if (!isUserAuthorized('[%SELECT_GRANT%]')) {
@@ -333,38 +334,40 @@ function show[%ucfirst(divId)%]() {
 }
 
 /**
-*
-*
-*/
-function showSecurityGrantsAssignmentDialog(){
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @return {boolean} allowed.
+ */
+function showSecurityGrantsAssignmentDialog() {
 	if (isEmpty($('#[%divId%]Form-[%prkey%]').val())) {
-	 showDialog('Please select a Profile to continue.'); 
-	 return false;
+		showDialog('Please select a Profile to continue.'); 
+		return false;
 	}
-$('#grantAssignDiv').dialog({
+	$('#grantAssignDiv').dialog({
 		resizable: false,
-		title:'Double Click or drag privileges.',
-		height: $(window).height()*.9,
-		width: $(window).width()*.9,
-		modal: true,
-		buttons: {
-			
+	title: 'Double Click or drag privileges.',
+	height: $(window).height() * .9,
+	width: $(window).width() * .9,
+	modal: true,
+	buttons: {
+
 		'Finished': function() {
 			$(this).dialog('close');
 		}
-		}
-			});
+	}
+	});
 }
 
 
 //page specific functions
 var allAvailablePrivilegeList;
 /**
-*
-* SRC: [%SRC_LOC%]
-* =====================================================================
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ * =====================================================================
+ * @return {boolean} allowed.
+ */
 function retrieveAllAvailablePrivilegesList() {
 	if (!isUserAuthorized('SELECT_SECURITY_PRIVILEGE')) {
 		briefNotify(
@@ -383,10 +386,10 @@ function retrieveAllAvailablePrivilegesList() {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
 function populateAvailableGrantsWithAll() {
 	var newOptions = '';
 	for (var ndx = 0; ndx < allAvailablePrivilegeList.length; ndx++) {
@@ -406,12 +409,12 @@ function populateAvailableGrantsWithAll() {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {string} identifierTodraggable_  div id.
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {string} identifierTodraggable_  div id.
+ * @return {boolean} allowed.
+ */
 function makeDragable(identifierTodraggable_) {
 	if (!isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
 		briefNotify('Access Violation - makeDragable', 'ERROR');
@@ -424,18 +427,18 @@ function makeDragable(identifierTodraggable_) {
 	scroll: false,
 	helper: 'clone'
 	});
-				$(identifierTodraggable_).dblclick(function() {
-					attemptSecurityGrantRevoke('SWAP', $(this).attr('id'));
-				});
+	$(identifierTodraggable_).dblclick(function() {
+		attemptSecurityGrantRevoke('SWAP', $(this).attr('id'));
+	});
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-* =====================================================================
-* @param {integer} profileId_ prkey.
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ * =====================================================================
+ * @param {integer} profileId_ prkey.
+ * @return {boolean} allowed.
+ */
 function retrieveAllGrantedPrivilegesList(profileId_) {
 	if (!isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
 		briefNotify(
@@ -462,36 +465,36 @@ function retrieveAllGrantedPrivilegesList(profileId_) {
 
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {Object} event unknown.
-* @param {Object} ui  dom element.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {Object} event unknown.
+ * @param {Object} ui  dom element.
+ */
 function handleSecurityGrantDrop(event, ui) {
 	if (ui.draggable.parent().attr('id') != 'grantedPrivilegesId')
 		attemptSecurityGrantRevoke('GRANT', ui.draggable.attr('id'));
 }
 /**
-*
-* SRC: [%SRC_LOC%]
-* =====================================================================
-* @param {Object} event unknown.
-* @param {Object} ui  dom element.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ * =====================================================================
+ * @param {Object} event unknown.
+ * @param {Object} ui  dom element.
+ */
 function handleSecurityRevokeDrop(event, ui) {
 	if (ui.draggable.parent().attr('id') != 'availableGrantsId')
 		attemptSecurityGrantRevoke('REVOKE', ui.draggable.attr('id'));
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {string} grantOrRevoke_  GRANT or REVOKE.
-* @param {string} divId_ div.
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {string} grantOrRevoke_  GRANT or REVOKE.
+ * @param {string} divId_ div.
+ * @return {boolean} allowed.
+ */
 function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
 	if (!isUserAuthorized('DELETE_SECURITY_PROFILE_GRANT')) {
 		briefNotify(
@@ -502,10 +505,10 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
 	}
 	if (grantOrRevoke_ === 'SWAP' &&
 			$('#' + divId_).parent().attr('id') === 'availableGrantsId') {
-		grantOrRevoke_ = 'GRANT';
-	} else {
-		grantOrRevoke_ = 'REVOKE';
-	}
+				grantOrRevoke_ = 'GRANT';
+			} else {
+				grantOrRevoke_ = 'REVOKE';
+			}
 
 
 	var profileId = $('#[%divId%]Form-[%prkey%]').val();
@@ -526,13 +529,13 @@ function attemptSecurityGrantRevoke(grantOrRevoke_, divId_) {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {string} grantDivId_ div.
-* @param {string} status_ GRANT or REVOKE.
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {string} grantDivId_ div.
+ * @param {string} status_ GRANT or REVOKE.
+ * @return {boolean} allowed.
+ */
 function assignGrantStatus(grantDivId_, status_) {
 	if (!isUserAuthorized('SELECT_SECURITY_PROFILE_GRANT')) {
 		briefNotify('Access Violation - assignGrantStatus', 'ERROR');
@@ -557,13 +560,13 @@ function assignGrantStatus(grantDivId_, status_) {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {integer} securityPrivilegeId_ priv id.
-* @param {integer} securityProfileId_  profile id.
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param {integer} securityPrivilegeId_ priv id.
+ * @param {integer} securityProfileId_  profile id.
+ * @return {boolean} allowed.
+ */
 function grantPrivilege(securityPrivilegeId_, securityProfileId_) {
 	if (!isUserAuthorized('INSERT_SECURITY_PROFILE_GRANT')) {
 		briefNotify('Access Violation -grantPrivilege ', 'ERROR');
@@ -589,13 +592,13 @@ function grantPrivilege(securityPrivilegeId_, securityProfileId_) {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-* =====================================================================
-* @param {integer} securityPrivilegeId_ priv id.
-* @param {integer} securityProfileId_  profile id.
-* @return {boolean} allowed.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ * =====================================================================
+ * @param {integer} securityPrivilegeId_ priv id.
+ * @param {integer} securityProfileId_  profile id.
+ * @return {boolean} allowed.
+ */
 function revokePrivilege(securityPrivilegeId_, securityProfileId_) {
 	if (!isUserAuthorized('[%DELETE_GRANT%]')) {
 		briefNotify('Access Violation  - revokePrivilege' , 'ERROR');
@@ -622,10 +625,10 @@ function revokePrivilege(securityPrivilegeId_, securityProfileId_) {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
 function makeAvailableAllPrivileges() {
 
 	$('#grantedPrivilegesId').children().remove();
@@ -636,11 +639,11 @@ function makeAvailableAllPrivileges() {
 
 }
 /**
-*
-* SRC: [%SRC_LOC%]
-* =====================================================================
-* @param {string} divName_  to sort.
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ * =====================================================================
+ * @param {string} divName_  to sort.
+ */
 function sortDivChildren(divName_) {
 	var children = $(divName_).children().sort(function(a, b) {
 		var vA = $(a).attr('id');
@@ -655,10 +658,10 @@ function sortDivChildren(divName_) {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
 function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 	var divIdToSecure;
 	divIdToSecure = '#grantAssignDiv';
@@ -689,10 +692,10 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 }
 
 /**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-*/
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
 function clear[%ucfirst(divId)%]Form() {
 	clearForm('[%divId%]Form');
 	makeAvailableAllPrivileges();

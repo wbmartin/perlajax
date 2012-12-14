@@ -1,6 +1,6 @@
 [% divId='aboutPane' %]
 
-[% SRC_LOC = '_cacheCommon'%]
+[% SRC_LOC = '_aboutCommon'%]
 /**
 *
 * SRC: [%SRC_LOC%]
@@ -12,6 +12,8 @@ function show[%ucfirst(divId)%]() {
 	statusMsg('Navigated to About');
 	$('#[%divId%]').fadeIn();
 	currentContentPane = '[%divId%]';
+	//_gaq.push(['_trackEvent', 'showDiv', '[%divId%]']);
+	_gaq.push(['_trackPageview','[%divId%]']);
 	return '[%divId%]';
 }
 

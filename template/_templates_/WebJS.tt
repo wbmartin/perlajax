@@ -1,14 +1,7 @@
 [%- FILTER redirect('/app.js') -%]
 [%- serverErrorMsg_Communication ='Sorry, there was a problem communicating with the server.' -%]
 'use strict';
-    var urlTarget = 'cgi-bin/server.pl';
-    var passwordResetUrlTarget = 'cgi-bin/pwdreset.pl';
-    var VIEW_ID = 0;
-    var PAGE_CALLS = new Array();
-		var IS_MOBILE = false;
-
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -%]
-
 [%FOREACH tPath = appTemplates%]
   [%-IF  tPath.match('Web') or tPath.match('Common')-%]
 	  [%-IF tPath.match('html'); NEXT; END;-%]
@@ -17,27 +10,5 @@
 		[%INCLUDE $tPath%]
 	[%-END-%]
 [%-END-%]
-
-
 [% # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%]
-
-function bodyOnLoad() {
-  sizeLeftNav();
-}
-
-function bodyOnResize() {
-  sizeLeftNav();
-}
-
-
-function changePage(strFuncCall_) {
-  PAGE_CALLS.push(strFuncCall_);
-  top.location.hash = '#' + VIEW_ID++;
-}
-$(window).bind('hashchange', function() {
-    var id = window.location.hash.replace('#', '');
-   if (id >= 0 && id < PAGE_CALLS.length) PAGE_CALLS[id]();
-});
-
-
 [%- END #filter -%]

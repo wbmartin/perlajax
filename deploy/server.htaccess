@@ -1,3 +1,4 @@
+AddCharset UTF-8 .html
 <FilesMatch ".(js|css|pdf|txt|html|jpg|png)$">
 Header set Cache-Control "max-age=604800"
 </FilesMatch>
@@ -27,6 +28,7 @@ Header set Content-Encoding: gzip
 ForceType text/javascript
 Header set Content-Encoding: gzip
 </Files>
+
 
 
 

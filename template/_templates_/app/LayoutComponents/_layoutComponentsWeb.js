@@ -3,22 +3,6 @@
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
-*/
-function sizeLeftNav() {
-[%headerHeight = 100%]
-[%leftNavWidth = 0%]
-		document.getElementById('mainContent').style.top =
-		'[%headerHeight%]px';
-	document.getElementById('mainContent').style.left = '0px';
-	document.getElementById('mainContent').style.height =
-		(window.innerHeight - [%headerHeight + 35%]) + 'px';
-	document.getElementById('mainContent').style.width =
-		(window.innerWidth - [%leftNavWidth + 20%]) + 'px';
-}
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
 * @param {boolean} showHide show or hide main layout pieces.
 */
 function displayMainLayout(showHide) {

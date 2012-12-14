@@ -5,6 +5,17 @@
  <link rel="stylesheet" href="http://yui.yahooapis.com/3.7.3/build/cssreset/cssreset-min.css" type="text/css"/>
  <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <script type="text/javascript">
+ var _gaq = _gaq || [];
+ _gaq.push(['_setAccount', 'UA-37053410-1']);
+ _gaq.push(['_setDomainName', 'martinanalytics.com']);
+ _gaq.push(['_trackPageview','InitialLoad']);
+ (function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+</script>
  <!-- 1140px Grid styles for IE -->
  <!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/ui-lightness/jquery-ui.css" type="text/css"/>
@@ -1142,11 +1153,11 @@ text-align:left;
 </div>
 <script src="http://code.jquery.com/jquery-1.8.0.min.js" type="text/javascript"></script>
 <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.min.js" type="text/javascript"></script>
-<script charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js" type="text/javascript"></script>
+<script asynch charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js" type="text/javascript"></script>
 <script type="text/javascript">
  //<![CDATA[
  //1140 mediaqueries not strict safe
- if(typeof Object.create!=="function"){
+if(typeof Object.create!=="function"){
 Object.create=function(o){
 function F(){
 };
@@ -1925,11 +1936,81 @@ document.execCommand("BackgroundImageCache",false,true);
 catch(e){
 }
 
- //]]>
+//]]>
 </script>
-<script type="text/javascript" src="app.js"> </script>
+<script asynch type="text/javascript" src="app.js"> </script>
+<!--script type="text/javascript">
+ // Add a script element as a child of the body
+function downloadJSAtOnload() {
+ var element = document.createElement("script");
+ element.src = "app.js";
+ document.body.appendChild(element);
+}
+// Check for browser support of event handling capability
+if (window.addEventListener) {
+ window.addEventListener("load", downloadJSAtOnload, false);
+} else if (window.attachEvent) {
+ window.attachEvent("onload", downloadJSAtOnload);
+} else {
+ window.onload = downloadJSAtOnload;
+}
+</script-->
 <script type="text/javascript">
- //footerWeb
+ 'use strict';
+ var urlTarget = 'cgi-bin/server.pl';
+ var passwordResetUrlTarget = 'cgi-bin/pwdreset.pl';
+ var VIEW_ID = 0;
+ var PAGE_CALLS = new Array();
+ var IS_MOBILE = false;
+ /**
+ *
+ * SRC: _footerWeb
+ *=====================================================================
+ */
+ function bodyOnLoad() {
+ sizeLeftNav();
+ }
+/**
+ *
+ * SRC: _footerWeb
+ *=====================================================================
+ */
+function bodyOnResize() {
+ sizeLeftNav();
+}
+/**
+ *
+ * SRC: _footerWeb
+ *=====================================================================
+ */
+function changePage(strFuncCall_) {
+ PAGE_CALLS.push(strFuncCall_);
+ top.location.hash = '#' + VIEW_ID++;
+}
+/**
+ *
+ * SRC: _footerWeb
+ *=====================================================================
+ */
+$(window).bind('hashchange', function() {
+ var id = window.location.hash.replace('#', '');
+ if (id >= 0 && id < PAGE_CALLS.length) PAGE_CALLS[id]();
+ });
+//footerWeb
+/**
+*
+* SRC: _footerWeb
+*=====================================================================
+*/
+function sizeLeftNav() {
+ document.getElementById('mainContent').style.top =
+ '100px';
+ document.getElementById('mainContent').style.left = '0px';
+ document.getElementById('mainContent').style.height =
+ (window.innerHeight - 135) + 'px';
+ document.getElementById('mainContent').style.width =
+ (window.innerWidth - 20) + 'px';
+}
 /**
  *
  * SRC: _footerWeb
@@ -1994,14 +2075,6 @@ $('#securityAccessGroupsListTable').dataTable(
  'sPaginationType' : 'two_button'
  }
  );
-$('#availableGrantsId').droppable({
- accept: '.securityGrant',
- drop: handleSecurityRevokeDrop
-});
-$('#grantedPrivilegesId').droppable({
- accept: '.securityGrant',
- drop: handleSecurityGrantDrop
-});
 //securityUser
 $('#securityUserListTable').dataTable({
  'aoColumns': [
