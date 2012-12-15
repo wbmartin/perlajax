@@ -1,4 +1,83 @@
 [% SRC_LOC = '_footerWeb'%]
+
+'use strict';
+	var urlTarget = 'cgi-bin/server.pl';
+	var passwordResetUrlTarget = 'cgi-bin/pwdreset.pl';
+	var VIEW_ID = 0;
+	var PAGE_CALLS = new Array();
+	var IS_MOBILE = false;
+
+	[% SRC_LOC = '_footerWeb'%]
+	/**
+	 *
+	 * SRC: [%SRC_LOC%]
+	 *=====================================================================
+	 */
+	function bodyOnLoad() {
+		sizeLeftNav();
+	}
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
+function bodyOnResize() {
+	sizeLeftNav();
+}
+
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
+function changePage(strFuncCall_) {
+	PAGE_CALLS.push(strFuncCall_);
+	top.location.hash = '#' + VIEW_ID++;
+}
+
+/**
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ * @param prettyName name of the page to log.
+ * @param divId name of the divId to set as active content page.
+ */ 
+function setCurrentContentPane(prettyName, divId) {
+  statusMsg('Navigated to ' + prettyName);
+	currentContentPane = divId;
+	_gaq.push(['_trackPageview',divId]);
+}
+
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @param {string} name divid.
+*/
+function standardShowContentPane(name, prettyName) {
+	hideCurrentContentPane();
+	$('#' + name).fadeIn();
+	setCurrentContentPane(prettyName, name);
+}
+/**
+*
+* SRC: [%SRC_LOC%]
+*=====================================================================
+* @return {string}  empty string.
+*/
+function hideMainContent() {
+	return '';
+}
+
+/**
+ *
+ * SRC: [%SRC_LOC%]
+ *=====================================================================
+ */
+$(window).bind('hashchange', function() {
+		var id = window.location.hash.replace('#', '');
+		if (id >= 0 && id < PAGE_CALLS.length) PAGE_CALLS[id]();
+		});
+
 /**
 *
 * SRC: [%SRC_LOC%]

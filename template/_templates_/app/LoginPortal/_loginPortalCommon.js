@@ -1,4 +1,3 @@
-//Begin LoginPortal
 [% divId = 'LoginPortal' %]
 [% spwfResource = 'security_user' %]
 

@@ -306,7 +306,6 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
  * @return {boolean} allowed.
  */
 function show[%ucfirst(divId)%]() {
-	statusMsg('Navigated to Security Grants');
 	if (!isUserAuthorized('[%SELECT_GRANT%]')) {
 		briefNotify(
 				'Access Violation - show[%ucfirst(divId)%]',
@@ -314,11 +313,8 @@ function show[%ucfirst(divId)%]() {
 				);
 		return false;
 	}
-
 	retrieve[%ucfirst(divId)%]List();
-	hideCurrentContentPane();
-	$('#[%divId%]').fadeIn();
-	currentContentPane = '[%divId%]';
+	standardShowContentPane('[%divId%]', 'Security Grants');
 	if (isFormEmpty('[%divId%]Form')) {
 		toggleSaveMode('[%divId%]Form', false);
 	}
@@ -344,6 +340,7 @@ function showSecurityGrantsAssignmentDialog() {
 		showDialog('Please select a Profile to continue.'); 
 		return false;
 	}
+	_gaq.push(['_trackPageview',[%divId%]]);
 	$('#grantAssignDiv').dialog({
 		resizable: false,
 	title: 'Double Click or drag privileges.',

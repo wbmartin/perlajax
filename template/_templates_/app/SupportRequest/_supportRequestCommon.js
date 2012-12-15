@@ -301,11 +301,8 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 *=====================================================================
 */
 function show[%ucfirst(divId)%]() {
-	statusMsg('Navigated to Support Request');
 	retrieve[%ucfirst(divId)%]List();
-	hideCurrentContentPane();
-	$('#[%divId%]').fadeIn();
-	currentContentPane = '[%divId%]';
+	standardShowContentPane('[%divId%]', 'Support Request');
 	if (isFormEmpty('[%divId%]Form')) {
 		toggleSaveMode('[%divId%]Form', false);
 	}

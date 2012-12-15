@@ -330,11 +330,8 @@ function impose[%ucfirst(divId)%]SecurityUIRestrictions() {
 * @param {integer} golferId_ id to delete.
 */
 function show[%ucfirst(divId)%](golferId_) {
-	statusMsg('Navigated to Golfer View');
 	var params = {};
-	hideCurrentContentPane();
-	$('#[%divId%]').fadeIn();
-	currentContentPane = '[%divId%]';
+	standardShowContentPane('[%divId%]','Golfer View');
 	if (golferId_) {
 		params['where_clause'] = '[%prkey%]=' + [%divId%]Id_;
 		retrieve[%ucfirst(divId)%](params);
@@ -344,9 +341,8 @@ function show[%ucfirst(divId)%](golferId_) {
 		}
 		clearForm('[%divId%]Form');
 	}
-		retrieve[%ucfirst(divId)%]List();
+	retrieve[%ucfirst(divId)%]List();
 	impose[%ucfirst(divId)%]SecurityUIRestrictions();
-
 }
 
 /**

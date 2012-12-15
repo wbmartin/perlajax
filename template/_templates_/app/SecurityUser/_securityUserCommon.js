@@ -312,17 +312,13 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 * @return {boolean} allowed.
 */
 function show[%ucfirst(divId)%]() {
-	statusMsg('Navigated to Security Users');
 	if (!isUserAuthorized('[%SELECT_GRANT%]',
 			 true,
 			 'show[%ucfirst(divId)%]')) {
 				 return false;
 			 }
-
 	retrieve[%ucfirst(divId)%]List();
-	hideCurrentContentPane();
-	$('#[%divId%]').fadeIn();
-	currentContentPane = '[%divId%]';
+	standardShowContentPane('[%divId%]', 'Security Users');
 	if (isFormEmpty('[%divId%]Form')) {
 		toggleSaveMode('[%divId%]Form', false);
 	}

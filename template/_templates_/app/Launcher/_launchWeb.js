@@ -8,10 +8,7 @@
 * @return {string} divid.
 */
 function show[%ucfirst(divId)%]() {
-	statusMsg('Navigated to Main Portal');
-	hideCurrentContentPane();
-	$('#[%divId%]').fadeIn();
-	currentContentPane = '[%divId%]';
+	standardShowContentPane('[%divId%]', 'Main Portal');
 	$(document).keypress(function(e) {
 		switch (e.which) {
 			case 103 : showSecurityGrants(); break;

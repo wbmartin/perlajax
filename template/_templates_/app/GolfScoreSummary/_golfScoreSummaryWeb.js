@@ -57,10 +57,11 @@ function build[%ucfirst(divId)%]ListTableRow(gs) {
 *
 * SRC: [%SRC_LOC%]
 *=====================================================================
+*@return div name shown
 */
 function show[%ucfirst(divId)%]() {
-	statusMsg('Navigated to Golf Score Summary View');
 	retrieve[%ucfirst(divId)%]List();
-	standardShowContentPane('[%divId%]');
+	standardShowContentPane('[%divId%]','Golf Score Summary View');
+	return '[%divId%]';
 }
 

@@ -116,15 +116,11 @@ function remove[%ucfirst(divId)%]ListTableRow([%toCC(prkey)%]_) {
 *=====================================================================
 */
 function show[%ucfirst(divId)%]() {
-	statusMsg('Navigated to Quick Golf Score Entry');
 	retrieve[%ucfirst(divId)%]List();
-	hideCurrentContentPane();
-	$('#[%divId%]').fadeIn();
-	currentContentPane = '[%divId%]';
+	standardShowContentPane('[%divId%]', 'Quick Golf Score Entry');
 	if (isFormEmpty('[%divId%]Form')) {
 	 	toggleSaveMode('[%divId%]Form', false);
 	}
-
 }
 
 /**

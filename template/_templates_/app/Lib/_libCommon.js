@@ -494,27 +494,7 @@ function hideCurrentContentPane() {
 }
 
 
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @param {string} name divid.
-*/
-function standardShowContentPane(name) {
-	hideCurrentContentPane();
-	$('#' + name).fadeIn();
-	currentContentPane = name;
-}
 
-/**
-*
-* SRC: [%SRC_LOC%]
-*=====================================================================
-* @return {string}  empty string.
-*/
-function hideMainContent() {
-	return '';
-}
 
 /**
 *

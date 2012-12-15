@@ -314,17 +314,13 @@ function removeSecurityUserListTableRow(securityUserId_) {
 * @return {boolean} allowed.
 */
 function showSecurityUser() {
- statusMsg('Navigated to Security Users');
  if (!isUserAuthorized('SELECT_SECURITY_USER',
     true,
     'showSecurityUser')) {
      return false;
     }
-
  retrieveSecurityUserList();
- hideCurrentContentPane();
- $('#securityUser').fadeIn();
- currentContentPane = 'securityUser';
+ standardShowContentPane('securityUser', 'Security Users');
  if (isFormEmpty('securityUserForm')) {
   toggleSaveMode('securityUserForm', false);
  }
@@ -495,14 +491,9 @@ function imposeApplicationSecurityRestrictions() {
 
 
  function showHelpPane() {
-  statusMsg('Navigated to Help Portal');
-  hideCurrentContentPane();
-  $('#helpPane').fadeIn();
-  currentContentPane = 'helpPane';
+   standardShowContentPane('helpPane','Help Portal');
   return 'helpPane';
  }
-
-
 
 
 /**
@@ -1091,27 +1082,7 @@ function hideCurrentContentPane() {
 }
 
 
-/**
-*
-* SRC: _libCommon
-*=====================================================================
-* @param {string} name divid.
-*/
-function standardShowContentPane(name) {
- hideCurrentContentPane();
- $('#' + name).fadeIn();
- currentContentPane = name;
-}
 
-/**
-*
-* SRC: _libCommon
-*=====================================================================
-* @return {string}  empty string.
-*/
-function hideMainContent() {
- return '';
-}
 
 /**
 *
@@ -1436,10 +1407,7 @@ function formatDate(dt, format) {
 * @return {string} divid.
 */
 function showLaunchPane() {
- statusMsg('Navigated to Main Portal');
- hideCurrentContentPane();
- $('#launchPane').fadeIn();
- currentContentPane = 'launchPane';
+ standardShowContentPane('launchPane', 'Main Portal');
  $(document).keypress(function(e) {
   switch (e.which) {
    case 103 : showSecurityGrants(); break;
@@ -1509,16 +1477,9 @@ function imposeLauncherSecurityUIRestrictions() {
 * @return {string}  div rendered.
 */
 function showAboutPane() {
- hideCurrentContentPane();
- statusMsg('Navigated to About');
- $('#aboutPane').fadeIn();
- currentContentPane = 'aboutPane';
- //_gaq.push(['_trackEvent', 'showDiv', 'aboutPane']);
- _gaq.push(['_trackPageview','aboutPane']);
+ standardShowContentPane('aboutPane','About');
  return 'aboutPane';
 }
-
-
 
 
 
@@ -1638,15 +1599,11 @@ function removeQuickGolfScoreListTableRow(golfScoreId_) {
 *=====================================================================
 */
 function showQuickGolfScore() {
- statusMsg('Navigated to Quick Golf Score Entry');
  retrieveQuickGolfScoreList();
- hideCurrentContentPane();
- $('#quickGolfScore').fadeIn();
- currentContentPane = 'quickGolfScore';
+ standardShowContentPane('quickGolfScore', 'Quick Golf Score Entry');
  if (isFormEmpty('quickGolfScoreForm')) {
    toggleSaveMode('quickGolfScoreForm', false);
  }
-
 }
 
 /**
@@ -1927,17 +1884,15 @@ function retrieveGolferNameForGolfScore(golferId_) {
 */
 function showClientLogViewer() {
  hideCurrentContentPane();
- statusMsg('Navigated to Log Viewer');
+ setCurrentContentPane('Log Viewer', 'clientLogViewer');
   var newHTML = '';
   $('#clientLogViewer').fadeIn();
   $('ul#clientLogView').find('li').remove();
-   logMsg('Log Viewed');
   for (var ndx = 0; ndx < clientLog.length; ndx++) {
  newHTML += '<li>' + clientLog[ndx].logDt + '|';
   newHTML += clientLog[ndx].msg + '</li>';
   }
   $('ul#clientLogView').html(newHTML);
-  currentContentPane = 'clientLogViewer';
 }
 
 
@@ -2246,12 +2201,9 @@ function showGolfScore(golferId_) {
     'showGolfScore')) {
   return false;
     }
-  statusMsg('Navigated to Golf Score View');
  retrieveGolfScoreList(golferId_);
  retrieveGolferNameForGolfScore(golferId_);
- hideCurrentContentPane();
- $('#golfScore').fadeIn();
- currentContentPane = 'golfScore';
+  standardShowContentPane('golfScore', 'Golf Score View');
  if (isFormEmpty('golfScoreForm')) toggleSaveMode('golfScoreForm', false);
  if ($('#golfScoreForm-golfer_id').val() != golferId_) {
   clearGolfScoreForm();
@@ -2426,6 +2378,7 @@ function validateChangePasswordDialogForm() {
 */
 function showChangePasswordDialog(userId_) {
  statusMsg('Navigated to Change Password Dialog');
+ _gaq.push(['_trackPageview','changePasswordDialog']);
  var params = {};
  if (userId_ == null) {
   userId_ = $('form#loginHolder #user_id').val();
@@ -2561,11 +2514,12 @@ function buildGolfScoreSummaryListTableRow(gs) {
 *
 * SRC: _golfScoreSummaryWeb
 *=====================================================================
+*@return div name shown
 */
 function showGolfScoreSummary() {
- statusMsg('Navigated to Golf Score Summary View');
  retrieveGolfScoreSummaryList();
- standardShowContentPane('golfScoreSummary');
+ standardShowContentPane('golfScoreSummary','Golf Score Summary View');
+ return 'golfScoreSummary';
 }
 
 
@@ -2872,11 +2826,8 @@ function removeSupportRequestListTableRow(supportRequestId_) {
 *=====================================================================
 */
 function showSupportRequest() {
- statusMsg('Navigated to Support Request');
  retrieveSupportRequestList();
- hideCurrentContentPane();
- $('#supportRequest').fadeIn();
- currentContentPane = 'supportRequest';
+ standardShowContentPane('supportRequest', 'Support Request');
  if (isFormEmpty('supportRequestForm')) {
   toggleSaveMode('supportRequestForm', false);
  }
@@ -3306,7 +3257,6 @@ function removeSecurityAccessGroupsListTableRow(securityProfileId_) {
  * @return {boolean} allowed.
  */
 function showSecurityAccessGroups() {
- statusMsg('Navigated to Security Grants');
  if (!isUserAuthorized('SELECT_SECURITY_PROFILE')) {
   briefNotify(
     'Access Violation - showSecurityAccessGroups',
@@ -3314,11 +3264,8 @@ function showSecurityAccessGroups() {
     );
   return false;
  }
-
  retrieveSecurityAccessGroupsList();
- hideCurrentContentPane();
- $('#securityAccessGroups').fadeIn();
- currentContentPane = 'securityAccessGroups';
+ standardShowContentPane('securityAccessGroups', 'Security Grants');
  if (isFormEmpty('securityAccessGroupsForm')) {
   toggleSaveMode('securityAccessGroupsForm', false);
  }
@@ -3344,6 +3291,7 @@ function showSecurityGrantsAssignmentDialog() {
   showDialog('Please select a Profile to continue.');
   return false;
  }
+ _gaq.push(['_trackPageview',securityAccessGroups]);
  $('#grantAssignDiv').dialog({
   resizable: false,
  title: 'Double Click or drag privileges.',
@@ -3782,7 +3730,6 @@ function validateLoginPortalForm() {
 
 
 
-  //Begin LoginPortal
 
 
 
@@ -4341,11 +4288,8 @@ function imposeGolferSecurityUIRestrictions() {
 * @param {integer} golferId_ id to delete.
 */
 function showGolfer(golferId_) {
- statusMsg('Navigated to Golfer View');
  var params = {};
- hideCurrentContentPane();
- $('#golfer').fadeIn();
- currentContentPane = 'golfer';
+ standardShowContentPane('golfer','Golfer View');
  if (golferId_) {
   params['where_clause'] = 'golfer_id=' + golferId_;
   retrieveGolfer(params);
@@ -4355,9 +4299,8 @@ function showGolfer(golferId_) {
   }
   clearForm('golferForm');
  }
-  retrieveGolferList();
+ retrieveGolferList();
  imposeGolferSecurityUIRestrictions();
-
 }
 
 /**

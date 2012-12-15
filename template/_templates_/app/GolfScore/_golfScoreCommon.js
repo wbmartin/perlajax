@@ -296,12 +296,9 @@ function show[%ucfirst(divId)%](golferId_) {
 				'show[%ucfirst(divId)%]')) {
 		return false;
 				}
-  statusMsg('Navigated to Golf Score View');
 	retrieve[%ucfirst(divId)%]List(golferId_);
 	retrieveGolferNameForGolfScore(golferId_);
-	hideCurrentContentPane();
-	$('#[%divId%]').fadeIn();
-	currentContentPane = '[%divId%]';
+  standardShowContentPane('[%divId%]', 'Golf Score View');
 	if (isFormEmpty('[%divId%]Form')) toggleSaveMode('[%divId%]Form', false);
 	if ($('#[%divId%]Form-golfer_id').val() != golferId_) {
 		clear[%ucfirst(divId)%]Form();

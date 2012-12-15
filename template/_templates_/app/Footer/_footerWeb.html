@@ -29,51 +29,7 @@ if (window.addEventListener) {
 
 
 <script type="text/javascript">
-	'use strict';
-	var urlTarget = 'cgi-bin/server.pl';
-	var passwordResetUrlTarget = 'cgi-bin/pwdreset.pl';
-	var VIEW_ID = 0;
-	var PAGE_CALLS = new Array();
-	var IS_MOBILE = false;
-
-	[% SRC_LOC = '_footerWeb'%]
-	/**
-	 *
-	 * SRC: [%SRC_LOC%]
-	 *=====================================================================
-	 */
-	function bodyOnLoad() {
-		sizeLeftNav();
-	}
-/**
- *
- * SRC: [%SRC_LOC%]
- *=====================================================================
- */
-function bodyOnResize() {
-	sizeLeftNav();
-}
-
-/**
- *
- * SRC: [%SRC_LOC%]
- *=====================================================================
- */
-function changePage(strFuncCall_) {
-	PAGE_CALLS.push(strFuncCall_);
-	top.location.hash = '#' + VIEW_ID++;
-}
-
-/**
- *
- * SRC: [%SRC_LOC%]
- *=====================================================================
- */
-$(window).bind('hashchange', function() {
-		var id = window.location.hash.replace('#', '');
-		if (id >= 0 && id < PAGE_CALLS.length) PAGE_CALLS[id]();
-		});
-
+	
 
 
 //footerWeb	

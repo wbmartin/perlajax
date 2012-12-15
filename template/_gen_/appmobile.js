@@ -503,27 +503,7 @@ function hideCurrentContentPane() {
 }
 
 
-/**
-*
-* SRC: _libCommon
-*=====================================================================
-* @param {string} name divid.
-*/
-function standardShowContentPane(name) {
- hideCurrentContentPane();
- $('#' + name).fadeIn();
- currentContentPane = name;
-}
 
-/**
-*
-* SRC: _libCommon
-*=====================================================================
-* @return {string}  empty string.
-*/
-function hideMainContent() {
- return '';
-}
 
 /**
 *
@@ -911,7 +891,6 @@ function imposeApplicationSecurityRestrictions() {
 }
 
 //loginportal.js
-//Begin LoginPortal
 
 
 
@@ -1290,10 +1269,6 @@ function imposeGolfScoreSummarySecurityUIRestrictions() {
 
 
 
-//After complete Load setup
-$(document).ready(function() {
-
-});
 
 
 

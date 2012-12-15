@@ -85,6 +85,7 @@ function validate[%ucfirst(divId)%]Form() {
 */
 function show[%ucfirst(divId)%](userId_) {
 	statusMsg('Navigated to Change Password Dialog');
+	_gaq.push(['_trackPageview','[%divId%]']);
 	var params = {};
 	if (userId_ == null) {
 		userId_ = $('form#loginHolder #user_id').val();

@@ -5,10 +5,6 @@
 [% INSERT_GRANT = 'INSERT_' _ spwfResource  FILTER upper %]
 [% SELECT_GRANT = 'SELECT_GOLFER_HANDICAP'  FILTER upper %]
 [% DELETE_GRANT = 'DELETE_' _ spwfResource  FILTER upper %]
-//After complete Load setup
-$(document).ready(function() {
-		
-});
 
 
 [% SRC_LOC = '_golfScoreSummaryMobile'%]
